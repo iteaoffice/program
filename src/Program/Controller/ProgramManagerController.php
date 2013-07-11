@@ -22,7 +22,8 @@ use Program\Service\FormService;
  *
  */
 class ProgramManagerController extends AbstractActionController implements
-    FormServiceAwareInterface, ServiceLocatorAwareInterface
+    FormServiceAwareInterface,
+    ServiceLocatorAwareInterface
 {
 
     /**

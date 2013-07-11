@@ -23,7 +23,8 @@ use Program\Entity;
  * @package     Controller
  */
 class ProgramController extends AbstractActionController implements
-    FormServiceAwareInterface, ServiceLocatorAwareInterface
+    FormServiceAwareInterface,
+    ServiceLocatorAwareInterface
 {
     /**
      * @var ProgramService
