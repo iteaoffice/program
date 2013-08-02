@@ -2,7 +2,7 @@
 /**
  * ITEA copyright message placeholder
  *
- * @category    ProjectTest
+ * @category    CallTest
  * @package     Entity
  * @author      Johan van der Heide <info@japaveh.nl>
  * @copyright   Copyright (c) 2004-2013 ITEA
@@ -10,11 +10,13 @@
 namespace ProgramTest\Entity;
 
 use Program\Entity\Program;
+
+
 use ProgramTest\Bootstrap;
 
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 
-class ProjectTest extends \PHPUnit_Framework_TestCase
+class CallTest extends \PHPUnit_Framework_TestCase
 {
 
     /**

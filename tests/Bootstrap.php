@@ -1,6 +1,6 @@
 <?php
 
-namespace ContactTest;
+namespace ProgramTest;
 
 use ContactTest\Fixture\LoadCountryData;
 use Zend\Loader\AutoloaderFactory;
@@ -75,14 +75,11 @@ class Bootstrap
         $tool->createSchema($mdFactory->getAllMetadata());
 
         $loader = new Loader();
-//        $loader->addFixture(new \ContactTest\Fixture\LoadContactData());
-//        $loader->addFixture(new \ContactTest\Fixture\LoadCountryData());
+        $loader->addFixture(new \ProgramTest\Fixture\LoadCallData());
 
         $purger   = new ORMPurger();
         $executor = new ORMExecutor($entityManager, $purger);
         $executor->execute($loader->getFixtures());
-
-
     }
 
     public static function getServiceManager()
