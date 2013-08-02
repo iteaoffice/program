@@ -1,9 +1,13 @@
 {
     "name": "debranova/program",
     "type": "library",
+    "license": "proprietary",
     "description": "General code for Debranova Program",
     "keywords": ["program"],
     "homepage": "http://debranova.org",
+    "support": {
+        "email": "ticket@itea2.org"
+    },
     "authors": [
         {
             "name": "Johan van der Heide",
@@ -32,7 +36,13 @@
     },
     "autoload": {
         "psr-0": {
-            "Program\\": "src/"
+            "Program\\": "src/",
+            "ProgramTest\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "1.0.x-dev"
         }
     }
 }
