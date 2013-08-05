@@ -82,6 +82,12 @@ class Call extends EntityAbstract
      * @var \Program\Entity\Program
      */
     private $program;
+    /**
+     * @ORM\OneToMany(targetEntity="\Project\Entity\Project", cascade={"persist"}, mappedBy="call")
+     * @Annotation\Exclude()
+     * @var \Project\Entity\Project[]
+     */
+    private $project;
 
 //    /**
 //     * @var \Roadmap
@@ -261,6 +267,7 @@ class Call extends EntityAbstract
     {
         return array(
             'call'         => $this->call,
+            'project'      => $this->project,
             'poOpenDate'   => $this->poOpenDate,
             'poCloseDate'  => $this->poCloseDate,
             'fppOpenDate'  => $this->fppOpenDate,
@@ -383,5 +390,21 @@ class Call extends EntityAbstract
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param \Project\Entity\Project[] $project
+     */
+    public function setProject($project)
+    {
+        $this->project = $project;
+    }
+
+    /**
+     * @return \Project\Entity\Project[]
+     */
+    public function getProject()
+    {
+        return $this->project;
     }
 }

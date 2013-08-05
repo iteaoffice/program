@@ -86,6 +86,11 @@ class ProjectTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->programData['program'], $dataArray['program']);
     }
 
+    public function testHasInputFilter()
+    {
+        $this->assertInstanceOf('Zend\InputFilter\InputFilter', $this->program->getInputFilter());
+    }
+
     public function testCanSaveEntityInDatabase()
     {
         $hydrator = new DoctrineObject(
