@@ -42,7 +42,9 @@ return array(
             /* If this guard is specified here (i.e. it is enabled), it will block
              * access to all routes unless they are specified here.
              */
-            'BjyAuthorize\Guard\Route' => array(),
+            'BjyAuthorize\Guard\Route' => array(
+                array('route' => 'program/programs', 'roles' => array(4, 2, 3)),
+            ),
         ),
     ),
 );
