@@ -59,7 +59,7 @@ class CallTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf("Program\Entity\Call", $this->call);
         $this->assertInstanceOf("Program\Entity\EntityInterface", $this->call);
 
-        $this->assertNull($this->call->getProgram(), 'The "Program" should be null');
+        $this->assertNull($this->call->getCall(), 'The "Call" should be null');
 
         $id = 1;
         $this->call->setId($id);
@@ -85,7 +85,7 @@ class CallTest extends \PHPUnit_Framework_TestCase
     {
         $hydrator = new DoctrineObject(
             $this->entityManager,
-            'Program\Entity\Program'
+            'Program\Entity\Call'
         );
 
         $this->call = $hydrator->hydrate($this->callData, new Call());

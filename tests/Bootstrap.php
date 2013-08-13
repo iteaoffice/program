@@ -76,6 +76,7 @@ class Bootstrap
 
         $loader = new Loader();
         $loader->addFixture(new \ProgramTest\Fixture\LoadCallData());
+        $loader->addFixture(new \ProgramTest\Fixture\LoadDomainData());
 
         $purger   = new ORMPurger();
         $executor = new ORMExecutor($entityManager, $purger);
