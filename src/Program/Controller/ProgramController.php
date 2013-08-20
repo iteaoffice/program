@@ -13,6 +13,8 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 
+use Project\Service\ProjectService;
+
 use Program\Service\ProgramService;
 use Program\Service\FormServiceAwareInterface;
 use Program\Service\FormService;
@@ -30,6 +32,10 @@ class ProgramController extends AbstractActionController implements
      * @var ProgramService
      */
     protected $programService;
+    /**
+     * @var ProjectService
+     */
+    protected $projectService;
     /**
      * @var FormService
      */
@@ -62,211 +68,49 @@ class ProgramController extends AbstractActionController implements
      */
     public function programAction()
     {
-        $program = $this->getProgramService()->findEntityById(
+        $program  = $this->getProgramService()->findEntityById(
             'program',
             $this->getEvent()->getRouteMatch()->getParam('id')
         );
+        $programs = $this->getProgramService()->findAll('program');
 
-        return new ViewModel(array('program' => $program));
+        return new ViewModel(array('program' => $program, 'programs' => $programs));
     }
 
     /**
-     * Give a list of facilities
+     * Show the details of 1 program
      *
      * @return \Zend\View\Model\ViewModel
      */
-    public function facilitiesAction()
+    public function callsAction()
     {
-        $facilities = $this->getProgramService()->findAll('facility');
+        $calls = $this->getProgramService()->findCalls();
 
-        return new ViewModel(array('facilities' => $facilities));
+        return new ViewModel(array('calls' => $calls));
     }
 
     /**
-     * Show the details of 1 facility
+     * Show the details of 1 call
      *
      * @return \Zend\View\Model\ViewModel
      */
-    public function facilityAction()
+    public function callAction()
     {
-        $facility = $this->getProgramService()->findEntityById(
-            'facility',
+        $call = $this->getProgramService()->findEntityById(
+            'call',
             $this->getEvent()->getRouteMatch()->getParam('id')
         );
 
-        return new ViewModel(array('facility' => $facility));
+        $projects = $this->getProjectService()->findProjectsPerCall($call);
+
+        return new ViewModel(array('call' => $call, 'projects' => $projects));
     }
 
-    /**
-     * Give a list of areas
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
-    public function areasAction()
-    {
-        $areas = $this->getProgramService()->findAll('area');
-
-        return new ViewModel(array('areas' => $areas));
-    }
 
     /**
-     * Show the details of 1 area
+     * @param \Zend\Mvc\Controller\string $layout
      *
-     * @return \Zend\View\Model\ViewModel
-     */
-    public function areaAction()
-    {
-        $area = $this->getProgramService()->findEntityById(
-            'area',
-            $this->getEvent()->getRouteMatch()->getParam('id')
-        );
-
-        return new ViewModel(array('area' => $area));
-    }
-
-    /**
-     * Give a list of area2s
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
-    public function area2sAction()
-    {
-        $area2s = $this->getProgramService()->findAll('area2');
-
-        return new ViewModel(array('area2s' => $area2s));
-    }
-
-    /**
-     * Show the details of 1 area
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
-    public function area2Action()
-    {
-        $area2 = $this->getProgramService()->findEntityById(
-            'area2',
-            $this->getEvent()->getRouteMatch()->getParam('id')
-        );
-
-        return new ViewModel(array('area2' => $area2));
-    }
-
-    /**
-     * Give a list of areas
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
-    public function subAreasAction()
-    {
-        $subAreas = $this->getProgramService()->findAll('subArea');
-
-        return new ViewModel(array('subAreas' => $subAreas));
-    }
-
-    /**
-     * Show the details of 1 area
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
-    public function subAreaAction()
-    {
-        $subArea = $this->getProgramService()->findEntityById(
-            'subArea',
-            $this->getEvent()->getRouteMatch()->getParam('id')
-        );
-
-        return new ViewModel(array('subArea' => $subArea));
-    }
-
-    /**
-     * Give a list of operAreas
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
-    public function operAreasAction()
-    {
-        $operAreas = $this->getProgramService()->findAll('operArea');
-
-        return new ViewModel(array('operAreas' => $operAreas));
-    }
-
-    /**
-     * Show the details of 1 operArea
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
-    public function operAreaAction()
-    {
-        $operArea = $this->getProgramService()->findEntityById(
-            'operArea',
-            $this->getEvent()->getRouteMatch()->getParam('id')
-        );
-
-        return new ViewModel(array('operArea' => $operArea));
-    }
-
-    /**
-     * Give a list of operAreas
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
-    public function operSubAreasAction()
-    {
-        $operSubAreas = $this->getProgramService()->findAll('operSubArea');
-
-        return new ViewModel(array('operSubAreas' => $operSubAreas));
-    }
-
-    /**
-     * Show the details of 1 operArea
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
-    public function operSubAreaAction()
-    {
-        $operSubArea = $this->getProgramService()->findEntityById(
-            'operSubArea',
-            $this->getEvent()->getRouteMatch()->getParam('id')
-        );
-
-        return new ViewModel(array('operSubArea' => $operSubArea));
-    }
-
-    /**
-     * Edit an entity
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
-    public function editAction()
-    {
-        $this->layout(false);
-        $entity = $this->getProgramService()->findEntityById(
-            $this->getEvent()->getRouteMatch()->getParam('entity'),
-            $this->getEvent()->getRouteMatch()->getParam('id')
-        );
-
-        $form = $this->getFormService()->prepare($entity->get('entity_name'), $entity, $_POST);
-        $form->setAttribute('class', 'form-vertical live-form-edit');
-        $form->setAttribute('id', 'program-' . strtolower($entity->get('entity_name')) . '-' . $entity->getId());
-
-        if ($this->getRequest()->isPost() && $form->isValid()) {
-            $this->getProgramService()->updateEntity($form->getData());
-
-            $view = new ViewModel(array($this->getEvent()->getRouteMatch()->getParam('entity') => $form->getData()));
-            $view->setTemplate(
-                "program/partial/" . $this->getEvent()->getRouteMatch()->getParam('entity') . '.twig'
-            );
-
-            return $view;
-        }
-
-        return new ViewModel(array('form' => $form, 'entity' => $entity));
-    }
-
-    /**
-     * Trigger to switch layout
-     *
-     * @param $layout
+     * @return void|\Zend\Mvc\Controller\Plugin\Layout|\Zend\View\Model\ModelInterface
      */
     public function layout($layout)
     {
@@ -306,6 +150,15 @@ class ProgramController extends AbstractActionController implements
     {
         return $this->getServiceLocator()->get('program_generic_service');
     }
+
+    /**
+     * @return \Project\Service\ProjectService
+     */
+    public function getProjectService()
+    {
+        return $this->getServiceLocator()->get('project_project_service');
+    }
+
 
     /**
      * @param $programService

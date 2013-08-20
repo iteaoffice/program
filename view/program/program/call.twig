@@ -1,0 +1,60 @@
+<h1>{{ translate("txt-call-%s")|format(call) }}</h1>
+
+<p class="lead">{{ translate("txt-call-explanation-%s-program-%s")|format(call,call.program) }}</p>
+
+<div class="col-lg-6">
+    <h2>{{ translate("txt-list-of-projects") }}</h2>
+    {% for projectService in projects %}
+        <ul class="media-list">
+            <div class="well well-small">
+                <li class="media">
+                    <a class="pull-left" href="#">
+                        <img width="64" height="64"
+                             src="{{ project.logo.logo|dataUri(true,'image/jpg')|raw }}">
+                    </a>
+
+                    <div class="media-body">
+                        <h4>{{ projectLink(projectService,'view', 'name') }}</h4>
+
+                        <p>{{ projectService.project.description }}</p>
+
+                        <p class="text-muted credit">{{ translate("txt-call") }}:
+                            {{ callLink(projectService.project.call,'view','name') }}
+                            {{ translate("txt-domain") }}:
+                            {% for domain in projectService.project.domain %}
+                                {{ domain.domain }}
+                            {% endfor %}
+                        </p>
+                    </div>
+                </li>
+            </div>
+        </ul>
+
+    {% else %}
+        {{ ztbalert().info(translate("txt-no-projects-found"))|raw }}
+    {% endfor %}
+</div>
+
+<div class="col-lg-6">
+    <h2>{{ translate("txt-innovation-reports") }}</h2>
+
+    <ul class="list-group">
+        <li class="list-group-item">
+            <div class="badge">2012-12-01</div>
+            ITEA 2 - JEDI: JEDI brings Blu-ray 3D quality to broadcast
+
+        </li>
+        <li class="list-group-item">
+            <div class="badge">2012-12-01</div>
+            ITEA 2 - ROLE-ID: It's not who you are but what you do that counts
+
+        </li>
+        <li class="list-group-item">
+            <div class="badge">2012-12-01</div>
+            ITEA 2 - TIMMO-2-USE: More predictable development, ..market
+
+        </li>
+    </ul>
+
+
+</div>

@@ -44,6 +44,9 @@ return array(
              */
             'BjyAuthorize\Guard\Route' => array(
                 array('route' => 'program/programs', 'roles' => array(4, 2, 3)),
+                array('route' => 'program/program', 'roles' => array(4, 2, 3)),
+                array('route' => 'program/calls', 'roles' => array(4, 2, 3)),
+                array('route' => 'program/call', 'roles' => array(4, 2, 3)),
             ),
         ),
     ),

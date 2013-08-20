@@ -22,11 +22,11 @@ use Program\Entity;
  * @package     View
  * @subpackage  Helper
  */
-class ProgramLink extends AbstractHelper
+class CallLink extends AbstractHelper
 {
 
     /**
-     * @param  \Program\Entity\Program $program
+     * @param  \Program\Entity\Program $call
      * @param                          $action
      * @param                          $show
      *
@@ -34,7 +34,7 @@ class ProgramLink extends AbstractHelper
      * @throws \RuntimeException
      * @throws \Exception
      */
-    public function __invoke(Entity\Program $program = null, $action = 'view', $show = 'name')
+    public function __invoke(Entity\Call $call = null, $action = 'view', $show = 'name')
     {
         $translate = $this->view->plugin('translate');
         $url       = $this->view->plugin('url');
@@ -43,24 +43,35 @@ class ProgramLink extends AbstractHelper
 
         switch ($action) {
             case 'new':
-                $router  = 'zfcadmin/program-manager/new';
-                $text    = sprintf($translate("txt-new-area"));
-                $program = new Entity\Program();
+                $router = 'zfcadmin/program-manager/new';
+                $text   = sprintf($translate("txt-new-area"));
+                $call   = new Entity\Program();
                 break;
             case 'edit':
                 $router = 'zfcadmin/program-manager/edit';
-                $text   = sprintf($translate("txt-edit-program-%s"), $program);
+                $text   = sprintf($translate("txt-edit-program-%s"), $call);
                 break;
             case 'view':
-                $router = 'program/program';
-                $text   = sprintf($translate("txt-view-program-%s"), $program);
+                $router = 'program/call';
+                $text   = sprintf($translate("txt-view-program-%s"), $call);
                 break;
             default:
                 throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
         }
 
+        if (is_null($call)) {
+            throw new \RuntimeException(
+                sprintf(
+                    "Area needs to be an instance of %s, %s given in %s",
+                    "Program\Entity\Program",
+                    get_class($call),
+                    __CLASS__
+                )
+            );
+        }
+
         $params = array(
-            'id'     => $program->getId(),
+            'id'     => $call->getId(),
             'entity' => 'program'
         );
 
@@ -82,10 +93,10 @@ class ProgramLink extends AbstractHelper
                 $classes[]     = "btn btn-primary";
                 break;
             case 'name':
-                $linkContent[] = $program;
+                $linkContent[] = $call;
                 break;
             default:
-                $linkContent[] = $program;
+                $linkContent[] = $call;
                 break;
         }
 

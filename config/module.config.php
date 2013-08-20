@@ -17,6 +17,7 @@ $config = array(
     'view_helpers'    => array(
         'invokables' => array(
             'programLink' => 'Program\View\Helper\ProgramLink',
+            'callLink'    => 'Program\View\Helper\CallLink',
 
         )
     ),

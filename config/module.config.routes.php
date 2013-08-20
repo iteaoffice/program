@@ -36,19 +36,19 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes'  => array(
-                    'programs'       => array(
+                    'programs' => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'    => '/list.html',
+                            'route'    => '/programs.html',
                             'defaults' => array(
                                 'action' => 'programs',
                             ),
                         ),
                     ),
-                    'program'        => array(
+                    'program'  => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'       => '/view/[:id].html',
+                            'route'       => '/program/[:id].html',
                             'constraints' => array(
                                 'id' => '\d+',
                             ),
@@ -57,138 +57,24 @@ return array(
                             ),
                         ),
                     ),
-                    'facilities'     => array(
+                    'call'     => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'    => '/facilities.html',
-                            'defaults' => array(
-                                'action' => 'facilities',
-                            ),
-                        ),
-                    ),
-                    'facility'       => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'       => '/facility/[:id].html',
+                            'route'       => '/call/[:id].html',
                             'constraints' => array(
                                 'id' => '\d+',
                             ),
                             'defaults'    => array(
-                                'action' => 'facility',
+                                'action' => 'call',
                             ),
                         ),
                     ),
-                    'areas'          => array(
+                    'calls'    => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'    => '/areas.html',
+                            'route'    => '/calls.html',
                             'defaults' => array(
-                                'action' => 'areas',
-                            ),
-                        ),
-                    ),
-                    'area'           => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'       => '/area/[:id].html',
-                            'constraints' => array(
-                                'id' => '\d+',
-                            ),
-                            'defaults'    => array(
-                                'action' => 'area',
-                            ),
-                        ),
-                    ),
-                    'area2s'         => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/area2s.html',
-                            'defaults' => array(
-                                'action' => 'area2s',
-                            ),
-                        ),
-                    ),
-                    'area2'          => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'       => '/area2/[:id].html',
-                            'constraints' => array(
-                                'id' => '\d+',
-                            ),
-                            'defaults'    => array(
-                                'action' => 'area2',
-                            ),
-                        ),
-                    ),
-                    'sub-areas'      => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/sub-areas.html',
-                            'defaults' => array(
-                                'action' => 'sub-areas',
-                            ),
-                        ),
-                    ),
-                    'sub-area'       => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'       => '/sub-area/[:id].html',
-                            'constraints' => array(
-                                'id' => '\d+',
-                            ),
-                            'defaults'    => array(
-                                'action' => 'sub-area',
-                            ),
-                        ),
-                    ),
-                    'oper-areas'     => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/operation-areas.html',
-                            'defaults' => array(
-                                'action' => 'operAreas',
-                            ),
-                        ),
-                    ),
-                    'oper-area'      => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'       => '/oper-area/[:id].html',
-                            'constraints' => array(
-                                'id' => '\d+',
-                            ),
-                            'defaults'    => array(
-                                'action' => 'oper-area',
-                            ),
-                        ),
-                    ),
-                    'oper-sub-areas' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/operation-sub-areas.html',
-                            'defaults' => array(
-                                'action' => 'oper-sub-areas',
-                            ),
-                        ),
-                    ),
-                    'oper-sub-area'  => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'       => '/oper-sub-area/[:id].html',
-                            'constraints' => array(
-                                'id' => '\d+',
-                            ),
-                            'defaults'    => array(
-                                'action' => 'oper-sub-area',
-                            ),
-                        ),
-                    ),
-                    'edit'           => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/edit/[:entity]/[:id].html',
-                            'defaults' => array(
-                                'action' => 'edit',
+                                'action' => 'calls',
                             ),
                         ),
                     ),
@@ -208,28 +94,8 @@ return array(
                         ),
                         'may_terminate' => true,
                         'child_routes'  => array(
-                            'messages' => array(
-                                'type'    => 'Segment',
-                                'options' => array(
-                                    'route'    => '/messages.html',
-                                    'defaults' => array(
-                                        'action' => 'messages',
-                                    ),
-                                ),
-                            ),
-                            'message'  => array(
-                                'type'    => 'Segment',
-                                'options' => array(
-                                    'route'       => '/message/[:id].html',
-                                    'constraints' => array(
-                                        'id' => '\d+',
-                                    ),
-                                    'defaults'    => array(
-                                        'action' => 'message',
-                                    ),
-                                ),
-                            ),
-                            'new'      => array(
+
+                            'new'    => array(
                                 'type'    => 'Segment',
                                 'options' => array(
                                     'route'    => '/new/:entity',
@@ -238,7 +104,7 @@ return array(
                                     ),
                                 ),
                             ),
-                            'edit'     => array(
+                            'edit'   => array(
                                 'type'    => 'Segment',
                                 'options' => array(
                                     'route'    => '/edit/:entity/:id',
@@ -247,7 +113,7 @@ return array(
                                     ),
                                 ),
                             ),
-                            'delete'   => array(
+                            'delete' => array(
                                 'type'    => 'Segment',
                                 'options' => array(
                                     'route'    => '/delete/:entity/:id',

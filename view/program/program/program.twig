@@ -1,0 +1,41 @@
+<h1>{{ translate("txt-program-%s")|format(program) }}</h1>
+<p class="lead">{{ translate("txt-program-showcase-explanation") }}</p>
+
+
+<div class="col-lg-10">
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>{{ translate("txt-call-name") }}</th>
+            <th>{{ translate("txt-call-po-open") }}</th>
+            <th>{{ translate("txt-call-po-closed") }}</th>
+            <th>{{ translate("txt-call-fpp-open") }}</th>
+            <th>{{ translate("txt-call-fpp-closed") }}</th>
+            <th>{{ translate("txt-amount-of-projects") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for call in program.call %}
+            <tr>
+                <td>{{ callLink(call,'view','name') }}</td>
+                <td>{{ call.poOpenDate|date("d-m-Y") }}</td>
+                <td>{{ call.poCloseDate|date("d-m-Y") }}</td>
+                <td>{{ call.fppOpenDate|date("d-m-Y") }}</td>
+                <td>{{ call.fppCloseDate|date("d-m-Y") }}</td>
+                <td>{{ call.project.count }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+<div class="col-lg-2">
+    <h3>{{ translate("txt-programs") }}</h3>
+    <ul class="nav nav-pills nav-stacked">
+        {% for otherProgram in programs %}
+            <li {% if program.id == otherProgram.id %}class="active"{% endif %}>{{ programLink(otherProgram,'view','name') }}</li>
+        {% endfor %}
+    </ul>
+</div>

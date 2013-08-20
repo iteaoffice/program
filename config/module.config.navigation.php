@@ -10,27 +10,27 @@
 return array(
     'navigation' => array(
         'default' => array(
-            'program' => array(
-                'label' => _("txt-program"),
-                'route' => 'program',
-                'pages' => array(
-                    'programs' => array(
-                        'label'     => _("txt-list-programs"),
-                        'route'     => 'program/programs',
-                        'resource'  => 'program',
-                        'privilege' => 'listings',
-                    ),
-
-                ),
-            ),
-            'admin'   => array(
-                'pages' => array(
-                    'messages' => array(
-                        'label' => _('txt-messages'),
-                        'route' => 'zfcadmin/program-manager/messages',
-                    ),
-                ),
-            ),
+//            'program' => array(
+//                'label' => _("txt-program"),
+//                'route' => 'program',
+//                'pages' => array(
+//                    'programs' => array(
+//                        'label'     => _("txt-list-programs"),
+//                        'route'     => 'program/programs',
+//                        'resource'  => 'program',
+//                        'privilege' => 'listings',
+//                    ),
+//
+//                ),
+//            ),
+//            'admin'   => array(
+//                'pages' => array(
+//                    'messages' => array(
+//                        'label' => _('txt-messages'),
+//                        'route' => 'zfcadmin/program-manager/messages',
+//                    ),
+//                ),
+//            ),
         ),
     ),
 );

@@ -131,7 +131,7 @@ class Call extends EntityAbstract
      */
     public function __toString()
     {
-        return $this->getProgram()->getProgram() . ' ' . $this->call;
+        return $this->getProgram()->getProgram() . ' call ' . $this->call;
     }
 
     /**

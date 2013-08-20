@@ -15,7 +15,7 @@
         {% for program in programs %}
             <tr>
                 <td>{{ program.id }}</td>
-                <td>{{ program.program }}</td>
+                <td>{{ programLink(program,'view', 'name') }}</td>
                 <td>{{ program.call.count }}</td>
             </tr>
         {% endfor %}
