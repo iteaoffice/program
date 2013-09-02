@@ -64,24 +64,27 @@ class Dnd //extends EntityAbstract implements ResourceInterface
      * })
      * @var \Contact\Entity\Contact
      */
-    //    private $contact;
+    private $contact;
     /**
-     * @var \Contenttype
-     *
-     * @ORM\ManyToOne(targetEntity="Contenttype")
-     * @ORM\JoinColumns({
-     * @ORM\JoinColumn(name="contenttype_id", referencedColumnName="contenttype_id")
-     * })
+     * @ORM\ManyToOne(targetEntity="General\Entity\ContentType", cascade={"persist"}, inversedBy="programDnd")
+     * @ORM\JoinColumn(name="contenttype_id", referencedColumnName="contenttype_id", nullable=false)
+     * @Annotation\Type("\Zend\Form\Element\File")
+     * @Annotation\Options({"label":"txt-dnd-file"})
+     * @var \General\Entity\ContentType
      */
-    //    private $contenttype;
+    private $contentType;
     /**
-     * @var \Program
-     *
-     * @ORM\ManyToOne(targetEntity="Program")
+     * @ORM\OneToOne(targetEntity="\Program\Entity\DndObject", cascade={"persist"}, mappedBy="dnd")
+     * @Annotation\Exclude()
+     * @var \Program\Entity\Dnd
+     */
+    private $object;
+    /**
+     * @ORM\ManyToOne(targetEntity="Program\Entity\Program")
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="program_id", referencedColumnName="program_id")
      * })
+     * @var \Program\Entity\Program
      */
-    //    private $program;
-
+    private $program;
 }

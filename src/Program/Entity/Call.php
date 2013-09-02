@@ -56,7 +56,6 @@ class Call extends EntityAbstract
      * @var \DateTime
      */
     private $poCloseDate;
-
     /**
      * @ORM\Column(name="fpp_open_date", type="datetime", nullable=true)
      * @Annotation\Type("\Zend\Form\Element\Date")
@@ -86,16 +85,31 @@ class Call extends EntityAbstract
      * @var \Project\Entity\Project[]
      */
     private $project;
-
-//    /**
-//     * @var \Roadmap
-//     *
-//     * @ORM\ManyToOne(targetEntity="Roadmap")
-//     * @ORM\JoinColumns({
-//     * @ORM\JoinColumn(name="roadmap_id", referencedColumnName="roadmap_id")
-//     * })
-//     */
-//    private $roadmap;
+    /**
+     * @ORM\ManyToOne(targetEntity="Program\Entity\Roadmap", inversedBy="call")
+     * @ORM\JoinColumns({
+     * @ORM\JoinColumn(name="roadmap_id", referencedColumnName="roadmap_id")
+     * })
+     * @var \Program\Entity\Roadmap
+     */
+    private $roadmap;
+    /**
+     * @ORM\ManyToMany(targetEntity="Program\Entity\Nda", cascade={"persist"}, inversedBy="call")
+     * @ORM\JoinTable(name="programcall_nda",
+     *    joinColumns={@ORM\JoinColumn(name="programcall_id", referencedColumnName="programcall_id")},
+     *    inverseJoinColumns={@ORM\JoinColumn(name="nda_id", referencedColumnName="nda_id")}
+     * )
+     * @Annotation\Exclude()
+     * @var \Program\Entity\Nda[]
+     * private $nda;
+     * @todo: Is this a many-to-many or one-to-many. The database suggests both
+     */
+    /**
+     * @ORM\OneToMany(targetEntity="Program\Entity\Nda", cascade={"persist"}, mappedBy="call")
+     * @Annotation\Exclude()
+     * @var \Program\Entity\Nda[]
+     */
+    private $nda;
 
     /**
      * Magic Getter
@@ -249,6 +263,15 @@ class Call extends EntityAbstract
                 )
             );
 
+            $inputFilter->add(
+                $factory->createInput(
+                    array(
+                        'name'     => 'call',
+                        'required' => true,
+                    )
+                )
+            );
+
             $this->inputFilter = $inputFilter;
         }
 
@@ -269,6 +292,8 @@ class Call extends EntityAbstract
             'poCloseDate'  => $this->poCloseDate,
             'fppOpenDate'  => $this->fppOpenDate,
             'fppCloseDate' => $this->fppCloseDate,
+            'call'         => $this->call,
+            'nda'          => $this->nda,
         );
     }
 
@@ -403,5 +428,37 @@ class Call extends EntityAbstract
     public function getProject()
     {
         return $this->project;
+    }
+
+    /**
+     * @param \Program\Entity\Roadmap $roadmap
+     */
+    public function setRoadmap($roadmap)
+    {
+        $this->roadmap = $roadmap;
+    }
+
+    /**
+     * @return \Program\Entity\Roadmap
+     */
+    public function getRoadmap()
+    {
+        return $this->roadmap;
+    }
+
+    /**
+     * @param \Program\Entity\Nda[] $nda
+     */
+    public function setNda($nda)
+    {
+        $this->nda = $nda;
+    }
+
+    /**
+     * @return \Program\Entity\Nda[]
+     */
+    public function getNda()
+    {
+        return $this->nda;
     }
 }

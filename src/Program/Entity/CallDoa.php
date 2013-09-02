@@ -55,22 +55,22 @@ class CallDoa
     private $branch;
 
     /**
+     * @todo;
      * @var \Organisation
      *
      * @ORM\ManyToOne(targetEntity="Organisation")
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")
      * })
+     * private $organisation;
      */
-    private $organisation;
 
     /**
-     * @var \Programcall
-     *
-     * @ORM\ManyToOne(targetEntity="Programcall")
+     * @ORM\ManyToOne(targetEntity="Call")
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="programcall_id", referencedColumnName="programcall_id")
      * })
+     * @var Call
      */
-    private $programcall;
+    private $call;
 }

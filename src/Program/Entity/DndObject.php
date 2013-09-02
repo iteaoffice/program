@@ -12,7 +12,7 @@ namespace Program\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="contact_dnd_object")
+ * @ORM\Table(name="program_dnd_object")
  * @ORM\Entity
  *
  * @category    Program
@@ -21,28 +21,23 @@ use Doctrine\ORM\Mapping as ORM;
 class DndObject
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="object_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @var integer
      */
     private $id;
-
     /**
-     * @var string
-     *
      * @ORM\Column(name="object", type="blob", nullable=false)
+     * @var string
      */
     private $object;
-
     /**
-     * @var \ContactDnd
-     *
-     * @ORM\ManyToOne(targetEntity="Dnd")
+     * @ORM\OneToOne(targetEntity="Program\Entity\Dnd", inversedBy="object")
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="dnd_id", referencedColumnName="dnd_id")
      * })
+     * @var \Program\Entity\Dnd
      */
     private $dnd;
 }

@@ -48,13 +48,26 @@ class Program extends EntityAbstract
      * @var \Program\Entity\Call[]
      */
     private $call;
+    /**
+     * @ORM\OneToMany(targetEntity="\Program\Entity\ProgramDoa", cascade={"persist"}, mappedBy="program")
+     * @Annotation\Exclude()
+     * @var \Program\Entity\ProgramDoa[]
+     */
+    private $programDoa;
+    /**
+     * @ORM\OneToMany(targetEntity="\Contact\Entity\Dnd", cascade={"persist"}, mappedBy="program")
+     * @Annotation\Exclude()
+     * @var \Contact\Entity\Dnd[]
+     */
+    private $contactDnd;
 
     /**
      * Class constructor
      */
     public function __construct()
     {
-        $this->call = new Collections\ArrayCollection();
+        $this->call       = new Collections\ArrayCollection();
+        $this->programDoa = new Collections\ArrayCollection();
     }
 
     /**

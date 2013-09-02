@@ -44,12 +44,11 @@ class CallImage
     private $imageExtension;
 
     /**
-     * @var \Programcall
-     *
-     * @ORM\ManyToOne(targetEntity="Programcall")
+     * @ORM\ManyToOne(targetEntity="Call")
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="programcall_id", referencedColumnName="programcall_id")
      * })
+     * @var Call
      */
-    private $programcall;
+    private $call;
 }

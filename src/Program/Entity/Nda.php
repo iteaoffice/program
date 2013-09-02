@@ -48,25 +48,23 @@ class Nda
      * @ORM\Column(name="date_signed", type="date", nullable=true)
      */
     private $dateSigned;
-
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="contenttype_id", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="General\Entity\ContentType", cascade={"persist"}, inversedBy="programNna")
+     * @ORM\JoinColumn(name="contenttype_id", referencedColumnName="contenttype_id", nullable=false)
+     * @Annotation\Type("\Zend\Form\Element\File")
+     * @Annotation\Options({"label":"txt-nda-file"})
+     * @var \General\Entity\ContentType
      */
-    private $contenttypeId;
-
+    private $contentType;
     /**
      * @var integer
      *
      * @ORM\Column(name="size", type="integer", nullable=false)
      */
     private $size;
-
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="date_created", type="datetime", nullable=true)
+     * @var \DateTime
      */
     private $dateCreated;
 
@@ -76,24 +74,26 @@ class Nda
      * @ORM\Column(name="date_updated", type="datetime", nullable=true)
      */
     private $dateUpdated;
-
     /**
-     * @var \Contact
-     *
-     * @ORM\ManyToOne(targetEntity="Contact")
+     * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", inversedBy="nda")
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id")
      * })
+     * @var \Contact\Entity\Contact
      */
     private $contact;
-
     /**
-     * @var \Programcall
-     *
-     * @ORM\ManyToOne(targetEntity="Programcall")
+     * @ORM\ManyToOne(targetEntity="Call", cascade={"persist"}, inversedBy="nda")
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="programcall_id", referencedColumnName="programcall_id")
      * })
+     * @var Call
      */
-    private $programcall;
+    private $call;
+    /**
+     * @ORM\OneToOne(targetEntity="\Program\Entity\NdaObject", cascade={"persist"}, mappedBy="nda")
+     * @Annotation\Exclude()
+     * @var \Program\Entity\Nda
+     */
+    private $object;
 }

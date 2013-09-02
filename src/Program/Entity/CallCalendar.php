@@ -30,19 +30,20 @@ class CallCalendar
     private $id;
 
     /**
+     * @todo
      * @var \Calendar
      *
      * @ORM\ManyToOne(targetEntity="Calendar")
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="calendar_id", referencedColumnName="calendar_id")
      * })
+     * private $calendar;
      */
-    private $calendar;
 
     /**
      * @var \Programcall
      *
-     * @ORM\ManyToOne(targetEntity="Programcall")
+     * @ORM\ManyToOne(targetEntity="Call")
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="programcall_id", referencedColumnName="programcall_id")
      * })

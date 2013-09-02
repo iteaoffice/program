@@ -80,6 +80,12 @@ class Domain extends EntityAbstract
      * @var \Project\Entity\Project[]
      */
     private $project;
+    /**
+     * @ORM\ManyToMany(targetEntity="Contact\Entity\Contact", mappedBy="domain")
+     * @Annotation\Exclude()
+     * @var \Contact\Entity\Contact[]
+     */
+    private $contact;
 
     /**
      * Class constructor
@@ -319,5 +325,37 @@ class Domain extends EntityAbstract
     public function getRoadmap()
     {
         return $this->roadmap;
+    }
+
+    /**
+     * @param \Contact\Entity\Contact[] $contact
+     */
+    public function setContact($contact)
+    {
+        $this->contact = $contact;
+    }
+
+    /**
+     * @return \Contact\Entity\Contact[]
+     */
+    public function getContact()
+    {
+        return $this->contact;
+    }
+
+    /**
+     * @param \Project\Entity\Project[] $project
+     */
+    public function setProject($project)
+    {
+        $this->project = $project;
+    }
+
+    /**
+     * @return \Project\Entity\Project[]
+     */
+    public function getProject()
+    {
+        return $this->project;
     }
 }

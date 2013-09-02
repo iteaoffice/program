@@ -11,6 +11,7 @@ namespace Program\Entity;
 
 use Zend\Form\Annotation;
 
+use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -46,20 +47,20 @@ class ProgramDoa
      * @ORM\Column(name="date_signed", type="date", nullable=true)
      */
     private $dateSigned;
-
     /**
      * @var string
      *
      * @ORM\Column(name="branch", type="string", length=40, nullable=true)
      */
     private $branch;
-
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="contenttype_id", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="General\Entity\ContentType", cascade={"persist"}, inversedBy="programDoa")
+     * @ORM\JoinColumn(name="contenttype_id", referencedColumnName="contenttype_id", nullable=false)
+     * @Annotation\Type("\Zend\Form\Element\File")
+     * @Annotation\Options({"label":"txt-nda-file"})
+     * @var \General\Entity\ContentType
      */
-    private $contenttypeId;
+    private $contentType;
 
     /**
      * @var integer
@@ -81,31 +82,37 @@ class ProgramDoa
      * @ORM\Column(name="date_created", type="datetime", nullable=true)
      */
     private $dateCreated;
-
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="contact_id", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", inversedBy="programDoa")
+     * @ORM\JoinColumns({
+     * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id")
+     * })
+     * @var \Contact\Entity\Contact
      */
-    private $contactId;
-
+    private $contact;
     /**
-     * @var \Organisation
-     *
-     * @ORM\ManyToOne(targetEntity="Organisation")
+     * @ORM\ManyToOne(targetEntity="Contact\Entity\Organisation", inversedBy="programDoa")
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")
      * })
+     * @var \Contact\Entity\Organisation
      */
     private $organisation;
-
     /**
-     * @var \Program
-     *
-     * @ORM\ManyToOne(targetEntity="Program")
+     * @ORM\ManyToOne(targetEntity="Program\Entity\Program", inversedBy="programDoa")
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="program_id", referencedColumnName="program_id")
      * })
+     * @var \Program\Entity\Program
      */
     private $program;
+
+    /**
+     * Class constructor
+     */
+    public function __construct()
+    {
+        $this->call       = new Collections\ArrayCollection();
+        $this->programDoa = new Collections\ArrayCollection();
+    }
 }

@@ -9,6 +9,7 @@
  */
 namespace Program\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Program\Entity\EntityAbstract;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
@@ -60,9 +61,28 @@ class Roadmap extends EntityAbstract
     /**
      * @ORM\OneToMany(targetEntity="\Program\Entity\Domain", cascade={"persist"}, mappedBy="roadmap")
      * @Annotation\Exclude()
-     * @var \Project\Entity\Project[]
+     * @var \Program\Entity\Domain[]
      */
     private $domain;
+    /**
+     * @ORM\OneToMany(targetEntity="\Program\Entity\Call", cascade={"persist"}, mappedBy="roadmap")
+     * @Annotation\Exclude()
+     * @var \Program\Entity\Call[]
+     */
+    private $call;
+    /**
+     * @ORM\OneToMany(targetEntity="\Program\Entity\Technology", cascade={"persist"}, mappedBy="roadmap")
+     * @Annotation\Exclude()
+     * @var \Program\Entity\Call[]
+     */
+    private $technology;
+
+    public function __construct()
+    {
+        $this->domain     = new ArrayCollection();
+        $this->call       = new ArrayCollection();
+        $this->technology = new ArrayCollection();
+    }
 
     /**
      * Magic Getter
@@ -306,5 +326,37 @@ class Roadmap extends EntityAbstract
     public function getRoadmap()
     {
         return $this->roadmap;
+    }
+
+    /**
+     * @param \Program\Entity\Call[] $call
+     */
+    public function setCall($call)
+    {
+        $this->call = $call;
+    }
+
+    /**
+     * @return \Program\Entity\Call[]
+     */
+    public function getCall()
+    {
+        return $this->call;
+    }
+
+    /**
+     * @param \Program\Entity\Call[] $technology
+     */
+    public function setTechnology($technology)
+    {
+        $this->technology = $technology;
+    }
+
+    /**
+     * @return \Program\Entity\Call[]
+     */
+    public function getTechnology()
+    {
+        return $this->technology;
     }
 }

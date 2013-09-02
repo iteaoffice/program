@@ -28,21 +28,17 @@ class NdaObject
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
     /**
-     * @var string
-     *
      * @ORM\Column(name="object", type="blob", nullable=false)
+     * @var string
      */
     private $object;
-
     /**
-     * @var \Nda
-     *
-     * @ORM\ManyToOne(targetEntity="Nda")
+     * @ORM\OneToOne(targetEntity="Nda", inversedBy="object")
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="nda_id", referencedColumnName="nda_id")
      * })
+     * @var Nda
      */
     private $nda;
 }
