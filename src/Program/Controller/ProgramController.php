@@ -18,7 +18,6 @@ use Project\Service\ProjectService;
 use Program\Service\ProgramService;
 use Program\Service\FormServiceAwareInterface;
 use Program\Service\FormService;
-use Program\Entity;
 
 /**
  * @category    Program
@@ -106,7 +105,6 @@ class ProgramController extends AbstractActionController implements
         return new ViewModel(array('call' => $call, 'projects' => $projects));
     }
 
-
     /**
      * @param \Zend\Mvc\Controller\string $layout
      *
@@ -158,7 +156,6 @@ class ProgramController extends AbstractActionController implements
     {
         return $this->getServiceLocator()->get('project_project_service');
     }
-
 
     /**
      * @param $programService

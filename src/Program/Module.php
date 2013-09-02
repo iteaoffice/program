@@ -79,7 +79,7 @@ class Module implements
     /**
      * Listen to the bootstrap event
      *
-     * @param  EventInterface $e
+     * @param EventInterface $e
      *
      * @return array
      */

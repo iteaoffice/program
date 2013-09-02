@@ -26,9 +26,9 @@ class ProgramLink extends AbstractHelper
 {
 
     /**
-     * @param  \Program\Entity\Program $program
-     * @param                          $action
-     * @param                          $show
+     * @param \Program\Entity\Program $program
+     * @param                         $action
+     * @param                         $show
      *
      * @return string
      * @throws \RuntimeException

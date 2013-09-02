@@ -26,9 +26,9 @@ class CallLink extends AbstractHelper
 {
 
     /**
-     * @param  \Program\Entity\Program $call
-     * @param                          $action
-     * @param                          $show
+     * @param \Program\Entity\Program $call
+     * @param                         $action
+     * @param                         $show
      *
      * @return string
      * @throws \RuntimeException

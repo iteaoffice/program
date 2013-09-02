@@ -1,11 +1,23 @@
 <?php
+/**
+ * Debranova copyright message placeholder
+ *
+ * @category    Program
+ * @package     Entity
+ * @author      Johan van der Heide <info@japaveh.nl>
+ * @copyright   Copyright (c) 2004-2013 Debranova
+ */
+namespace Program\Entity;
 
+use Zend\Form\Annotation;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * RoadmapLog
  *
+ * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @Annotation\Name("roadmap_log")
  * @ORM\Table(name="roadmap_log")
  * @ORM\Entity
  */
@@ -18,7 +30,7 @@ class RoadmapLog
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $logId;
+    private $id;
 
     /**
      * @var integer

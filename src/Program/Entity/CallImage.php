@@ -1,15 +1,24 @@
 <?php
-
+/**
+ * Debranova copyright message placeholder
+ *
+ * @category    Program
+ * @package     Entity
+ * @author      Johan van der Heide <info@japaveh.nl>
+ * @copyright   Copyright (c) 2004-2013 Debranova
+ */
+namespace Program\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ProgramcallImage
- *
  * @ORM\Table(name="programcall_image")
  * @ORM\Entity
+ *
+ * @category    Contact
+ * @package     Entity
  */
-class ProgramcallImage
+class CallImage
 {
     /**
      * @var integer
@@ -18,7 +27,7 @@ class ProgramcallImage
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $programcallImageId;
+    private $id;
 
     /**
      * @var string

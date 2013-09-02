@@ -1,13 +1,28 @@
 <?php
+/**
+ * Debranova copyright message placeholder
+ *
+ * @category    Contact
+ * @package     Entity
+ * @author      Johan van der Heide <info@japaveh.nl>
+ * @copyright   Copyright (c) 2004-2013 Debranova
+ */
+namespace Program\Entity;
 
+use Zend\Form\Annotation;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Nda
+ * Entity for a DND
  *
  * @ORM\Table(name="nda")
  * @ORM\Entity
+ * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @Annotation\Name("nda")
+ *
+ * @category    Contact
+ * @package     Entity
  */
 class Nda
 {
@@ -18,7 +33,7 @@ class Nda
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $ndaId;
+    private $id;
 
     /**
      * @var \DateTime

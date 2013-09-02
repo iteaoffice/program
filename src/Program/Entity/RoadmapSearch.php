@@ -1,13 +1,24 @@
 <?php
+/**
+ * Debranova copyright message placeholder
+ *
+ * @category    Program
+ * @package     Entity
+ * @author      Johan van der Heide <info@japaveh.nl>
+ * @copyright   Copyright (c) 2004-2013 Debranova
+ */
+namespace Program\Entity;
 
+use Zend\Form\Annotation;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * RoadmapSearch
- *
+ * RoadmapPromo
  * @ORM\Table(name="roadmap_search")
  * @ORM\Entity
+ * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @Annotation\Name("roadmap_search")
  */
 class RoadmapSearch
 {
@@ -18,7 +29,7 @@ class RoadmapSearch
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $searchId;
+    private $id;
 
     /**
      * @var integer

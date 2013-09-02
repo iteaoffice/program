@@ -130,7 +130,7 @@ class Domain extends EntityAbstract
     }
 
     /**
-     * @param  InputFilterInterface $inputFilter
+     * @param InputFilterInterface $inputFilter
      *
      * @return void
      * @throws \Exception
@@ -321,4 +321,3 @@ class Domain extends EntityAbstract
         return $this->roadmap;
     }
 }
-

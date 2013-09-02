@@ -21,7 +21,7 @@ use Program\Entity;
 /**
  * Create a form for a group
  */
-class ProgramFieldset extends Fieldset
+class ProjectFieldset extends Fieldset
 {
     /**
      * @param \Doctrine\ORM\EntityManager $entityManager

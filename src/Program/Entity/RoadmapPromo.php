@@ -1,13 +1,24 @@
 <?php
+/**
+ * Debranova copyright message placeholder
+ *
+ * @category    Program
+ * @package     Entity
+ * @author      Johan van der Heide <info@japaveh.nl>
+ * @copyright   Copyright (c) 2004-2013 Debranova
+ */
+namespace Program\Entity;
 
+use Zend\Form\Annotation;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * RoadmapPromo
- *
  * @ORM\Table(name="roadmap_promo")
  * @ORM\Entity
+ * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @Annotation\Name("roadmap_promo")
  */
 class RoadmapPromo
 {
@@ -18,7 +29,7 @@ class RoadmapPromo
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $promoId;
+    private $id;
 
     /**
      * @var \DateTime

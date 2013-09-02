@@ -29,8 +29,8 @@ class ProgramService extends ServiceAbstract
     /**
      * Find 1 entity based on the name
      *
-     * @param         $entity
-     * @param         $name
+     * @param   $entity
+     * @param   $name
      *
      * @return object
      */

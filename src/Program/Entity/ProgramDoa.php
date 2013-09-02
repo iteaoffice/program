@@ -1,13 +1,26 @@
 <?php
+/**
+ * Debranova copyright message placeholder
+ *
+ * @category    Program
+ * @package     Entity
+ * @author      Johan van der Heide <info@japaveh.nl>
+ * @copyright   Copyright (c) 2004-2013 Debranova
+ */
+namespace Program\Entity;
 
+use Zend\Form\Annotation;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ProgramDoa
- *
  * @ORM\Table(name="program_doa")
  * @ORM\Entity
+ * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @Annotation\Name("program_doa")
+ *
+ * @category    Program
+ * @package     Entity
  */
 class ProgramDoa
 {
@@ -18,7 +31,7 @@ class ProgramDoa
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $doaId;
+    private $id;
 
     /**
      * @var \DateTime
