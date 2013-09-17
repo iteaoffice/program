@@ -91,7 +91,7 @@ class ProgramDoa
      */
     private $contact;
     /**
-     * @ORM\ManyToOne(targetEntity="Contact\Entity\Organisation", inversedBy="programDoa")
+     * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="programDoa")
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")
      * })

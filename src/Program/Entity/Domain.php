@@ -81,6 +81,11 @@ class Domain extends EntityAbstract
      */
     private $project;
     /**
+     * @ORM\ManyToMany(targetEntity="Organisation\Entity\Organisation", mappedBy="domain")
+     * @var \Organisation\Entity\Organisation[]
+     */
+    private $organisation;
+    /**
      * @ORM\ManyToMany(targetEntity="Contact\Entity\Contact", mappedBy="domain")
      * @Annotation\Exclude()
      * @var \Contact\Entity\Contact[]
@@ -92,7 +97,9 @@ class Domain extends EntityAbstract
      */
     public function __construct()
     {
-        $this->project = new Collections\ArrayCollection();
+        $this->project      = new Collections\ArrayCollection();
+        $this->organisation = new Collections\ArrayCollection();
+        $this->contact      = new Collections\ArrayCollection();
     }
 
     /**

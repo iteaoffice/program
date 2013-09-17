@@ -45,8 +45,6 @@ class Technology
      */
     private $description;
     /**
-     *
-     *
      * @ORM\ManyToOne(targetEntity="Program\Entity\Roadmap", cascade={"persist"}, inversedBy="technology")
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="roadmap_id", referencedColumnName="roadmap_id")
@@ -60,4 +58,10 @@ class Technology
      * @var \Contact\Entity\Contact[]
      */
     private $contact;
+    /**
+     * @ORM\ManyToMany(targetEntity="Organisation\Entity\Organisation", cascade={"persist"}, mappedBy="technology")
+     * @Annotation\Exclude()
+     * @var \Organisation\Entity\Organisation[]
+     */
+    private $organisation;
 }
