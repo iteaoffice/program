@@ -9,7 +9,6 @@
  */
 namespace Program\Entity;
 
-use Zend\InputFilter\InputFilter;
 use Zend\Form\Annotation;
 
 use Doctrine\ORM\Mapping as ORM;
