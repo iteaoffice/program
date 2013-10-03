@@ -37,5 +37,7 @@ return array(
   'Program\Service\ServiceAbstract'             => __DIR__ . '/src/Program/Service/ServiceAbstract.php',
   'Program\Service\ServiceInterface'            => __DIR__ . '/src/Program/Service/ServiceInterface.php',
   'Program\View\Helper\CallLink'                => __DIR__ . '/src/Program/View/Helper/CallLink.php',
+  'Program\View\Helper\DomainLink'              => __DIR__ . '/src/Program/View/Helper/DomainLink.php',
   'Program\View\Helper\ProgramLink'             => __DIR__ . '/src/Program/View/Helper/ProgramLink.php',
+  'Program\View\Helper\TechnologyLink'          => __DIR__ . '/src/Program/View/Helper/TechnologyLink.php',
 );

@@ -16,25 +16,25 @@ use Zend\View\Helper\AbstractHelper;
 use Program\Entity;
 
 /**
- * Create a link to an call
+ * Create a link to an program
  *
  * @category    Program
  * @package     View
  * @subpackage  Helper
  */
-class CallLink extends AbstractHelper
+class TechnologyLink extends AbstractHelper
 {
 
     /**
-     * @param \Program\Entity\Call    $call
-     * @param                         $action
-     * @param                         $show
+     * @param \Program\Entity\Technology $technology
+     * @param                            $action
+     * @param                            $show
      *
      * @return string
      * @throws \RuntimeException
      * @throws \Exception
      */
-    public function __invoke(Entity\Call $call = null, $action = 'view', $show = 'name')
+    public function __invoke(Entity\Technology $technology = null, $action = 'view', $show = 'name')
     {
         $translate = $this->view->plugin('translate');
         $url       = $this->view->plugin('url');
@@ -43,30 +43,31 @@ class CallLink extends AbstractHelper
 
         switch ($action) {
             case 'new':
-                $router = 'zfcadmin/call-manager/new';
-                $text   = sprintf($translate("txt-new-area"));
-                $call   = new Entity\Program();
+                $router     = 'zfcadmin/program-manager/new';
+                $text       = sprintf($translate("txt-new-technology"));
+                $technology = new Entity\Technology();
                 break;
             case 'edit':
-                $router = 'zfcadmin/call-manager/edit';
-                $text   = sprintf($translate("txt-edit-call-%s"), $call);
+                $router = 'zfcadmin/program-manager/edit';
+                $text   = sprintf($translate("txt-edit-technology-%s"), $technology);
                 break;
             case 'view':
                 $router = 'program/view';
-                $text   = sprintf($translate("txt-view-call-%s"), $call);
+                $text   = sprintf($translate("txt-view-technology-%s"), $technology);
                 break;
             case 'list':
-                $router = 'program/list';
-                $text   = sprintf($translate("txt-list-calls"));
-                $call   = new Entity\Call();
+                $router     = 'program/list';
+                $text       = sprintf($translate("txt-list-technologys"));
+                $technology = new Entity\Technology();
                 break;
             default:
                 throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
         }
 
+
         $params = array(
-            'id'     => $call->getId(),
-            'entity' => 'call'
+            'id'     => $technology->getId(),
+            'entity' => 'technology'
         );
 
         $classes     = array();
@@ -87,10 +88,10 @@ class CallLink extends AbstractHelper
                 $classes[]     = "btn btn-primary";
                 break;
             case 'name':
-                $linkContent[] = $call;
+                $linkContent[] = $technology;
                 break;
             default:
-                $linkContent[] = $call;
+                $linkContent[] = $technology;
                 break;
         }
 

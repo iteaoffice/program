@@ -44,7 +44,7 @@ class ProgramLink extends AbstractHelper
         switch ($action) {
             case 'new':
                 $router  = 'zfcadmin/program-manager/new';
-                $text    = sprintf($translate("txt-new-area"));
+                $text    = sprintf($translate("txt-new-program"));
                 $program = new Entity\Program();
                 break;
             case 'edit':
@@ -52,8 +52,13 @@ class ProgramLink extends AbstractHelper
                 $text   = sprintf($translate("txt-edit-program-%s"), $program);
                 break;
             case 'view':
-                $router = 'program/program';
+                $router = 'program/view';
                 $text   = sprintf($translate("txt-view-program-%s"), $program);
+                break;
+            case 'list':
+                $router  = 'program/list';
+                $text    = sprintf($translate("txt-list-program"));
+                $program = new Entity\Program();
                 break;
             default:
                 throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
@@ -70,15 +75,15 @@ class ProgramLink extends AbstractHelper
         switch ($show) {
             case 'icon':
                 if ($action === 'edit') {
-                    $linkContent[] = '<i class="icon-pencil"></i>';
+                    $linkContent[] = ' < i class="icon-pencil" ></i > ';
                 } elseif ($action === 'delete') {
-                    $linkContent[] = '<i class="icon-remove"></i>';
+                    $linkContent[] = ' < i class="icon-remove" ></i > ';
                 } else {
-                    $linkContent[] = '<i class="icon-info-sign"></i>';
+                    $linkContent[] = '<i class="icon-info-sign" ></i > ';
                 }
                 break;
             case 'button':
-                $linkContent[] = '<i class="icon-pencil icon-white"></i> ' . $text;
+                $linkContent[] = ' < i class="icon-pencil icon-white" ></i > ' . $text;
                 $classes[]     = "btn btn-primary";
                 break;
             case 'name':

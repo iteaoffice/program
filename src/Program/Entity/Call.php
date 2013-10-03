@@ -14,6 +14,7 @@ use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Form\Annotation;
 
+use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -110,6 +111,20 @@ class Call extends EntityAbstract
      * @var \Program\Entity\Nda[]
      */
     private $nda;
+    /**
+     * @ORM\ManyToMany(targetEntity="\Publication\Entity\Publication", cascade={"persist"}, mappedBy="call")
+     * @Annotation\Exclude()
+     * @var \Publication\Entity\Publication[]
+     */
+    private $publication;
+
+    /**
+     * Class constructor
+     */
+    public function __construct()
+    {
+        $this->publication = new Collections\ArrayCollection();
+    }
 
     /**
      * Magic Getter

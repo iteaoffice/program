@@ -16,17 +16,17 @@ use Zend\View\Helper\AbstractHelper;
 use Program\Entity;
 
 /**
- * Create a link to an call
+ * Create a link to an domain
  *
  * @category    Program
  * @package     View
  * @subpackage  Helper
  */
-class CallLink extends AbstractHelper
+class DomainLink extends AbstractHelper
 {
 
     /**
-     * @param \Program\Entity\Call    $call
+     * @param \Program\Entity\Domain  $domain
      * @param                         $action
      * @param                         $show
      *
@@ -34,7 +34,7 @@ class CallLink extends AbstractHelper
      * @throws \RuntimeException
      * @throws \Exception
      */
-    public function __invoke(Entity\Call $call = null, $action = 'view', $show = 'name')
+    public function __invoke(Entity\Domain $domain = null, $action = 'view', $show = 'name')
     {
         $translate = $this->view->plugin('translate');
         $url       = $this->view->plugin('url');
@@ -43,30 +43,31 @@ class CallLink extends AbstractHelper
 
         switch ($action) {
             case 'new':
-                $router = 'zfcadmin/call-manager/new';
-                $text   = sprintf($translate("txt-new-area"));
-                $call   = new Entity\Program();
+                $router = 'zfcadmin/program-manager/new';
+                $text   = sprintf($translate("txt-new-domain"));
+                $domain = new Entity\Domain();
                 break;
             case 'edit':
-                $router = 'zfcadmin/call-manager/edit';
-                $text   = sprintf($translate("txt-edit-call-%s"), $call);
+                $router = 'zfcadmin/program-manager/edit';
+                $text   = sprintf($translate("txt-edit-domain-%s"), $domain);
                 break;
             case 'view':
                 $router = 'program/view';
-                $text   = sprintf($translate("txt-view-call-%s"), $call);
+                $text   = sprintf($translate("txt-view-domain-%s"), $domain);
                 break;
             case 'list':
                 $router = 'program/list';
-                $text   = sprintf($translate("txt-list-calls"));
-                $call   = new Entity\Call();
+                $text   = sprintf($translate("txt-list-domains"));
+                $domain = new Entity\Domain();
                 break;
             default:
                 throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
         }
 
+
         $params = array(
-            'id'     => $call->getId(),
-            'entity' => 'call'
+            'id'     => $domain->getId(),
+            'entity' => 'domain'
         );
 
         $classes     = array();
@@ -87,10 +88,10 @@ class CallLink extends AbstractHelper
                 $classes[]     = "btn btn-primary";
                 break;
             case 'name':
-                $linkContent[] = $call;
+                $linkContent[] = $domain;
                 break;
             default:
-                $linkContent[] = $call;
+                $linkContent[] = $domain;
                 break;
         }
 

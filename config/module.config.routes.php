@@ -10,21 +10,7 @@
 return array(
     'router'       => array(
         'routes' => array(
-            'program_shortcut' => array(
-                'type'     => 'Segment',
-                'priority' => -1000,
-                'options'  => array(
-                    'route'       => 'l/:id',
-                    'constraints' => array(
-                        'id' => '\d+',
-                    ),
-                    'defaults'    => array(
-                        'controller' => 'program',
-                        'action'     => 'programRedirect',
-                    ),
-                ),
-            ),
-            'program'          => array(
+            'program'  => array(
                 'type'          => 'Literal',
                 'priority'      => 1000,
                 'options'       => array(
@@ -36,51 +22,34 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes'  => array(
-                    'programs' => array(
+                    'list' => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'    => '/programs.html',
-                            'defaults' => array(
-                                'action' => 'programs',
-                            ),
-                        ),
-                    ),
-                    'program'  => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'       => '/program/[:id].html',
+                            'route'       => '/list/[:entity].html',
                             'constraints' => array(
-                                'id' => '\d+',
+                                'entity' => '[a-zA-Z][a-zA-Z]+',
                             ),
                             'defaults'    => array(
-                                'action' => 'program',
+                                'action' => 'list',
                             ),
                         ),
                     ),
-                    'call'     => array(
+                    'view' => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'       => '/call/[:id].html',
+                            'route'       => '/[:entity]/[:id].html',
                             'constraints' => array(
-                                'id' => '\d+',
+                                'entity' => '[a-zA-Z][a-zA-Z]+',
+                                'id'     => '\d+',
                             ),
                             'defaults'    => array(
-                                'action' => 'call',
-                            ),
-                        ),
-                    ),
-                    'calls'    => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/calls.html',
-                            'defaults' => array(
-                                'action' => 'calls',
+                                'action' => 'view',
                             ),
                         ),
                     ),
                 ),
             ),
-            'zfcadmin'         => array(
+            'zfcadmin' => array(
                 'child_routes' => array(
                     'program-manager' => array(
                         'type'          => 'Segment',

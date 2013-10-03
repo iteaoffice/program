@@ -16,9 +16,10 @@ $config = array(
     ),
     'view_helpers'    => array(
         'invokables' => array(
-            'programLink' => 'Program\View\Helper\ProgramLink',
-            'callLink'    => 'Program\View\Helper\CallLink',
-
+            'programLink'    => 'Program\View\Helper\ProgramLink',
+            'callLink'       => 'Program\View\Helper\CallLink',
+            'domainLink'     => 'Program\View\Helper\DomainLink',
+            'technologyLink' => 'Program\View\Helper\TechnologyLink',
         )
     ),
     'service_manager' => array(
