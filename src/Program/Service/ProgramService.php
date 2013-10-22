@@ -9,6 +9,10 @@
  */
 namespace Program\Service;
 
+use General\Entity\Country;
+
+use Program\Entity\Funder;
+
 /**
  * ProgramService
  *
@@ -38,6 +42,18 @@ class ProgramService extends ServiceAbstract
     {
         return $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->findOneBy(
             array('name' => $name)
+        );
+    }
+
+    /**
+     * @param Country $country
+     *
+     * @return Funder[]
+     */
+    public function findFunderByCountry(Country $country)
+    {
+        return $this->getEntityManager()->getRepository($this->getFullEntityName('funder'))->findBy(
+            array('country' => $country)
         );
     }
 }

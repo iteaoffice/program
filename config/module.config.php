@@ -27,7 +27,7 @@ $config = array(
             'program-assertion' => 'Program\Acl\Assertion\Program',
         ),
         'invokables' => array(
-            'program_generic_service'     => 'Program\Service\ProgramService',
+            'program_program_service'     => 'Program\Service\ProgramService',
             'program_form_service'        => 'Program\Service\FormService',
             'program_program_form_filter' => 'Program\Form\FilterCreateProgram',
 
