@@ -56,4 +56,27 @@ class ProgramService extends ServiceAbstract
             array('country' => $country)
         );
     }
+
+    /**
+     * Return an object with the first and last call in the database
+     *
+     * @return \stdClass
+     */
+    public function findFirstAndLastCall()
+    {
+        $firstCall = $this->getEntityManager()->getRepository($this->getFullEntityName('call'))->findOneBy(
+            array(),
+            array('call' => 'ASC')
+        );
+        $lastCall  = $this->getEntityManager()->getRepository($this->getFullEntityName('call'))->findOneBy(
+            array(),
+            array('call' => 'DESC')
+        );
+
+        $callSpan            = new \stdClass();
+        $callSpan->firstCall = $firstCall;
+        $callSpan->lastCall  = $lastCall;
+
+        return $callSpan;
+    }
 }
