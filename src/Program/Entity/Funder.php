@@ -14,7 +14,7 @@ use Zend\Form\Annotation;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Organisation
+ * Program
  *
  * @ORM\Table(name="funder")
  * @ORM\Entity

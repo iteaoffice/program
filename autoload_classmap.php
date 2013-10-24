@@ -15,6 +15,7 @@ return array(
   'Program\Entity\Domain'                       => __DIR__ . '/src/Program/Entity/Domain.php',
   'Program\Entity\EntityAbstract'               => __DIR__ . '/src/Program/Entity/EntityAbstract.php',
   'Program\Entity\EntityInterface'              => __DIR__ . '/src/Program/Entity/EntityInterface.php',
+  'Program\Entity\Funder'                       => __DIR__ . '/src/Program/Entity/Funder.php',
   'Program\Entity\HydrateInterface'             => __DIR__ . '/src/Program/Entity/HydrateInterface.php',
   'Program\Entity\Nda'                          => __DIR__ . '/src/Program/Entity/Nda.php',
   'Program\Entity\NdaObject'                    => __DIR__ . '/src/Program/Entity/NdaObject.php',
