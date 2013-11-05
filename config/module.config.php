@@ -14,14 +14,6 @@ $config = array(
             'program-manager' => 'Program\Controller\ProgramManagerController',
         ),
     ),
-    'view_helpers'    => array(
-        'invokables' => array(
-            'programLink'    => 'Program\View\Helper\ProgramLink',
-            'callLink'       => 'Program\View\Helper\CallLink',
-            'domainLink'     => 'Program\View\Helper\DomainLink',
-            'technologyLink' => 'Program\View\Helper\TechnologyLink',
-        )
-    ),
     'service_manager' => array(
         'factories'  => array(
             'program-assertion' => 'Program\Acl\Assertion\Program',

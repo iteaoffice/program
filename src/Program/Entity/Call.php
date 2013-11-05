@@ -117,6 +117,12 @@ class Call extends EntityAbstract
      * @var \Publication\Entity\Publication[]
      */
     private $publication;
+    /**
+     * @ORM\ManyToMany(targetEntity="Event\Entity\Meeting\Meeting", cascade={"persist"}, mappedBy="call")
+     * @Annotation\Exclude()
+     * @var \Event\Entity\Meeting\Meeting[]
+     */
+    private $meeting;
 
     /**
      * Class constructor
@@ -124,6 +130,7 @@ class Call extends EntityAbstract
     public function __construct()
     {
         $this->publication = new Collections\ArrayCollection();
+        $this->meeting     = new Collections\ArrayCollection();
     }
 
     /**
@@ -475,5 +482,37 @@ class Call extends EntityAbstract
     public function getNda()
     {
         return $this->nda;
+    }
+
+    /**
+     * @param \Event\Entity\Meeting\Meeting[] $meeting
+     */
+    public function setMeeting($meeting)
+    {
+        $this->meeting = $meeting;
+    }
+
+    /**
+     * @return \Event\Entity\Meeting\Meeting[]
+     */
+    public function getMeeting()
+    {
+        return $this->meeting;
+    }
+
+    /**
+     * @param \Publication\Entity\Publication[] $publication
+     */
+    public function setPublication($publication)
+    {
+        $this->publication = $publication;
+    }
+
+    /**
+     * @return \Publication\Entity\Publication[]
+     */
+    public function getPublication()
+    {
+        return $this->publication;
     }
 }

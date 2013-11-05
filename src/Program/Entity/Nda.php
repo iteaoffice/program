@@ -9,12 +9,16 @@
  */
 namespace Program\Entity;
 
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\InputFilterInterface;
+use Zend\InputFilter\Factory as InputFactory;
 use Zend\Form\Annotation;
 
+use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Entity for a DND
+ * Entity for a nda
  *
  * @ORM\Table(name="nda")
  * @ORM\Entity
@@ -27,25 +31,20 @@ use Doctrine\ORM\Mapping as ORM;
 class Nda
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="nda_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @var integer
      */
     private $id;
-
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="date_approved", type="datetime", nullable=true)
+     * @var \DateTime
      */
     private $dateApproved;
-
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="date_signed", type="date", nullable=true)
+     * @var \DateTime
      */
     private $dateSigned;
     /**
@@ -57,9 +56,8 @@ class Nda
      */
     private $contentType;
     /**
-     * @var integer
-     *
      * @ORM\Column(name="size", type="integer", nullable=false)
+     * @var integer
      */
     private $size;
     /**
@@ -67,15 +65,13 @@ class Nda
      * @var \DateTime
      */
     private $dateCreated;
-
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="date_updated", type="datetime", nullable=true)
+     * @var \DateTime
      */
     private $dateUpdated;
     /**
-     * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", inversedBy="nda")
+     * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", cascade={"persist"}, inversedBy="nda")
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id")
      * })
@@ -91,9 +87,169 @@ class Nda
      */
     private $call;
     /**
-     * @ORM\OneToOne(targetEntity="\Program\Entity\NdaObject", cascade={"persist"}, mappedBy="nda")
+     * @ORM\OneToMany(targetEntity="\Program\Entity\NdaObject", cascade={"persist"}, mappedBy="nda")
      * @Annotation\Exclude()
      * @var \Program\Entity\Nda
      */
     private $object;
+
+    /**
+     * @param \Program\Entity\Call $call
+     */
+    public function setCall($call)
+    {
+        $this->call = $call;
+    }
+
+    /**
+     * @return \Program\Entity\Call
+     */
+    public function getCall()
+    {
+        return $this->call;
+    }
+
+    /**
+     * @param \Contact\Entity\Contact $contact
+     */
+    public function setContact($contact)
+    {
+        $this->contact = $contact;
+    }
+
+    /**
+     * @return \Contact\Entity\Contact
+     */
+    public function getContact()
+    {
+        return $this->contact;
+    }
+
+    /**
+     * @param \General\Entity\ContentType $contentType
+     */
+    public function setContentType($contentType)
+    {
+        $this->contentType = $contentType;
+    }
+
+    /**
+     * @return \General\Entity\ContentType
+     */
+    public function getContentType()
+    {
+        return $this->contentType;
+    }
+
+    /**
+     * @param \DateTime $dateApproved
+     */
+    public function setDateApproved($dateApproved)
+    {
+        $this->dateApproved = $dateApproved;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateApproved()
+    {
+        return $this->dateApproved;
+    }
+
+    /**
+     * @param \DateTime $dateCreated
+     */
+    public function setDateCreated($dateCreated)
+    {
+        $this->dateCreated = $dateCreated;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
+
+    /**
+     * @param \DateTime $dateSigned
+     */
+    public function setDateSigned($dateSigned)
+    {
+        $this->dateSigned = $dateSigned;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateSigned()
+    {
+        return $this->dateSigned;
+    }
+
+    /**
+     * @param \DateTime $dateUpdated
+     */
+    public function setDateUpdated($dateUpdated)
+    {
+        $this->dateUpdated = $dateUpdated;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateUpdated()
+    {
+        return $this->dateUpdated;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param \Program\Entity\Nda $object
+     */
+    public function setObject($object)
+    {
+        $this->object = $object;
+    }
+
+    /**
+     * @return \Program\Entity\Nda
+     */
+    public function getObject()
+    {
+        return $this->object;
+    }
+
+    /**
+     * @param int $size
+     */
+    public function setSize($size)
+    {
+        $this->size = $size;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSize()
+    {
+        return $this->size;
+    }
 }

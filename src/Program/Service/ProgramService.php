@@ -11,7 +11,9 @@ namespace Program\Service;
 
 use General\Entity\Country;
 
+use Contact\Entity\Contact;
 use Program\Entity\Funder;
+use Program\Entity\Call;
 
 /**
  * ProgramService
@@ -78,5 +80,21 @@ class ProgramService extends ServiceAbstract
         $callSpan->lastCall  = $lastCall;
 
         return $callSpan;
+    }
+
+    /**
+     * @param Call    $call
+     * @param Contact $contact
+     *
+     * @return \Program\Entity\Nda
+     */
+    public function findNdaByCallAndContact(Call $call, Contact $contact)
+    {
+        return $this->getEntityManager()->getRepository($this->getFullEntityName('nda'))->findOneBy(
+            array(
+                'call'    => $call,
+                'contact' => $contact
+            )
+        );
     }
 }

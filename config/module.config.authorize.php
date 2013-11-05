@@ -7,6 +7,10 @@
  * @author      Johan van der Heide <info@japaveh.nl>
  * @copyright   Copyright (c) 2004-2013 Japaveh Webdesign (http://japaveh.nl)
  */
+$program = new \Program\Entity\Program();
+$call    = new \Program\Entity\Call();
+
+
 return array(
     'bjyauthorize' => array(
         // resource providers provide a list of resources that will be tracked
@@ -27,8 +31,8 @@ return array(
                 'allow' => array(
                     // allow guests and users (and admins, through inheritance)
                     // the "wear" privilege on the resource "pants"d
-                    array(array(4, 2, 3), 'program', array('listings', 'view')),
-                    array(array(1), 'program', array('edit', 'new', 'delete'))
+                    array(array('public'), 'program', array('listings', 'view')),
+                    array(array('admin'), 'program', array('edit', 'new', 'delete'))
                 ),
                 // Don't mix allow/deny rules if you are using role inheritance.
                 // There are some weird bugs.
@@ -43,10 +47,8 @@ return array(
              * access to all routes unless they are specified here.
              */
             'BjyAuthorize\Guard\Route' => array(
-                array('route' => 'program/programs', 'roles' => array(4, 2, 3)),
-                array('route' => 'program/program', 'roles' => array(4, 2, 3)),
-                array('route' => 'program/calls', 'roles' => array(4, 2, 3)),
-                array('route' => 'program/call', 'roles' => array(4, 2, 3)),
+                array('route' => 'route-' . $program->get('underscore_full_entity_name'), 'roles' => array()),
+                array('route' => 'route-' . $call->get('underscore_full_entity_name'), 'roles' => array()),
             ),
         ),
     ),

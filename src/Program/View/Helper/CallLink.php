@@ -26,12 +26,12 @@ class CallLink extends AbstractHelper
 {
 
     /**
-     * @param \Program\Entity\Call    $call
-     * @param                         $action
-     * @param                         $show
+     * @param Entity\Call $call
+     * @param string      $action
+     * @param string      $show
+     * @param bool        $active
      *
      * @return string
-     * @throws \RuntimeException
      * @throws \Exception
      */
     public function __invoke(Entity\Call $call = null, $action = 'view', $show = 'name')
@@ -39,6 +39,18 @@ class CallLink extends AbstractHelper
         $translate = $this->view->plugin('translate');
         $url       = $this->view->plugin('url');
         $serverUrl = $this->view->plugin('serverUrl');
+
+        $routeMatch = $this->view->getHelperPluginManager()->getServiceLocator()
+            ->get('application')
+            ->getMvcEvent()
+            ->getRouteMatch();
+
+        $params = array(
+            'id'     => $call->getId(),
+            'entity' => 'call'
+        );
+
+
         $isAllowed = $this->view->plugin('isAllowed');
 
         switch ($action) {
@@ -51,9 +63,26 @@ class CallLink extends AbstractHelper
                 $router = 'zfcadmin/call-manager/edit';
                 $text   = sprintf($translate("txt-edit-call-%s"), $call);
                 break;
+            case 'view-list':
+
+                /**
+                 * For a list in the front-end simply use the MatchedRouteName
+                 */
+                $router           = $routeMatch->getMatchedRouteName();
+                $params['docRef'] = $routeMatch->getParam('docRef');
+                $params['call']   = $call->getId();
+
+                $text = sprintf($translate("txt-view-call-%s"), $call);
+                break;
             case 'view':
-                $router = 'program/view';
-                $text   = sprintf($translate("txt-view-call-%s"), $call);
+
+                /**
+                 * For a list in the front-end simply use the MatchedRouteName
+                 */
+                $router         = 'route-' . $call->get("underscore_full_entity_name");
+                $params['call'] = $call->getId();
+
+                $text = sprintf($translate("txt-view-call-%s"), $call);
                 break;
             case 'list':
                 $router = 'program/list';
@@ -64,10 +93,6 @@ class CallLink extends AbstractHelper
                 throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
         }
 
-        $params = array(
-            'id'     => $call->getId(),
-            'entity' => 'call'
-        );
 
         $classes     = array();
         $linkContent = array();
