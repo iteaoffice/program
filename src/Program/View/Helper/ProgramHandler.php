@@ -150,7 +150,7 @@ class ProgramHandler extends AbstractHelper
             'program/partial/call-selector.twig',
             array(
                 'calls'  => $calls,
-                'callId' => $this->getCall()->getId()
+                'callId' => !is_null($this->getCall()) ? $this->getCall()->getId() : null
             )
         );
     }
