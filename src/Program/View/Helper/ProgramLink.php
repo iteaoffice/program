@@ -41,6 +41,16 @@ class ProgramLink extends AbstractHelper
         $serverUrl = $this->view->plugin('serverUrl');
         $isAllowed = $this->view->plugin('isAllowed');
 
+        $routeMatch = $this->view->getHelperPluginManager()->getServiceLocator()
+            ->get('application')
+            ->getMvcEvent()
+            ->getRouteMatch();
+
+        $params = array(
+            'id'     => $program->getId(),
+            'entity' => 'program'
+        );
+
         switch ($action) {
             case 'new':
                 $router  = 'zfcadmin/program-manager/new';
@@ -55,6 +65,17 @@ class ProgramLink extends AbstractHelper
                 $router = 'program/view';
                 $text   = sprintf($translate("txt-view-program-%s"), $program);
                 break;
+            case 'view-list':
+
+                /**
+                 * For a list in the front-end simply use the MatchedRouteName
+                 */
+                $router            = $routeMatch->getMatchedRouteName();
+                $params['docRef']  = $routeMatch->getParam('docRef');
+                $params['program'] = $program->getId();
+
+                $text = sprintf($translate("txt-view-program-%s"), $program);
+                break;
             case 'list':
                 $router  = 'program/list';
                 $text    = sprintf($translate("txt-list-program"));
@@ -64,10 +85,6 @@ class ProgramLink extends AbstractHelper
                 throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
         }
 
-        $params = array(
-            'id'     => $program->getId(),
-            'entity' => 'program'
-        );
 
         $classes     = array();
         $linkContent = array();

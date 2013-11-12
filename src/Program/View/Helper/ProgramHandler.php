@@ -17,6 +17,8 @@ use Zend\Paginator\Adapter\ArrayAdapter;
 use Zend\Paginator\Paginator;
 use Zend\Mvc\Router\Http\RouteMatch;
 
+use Content\Entity\Handler;
+use General\View\Helper\CountryMap;
 use Program\Entity\Program;
 use Program\Entity\Call;
 use Program\Service\ProgramService;
@@ -43,6 +45,14 @@ class ProgramHandler extends AbstractHelper
      * @var Call
      */
     protected $call;
+    /**
+     * @var Program
+     */
+    protected $program;
+    /**
+     * @var CountryMap
+     */
+    protected $countryMap;
 
     /**
      * @param HelperPluginManager $helperPluginManager
@@ -149,8 +159,9 @@ class ProgramHandler extends AbstractHelper
         return $this->getView()->render(
             'program/partial/call-selector.twig',
             array(
-                'calls'  => $calls,
-                'callId' => !is_null($this->getCall()) ? $this->getCall()->getId() : null
+                'calls'     => $calls,
+                'callId'    => !is_null($this->getCall()) ? $this->getCall()->getId() : null,
+                'programId' => !is_null($this->getProgram()) ? $this->getProgram()->getId() : null
             )
         );
     }
@@ -174,5 +185,13 @@ class ProgramHandler extends AbstractHelper
     public function getCall()
     {
         return $this->call;
+    }
+
+    /**
+     * @return \Program\Entity\Program
+     */
+    public function getProgram()
+    {
+        return $this->program;
     }
 }

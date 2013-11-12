@@ -29,7 +29,6 @@ class CallLink extends AbstractHelper
      * @param Entity\Call $call
      * @param string      $action
      * @param string      $show
-     * @param bool        $active
      *
      * @return string
      * @throws \Exception
