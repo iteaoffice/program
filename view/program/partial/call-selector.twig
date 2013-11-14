@@ -2,7 +2,7 @@
 
 {% set programId = 0 %}
 
-<ul class="nav nav-pills">
+<ul class="nav nav-pills nav-stacked">
     {% for call in calls|reverse %}
         {% if call.program.id != programId %}
             <li {% if programId == call.program.id %}class="active"{% endif %}>{{ programLink(call.program, 'view-list','name') }}</li>
