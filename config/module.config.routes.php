@@ -22,28 +22,27 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes'  => array(
-                    'list' => array(
+                    'view-nda-call'   => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'       => '/list/[:entity].html',
+                            'route'       => '/nda/view/call-[:call].html',
                             'constraints' => array(
-                                'entity' => '[a-zA-Z][a-zA-Z]+',
+                                'call' => '\d+'
                             ),
                             'defaults'    => array(
-                                'action' => 'list',
+                                'action' => 'view-nda-call',
                             ),
                         ),
                     ),
-                    'view' => array(
+                    'render-nda-call' => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'       => '/[:entity]/[:id].html',
+                            'route'       => '/nda/render/call-[:call].html',
                             'constraints' => array(
-                                'entity' => '[a-zA-Z][a-zA-Z]+',
-                                'id'     => '\d+',
+                                'call' => '\d+'
                             ),
                             'defaults'    => array(
-                                'action' => 'view',
+                                'action' => 'render-nda-call',
                             ),
                         ),
                     ),

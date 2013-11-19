@@ -17,6 +17,8 @@ use Zend\Form\Annotation;
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 
+use Gedmo\Mapping\Annotation AS Gedmo;
+
 /**
  * Entity for a nda
  *
@@ -44,6 +46,7 @@ class Nda
     private $dateApproved;
     /**
      * @ORM\Column(name="date_signed", type="date", nullable=true)
+     * @Gedmo\Timestampable(on="create")
      * @var \DateTime
      */
     private $dateSigned;
@@ -61,12 +64,14 @@ class Nda
      */
     private $size;
     /**
-     * @ORM\Column(name="date_created", type="datetime", nullable=true)
+     * @ORM\Column(name="date_created", type="datetime", nullable=false)
+     * @Gedmo\Timestampable(on="create")
      * @var \DateTime
      */
     private $dateCreated;
     /**
      * @ORM\Column(name="date_updated", type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="update")
      * @var \DateTime
      */
     private $dateUpdated;

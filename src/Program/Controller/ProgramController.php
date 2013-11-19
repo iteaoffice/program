@@ -9,6 +9,9 @@
  */
 namespace Program\Controller;
 
+use Program\Builder\Nda;
+use Program\Form\FilterUploadNda;
+use Program\Form\UploadNda;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -44,66 +47,73 @@ class ProgramController extends AbstractActionController implements
      * Message container
      * @return array|void
      */
-    public function indexAction()
-    {
-    }
-
-    /**
-     * Give a list of programs
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
-    public function programsAction()
-    {
-        $programs = $this->getProgramService()->findAll('program');
-
-        return new ViewModel(array('programs' => $programs));
-    }
-
-    /**
-     * Show the details of 1 program
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
-    public function programAction()
-    {
-        $program  = $this->getProgramService()->findEntityById(
-            'program',
-            $this->getEvent()->getRouteMatch()->getParam('id')
-        );
-        $programs = $this->getProgramService()->findAll('program');
-
-        return new ViewModel(array('program' => $program, 'programs' => $programs));
-    }
-
-    /**
-     * Show the details of 1 program
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
-    public function callsAction()
-    {
-        $calls = $this->getProgramService()->findCalls();
-
-        return new ViewModel(array('calls' => $calls));
-    }
-
-    /**
-     * Show the details of 1 call
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
-    public function callAction()
+    public function viewNdaCallAction()
     {
         $call = $this->getProgramService()->findEntityById(
             'call',
-            $this->getEvent()->getRouteMatch()->getParam('id')
+            $this->getEvent()->getRouteMatch()->getParam('call')
         );
 
-        $projects = $this->getProjectService()->findProjectsPerCall($call);
+        if (is_null($call)) {
+            return $this->notFoundAction();
+        }
 
-        return new ViewModel(array('call' => $call, 'projects' => $projects));
+        $form = new UploadNda();
+
+        if ($this->getRequest()->isPost()) {
+            $data = array_merge_recursive(
+                $this->getRequest()->getPost()->toArray(),
+                $this->getRequest()->getFiles()->toArray()
+            );
+            $form->setData($data);
+            if ($form->isValid()) {
+                var_dump($form->getData('file'));
+                die();
+                $this->getProgramService()->uploadNda(
+                    $form->getData('file'),
+                    $this->zfcUserAuthentication()->getIdentity(),
+                    $call
+                );
+            }
+        }
+
+        return new ViewModel(
+            array(
+                'call' => $call,
+                'form' => $form
+            )
+        );
     }
+
+    /**
+     * Message container
+     * @return array|void
+     */
+    public function renderNdaCallAction()
+    {
+        $call = $this->getProgramService()->findEntityById(
+            'call',
+            $this->getEvent()->getRouteMatch()->getParam('call')
+        );
+
+        if (is_null($call)) {
+            return $this->notFoundAction();
+        }
+
+        $builderNda = new Nda($this->zfcUserAuthentication()->getIdentity(), $call);
+
+        $response = $this->getResponse();
+        $response->getHeaders()
+            ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
+            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
+            ->addHeaderLine("Pragma: public")
+            ->addHeaderLine('Content-Type: application/pdf');
+
+        $response->setContent($builderNda->getPdf());
+
+        return $response;
+    }
+
 
     /**
      * @param \Zend\Mvc\Controller\string $layout
@@ -146,7 +156,7 @@ class ProgramController extends AbstractActionController implements
      */
     public function getProgramService()
     {
-        return $this->getServiceLocator()->get('program_generic_service');
+        return $this->getServiceLocator()->get('program_program_service');
     }
 
     /**

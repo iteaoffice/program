@@ -1,0 +1,40 @@
+<h1>{{ translate("txt-submit-non-disclosure-agreement") }}</h1>
+
+<div class="alert alert-block alert-info">
+    <div class="alert-heading"><h4>Submit your Non-Disclosure-Agreement</h4></div>
+    <ul>
+        <li>Download the personalised Non-Disclosure-Agreement from this page;
+        <li>Print the document;
+        <li>Have the document signed by the authorised person in your organisation to do so;
+        <li>Scan the signed document;
+        <li>Upload the scanned document on this page.
+    </ul>
+</div>
+
+
+<h2>{{ translate("txt-download-personalised-non-disclosure-agreement") }}</h2>
+<dl class="dl-horizontal">
+    <dt>{{ translate("txt-program-call") }}</dt>
+    <dd>{{ callLink(call,'view', 'name') }}</dd>
+    <dt>{{ translate("txt-contact") }}</dt>
+    <dd>{{ zfcUserIdentity() }}</dd>
+</dl>
+
+{{ ndaLink(null, 'render-call', 'button', call ) }}
+
+<h2>{{ translate("txt-upload-non-disclosure-agreement") }}</h2>
+<dl class="dl-horizontal">
+    <dt>{{ translate("txt-program-call") }}</dt>
+    <dd>{{ callLink(call,'view', 'name') }}</dd>
+    <dt>{{ translate("txt-contact") }}</dt>
+    <dd>{{ zfcUserIdentity() }}</dd>
+</dl>
+
+{% do form.prepare() %}
+    {{ form().openTag(form)|raw }}
+{{ formrow(form.get('file')) }}
+
+<span class="help-block">{{ translate("txt-upload-signed-nda") }}</span>
+{{ formelement(form.get('submit')) }}
+
+{{ form().closeTag()|raw }}

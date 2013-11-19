@@ -10,10 +10,13 @@
 namespace Program\Service;
 
 use General\Entity\Country;
+use General\Service\GeneralService;
 
 use Contact\Entity\Contact;
 use Program\Entity\Funder;
 use Program\Entity\Call;
+use Program\Entity\Nda;
+use Program\Entity\NdaObject;
 
 /**
  * ProgramService
@@ -31,6 +34,10 @@ class ProgramService extends ServiceAbstract
      * @var ProgramService
      */
     protected $programService;
+    /**
+     * @var GeneralService
+     */
+    protected $generalService;
 
     /**
      * Find 1 entity based on the name
@@ -96,5 +103,52 @@ class ProgramService extends ServiceAbstract
                 'contact' => $contact
             )
         );
+    }
+
+    /**
+     * Upload a NDA to the system and store it for the user
+     *
+     * @param array   $file
+     * @param Contact $contact
+     * @param Call    $call
+     *
+     * @return Nda
+     */
+    public function uploadNda(array $file, Contact $contact, Call $call = null)
+    {
+        var_dump($file);
+        die();
+        $ndaObject = new NdaObject();
+        $ndaObject->setObject(file_get_contents($file['tmp_name']));
+
+        $nda = new Nda();
+        $nda->setContact($contact);
+        $nda->setCall($call);
+        $nda->setSize($file['size']);
+        $nda->setContentType($this->generalService->findContentTypeByContentTypeName($file['type']));
+
+        $ndaObject->setNda($nda);
+
+        return $this->newEntity($nda);
+    }
+
+    /**
+     * @param \General\Service\GeneralService $generalService
+     */
+    public function setGeneralService($generalService)
+    {
+        $this->generalService = $generalService;
+    }
+
+    /**
+     * @return \General\Service\GeneralService
+     */
+    public function getGeneralService()
+    {
+        if (is_null($this->generalService)) {
+            $this->setGeneralService($this->getServiceLocator()->get('general_general_service'));
+        }
+
+        return $this->generalService;
     }
 }

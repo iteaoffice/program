@@ -10,16 +10,17 @@
 
 return array(
     'factories'  => array(
-        'programHandler' => function ($sm) {
-            return new \Program\View\Helper\ProgramHandler($sm);
-        },
+        'programHandler'      => function ($sm) {
+                return new \Program\View\Helper\ProgramHandler($sm);
+            },
         'programServiceProxy' => function ($sm) {
-            return new \Program\View\Helper\ProgramServiceProxy($sm);
-        },
+                return new \Program\View\Helper\ProgramServiceProxy($sm);
+            },
     ),
     'invokables' => array(
         'programLink'    => 'Program\View\Helper\ProgramLink',
         'callLink'       => 'Program\View\Helper\CallLink',
+        'ndaLink'        => 'Program\View\Helper\NdaLink',
         'domainLink'     => 'Program\View\Helper\DomainLink',
         'technologyLink' => 'Program\View\Helper\TechnologyLink',
     )

@@ -95,17 +95,6 @@ class Call extends EntityAbstract
      */
     private $roadmap;
     /**
-     * @ORM\ManyToMany(targetEntity="Program\Entity\Nda", cascade={"persist"}, inversedBy="call")
-     * @ORM\JoinTable(name="programcall_nda",
-     *    joinColumns={@ORM\JoinColumn(name="programcall_id", referencedColumnName="programcall_id")},
-     *    inverseJoinColumns={@ORM\JoinColumn(name="nda_id", referencedColumnName="nda_id")}
-     * )
-     * @Annotation\Exclude()
-     * @var \Program\Entity\Nda[]
-     * private $nda;
-     * @todo: Is this a many-to-many or one-to-many. The database suggests both
-     */
-    /**
      * @ORM\OneToMany(targetEntity="Program\Entity\Nda", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      * @var \Program\Entity\Nda[]
@@ -131,6 +120,7 @@ class Call extends EntityAbstract
     {
         $this->publication = new Collections\ArrayCollection();
         $this->meeting     = new Collections\ArrayCollection();
+        $this->nda         = new Collections\ArrayCollection();
     }
 
     /**
@@ -314,7 +304,6 @@ class Call extends EntityAbstract
             'poCloseDate'  => $this->poCloseDate,
             'fppOpenDate'  => $this->fppOpenDate,
             'fppCloseDate' => $this->fppCloseDate,
-            'call'         => $this->call,
             'nda'          => $this->nda,
         );
     }
