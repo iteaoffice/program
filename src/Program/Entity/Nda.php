@@ -30,7 +30,7 @@ use Gedmo\Mapping\Annotation AS Gedmo;
  * @category    Contact
  * @package     Entity
  */
-class Nda
+class Nda extends EntityAbstract
 {
     /**
      * @ORM\Column(name="nda_id", type="integer", nullable=false)
@@ -94,9 +94,129 @@ class Nda
     /**
      * @ORM\OneToMany(targetEntity="\Program\Entity\NdaObject", cascade={"persist"}, mappedBy="nda")
      * @Annotation\Exclude()
-     * @var \Program\Entity\Nda
+     * @var \Program\Entity\NdaObject
      */
     private $object;
+
+    /**
+     * @param $property
+     *
+     * @return mixed
+     */
+    public function __get($property)
+    {
+        return $this->$property;
+    }
+
+    /**
+     * @param $property
+     * @param $value
+     *
+     * @return void
+     */
+    public function __set($property, $value)
+    {
+        $this->$property = $value;
+    }
+
+    /**
+     * ToString
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->domain;
+    }
+
+    /**
+     * Needed for the hydration of form elements
+     *
+     * @return array
+     */
+    public function getArrayCopy()
+    {
+        return array(
+            'id'           => $this->id,
+            'dateApproved' => $this->dateApproved,
+            'dateSigned'   => $this->dateSigned,
+            'contentType'  => $this->contentType,
+            'size'         => $this->size,
+            'dateCreated'  => $this->dateCreated,
+            'dateUpdated'  => $this->dateUpdated,
+            'contact'      => $this->contact,
+            'call'         => $this->call,
+            'object'       => $this->object,
+        );
+    }
+
+    public function populate()
+    {
+        return $this->getArrayCopy();
+    }
+
+    /**
+     * @param InputFilterInterface $inputFilter
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function setInputFilter(InputFilterInterface $inputFilter)
+    {
+        throw new \Exception(sprintf("This class %s is unused", __CLASS__));
+    }
+
+    /**
+     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
+     */
+    public function getInputFilter()
+    {
+        if (!$this->inputFilter) {
+            $inputFilter = new InputFilter();
+            $factory     = new InputFactory();
+
+            $inputFilter->add(
+                $factory->createInput(
+                    array(
+                        'name'     => 'dateApproved',
+                        'required' => false,
+                    )
+                )
+            );
+
+            $inputFilter->add(
+                $factory->createInput(
+                    array(
+                        'name'     => 'contact',
+                        'required' => true,
+                    )
+                )
+            );
+
+            $inputFilter->add(
+                $factory->createInput(
+                    array(
+                        'name'     => 'call',
+                        'required' => true,
+                    )
+                )
+            );
+
+            $inputFilter->add(
+                $factory->createInput(
+                    array(
+                        'name'     => 'program',
+                        'required' => true,
+                    )
+                )
+            );
+
+
+            $this->inputFilter = $inputFilter;
+        }
+
+        return $this->inputFilter;
+    }
+
 
     /**
      * @param \Program\Entity\Call $call
@@ -227,7 +347,7 @@ class Nda
     }
 
     /**
-     * @param \Program\Entity\Nda $object
+     * @param \Program\Entity\NdaObject $object
      */
     public function setObject($object)
     {
@@ -235,11 +355,15 @@ class Nda
     }
 
     /**
-     * @return \Program\Entity\Nda
+     * @return \Program\Entity\NdaObject|null
      */
     public function getObject()
     {
-        return $this->object;
+        if ($this->object->count() > 0) {
+            return $this->object[0];
+        } else {
+            return null;
+        }
     }
 
     /**

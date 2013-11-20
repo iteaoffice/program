@@ -46,7 +46,7 @@ class RoadmapTest extends \PHPUnit_Framework_TestCase
 
         $this->roadmapData = array(
             'roadmap'      => 2,
-            'dateReleased' => new DateTime(),
+            'dateReleased' => new \DateTime(),
             'description'  => 'This is the first roadmap'
         );
 

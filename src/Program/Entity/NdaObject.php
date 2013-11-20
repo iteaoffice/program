@@ -9,6 +9,9 @@
  */
 namespace Program\Entity;
 
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\InputFilterInterface;
+use Zend\InputFilter\Factory as InputFactory;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @category    Program
  * @package     Entity
  */
-class NdaObject
+class NdaObject extends EntityAbstract
 {
     /**
      * @ORM\Column(name="object_id", type="integer", nullable=false)
@@ -35,11 +38,87 @@ class NdaObject
     /**
      * @ORM\ManyToOne(targetEntity="Nda", inversedBy="object", cascade={"persist"})
      * @ORM\JoinColumns({
-     * @ORM\JoinColumn(name="nda_id", referencedColumnName="nda_id")
+     * @ORM\JoinColumn(name="nda_id", referencedColumnName="nda_id",nullable=false)
      * })
      * @var Nda
      */
     private $nda;
+
+    /**
+     * @param $property
+     *
+     * @return mixed
+     */
+    public function __get($property)
+    {
+        return $this->$property;
+    }
+
+    /**
+     * @param $property
+     * @param $value
+     *
+     * @return void
+     */
+    public function __set($property, $value)
+    {
+        $this->$property = $value;
+    }
+
+    /**
+     * ToString
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->domain;
+    }
+
+    /**
+     * Needed for the hydration of form elements
+     *
+     * @return array
+     */
+    public function getArrayCopy()
+    {
+        return array(
+            'id'     => $this->id,
+            'object' => $this->object,
+            'nda'    => $this->nda,
+        );
+    }
+
+    public function populate()
+    {
+        return $this->getArrayCopy();
+    }
+
+    /**
+     * @param InputFilterInterface $inputFilter
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function setInputFilter(InputFilterInterface $inputFilter)
+    {
+        throw new \Exception(sprintf("This class %s is unused", __CLASS__));
+    }
+
+    /**
+     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
+     */
+    public function getInputFilter()
+    {
+        if (!$this->inputFilter) {
+            $inputFilter = new InputFilter();
+            $factory     = new InputFactory();
+
+
+            $this->inputFilter = $inputFilter;
+        }
+
+        return $this->inputFilter;
+    }
 
     /**
      * @param int $id

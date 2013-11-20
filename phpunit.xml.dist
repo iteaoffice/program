@@ -17,9 +17,12 @@
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./src</directory>
+            <directory suffix=".php">./../library/Builder</directory>
         </whitelist>
     </filter>
     <logging>
+        <!--<log type="coverage-html" target="./log/report" charset="UTF-8" yui="true"-->
+             <!--highlight="true" lowUpperBound="50" highLowerBound="80"/>-->
         <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
         <log type="coverage-clover" target="./clover.xml"/>
     </logging>

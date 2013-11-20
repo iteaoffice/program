@@ -2,7 +2,7 @@
 /**
  * Japaveh Webdesign copyright message placeholder
  *
- * @category    Program
+ * @category    Project
  * @package     Form
  * @author      Johan van der Heide <info@japaveh.nl>
  * @copyright   Copyright (c) 2004-2013 Japaveh Webdesign (http://japaveh.nl)
@@ -14,38 +14,34 @@ use Zend\Form\Annotation\AnnotationBuilder;
 
 use Doctrine\ORM\EntityManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
-use DoctrineORMModule\Form\Element;
+use DoctrineORMModule\Form\Element\EntitySelect;
+use DoctrineORMModule\Form\Element\EntityMultiCheckbox;
 
 use Program\Entity;
 
-/**
- * Create a form for a group
- */
-class ProjectFieldset extends Fieldset
+class ObjectFieldset extends Fieldset
 {
     /**
-     * @param \Doctrine\ORM\EntityManager $entityManager
+     * @param EntityManager         $entityManager
+     * @param Entity\EntityAbstract $object
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, Entity\EntityAbstract $object)
     {
-        parent::__construct('area');
-        $area = new Entity\Area();
+        parent::__construct($object->get('underscore_entity_name'));
 
-        $doctrineHydrator = new DoctrineHydrator($entityManager, 'Program\Entity\Area');
-        $this->setHydrator($doctrineHydrator)->setObject($area);
+        $doctrineHydrator = new DoctrineHydrator($entityManager);
+        $this->setHydrator($doctrineHydrator)->setObject($object);
 
         $builder = new AnnotationBuilder();
 
         /**
          * Go over the different form elements and add them to the form
          */
-        foreach ($builder->createForm($area)->getElements() as $element) {
+        foreach ($builder->createForm($object)->getElements() as $element) {
             /**
-             * Go over each element to add the objectManager to the EntitySelect or EntityMultiCheckbox
+             * Go over each element to add the objectManager to the EntitySelect
              */
-            if ($element instanceof Element\EntitySelect ||
-                $element instanceof Element\EntityMultiCheckbox
-            ) {
+            if ($element instanceof EntitySelect or $element instanceof EntityMultiCheckbox) {
                 $element->setOptions(
                     array(
                         'object_manager' => $entityManager

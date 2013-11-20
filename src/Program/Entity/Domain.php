@@ -143,6 +143,31 @@ class Domain extends EntityAbstract
     }
 
     /**
+     * Needed for the hydration of form elements
+     *
+     * @return array
+     */
+    public function getArrayCopy()
+    {
+        return array(
+            'id'           => $this->id,
+            'domain'       => $this->domain,
+            'description'  => $this->description,
+            'color'        => $this->color,
+            'mainId'       => $this->mainId,
+            'roadmap'      => $this->roadmap,
+            'project'      => $this->project,
+            'organisation' => $this->organisation,
+            'contact'      => $this->contact,
+        );
+    }
+
+    public function populate()
+    {
+        return $this->getArrayCopy();
+    }
+
+    /**
      * @param InputFilterInterface $inputFilter
      *
      * @return void

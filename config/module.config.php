@@ -21,9 +21,7 @@ $config = array(
         'invokables' => array(
             'program_program_service'     => 'Program\Service\ProgramService',
             'program_form_service'        => 'Program\Service\FormService',
-            'program_program_form_filter' => 'Program\Form\FilterCreateProgram',
-
-
+            'program_program_form_filter' => 'Program\Form\FilterCreateObject',
         )
     ),
     'doctrine'        => array(

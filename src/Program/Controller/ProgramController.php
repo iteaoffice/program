@@ -67,10 +67,9 @@ class ProgramController extends AbstractActionController implements
             );
             $form->setData($data);
             if ($form->isValid()) {
-                var_dump($form->getData('file'));
-                die();
+                $fileData = $form->getData('file');
                 $this->getProgramService()->uploadNda(
-                    $form->getData('file'),
+                    $fileData['file'],
                     $this->zfcUserAuthentication()->getIdentity(),
                     $call
                 );
@@ -107,6 +106,7 @@ class ProgramController extends AbstractActionController implements
             ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
             ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
             ->addHeaderLine("Pragma: public")
+            ->addHeaderLine('Content-Disposition', "attachment; filename=\"call-xxx-2\"")
             ->addHeaderLine('Content-Type: application/pdf');
 
         $response->setContent($builderNda->getPdf());

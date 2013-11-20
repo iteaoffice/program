@@ -37,7 +37,7 @@ return array(
                     'render-nda-call' => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'       => '/nda/render/call-[:call].html',
+                            'route'       => '/nda/render/call-[:call].pdf',
                             'constraints' => array(
                                 'call' => '\d+'
                             ),

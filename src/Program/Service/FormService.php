@@ -24,7 +24,7 @@ class FormService implements ServiceLocatorAwareInterface
      */
     protected $form;
     /**
-     * @var \Program\Service\ProgramService
+     * @var ProgramService
      */
     protected $programService;
     /**
@@ -38,15 +38,21 @@ class FormService implements ServiceLocatorAwareInterface
      * @param bool $bind
      *
      * @return array|object
+     * @throws \InvalidArgumentException
      */
     public function getForm($className = null, $entity = null, $bind = true)
     {
-        if (!$entity) {
+        if (!is_null($className) && is_null($entity)) {
             $entity = $this->getProgramService()->getEntity($className);
         }
 
+        if (!is_object($entity)) {
+            throw new \InvalidArgumentException("No entity created given");
+        }
+
         $formName = 'program_' . $entity->get('underscore_entity_name') . '_form';
-        $form     = $this->getServiceLocator()->get($formName);
+
+        $form = $this->getServiceLocator()->get($formName);
 
         $filterName = 'program_' . $entity->get('underscore_entity_name') . '_form_filter';
         $filter     = $this->getServiceLocator()->get($filterName);
@@ -91,7 +97,7 @@ class FormService implements ServiceLocatorAwareInterface
     public function getProgramService()
     {
         if (null === $this->programService) {
-            $this->programService = $this->getServiceLocator()->get('program_generic_service');
+            $this->setProgramService($this->getServiceLocator()->get('program_program_service'));
         }
 
         return $this->programService;

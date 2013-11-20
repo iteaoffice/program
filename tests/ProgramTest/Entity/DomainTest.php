@@ -118,7 +118,7 @@ class DomainTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->domainData['domain'], $this->domain->getDomain());
         $this->assertSame($this->domainData['roadmap']->getId(), $this->domain->getRoadmap()->getId());
         $this->assertSame($this->domainData['description'], $this->domain->getDescription());
-        $this->assertSame($this->domainData['color'], $this->domain->getDescription());
+        $this->assertSame($this->domainData['color'], $this->domain->getColor());
         $this->assertSame($this->domainData['mainId'], $this->domain->getMainId());
     }
 }

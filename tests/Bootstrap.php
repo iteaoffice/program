@@ -19,8 +19,16 @@ chdir(__DIR__);
 
 define('DEBRANOVA_HOST', 'test');
 define('DEBRANOVA_APP', 'test');
+define('DEBRANOVA_APPLICATION', 'public');
 define('DEBRANOVA_ENV', 'development');
+putenv('DEBRANOVA_DOMAIN=beta.itea3.org');
+putenv('DEBRANOVA_ENVIRONMENT=development');
+define('DOCUMENT_ROOT', $_SERVER['DOCUMENT_ROOT']);
 
+define('APPLICATION_PATH',
+realpath(
+    __DIR__ . '/../..' . DIRECTORY_SEPARATOR . DEBRANOVA_APPLICATION . DIRECTORY_SEPARATOR . 'application'
+));
 
 /**
  * Test bootstrap, for setting up autoloading
@@ -75,8 +83,10 @@ class Bootstrap
         $tool->createSchema($mdFactory->getAllMetadata());
 
         $loader = new Loader();
+        $loader->addFixture(new \GeneralTest\Fixture\LoadContentTypeData());
         $loader->addFixture(new \ProgramTest\Fixture\LoadCallData());
         $loader->addFixture(new \ProgramTest\Fixture\LoadDomainData());
+        $loader->addFixture(new \ProgramTest\Fixture\LoadFunderData());
 
         $purger   = new ORMPurger();
         $executor = new ORMExecutor($entityManager, $purger);

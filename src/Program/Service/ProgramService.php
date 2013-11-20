@@ -40,21 +40,6 @@ class ProgramService extends ServiceAbstract
     protected $generalService;
 
     /**
-     * Find 1 entity based on the name
-     *
-     * @param   $entity
-     * @param   $name
-     *
-     * @return object
-     */
-    public function findEntityByName($entity, $name)
-    {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->findOneBy(
-            array('name' => $name)
-        );
-    }
-
-    /**
      * @param Country $country
      *
      * @return Funder[]
@@ -112,12 +97,10 @@ class ProgramService extends ServiceAbstract
      * @param Contact $contact
      * @param Call    $call
      *
-     * @return Nda
+     * @return NdaObject
      */
     public function uploadNda(array $file, Contact $contact, Call $call = null)
     {
-        var_dump($file);
-        die();
         $ndaObject = new NdaObject();
         $ndaObject->setObject(file_get_contents($file['tmp_name']));
 
@@ -125,11 +108,11 @@ class ProgramService extends ServiceAbstract
         $nda->setContact($contact);
         $nda->setCall($call);
         $nda->setSize($file['size']);
-        $nda->setContentType($this->generalService->findContentTypeByContentTypeName($file['type']));
+        $nda->setContentType($this->getGeneralService()->findContentTypeByContentTypeName($file['type']));
 
         $ndaObject->setNda($nda);
 
-        return $this->newEntity($nda);
+        return $this->newEntity($ndaObject);
     }
 
     /**
