@@ -1,40 +1,69 @@
 <h1>{{ translate("txt-submit-non-disclosure-agreement") }}</h1>
 
-<div class="alert alert-block alert-info">
-    <div class="alert-heading"><h4>Submit your Non-Disclosure-Agreement</h4></div>
-    <ul>
-        <li>Download the personalised Non-Disclosure-Agreement from this page;
-        <li>Print the document;
-        <li>Have the document signed by the authorised person in your organisation to do so;
-        <li>Scan the signed document;
-        <li>Upload the scanned document on this page.
-    </ul>
-</div>
+{% set programService = programServiceProxy() %}
+{% set nda = programService.findNdaByCallAndContact(call, zfcUserIdentity()) %}
 
+{% if not nda %}
+    <div class="alert alert-block alert-info">
+        <div class="alert-heading"><h4>Submit your Non-Disclosure-Agreement</h4></div>
+        <ul>
+            <li>Download the personalised Non-Disclosure-Agreement from this page;
+            <li>Print the document;
+            <li>Have the document signed by the authorised person in your organisation to do so;
+            <li>Scan the signed document;
+            <li>Upload the scanned document on this page.
+        </ul>
+    </div>
 
-<h2>{{ translate("txt-download-personalised-non-disclosure-agreement") }}</h2>
-<dl class="dl-horizontal">
-    <dt>{{ translate("txt-program-call") }}</dt>
-    <dd>{{ callLink(call,'view', 'name') }}</dd>
-    <dt>{{ translate("txt-contact") }}</dt>
-    <dd>{{ zfcUserIdentity() }}</dd>
-</dl>
+    <h2>{{ translate("txt-download-personalised-non-disclosure-agreement") }}</h2>
+    <dl class="dl-horizontal">
+        <dt>{{ translate("txt-program-call") }}</dt>
+        <dd>{{ callLink(call,'view', 'name') }}</dd>
+        <dt>{{ translate("txt-contact") }}</dt>
+        <dd>{{ zfcUserIdentity() }}</dd>
+    </dl>
 
-{{ ndaLink(null, 'render-call', 'button', call ) }}
+    {{ ndaLink(null, 'render-call', 'button', call ) }}
 
-<h2>{{ translate("txt-upload-non-disclosure-agreement") }}</h2>
-<dl class="dl-horizontal">
-    <dt>{{ translate("txt-program-call") }}</dt>
-    <dd>{{ callLink(call,'view', 'name') }}</dd>
-    <dt>{{ translate("txt-contact") }}</dt>
-    <dd>{{ zfcUserIdentity() }}</dd>
-</dl>
+    <h2>{{ translate("txt-upload-non-disclosure-agreement") }}</h2>
+    <dl class="dl-horizontal">
+        <dt>{{ translate("txt-program-call") }}</dt>
+        <dd>{{ callLink(call,'view', 'name') }}</dd>
+        <dt>{{ translate("txt-contact") }}</dt>
+        <dd>{{ zfcUserIdentity() }}</dd>
+    </dl>
 
-{% do form.prepare() %}
+    {% do form.prepare() %}
     {{ form().openTag(form)|raw }}
-{{ formrow(form.get('file')) }}
+    {{ formrow(form.get('file')) }}
 
-<span class="help-block">{{ translate("txt-upload-signed-nda") }}</span>
-{{ formelement(form.get('submit')) }}
+    <span class="help-block">{{ translate("txt-upload-signed-nda") }}</span>
+    {{ formelement(form.get('submit')) }}
 
-{{ form().closeTag()|raw }}
+    {{ form().closeTag()|raw }}
+
+{% else %}
+
+    {% if nda.dateApproved %}
+        <div class="alert alert-block alert-success">
+            <div class="alert-heading"><h4>{{ translate("txt-nda-already-approved") }}</h4></div>
+            <p>{{ translate("txt-nda-for-call-%s-has-already-been-approved-on-%s")|format(
+                call, nda.dateApproved|date("d-m-Y")) }}</p>
+        </div>
+    {% else %}
+        <div class="alert alert-block alert-warning">
+            <div class="alert-heading"><h4>{{ translate("txt-nda-waiting-for-approval") }}</h4></div>
+            <p>{{ translate("txt-nda-for-call-%s-has-already-been-submitted-on-%s-and-is-waiting-for-approval")|format(
+                call, nda.dateSigned|date("d-m-Y")) }}</p>
+        </div>
+    {% endif %}
+
+    <dl class="dl-horizontal">
+        <dt>{{ translate("txt-program-call") }}</dt>
+        <dd>{{ callLink(call,'view', 'name') }}</dd>
+        <dt>{{ translate("txt-contact") }}</dt>
+        <dd>{{ zfcUserIdentity() }}</dd>
+    </dl>
+
+{% endif %}
+
