@@ -82,6 +82,12 @@ class Technology extends EntityAbstract
      * @var \Project\Entity\Project[]
      */
     private $project;
+    /**
+     * @ORM\ManyToMany(targetEntity="Project\Entity\Idea\Idea", cascade={"persist"}, mappedBy="technology")
+     * @Annotation\Exclude()
+     * @var \Project\Entity\Idea\Idea[]
+     */
+    private $idea;
 
     /**
      * Class constructor
@@ -91,6 +97,7 @@ class Technology extends EntityAbstract
         $this->contact      = new Collections\ArrayCollection();
         $this->organisation = new Collections\ArrayCollection();
         $this->project      = new Collections\ArrayCollection();
+        $this->idea         = new Collections\ArrayCollection();
     }
 
     /**
@@ -331,5 +338,21 @@ class Technology extends EntityAbstract
     public function getTechnology()
     {
         return $this->technology;
+    }
+
+    /**
+     * @param \Project\Entity\Idea\Idea[] $idea
+     */
+    public function setIdea($idea)
+    {
+        $this->idea = $idea;
+    }
+
+    /**
+     * @return \Project\Entity\Idea\Idea[]
+     */
+    public function getIdea()
+    {
+        return $this->idea;
     }
 }

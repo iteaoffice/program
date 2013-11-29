@@ -84,11 +84,11 @@ class Nda extends EntityAbstract
      */
     private $contact;
     /**
-     * @ORM\ManyToOne(targetEntity="Call", cascade={"persist"}, inversedBy="nda")
+     * @ORM\ManyToOne(targetEntity="Program\Entity\Call\Call", cascade={"persist"}, inversedBy="nda")
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="programcall_id", referencedColumnName="programcall_id")
      * })
-     * @var Call
+     * @var \Program\Entity\Call\Call
      */
     private $call;
     /**
@@ -219,7 +219,7 @@ class Nda extends EntityAbstract
 
 
     /**
-     * @param \Program\Entity\Call $call
+     * @param \Program\Entity\Call\Call $call
      */
     public function setCall($call)
     {
@@ -227,7 +227,7 @@ class Nda extends EntityAbstract
     }
 
     /**
-     * @return \Program\Entity\Call
+     * @return \Program\Entity\Call\Call
      */
     public function getCall()
     {

@@ -7,11 +7,12 @@
  * @author      Johan van der Heide <info@japaveh.nl>
  * @copyright   Copyright (c) 2004-2013 Debranova
  */
-namespace Program\Entity;
+namespace Program\Entity\Call;
 
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
+use Program\Entity\EntityAbstract;
 use Zend\Form\Annotation;
 
 use Doctrine\Common\Collections;
@@ -112,6 +113,36 @@ class Call extends EntityAbstract
      * @var \Event\Entity\Meeting\Meeting[]
      */
     private $meeting;
+    /**
+     * @ORM\OneToMany(targetEntity="Program\Entity\Call\Calendar", cascade={"persist"}, mappedBy="call")
+     * @Annotation\Exclude()
+     * @var \Program\Entity\Call\Calendar[]
+     */
+    private $calendar;
+    /**
+     * @ORM\OneToMany(targetEntity="Program\Entity\Call\Doa", cascade={"persist"}, mappedBy="call")
+     * @Annotation\Exclude()
+     * @var \Program\Entity\Call\Doa[]
+     */
+    private $doa;
+    /**
+     * @ORM\OneToMany(targetEntity="Program\Entity\Call\Image", cascade={"persist"}, mappedBy="call")
+     * @Annotation\Exclude()
+     * @var \Program\Entity\Call\Image[]
+     */
+    private $image;
+    /**
+     * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Idea", cascade={"persist"}, mappedBy="call")
+     * @Annotation\Exclude()
+     * @var \Project\Entity\Idea\Idea[]
+     */
+    private $idea;
+    /**
+     * @ORM\OneToMany(targetEntity="Program\Entity\Call\Session", cascade={"persist"}, mappedBy="call")
+     * @Annotation\Exclude()
+     * @var \Program\Entity\Call\Session[]
+     */
+    private $session;
 
     /**
      * Class constructor
@@ -121,6 +152,11 @@ class Call extends EntityAbstract
         $this->publication = new Collections\ArrayCollection();
         $this->meeting     = new Collections\ArrayCollection();
         $this->nda         = new Collections\ArrayCollection();
+        $this->calendar    = new Collections\ArrayCollection();
+        $this->doa         = new Collections\ArrayCollection();
+        $this->image       = new Collections\ArrayCollection();
+        $this->idea        = new Collections\ArrayCollection();
+        $this->session     = new Collections\ArrayCollection();
     }
 
     /**
@@ -503,5 +539,85 @@ class Call extends EntityAbstract
     public function getPublication()
     {
         return $this->publication;
+    }
+
+    /**
+     * @param \Program\Entity\Call\Calendar[] $calendar
+     */
+    public function setCalendar($calendar)
+    {
+        $this->calendar = $calendar;
+    }
+
+    /**
+     * @return \Program\Entity\Call\Calendar[]
+     */
+    public function getCalendar()
+    {
+        return $this->calendar;
+    }
+
+    /**
+     * @param \Program\Entity\Call\Doa[] $doa
+     */
+    public function setDoa($doa)
+    {
+        $this->doa = $doa;
+    }
+
+    /**
+     * @return \Program\Entity\Call\Doa[]
+     */
+    public function getDoa()
+    {
+        return $this->doa;
+    }
+
+    /**
+     * @param \Program\Entity\Call\Image[] $image
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+    }
+
+    /**
+     * @return \Program\Entity\Call\Image[]
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param \Project\Entity\Idea\Idea[] $idea
+     */
+    public function setIdea($idea)
+    {
+        $this->idea = $idea;
+    }
+
+    /**
+     * @return \Project\Entity\Idea\Idea[]
+     */
+    public function getIdea()
+    {
+        return $this->idea;
+    }
+
+    /**
+     * @param \Program\Entity\Call\Session[] $session
+     */
+    public function setSession($session)
+    {
+        $this->session = $session;
+    }
+
+    /**
+     * @return \Program\Entity\Call\Session[]
+     */
+    public function getSession()
+    {
+        return $this->session;
     }
 }

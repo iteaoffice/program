@@ -20,7 +20,7 @@ use Zend\Mvc\Router\Http\RouteMatch;
 use Content\Entity\Handler;
 use General\View\Helper\CountryMap;
 use Program\Entity\Program;
-use Program\Entity\Call;
+use Program\Entity\Call\Call;
 use Program\Service\ProgramService;
 
 /**
@@ -180,7 +180,7 @@ class ProgramHandler extends AbstractHelper
     }
 
     /**
-     * @return \Program\Entity\Call
+     * @return \Program\Entity\Call\Call
      */
     public function getCall()
     {

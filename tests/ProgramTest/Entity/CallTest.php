@@ -9,7 +9,7 @@
  */
 namespace ProgramTest\Entity;
 
-use Program\Entity\Call;
+use Program\Entity\Call\Call;
 
 use ProgramTest\Bootstrap;
 
@@ -56,7 +56,7 @@ class CallTest extends \PHPUnit_Framework_TestCase
     public function testCanCreateEntity()
     {
 
-        $this->assertInstanceOf("Program\Entity\Call", $this->call);
+        $this->assertInstanceOf("Program\Entity\Call\Call", $this->call);
         $this->assertInstanceOf("Program\Entity\EntityInterface", $this->call);
 
         $this->assertNull($this->call->getCall(), 'The "Call" should be null');
@@ -85,7 +85,7 @@ class CallTest extends \PHPUnit_Framework_TestCase
     {
         $hydrator = new DoctrineObject(
             $this->entityManager,
-            'Program\Entity\Call'
+            'Program\Entity\Call\Call'
         );
 
         $this->call = $hydrator->hydrate($this->callData, new Call());
@@ -99,14 +99,14 @@ class CallTest extends \PHPUnit_Framework_TestCase
     {
         $hydrator = new DoctrineObject(
             $this->entityManager,
-            'Program\Entity\Call'
+            'Program\Entity\Call\Call'
         );
 
         $this->call = $hydrator->hydrate($this->callData, new Call());
         $this->entityManager->persist($this->call);
         $this->entityManager->flush();
 
-        $this->assertInstanceOf('Program\Entity\Call', $this->call);
+        $this->assertInstanceOf('Program\Entity\Call\Call', $this->call);
         $this->assertNotNull($this->call->getId());
         $this->assertSame($this->callData['call'], $this->call->getCall());
     }

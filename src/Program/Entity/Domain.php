@@ -91,6 +91,12 @@ class Domain extends EntityAbstract
      * @var \Contact\Entity\Contact[]
      */
     private $contact;
+    /**
+     * @ORM\ManyToMany(targetEntity="Project\Entity\Idea\Idea", cascade={"persist"}, mappedBy="domain")
+     * @Annotation\Exclude()
+     * @var \Project\Entity\Idea\Idea[]
+     */
+    private $idea;
 
     /**
      * Class constructor
@@ -100,6 +106,7 @@ class Domain extends EntityAbstract
         $this->project      = new Collections\ArrayCollection();
         $this->organisation = new Collections\ArrayCollection();
         $this->contact      = new Collections\ArrayCollection();
+        $this->idea         = new Collections\ArrayCollection();
     }
 
     /**
@@ -389,5 +396,37 @@ class Domain extends EntityAbstract
     public function getProject()
     {
         return $this->project;
+    }
+
+    /**
+     * @param \Project\Entity\Idea\Idea[] $idea
+     */
+    public function setIdea($idea)
+    {
+        $this->idea = $idea;
+    }
+
+    /**
+     * @return \Project\Entity\Idea\Idea[]
+     */
+    public function getIdea()
+    {
+        return $this->idea;
+    }
+
+    /**
+     * @param \Organisation\Entity\Organisation[] $organisation
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+    }
+
+    /**
+     * @return \Organisation\Entity\Organisation[]
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
     }
 }

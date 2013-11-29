@@ -14,7 +14,7 @@ use General\Service\GeneralService;
 
 use Contact\Entity\Contact;
 use Program\Entity\Funder;
-use Program\Entity\Call;
+use Program\Entity\Call\Call;
 use Program\Entity\Nda;
 use Program\Entity\NdaObject;
 

@@ -11,7 +11,7 @@
 namespace Program\Builder;
 
 use Contact\Entity\Contact as ContactEntity;
-use Program\Entity\Call as Call;
+use Program\Entity\Call\Call as Call;
 
 /**
  * Class Nda

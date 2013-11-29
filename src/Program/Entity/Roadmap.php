@@ -10,7 +10,6 @@
 namespace Program\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Program\Entity\EntityAbstract;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
@@ -44,13 +43,11 @@ class Roadmap extends EntityAbstract
      * @var string
      */
     private $roadmap;
-
     /**
      * @ORM\Column(name="description", type="text", nullable=true)
      * @var string
      */
     private $description;
-
     /**
      * @ORM\Column(name="date_released", type="date", nullable=true)
      * @Annotation\Type("\Zend\Form\Element\Date")
@@ -65,15 +62,15 @@ class Roadmap extends EntityAbstract
      */
     private $domain;
     /**
-     * @ORM\OneToMany(targetEntity="\Program\Entity\Call", cascade={"persist"}, mappedBy="roadmap")
+     * @ORM\OneToMany(targetEntity="\Program\Entity\Call\Call", cascade={"persist"}, mappedBy="roadmap")
      * @Annotation\Exclude()
-     * @var \Program\Entity\Call[]
+     * @var \Program\Entity\Call\Call[]
      */
     private $call;
     /**
      * @ORM\OneToMany(targetEntity="\Program\Entity\Technology", cascade={"persist"}, mappedBy="roadmap")
      * @Annotation\Exclude()
-     * @var \Program\Entity\Call[]
+     * @var \Program\Entity\Technology[]
      */
     private $technology;
 
@@ -329,7 +326,7 @@ class Roadmap extends EntityAbstract
     }
 
     /**
-     * @param \Program\Entity\Call[] $call
+     * @param \Program\Entity\Call\Call[] $call
      */
     public function setCall($call)
     {
@@ -337,7 +334,7 @@ class Roadmap extends EntityAbstract
     }
 
     /**
-     * @return \Program\Entity\Call[]
+     * @return \Program\Entity\Call\Call[]
      */
     public function getCall()
     {
@@ -345,7 +342,7 @@ class Roadmap extends EntityAbstract
     }
 
     /**
-     * @param \Program\Entity\Call[] $technology
+     * @param \Program\Entity\Technology[] $technology
      */
     public function setTechnology($technology)
     {
@@ -353,7 +350,7 @@ class Roadmap extends EntityAbstract
     }
 
     /**
-     * @return \Program\Entity\Call[]
+     * @return \Program\Entity\Technology[]
      */
     public function getTechnology()
     {

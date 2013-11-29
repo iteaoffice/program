@@ -16,7 +16,7 @@ class LoadCallData extends AbstractFixture implements DependentFixtureInterface
     {
         $program = $manager->find("Program\Entity\Program", 1);
 
-        $call = new \Program\Entity\Call();
+        $call = new \Program\Entity\Call\Call();
         $call->setProgram($program);
         $call->setCall('1');
         $call->setPoOpenDate(new \DateTime());

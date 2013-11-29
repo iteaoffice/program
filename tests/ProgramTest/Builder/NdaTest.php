@@ -39,7 +39,7 @@ class NdaTest extends \PHPUnit_Framework_TestCase
     public function testCanConstruct()
     {
         $contact    = $this->entityManager->find('Contact\Entity\Contact', 1);
-        $call       = $this->entityManager->find("Program\Entity\Call", 1);
+        $call       = $this->entityManager->find("Program\Entity\Call\Call", 1);
         $builderNda = new Nda($contact, $call);
         $this->assertInstanceOf('Program\\Builder\\Nda', $builderNda);
     }
@@ -51,7 +51,7 @@ class NdaTest extends \PHPUnit_Framework_TestCase
     public function testCanRender()
     {
         $contact    = $this->entityManager->find('Contact\Entity\Contact', 1);
-        $call       = $this->entityManager->find("Program\Entity\Call", 1);
+        $call       = $this->entityManager->find("Program\Entity\Call\Call", 1);
         $builderNda = new Nda($contact, $call);
         $this->assertContains('PDF-1.4', $builderNda->getPdf());
     }

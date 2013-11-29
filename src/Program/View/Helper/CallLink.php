@@ -26,14 +26,14 @@ class CallLink extends AbstractHelper
 {
 
     /**
-     * @param Entity\Call $call
-     * @param string      $action
-     * @param string      $show
+     * @param Entity\Call\Call $call
+     * @param string           $action
+     * @param string           $show
      *
      * @return string
      * @throws \Exception
      */
-    public function __invoke(Entity\Call $call = null, $action = 'view', $show = 'name')
+    public function __invoke(Entity\Call\Call $call = null, $action = 'view', $show = 'name')
     {
         $translate = $this->view->plugin('translate');
         $url       = $this->view->plugin('url');
@@ -86,7 +86,7 @@ class CallLink extends AbstractHelper
             case 'list':
                 $router = 'program/list';
                 $text   = sprintf($translate("txt-list-calls"));
-                $call   = new Entity\Call();
+                $call   = new Entity\Call\Call();
                 break;
             default:
                 throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
