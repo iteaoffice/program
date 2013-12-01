@@ -46,7 +46,7 @@ class CallLink extends AbstractHelper
 
         $params = array(
             'id'     => $call->getId(),
-            'entity' => 'call'
+            'entity' => 'call\call'
         );
 
 
