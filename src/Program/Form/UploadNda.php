@@ -16,7 +16,7 @@ use Zend\Form\Element;
 class UploadNda extends Form
 {
     /**
-     *
+     * Construct the form
      */
     public function __construct($name = null, $options = array())
     {
@@ -27,6 +27,11 @@ class UploadNda extends Form
         $this->setInputFilter($this->createInputFilter());
     }
 
+    /**
+     * Add the elements to the form
+     *
+     * @return $this
+     */
     public function addElements()
     {
 
@@ -54,6 +59,11 @@ class UploadNda extends Form
         return $this;
     }
 
+    /**
+     * Create a dedicated input filter fo a NDA
+     *
+     * @return InputFilter\InputFilter
+     */
     public function createInputFilter()
     {
         $inputFilter = new InputFilter\InputFilter();

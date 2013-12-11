@@ -76,18 +76,21 @@ class ProgramHandler extends AbstractHelper
     public function render()
     {
 
+        $translate = $this->getView()->plugin('translate');
 
         switch ($this->getHandler()->getHandler()) {
 
             case 'program':
-                $this->getView()->headTitle()->append("Program");
+                $this->getView()->headTitle()->append($translate("txt-program"));
 
 
                 return $this->parseProgram($this->getProgramService());
                 break;
 
             case 'programcall':
-                $this->getView()->headTitle()->append("Program Call");
+
+
+                $this->getView()->headTitle()->append($translate("txt-program-call"));
 
 
                 return $this->parseCall($this->getCall());
@@ -154,7 +157,7 @@ class ProgramHandler extends AbstractHelper
      */
     public function parseCallSelector()
     {
-        $calls = $this->programService->findAll('call');
+        $calls = $this->programService->findAll('Call\Call');
 
         return $this->getView()->render(
             'program/partial/call-selector.twig',
@@ -174,7 +177,7 @@ class ProgramHandler extends AbstractHelper
      */
     public function setCallId($callId)
     {
-        $this->call = $this->programService->findEntityById('call', $callId);
+        $this->call = $this->programService->findEntityById('Call\Call', $callId);
 
         return $this->call;
     }

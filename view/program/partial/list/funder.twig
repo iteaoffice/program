@@ -3,36 +3,39 @@
 {% for funder in funder if funder.showOnWebsite is constant("\\Program\\Entity\\Funder::SHOW_ON_WEBSITE") %}
 
 
-    <div class="thumbnail">
-        {{ contactPhoto(funder.contact) }}
+    <div class="well well-sm">
+        <div class="row">
+            <h3>{{ contactService.parseFullName }}</h3>
 
-        <div class="caption">
+            <div class="col-md-4">
+                {{ contactPhoto(funder.contact) }}
+            </div>
+            <div class="col-md-8">
 
-            {% set contactService = contactServiceProxy(funder.contact) %}
 
-            <h4>{{ contactService.parseFullName }}</h4>
+                {% set contactService = contactServiceProxy(funder.contact) %}
 
-            <dl>
-                <dt>{{ translate("txt-address") }}</dt>
+                <dl>
+                    <dt>{{ translate("txt-address") }}</dt>
 
-                {% set organisationService = organisationServiceProxy(funder.contact.contactOrganisation.organisation) %}
+                    {% set organisationService = organisationServiceProxy(funder.contact.contactOrganisation.organisation) %}
 
-                <dd>{{ organisationService.parseOrganisationWithBranch(funder.contact.contactOrganisation.branch) }}</dd>
-                <dd>{{ contactService.getVisitAddress().address.address }}</dd>
-                <dd>{{ contactService.getVisitAddress().address.zipCode }} {{ contactService.getVisitAddress().address.city }}</dd>
-                <dd>{{ contactService.getVisitAddress().address.country }}</dd>
+                    <dd>{{ organisationService.parseOrganisationWithBranch(funder.contact.contactOrganisation.branch) }}</dd>
+                    <dd>{{ contactService.getVisitAddress().address.address }}</dd>
+                    <dd>{{ contactService.getVisitAddress().address.zipCode }} {{ contactService.getVisitAddress().address.city }}</dd>
+                    <dd>{{ contactService.getVisitAddress().address.country }}</dd>
 
-                <dt>{{ translate("txt-phone") }}</dt>
-                <dd>{{ contactService.getDirectPhone() }}</dd>
+                    <dt>{{ translate("txt-phone") }}</dt>
+                    <dd>{{ contactService.getDirectPhone() }}</dd>
 
-                <dt>{{ translate("txt-website") }}</dt>
-                {# show only the first result#}
-                <dd>{{ organisationService.organisation.web[0]|raw }}</dd>
+                    <dt>{{ translate("txt-website") }}</dt>
+                    {# show only the first result#}
+                    <dd>{{ organisationService.organisation.web[0]|raw }}</dd>
 
-                <dt>{{ translate("txt-extra-information") }}</dt>
-                <dd>{{ funder.infoPublic }}</dd>
-            </dl>
+                    <dt>{{ translate("txt-extra-information") }}</dt>
+                    <dd>{{ funder.infoPublic }}</dd>
+                </dl>
+            </div>
         </div>
     </div>
-    <br>
 {% endfor %}
