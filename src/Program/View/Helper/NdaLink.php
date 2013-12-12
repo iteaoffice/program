@@ -33,7 +33,7 @@ class NdaLink extends AbstractHelper
      * @return string
      * @throws \Exception
      */
-    public function __invoke(Entity\Nda $nda = null, $action = 'view', $show = 'name', Entity\Call $call = null)
+    public function __invoke(Entity\Nda $nda = null, $action = 'view', $show = 'name', Entity\Call\Call $call = null)
     {
         $translate = $this->view->plugin('translate');
         $url       = $this->view->plugin('url');
