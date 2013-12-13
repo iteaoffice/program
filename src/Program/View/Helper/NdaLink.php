@@ -26,9 +26,10 @@ class NdaLink extends AbstractHelper
 {
 
     /**
-     * @param Entity\Nda $nda
-     * @param string     $action
-     * @param string     $show
+     * @param Entity\Nda       $nda
+     * @param string           $action
+     * @param string           $show
+     * @param Entity\Call\Call $call
      *
      * @return string
      * @throws \Exception

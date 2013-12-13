@@ -55,7 +55,7 @@ class CallLink extends AbstractHelper
         switch ($action) {
             case 'new':
                 $router = 'zfcadmin/call-manager/new';
-                $text   = sprintf($translate("txt-new-area"));
+                $text   = sprintf($translate("txt-new-call"));
                 $call   = new Entity\Program();
                 break;
             case 'edit':
@@ -78,7 +78,7 @@ class CallLink extends AbstractHelper
                 /**
                  * For a list in the front-end simply use the MatchedRouteName
                  */
-                $router         = 'route-' . $call->get("underscore_full_entity_name");
+                $router         = 'route-' . $call->get("underscore_full_entity_name") . '_call';
                 $params['call'] = $call->getId();
 
                 $text = sprintf($translate("txt-view-call-%s"), $call);
