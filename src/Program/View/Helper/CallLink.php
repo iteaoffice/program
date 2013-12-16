@@ -81,7 +81,7 @@ class CallLink extends AbstractHelper
                 $router = 'route-content_entity_node';
 
                 $params['call']   = $call->getId();
-                $params['docRef'] = 'project-list';
+                $params['docRef'] = 'all-projects';
 
                 $text = sprintf($translate("txt-view-call-%s"), $call);
                 break;
