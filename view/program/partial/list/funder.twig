@@ -5,6 +5,9 @@
 
     <div class="well well-sm">
         <div class="row">
+
+            {% set contactService = contactServiceProxy(funder.contact) %}
+
             <h3>{{ contactService.parseFullName }}</h3>
 
             <div class="col-md-4">
@@ -12,8 +15,6 @@
             </div>
             <div class="col-md-8">
 
-
-                {% set contactService = contactServiceProxy(funder.contact) %}
 
                 <dl>
                     <dt>{{ translate("txt-address") }}</dt>

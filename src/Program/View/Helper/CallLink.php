@@ -78,15 +78,12 @@ class CallLink extends AbstractHelper
                 /**
                  * For a list in the front-end simply use the MatchedRouteName
                  */
-                $router         = 'route-' . $call->get("underscore_full_entity_name") . '_call';
-                $params['call'] = $call->getId();
+                $router = 'route-content_entity_node';
+
+                $params['call']   = $call->getId();
+                $params['docRef'] = 'project-list';
 
                 $text = sprintf($translate("txt-view-call-%s"), $call);
-                break;
-            case 'list':
-                $router = 'program/list';
-                $text   = sprintf($translate("txt-list-calls"));
-                $call   = new Entity\Call\Call();
                 break;
             default:
                 throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
