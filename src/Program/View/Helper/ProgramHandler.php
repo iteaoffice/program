@@ -80,18 +80,8 @@ class ProgramHandler extends AbstractHelper
 
         switch ($this->getHandler()->getHandler()) {
 
-            case 'program':
-                $this->getView()->headTitle()->append($translate("txt-program"));
-
-
-                return $this->parseProgram($this->getProgramService());
-                break;
-
             case 'programcall':
-
-
                 $this->getView()->headTitle()->append($translate("txt-program-call"));
-
 
                 return $this->parseCall($this->getCall());
                 break;
@@ -131,7 +121,7 @@ class ProgramHandler extends AbstractHelper
      */
     public function getProgramService()
     {
-        return $this->projectService;
+        return $this->programService;
     }
 
     /**
