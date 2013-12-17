@@ -4,12 +4,14 @@
 
 
     <div class="well well-sm">
+
+
+        {% set contactService = contactServiceProxy(funder.contact) %}
+
+
+        <h3>{{ contactService.parseFullName }}</h3>
+
         <div class="row">
-
-            {% set contactService = contactServiceProxy(funder.contact) %}
-
-            <h3>{{ contactService.parseFullName }}</h3>
-
             <div class="col-md-4">
                 {{ contactPhoto(funder.contact) }}
             </div>
