@@ -39,6 +39,7 @@ return array(
   'Program\Service\ProgramService'              => __DIR__ . '/src/Program/Service/ProgramService.php',
   'Program\Service\ServiceAbstract'             => __DIR__ . '/src/Program/Service/ServiceAbstract.php',
   'Program\Service\ServiceInterface'            => __DIR__ . '/src/Program/Service/ServiceInterface.php',
+  'Program\Version\Version'                     => __DIR__ . '/src/Program/Version/Version.php',
   'Program\View\Helper\CallLink'                => __DIR__ . '/src/Program/View/Helper/CallLink.php',
   'Program\View\Helper\DomainLink'              => __DIR__ . '/src/Program/View/Helper/DomainLink.php',
   'Program\View\Helper\NdaLink'                 => __DIR__ . '/src/Program/View/Helper/NdaLink.php',
