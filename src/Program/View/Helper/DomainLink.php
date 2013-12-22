@@ -26,9 +26,9 @@ class DomainLink extends AbstractHelper
 {
 
     /**
-     * @param \Program\Entity\Domain  $domain
-     * @param                         $action
-     * @param                         $show
+     * @param \Program\Entity\Domain $domain
+     * @param                        $action
+     * @param                        $show
      *
      * @return string
      * @throws \RuntimeException
@@ -63,7 +63,6 @@ class DomainLink extends AbstractHelper
             default:
                 throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
         }
-
 
         $params = array(
             'id'     => $domain->getId(),

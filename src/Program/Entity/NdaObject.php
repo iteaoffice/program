@@ -113,7 +113,6 @@ class NdaObject extends EntityAbstract
             $inputFilter = new InputFilter();
             $factory     = new InputFactory();
 
-
             $this->inputFilter = $inputFilter;
         }
 

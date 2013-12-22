@@ -7,7 +7,7 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 Debranova
  */
-namespace Program\Entity;
+namespace Program\Entity\Call;
 
 use Zend\Form\Annotation;
 
@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @category    Contact
  * @package     Entity
  */
-class CallFloorPlan
+class FloorPlan
 {
     /**
      * @var integer

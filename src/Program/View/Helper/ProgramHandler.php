@@ -13,8 +13,6 @@ namespace Program\View\Helper;
 
 use Zend\View\HelperPluginManager;
 use Zend\View\Helper\AbstractHelper;
-use Zend\Paginator\Adapter\ArrayAdapter;
-use Zend\Paginator\Paginator;
 use Zend\Mvc\Router\Http\RouteMatch;
 
 use Content\Entity\Handler;
@@ -158,7 +156,6 @@ class ProgramHandler extends AbstractHelper
             )
         );
     }
-
 
     /**
      * @param int $callId

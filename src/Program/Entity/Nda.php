@@ -14,7 +14,6 @@ use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Form\Annotation;
 
-use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 
 use Gedmo\Mapping\Annotation AS Gedmo;
@@ -210,13 +209,11 @@ class Nda extends EntityAbstract
                 )
             );
 
-
             $this->inputFilter = $inputFilter;
         }
 
         return $this->inputFilter;
     }
-
 
     /**
      * @param \Program\Entity\Call\Call $call

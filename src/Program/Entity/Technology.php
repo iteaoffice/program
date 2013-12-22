@@ -137,7 +137,7 @@ class Technology extends EntityAbstract
      */
     public function __toString()
     {
-        return (string)$this->technology;
+        return (string) $this->technology;
     }
 
     /**
@@ -205,7 +205,6 @@ class Technology extends EntityAbstract
 
         return $this->inputFilter;
     }
-
 
     /**
      * Needed for the hydration of form elements

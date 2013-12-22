@@ -40,7 +40,6 @@ class NdaLink extends AbstractHelper
         $url       = $this->view->plugin('url');
         $serverUrl = $this->view->plugin('serverUrl');
 
-
         switch ($action) {
 
             case 'view-call':
@@ -73,7 +72,6 @@ class NdaLink extends AbstractHelper
             'entity' => 'nda',
             'call'   => (!is_null($call) ? $call->getId() : null)
         );
-
 
         $classes     = array();
         $linkContent = array();

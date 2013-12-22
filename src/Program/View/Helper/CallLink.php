@@ -49,7 +49,6 @@ class CallLink extends AbstractHelper
             'entity' => 'call\call'
         );
 
-
         $isAllowed = $this->view->plugin('isAllowed');
 
         switch ($action) {
@@ -88,7 +87,6 @@ class CallLink extends AbstractHelper
             default:
                 throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
         }
-
 
         $classes     = array();
         $linkContent = array();

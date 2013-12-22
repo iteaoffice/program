@@ -9,8 +9,6 @@
  */
 namespace Program\Entity\Call;
 
-use Zend\Form\Annotation;
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**

@@ -64,7 +64,6 @@ class TechnologyLink extends AbstractHelper
                 throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
         }
 
-
         $params = array(
             'id'     => $technology->getId(),
             'entity' => 'technology'
