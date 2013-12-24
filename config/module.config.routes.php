@@ -8,7 +8,7 @@
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
 return array(
-    'router'       => array(
+    'router' => array(
         'routes' => array(
             'program'  => array(
                 'type'          => 'Literal',
@@ -95,11 +95,6 @@ return array(
                 ),
             ),
 
-        ),
-    ),
-    'view_manager' => array(
-        'template_path_stack' => array(
-            __DIR__ . '/../view'
         ),
     ),
 );

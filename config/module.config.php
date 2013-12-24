@@ -14,6 +14,12 @@ $config = array(
             'program-manager' => 'Program\Controller\ProgramManagerController',
         ),
     ),
+    'view_manager'    => array(
+        'template_path_stack' => array(
+            'file' => __DIR__ . '/../view',
+        ),
+        'template_map'        => include __DIR__ . '/../template_map.php',
+    ),
     'service_manager' => array(
         'factories'  => array(
             'program-assertion' => 'Program\Acl\Assertion\Program',
