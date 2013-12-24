@@ -7,7 +7,7 @@ return array(
   'Program\Entity\Call\Calendar'                => __DIR__ . '/src/Program/Entity/Call/Calendar.php',
   'Program\Entity\Call\Call'                    => __DIR__ . '/src/Program/Entity/Call/Call.php',
   'Program\Entity\Call\Doa'                     => __DIR__ . '/src/Program/Entity/Call/Doa.php',
-  'Program\Entity\CallFloorPlan'                => __DIR__ . '/src/Program/Entity/Call/FloorPlan.php',
+  'Program\Entity\Call\FloorPlan'               => __DIR__ . '/src/Program/Entity/Call/FloorPlan.php',
   'Program\Entity\Call\Image'                   => __DIR__ . '/src/Program/Entity/Call/Image.php',
   'Program\Entity\Call\Session'                 => __DIR__ . '/src/Program/Entity/Call/Session.php',
   'Program\Entity\Call\SessionTrack'            => __DIR__ . '/src/Program/Entity/Call/SessionTrack.php',
