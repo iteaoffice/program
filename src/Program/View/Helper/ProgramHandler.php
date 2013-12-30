@@ -85,6 +85,7 @@ class ProgramHandler extends AbstractHelper
                 break;
 
             case 'programcall_selector':
+
                 return $this->parseCallSelector();
 
                 break;
@@ -148,7 +149,7 @@ class ProgramHandler extends AbstractHelper
         $calls = $this->programService->findAll('Call\Call');
 
         return $this->getView()->render(
-            'program/partial/call-selector.twig',
+            'program/partial/call-selector',
             array(
                 'calls'     => $calls,
                 'callId'    => !is_null($this->getCall()) ? $this->getCall()->getId() : null,
