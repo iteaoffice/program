@@ -12,7 +12,6 @@ namespace ProgramTest\Builder;
 use Program\Builder\Nda;
 use ProgramTest\Bootstrap;
 
-
 class NdaTest extends \PHPUnit_Framework_TestCase
 {
     /**

@@ -88,7 +88,6 @@ class GeneralServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($reloadProgram);
     }
 
-
     public function testCanGetEntity()
     {
         $entity    = 'program';

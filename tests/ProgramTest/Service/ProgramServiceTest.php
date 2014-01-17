@@ -47,7 +47,6 @@ class ProgramServiceTest extends \PHPUnit_Framework_TestCase
         $this->contactService->setServiceLocator($this->serviceManager);
     }
 
-
     public function testCanFindFunderByCountry()
     {
         $country = $this->entityManager->find("General\Entity\Country", 1);

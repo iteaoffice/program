@@ -85,7 +85,6 @@ class ProgramHandler extends AbstractHelper
                 break;
 
             case 'programcall_selector':
-
                 return $this->parseCallSelector();
 
                 break;

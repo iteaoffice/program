@@ -9,8 +9,6 @@
  */
 namespace Program\Service;
 
-use Program\Service\FormService;
-
 interface FormServiceAwareInterface
 {
     /**

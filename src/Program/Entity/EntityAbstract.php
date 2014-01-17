@@ -10,7 +10,6 @@
 namespace Program\Entity;
 
 use Zend\InputFilter\InputFilterAwareInterface;
-use Program\Entity\EntityInterface;
 
 /**
  * Annotations class

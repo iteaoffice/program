@@ -9,7 +9,6 @@
  */
 namespace Program\Entity;
 
-use Program\Entity\EntityAbstract;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
