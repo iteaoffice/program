@@ -58,11 +58,11 @@ class ProgramService extends ServiceAbstract
      */
     public function findFirstAndLastCall()
     {
-        $firstCall = $this->getEntityManager()->getRepository($this->getFullEntityName('call'))->findOneBy(
+        $firstCall = $this->getEntityManager()->getRepository($this->getFullEntityName('Call\Call'))->findOneBy(
             array(),
             array('call' => 'ASC')
         );
-        $lastCall  = $this->getEntityManager()->getRepository($this->getFullEntityName('call'))->findOneBy(
+        $lastCall  = $this->getEntityManager()->getRepository($this->getFullEntityName('Call\Call'))->findOneBy(
             array(),
             array('call' => 'DESC')
         );
