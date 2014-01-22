@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="programcall")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Program\Repository\Call\Call")
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("program_call")
  *

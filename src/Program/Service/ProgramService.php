@@ -17,6 +17,7 @@ use Program\Entity\Funder;
 use Program\Entity\Call\Call;
 use Program\Entity\Nda;
 use Program\Entity\NdaObject;
+use Project\Entity\VersionType;
 
 /**
  * ProgramService
@@ -49,6 +50,18 @@ class ProgramService extends ServiceAbstract
         return $this->getEntityManager()->getRepository($this->getFullEntityName('funder'))->findBy(
             array('country' => $country)
         );
+    }
+
+    /**
+     * Find the open call based on the request type
+     *
+     * @param int $type ;
+     *
+     * @return Call|null
+     */
+    public function findOpenCall($type)
+    {
+        return $this->getEntityManager()->getRepository($this->getFullEntityName('Call\Call'))->findOpenCall($type);
     }
 
     /**
