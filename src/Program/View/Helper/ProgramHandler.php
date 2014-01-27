@@ -15,6 +15,8 @@ use Zend\View\HelperPluginManager;
 use Zend\View\Helper\AbstractHelper;
 use Zend\Mvc\Router\Http\RouteMatch;
 
+use ZfcTwig\View\TwigRenderer;
+
 use Content\Entity\Handler;
 use General\View\Helper\CountryMap;
 use Program\Entity\Program;
@@ -51,6 +53,10 @@ class ProgramHandler extends AbstractHelper
      * @var CountryMap
      */
     protected $countryMap;
+    /**
+     * @var TwigRenderer;
+     */
+    protected $zfcTwigRenderer;
 
     /**
      * @param HelperPluginManager $helperPluginManager
@@ -65,6 +71,10 @@ class ProgramHandler extends AbstractHelper
             ->getRouteMatch();
 
         $this->countryMap = $helperPluginManager->get('countryMap');
+        /**
+         * Load the TwigRenderer directly form the plugin manager to avoid a fallback to the standard PhpRenderer
+         */
+        $this->zfcTwigRenderer = $helperPluginManager->getServiceLocator()->get('ZfcTwigRenderer');
     }
 
     /**
@@ -147,7 +157,7 @@ class ProgramHandler extends AbstractHelper
     {
         $calls = $this->programService->findAll('Call\Call');
 
-        return $this->getView()->render(
+        return $this->zfcTwigRenderer->render(
             'program/partial/call-selector',
             array(
                 'calls'     => $calls,

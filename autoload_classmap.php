@@ -34,6 +34,7 @@ return array(
   'Program\Form\ObjectFieldset'                 => __DIR__ . '/src/Program/Form/ObjectFieldset.php',
   'Program\Form\UploadNda'                      => __DIR__ . '/src/Program/Form/UploadNda.php',
   'Program\Module'                              => __DIR__ . '/src/Program/Module.php',
+  'Program\Repository\Call\Call'                => __DIR__ . '/src/Program/Repository/Call/Call.php',
   'Program\Service\FormService'                 => __DIR__ . '/src/Program/Service/FormService.php',
   'Program\Service\FormServiceAwareInterface'   => __DIR__ . '/src/Program/Service/FormServiceAwareInterface.php',
   'Program\Service\ProgramService'              => __DIR__ . '/src/Program/Service/ProgramService.php',
