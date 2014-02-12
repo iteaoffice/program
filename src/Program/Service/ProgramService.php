@@ -17,7 +17,7 @@ use Program\Entity\Funder;
 use Program\Entity\Call\Call;
 use Program\Entity\Nda;
 use Program\Entity\NdaObject;
-use Project\Entity\VersionType;
+use Project\Entity\Version\Type;
 
 /**
  * ProgramService

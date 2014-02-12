@@ -11,7 +11,7 @@
 namespace Program\Repository\Call;
 
 use Doctrine\ORM\EntityRepository;
-use Project\Entity\VersionType;
+use Project\Entity\Version\Type;
 use Program\Repository\Call\Call as CallEntity;
 
 /**
@@ -37,12 +37,12 @@ class Call extends EntityRepository
         $today = new \DateTime();
 
         switch ($type) {
-            case VersionType::TYPE_PO:
+            case Type::TYPE_PO:
                 $qb->where('c.poOpenDate < :today')
                     ->andWhere('c.poCloseDate > :today')
                     ->setParameter('today', $today);
                 break;
-            case VersionType::TYPE_FPP:
+            case Type::TYPE_FPP:
                 $qb->where('c.fppOpenDate < :today')
                     ->andWhere('c.fppCloseDate > :today')
                     ->setParameter('today', $today);
