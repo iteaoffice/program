@@ -24,7 +24,7 @@
     "require": {
         "debranova/contact": "dev-develop",
         "debranova/project": "dev-develop",
-        "zendframework/zendframework": "2.2.*",
+        "zendframework/zendframework": "2.3.*",
         "doctrine/doctrine-orm-module": "dev-master",
         "gedmo/doctrine-extensions": "dev-master"
     },
