@@ -114,9 +114,9 @@ class Call extends EntityAbstract
      */
     private $meeting;
     /**
-     * @ORM\OneToMany(targetEntity="Program\Entity\Call\Calendar", cascade={"persist"}, mappedBy="call")
+     * @ORM\ManyToMany(targetEntity="Calendar\Entity\Calendar", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
-     * @var \Program\Entity\Call\Calendar[]
+     * @var \Calendar\Entity\Calendar[]
      */
     private $calendar;
     /**
@@ -191,7 +191,7 @@ class Call extends EntityAbstract
      */
     public function __toString()
     {
-        return $this->getProgram()->getProgram() . ' call ' . $this->call;
+        return $this->getProgram()->getProgram() . ' Call ' . $this->call;
     }
 
     /**
@@ -542,7 +542,7 @@ class Call extends EntityAbstract
     }
 
     /**
-     * @param \Program\Entity\Call\Calendar[] $calendar
+     * @param \Calendar\Entity\Calendar[] $calendar
      */
     public function setCalendar($calendar)
     {
@@ -550,7 +550,7 @@ class Call extends EntityAbstract
     }
 
     /**
-     * @return \Program\Entity\Call\Calendar[]
+     * @return \Calendar\Entity\Calendar[]
      */
     public function getCalendar()
     {

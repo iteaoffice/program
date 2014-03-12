@@ -11,6 +11,9 @@ namespace Program\Service;
 
 use General\Entity\Country;
 use General\Service\GeneralService;
+use Organisation\Entity\Organisation;
+use Program\Entity\Program;
+use Project\Service\VersionService;
 
 use Contact\Entity\Contact;
 use Program\Entity\Funder;
@@ -32,15 +35,6 @@ use Project\Entity\Version\Type;
 class ProgramService extends ServiceAbstract
 {
     /**
-     * @var ProgramService
-     */
-    protected $programService;
-    /**
-     * @var GeneralService
-     */
-    protected $generalService;
-
-    /**
      * @param Country $country
      *
      * @return Funder[]
@@ -49,6 +43,22 @@ class ProgramService extends ServiceAbstract
     {
         return $this->getEntityManager()->getRepository($this->getFullEntityName('funder'))->findBy(
             array('country' => $country)
+        );
+    }
+
+    /**
+     * @param Program      $program
+     * @param Organisation $organisation
+     *
+     * @return null|\Program\Entity\ProgramDoa
+     */
+    public function findProgramDoaByProgramAndOrganisation(Program $program, Organisation $organisation)
+    {
+        return $this->getEntityManager()->getRepository($this->getFullEntityName('ProgramDoa'))->findOneBy(
+            array(
+                'program'      => $program,
+                'organisation' => $organisation
+            )
         );
     }
 
@@ -62,6 +72,27 @@ class ProgramService extends ServiceAbstract
     public function findOpenCall($type)
     {
         return $this->getEntityManager()->getRepository($this->getFullEntityName('Call\Call'))->findOpenCall($type);
+    }
+
+    /**
+     * Find the last open call and check which versionType is active
+     *
+     * @return \stdClass
+     */
+    public function findLastCallAndActiveVersionType()
+    {
+        $result = $this->getEntityManager()->getRepository(
+            $this->getFullEntityName('Call\Call')
+        )->findLastCallAndActiveVersionType();
+
+        $lastCallAndActiveVersionType              = new \stdClass();
+        $lastCallAndActiveVersionType->call        = $result['call'];
+        $lastCallAndActiveVersionType->versionType = $this->getVersionService()->findEntityById(
+            'Version\Type',
+            $result['versionType']
+        );
+
+        return $lastCallAndActiveVersionType;
     }
 
     /**
@@ -129,22 +160,20 @@ class ProgramService extends ServiceAbstract
     }
 
     /**
-     * @param \General\Service\GeneralService $generalService
-     */
-    public function setGeneralService($generalService)
-    {
-        $this->generalService = $generalService;
-    }
-
-    /**
-     * @return \General\Service\GeneralService
+     * @return GeneralService
      */
     public function getGeneralService()
     {
-        if (is_null($this->generalService)) {
-            $this->setGeneralService($this->getServiceLocator()->get('general_general_service'));
-        }
+        return $this->getServiceLocator()->get('general_general_service');
+    }
 
-        return $this->generalService;
+    /**
+     * get the version service
+     *
+     * @return VersionService
+     */
+    public function getVersionService()
+    {
+        return $this->getServiceLocator()->get('project_version_service');
     }
 }

@@ -93,7 +93,7 @@ class Nda extends EntityAbstract
     /**
      * @ORM\OneToMany(targetEntity="\Program\Entity\NdaObject", cascade={"persist"}, mappedBy="nda")
      * @Annotation\Exclude()
-     * @var \Program\Entity\NdaObject
+     * @var \Program\Entity\NdaObject[]
      */
     private $object;
 
@@ -124,7 +124,21 @@ class Nda extends EntityAbstract
      */
     public function __toString()
     {
-        return $this->domain;
+        return $this->parseFileName();
+    }
+
+    /**
+     * Parse a filename
+     *
+     * @return string
+     */
+    public function parseFileName()
+    {
+        if (is_null($this->getCall())) {
+            return sprintf(sprintf("NDA_SEQ_%s", $this->getContact()->getId()));
+        }
+
+        return sprintf(sprintf("NDA_%s_SEQ_%s", $this->getCall(), $this->getContact()->getId()));
     }
 
     /**
@@ -344,7 +358,7 @@ class Nda extends EntityAbstract
     }
 
     /**
-     * @param \Program\Entity\NdaObject $object
+     * @param \Program\Entity\NdaObject[] $object
      */
     public function setObject($object)
     {
@@ -352,15 +366,11 @@ class Nda extends EntityAbstract
     }
 
     /**
-     * @return \Program\Entity\NdaObject|null
+     * @return \Program\Entity\NdaObject[]
      */
     public function getObject()
     {
-        if ($this->object->count() > 0) {
-            return $this->object[0];
-        } else {
-            return null;
-        }
+        return $this->object;
     }
 
     /**

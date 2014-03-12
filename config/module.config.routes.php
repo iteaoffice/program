@@ -22,27 +22,70 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes'  => array(
-                    'view-nda-call'   => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'       => '/nda/view/call-[:call].html',
-                            'constraints' => array(
-                                'call' => '\d+'
-                            ),
-                            'defaults'    => array(
-                                'action' => 'view-nda-call',
+                    'nda' => array(
+                        'type'         => 'Literal',
+                        'priority'     => 1000,
+                        'options'      => array(
+                            'route'    => '/nda',
+                            'defaults' => array(
+                                'controller' => 'program-nda',
+                                'action'     => 'index',
                             ),
                         ),
-                    ),
-                    'render-nda-call' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'       => '/nda/render/call-[:call].pdf',
-                            'constraints' => array(
-                                'call' => '\d+'
+                        'child_routes' => array(
+                            'view-call'   => array(
+                                'type'    => 'Segment',
+                                'options' => array(
+                                    'route'       => '/view/call-[:call].html',
+                                    'constraints' => array(
+                                        'call' => '\d+'
+                                    ),
+                                    'defaults'    => array(
+                                        'action' => 'view-call',
+                                    ),
+                                ),
                             ),
-                            'defaults'    => array(
-                                'action' => 'render-nda-call',
+                            'render-call' => array(
+                                'type'    => 'Segment',
+                                'options' => array(
+                                    'route'       => '/render/call-[:call].pdf',
+                                    'constraints' => array(
+                                        'call' => '\d+'
+                                    ),
+                                    'defaults'    => array(
+                                        'action' => 'render-call',
+                                    ),
+                                ),
+                            ),
+                            'render'      => array(
+                                'type'    => 'Segment',
+                                'options' => array(
+                                    'route'    => '/render/nda.pdf',
+                                    'defaults' => array(
+                                        'action' => 'render',
+                                    ),
+                                ),
+                            ),
+                            'view'        => array(
+                                'type'    => 'Segment',
+                                'options' => array(
+                                    'route'    => '/view.html',
+                                    'defaults' => array(
+                                        'action' => 'view',
+                                    ),
+                                ),
+                            ),
+                            'download'    => array(
+                                'type'    => 'Segment',
+                                'options' => array(
+                                    'route'       => '/download/nda-[:id].pdf',
+                                    'constraints' => array(
+                                        'id' => '\d+'
+                                    ),
+                                    'defaults'    => array(
+                                        'action' => 'download',
+                                    ),
+                                ),
                             ),
                         ),
                     ),
@@ -62,7 +105,6 @@ return array(
                         ),
                         'may_terminate' => true,
                         'child_routes'  => array(
-
                             'new'    => array(
                                 'type'    => 'Segment',
                                 'options' => array(

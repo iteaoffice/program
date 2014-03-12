@@ -13,9 +13,10 @@ use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Authentication\AuthenticationService;
 
-use Doctrine\ORM\EntityManager;
-
 use Program\Entity\EntityAbstract;
+
+use Program\Entity\Call\Call;
+use Program\Entity\Nda;
 
 /**
  * ServiceAbstract
@@ -53,7 +54,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
      * @param      $id
      * @param bool $populate
      *
-     * @return object
+     * @return object|Call|Nda
      */
     public function findEntityById($entity, $id, $populate = false)
     {

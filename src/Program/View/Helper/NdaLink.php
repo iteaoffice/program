@@ -43,25 +43,36 @@ class NdaLink extends AbstractHelper
         switch ($action) {
 
             case 'view-call':
-
                 if (is_null($call)) {
                     throw new \Exception(sprintf("A call is needed to create a call DNA in %s", __CLASS__));
                 }
 
-                $router = 'program/view-nda-call';
+                $router = 'program/nda/view-call';
                 $nda    = new Entity\Nda();
                 $text   = sprintf($translate("txt-create-nda-for-call-%s"), $call);
                 break;
-
             case 'render-call':
-
                 if (is_null($call)) {
                     throw new \Exception(sprintf("A call is needed to create a call DNA in %s", __CLASS__));
                 }
 
-                $router = 'program/render-nda-call';
+                $router = 'program/nda/render-call';
                 $nda    = new Entity\Nda();
                 $text   = sprintf($translate("txt-render-nda-for-call-%s"), $call);
+                break;
+            case 'view':
+                $router = 'program/nda/view';
+                $nda    = new Entity\Nda();
+                $text   = sprintf($translate("txt-view-general-nda"), $call);
+                break;
+            case 'render':
+                $router = 'program/nda/render';
+                $nda    = new Entity\Nda();
+                $text   = sprintf($translate("txt-render-general-nda"));
+                break;
+            case 'download':
+                $router = 'program/nda/download';
+                $text   = sprintf($translate("txt-download-nda"));
                 break;
             default:
                 throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
@@ -87,8 +98,13 @@ class NdaLink extends AbstractHelper
                 }
                 break;
             case 'button':
-                $linkContent[] = '<i class="icon-pencil icon-white"></i> ' . $text;
-                $classes[]     = "btn btn-primary";
+                $linkContent[] = $text;
+                if ($action === 'render' || $action === 'render-call') {
+                    $classes[] = "btn btn-info";
+                } else {
+                    $classes[] = "btn btn-primary";
+                }
+
                 break;
             case 'text':
                 $linkContent[] = $text;

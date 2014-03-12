@@ -9,6 +9,11 @@
  */
 namespace Program\Entity;
 
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\InputFilterInterface;
+use Zend\Form\Annotation;
+
+use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,28 +23,125 @@ use Doctrine\ORM\Mapping as ORM;
  * @category    Program
  * @package     Entity
  */
-class ProgramDoaObject
+class ProgramDoaObject extends EntityAbstract
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="object_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @var integer
      */
     private $id;
-
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="doa_id", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Program\Entity\ProgramDoa", inversedBy="object", cascade={"persist"})
+     * @ORM\JoinColumns({
+     * @ORM\JoinColumn(name="doa_id", referencedColumnName="doa_id",nullable=false)
+     * })
+     * @var \Program\Entity\ProgramDoa
      */
-    private $doaId;
-
+    private $programDoa;
     /**
-     * @var string
-     *
      * @ORM\Column(name="object", type="blob", nullable=false)
+     * @var resource
      */
     private $object;
+
+    /**
+     * Magic Getter
+     *
+     * @param $property
+     *
+     * @return mixed
+     */
+    public function __get($property)
+    {
+        return $this->$property;
+    }
+
+    /**
+     * Magic Setter
+     *
+     * @param $property
+     * @param $value
+     *
+     * @return void
+     */
+    public function __set($property, $value)
+    {
+        $this->$property = $value;
+    }
+
+    /**
+     * Set input filter
+     *
+     * @param InputFilterInterface $inputFilter
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function setInputFilter(InputFilterInterface $inputFilter)
+    {
+        throw new \Exception("Setting an inputFilter is currently not supported");
+    }
+
+    /**
+     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
+     */
+    public function getInputFilter()
+    {
+        if (!$this->inputFilter) {
+            $inputFilter       = new InputFilter();
+            $this->inputFilter = $inputFilter;
+        }
+
+        return $this->inputFilter;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $object
+     */
+    public function setObject($object)
+    {
+        $this->object = $object;
+    }
+
+    /**
+     * @return resource
+     */
+    public function getObject()
+    {
+        return $this->object;
+    }
+
+    /**
+     * @param \Program\Entity\ProgramDoa $programDoa
+     */
+    public function setProgramDoa($programDoa)
+    {
+        $this->programDoa = $programDoa;
+    }
+
+    /**
+     * @return \Program\Entity\ProgramDoa
+     */
+    public function getProgramDoa()
+    {
+        return $this->programDoa;
+    }
 }

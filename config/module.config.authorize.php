@@ -43,8 +43,12 @@ return array(
              * access to all routes unless they are specified here.
              */
             'BjyAuthorize\Guard\Route' => array(
-                array('route' => 'program/view-nda-call', 'roles' => array()),
-                array('route' => 'program/render-nda-call', 'roles' => array()),
+                array('route' => 'program/nda/view-call', 'roles' => array('user')),
+                array('route' => 'program/nda/render-call', 'roles' => array('user')),
+                array('route' => 'program/nda/view', 'roles' => array('user')),
+                array('route' => 'program/nda/render', 'roles' => array('user')),
+                array('route' => 'program/nda/download', 'roles' => array('user'), 'assertion' => 'program_acl_assertion_nda'),
+
             ),
         ),
     ),

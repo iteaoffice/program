@@ -15,6 +15,7 @@ use Zend\ModuleManager\Feature; //Makes the module class more strict
 use Zend\EventManager\EventInterface;
 
 use Program\Service\FormServiceAwareInterface;
+use Program\Controller\Plugin\RenderNda;
 
 /**
  *
@@ -81,6 +82,24 @@ class Module implements
                     }
                 },
             ),
+        );
+    }
+
+    /**
+     * Move this to here to have config cache working
+     * @return array
+     */
+    public function getControllerPluginConfig()
+    {
+        return array(
+            'factories' => array(
+                'renderNda' => function ($sm) {
+                        $renderNda = new RenderNda();
+                        $renderNda->setServiceLocator($sm->getServiceLocator());
+
+                        return $renderNda;
+                    },
+            )
         );
     }
 

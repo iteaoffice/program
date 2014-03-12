@@ -12,6 +12,7 @@ $config = array(
         'invokables' => array(
             'program'         => 'Program\Controller\ProgramController',
             'program-manager' => 'Program\Controller\ProgramManagerController',
+            'program-nda'     => 'Program\Controller\NdaController',
         ),
     ),
     'view_manager'    => array(
@@ -19,7 +20,8 @@ $config = array(
     ),
     'service_manager' => array(
         'factories'  => array(
-            'program-assertion' => 'Program\Acl\Assertion\Program',
+            'program-assertion'      => 'Program\Acl\Assertion\Program',
+            'program_module_options' => 'Program\Service\OptionServiceFactory',
         ),
         'invokables' => array(
             'program_program_service'     => 'Program\Service\ProgramService',
@@ -56,6 +58,7 @@ $configFiles = array(
     __DIR__ . '/module.config.routes.php',
     __DIR__ . '/module.config.navigation.php',
     __DIR__ . '/module.config.authorize.php',
+    __DIR__ . '/module.option.program.php',
 );
 
 foreach ($configFiles as $configFile) {

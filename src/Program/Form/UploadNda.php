@@ -22,6 +22,7 @@ class UploadNda extends Form
     {
         parent::__construct($name, $options);
         $this->setAttribute('enctype', 'multipart/form-data');
+        $this->setAttribute('class', 'form-horizontal');
 
         $this->addElements();
         $this->setInputFilter($this->createInputFilter());
@@ -40,7 +41,7 @@ class UploadNda extends Form
         $file->setLabel(_("txt-upload-file"))
             ->setAttributes(array(
                 'id' => 'file',
-            ));
+            ))->setOptions(array('help-block' => _("txt-upload-signed-nda")));
         $this->add($file);
 
         $this->add(array(

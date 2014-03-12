@@ -54,4 +54,62 @@ class Call extends EntityRepository
 
         return $qb->getQuery()->getOneOrNullResult();
     }
+
+    /**
+     * @return array
+     */
+    public function findLastCallAndActiveVersionType()
+    {
+
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('c');
+        $qb->from("Program\Entity\Call\Call", 'c');
+
+        $today = new \DateTime();
+
+        $qb->where('c.poOpenDate < :today')
+            ->andWhere('c.poCloseDate > :today')
+            ->setParameter('today', $today);
+
+        /**
+         * Check first if we find an open PO
+         */
+        if (!is_null($qb->getQuery()->getOneOrNullResult())) {
+            /**
+             * We have found an open PO and call, return the result
+             */
+            return array(
+                'call'        => $qb->getQuery()->getOneOrNullResult(),
+                'versionType' => Type::TYPE_PO
+            );
+        }
+
+        $qb->where('c.fppOpenDate < :today')
+            ->andWhere('c.fppCloseDate > :today')
+            ->setParameter('today', $today);
+
+        /**
+         * Check first if we find an open FPP
+         */
+        if (!is_null($qb->getQuery()->getOneOrNullResult())) {
+            /**
+             * We have found an open PO and call, return the result
+             */
+            return array(
+                'call'        => $qb->getQuery()->getOneOrNullResult(),
+                'versionType' => Type::TYPE_FPP
+            );
+        }
+
+        /**
+         * Still no result? Return the latest FPP
+         */
+        $qb->orderBy('c.fppCloseCate', 'DESC');
+        $qb->setMaxResults(1);
+
+        return array(
+            'call'        => $qb->getQuery()->getOneOrNullResult(),
+            'versionType' => Type::TYPE_FPP
+        );
+    }
 }

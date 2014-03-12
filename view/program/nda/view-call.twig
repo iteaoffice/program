@@ -1,4 +1,4 @@
-<h1>{{ translate("txt-submit-non-disclosure-agreement") }}</h1>
+<h1>{{ translate("txt-submit-non-disclosure-agreement-for-call-%s")|format(call) }}</h1>
 
 {% set programService = programServiceProxy() %}
 {% set nda = programService.findNdaByCallAndContact(call, zfcUserIdentity()) %}
@@ -15,30 +15,36 @@
         </ul>
     </div>
 
-    <h2>{{ translate("txt-download-personalised-non-disclosure-agreement") }}</h2>
-    <dl class="dl-horizontal">
-        <dt>{{ translate("txt-program-call") }}</dt>
-        <dd>{{ callLink(call,'view', 'name') }}</dd>
-        <dt>{{ translate("txt-contact") }}</dt>
-        <dd>{{ zfcUserIdentity() }}</dd>
-    </dl>
-
-    {{ ndaLink(null, 'render-call', 'button', call ) }}
 
     <h2>{{ translate("txt-upload-non-disclosure-agreement") }}</h2>
-    <dl class="dl-horizontal">
-        <dt>{{ translate("txt-program-call") }}</dt>
-        <dd>{{ callLink(call,'view', 'name') }}</dd>
-        <dt>{{ translate("txt-contact") }}</dt>
-        <dd>{{ zfcUserIdentity() }}</dd>
-    </dl>
 
     {% do form.prepare() %}
     {{ form().openTag(form)|raw }}
-    {{ formrow(form.get('file')) }}
 
-    <span class="help-block">{{ translate("txt-upload-signed-nda") }}</span>
-    {{ formelement(form.get('submit')) }}
+    <div class="form-group">
+        <label class="col-sm-3 control-label">{{ translate("txt-contact") }}</label>
+
+        <div class="col-sm-9">
+            <p class="form-control-static">{{ zfcUserIdentity().displayName }}</p>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label">{{ translate("txt-program-call") }}</label>
+
+        <div class="col-sm-9">
+            <p class="form-control-static">{{ callLink(call,'view', 'name') }}</p>
+        </div>
+    </div>
+
+    {{ ztbformelement(form.get('file')) }}
+
+    <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-9">
+            {{ formelement(form.get('submit')) }} {{ ndaLink(null, 'render-call', 'button', call ) }}
+        </div>
+    </div>
 
     {{ form().closeTag()|raw }}
 
@@ -62,7 +68,9 @@
         <dt>{{ translate("txt-program-call") }}</dt>
         <dd>{{ callLink(call,'view', 'name') }}</dd>
         <dt>{{ translate("txt-contact") }}</dt>
-        <dd>{{ zfcUserIdentity() }}</dd>
+        <dd>{{ zfcUserIdentity().displayName() }}</dd>
+        <dt>{{ translate("txt-download-nda") }}</dt>
+        <dd>{{ ndaLink(nda,'download', 'text') }}</dd>
     </dl>
 
 {% endif %}
