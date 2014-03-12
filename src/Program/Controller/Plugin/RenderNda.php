@@ -9,15 +9,15 @@
  */
 namespace Program\Controller\Plugin;
 
-use Program\Entity\Nda;
+
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\ServiceManager\ServiceLocatorInterface;
+
+use Program\Entity\Nda;
 use General\Service\GeneralService;
 use Program\Options\ModuleOptions;
-
-use Contact\Entity\Contact;
 use Contact\Service\ContactService;
-use Program\Entity\Call\Call;
+
 
 /**
  * Special plugin to produce an array with the evaluation
@@ -33,14 +33,11 @@ class RenderNda extends AbstractPlugin
     protected $serviceLocator;
 
     /**
-     * Render a NDA triggered for a call
-     *
-     * @param Contact $contact
-     * @param Call    $call
+     * @param Nda $nda
      *
      * @return ProgramPdf
      */
-    public function renderCall(Contact $contact, Call $call)
+    public function renderCall(Nda $nda)
     {
         $pdf = new ProgramPdf();
         $pdf->setTemplate($this->getModuleOptions()->getNdaTemplate());
@@ -53,7 +50,7 @@ class RenderNda extends AbstractPlugin
         /**
          * Write the contact details
          */
-        $contactService = $this->getContactService()->setContact($contact);
+        $contactService = $this->getContactService()->setContact($nda->getContact());
         $pdf->SetXY(14, 55);
         $pdf->Write(0, $contactService->parseFullName());
         $pdf->SetXY(14, 60);
@@ -73,9 +70,6 @@ class RenderNda extends AbstractPlugin
         /**
          * Use the NDA object to render the filename
          */
-        $nda = new Nda();
-        $nda->setContact($contact);
-        $nda->setCall($call);
         $pdf->Write(0, $nda->parseFileName());
 
         $ndaContent = $twig->render(
@@ -132,7 +126,7 @@ class RenderNda extends AbstractPlugin
         /**
          * Write the contact details
          */
-        $contactService = $this->getContactService()->setContact($contact);
+        $contactService = $this->getContactService()->setContact($nda->getContact());
         $pdf->SetXY(14, 55);
         $pdf->Write(0, $contactService->parseFullName());
         $pdf->SetXY(14, 60);
@@ -154,7 +148,7 @@ class RenderNda extends AbstractPlugin
         $ndaContent = $twig->render(
             'program/pdf/nda-general',
             array(
-                'contact' => $contact,
+                'contact' => $nda->getContact(),
             )
         );
 
