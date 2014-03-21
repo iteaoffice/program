@@ -18,7 +18,7 @@
         <tbody>
         {% for call in program.call %}
             <tr>
-                <td>{{ callLink(call,'view','name') }}</td>
+                <td>{{ callLink(call,'view-list','name') }}</td>
                 <td>{{ call.poOpenDate|date("d-m-Y") }}</td>
                 <td>{{ call.poCloseDate|date("d-m-Y") }}</td>
                 <td>{{ call.fppOpenDate|date("d-m-Y") }}</td>

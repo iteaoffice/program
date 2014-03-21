@@ -39,17 +39,10 @@ class CallLink extends AbstractHelper
         $url       = $this->view->plugin('url');
         $serverUrl = $this->view->plugin('serverUrl');
 
-        $routeMatch = $this->view->getHelperPluginManager()->getServiceLocator()
-            ->get('application')
-            ->getMvcEvent()
-            ->getRouteMatch();
-
         $params = array(
             'id'     => $call->getId(),
-            'entity' => 'call\call'
+            'entity' => 'Call\Call'
         );
-
-        $isAllowed = $this->view->plugin('isAllowed');
 
         switch ($action) {
             case 'new':
@@ -64,21 +57,10 @@ class CallLink extends AbstractHelper
             case 'view-list':
 
                 /**
-                 * For a list in the front-end simply use the MatchedRouteName
+                 * For a list in the front-end we use a node (all-projects)
+                 * This node should exist...
                  */
-                $router           = $routeMatch->getMatchedRouteName();
-                $params['docRef'] = $routeMatch->getParam('docRef');
-                $params['call']   = $call->getId();
-
-                $text = sprintf($translate("txt-view-call-%s"), $call);
-                break;
-            case 'view':
-
-                /**
-                 * For a list in the front-end simply use the MatchedRouteName
-                 */
-                $router = 'route-content_entity_node';
-
+                $router           = 'route-content_entity_node';
                 $params['call']   = $call->getId();
                 $params['docRef'] = 'all-projects';
 
