@@ -104,8 +104,11 @@ class Call extends EntityRepository
         }
 
         /**
-         * Still no result? Return the latest FPP
+         * Still no result? Return the latest FPP (and reset the previous settings)
          */
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('c');
+        $qb->from("Program\Entity\Call\Call", 'c');
         $qb->orderBy('c.fppCloseDate', 'DESC');
         $qb->setMaxResults(1);
 
