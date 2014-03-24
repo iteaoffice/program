@@ -9,7 +9,6 @@
  */
 namespace Program\Controller\Plugin;
 
-
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -17,7 +16,6 @@ use Program\Entity\Nda;
 use General\Service\GeneralService;
 use Program\Options\ModuleOptions;
 use Contact\Service\ContactService;
-
 
 /**
  * Special plugin to produce an array with the evaluation
@@ -55,7 +53,6 @@ class RenderNda extends AbstractPlugin
         $pdf->Write(0, $contactService->parseFullName());
         $pdf->SetXY(14, 60);
         $pdf->Write(0, $contactService->parseOrganisation());
-
 
         /**
          * Write the current date
@@ -102,7 +99,6 @@ class RenderNda extends AbstractPlugin
         $pdf->Line(130, 265, 190, 265);
         $pdf->Line(30, 275, 90, 275);
 
-
         return $pdf;
     }
 
@@ -131,7 +127,6 @@ class RenderNda extends AbstractPlugin
         $pdf->Write(0, $contactService->parseFullName());
         $pdf->SetXY(14, 60);
         $pdf->Write(0, $contactService->parseOrganisation());
-
 
         /**
          * Write the current date
@@ -174,10 +169,8 @@ class RenderNda extends AbstractPlugin
         $pdf->Line(130, 265, 190, 265);
         $pdf->Line(30, 275, 90, 275);
 
-
         return $pdf;
     }
-
 
     /**
      * Gateway to the General Service
@@ -206,7 +199,6 @@ class RenderNda extends AbstractPlugin
     {
         return $this->getServiceLocator()->get('program_module_options');
     }
-
 
     /**
      * @return ServiceLocatorInterface

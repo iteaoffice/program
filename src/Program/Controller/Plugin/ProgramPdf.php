@@ -9,7 +9,6 @@
  */
 namespace Program\Controller\Plugin;
 
-
 /**
  * Class PDF
  * @package Program\Controller\Plugin
@@ -59,4 +58,3 @@ class ProgramPdf extends \FPDI
         $this->template = $template;
     }
 }
-

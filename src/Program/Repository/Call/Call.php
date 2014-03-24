@@ -78,6 +78,7 @@ class Call extends EntityRepository
             /**
              * We have found an open PO and call, return the result
              */
+
             return array(
                 'call'        => $qb->getQuery()->getOneOrNullResult(),
                 'versionType' => Type::TYPE_PO
@@ -95,6 +96,7 @@ class Call extends EntityRepository
             /**
              * We have found an open PO and call, return the result
              */
+
             return array(
                 'call'        => $qb->getQuery()->getOneOrNullResult(),
                 'versionType' => Type::TYPE_FPP
