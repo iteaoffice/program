@@ -106,7 +106,7 @@ class Call extends EntityRepository
         /**
          * Still no result? Return the latest FPP
          */
-        $qb->orderBy('c.fppCloseCate', 'DESC');
+        $qb->orderBy('c.fppCloseDate', 'DESC');
         $qb->setMaxResults(1);
 
         return array(
