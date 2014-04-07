@@ -14,10 +14,14 @@ use Zend\ServiceManager\ServiceLocatorAwareInterface;
 
 use Project\Service\ProjectService;
 
+use Affiliation\Service\AffiliationService;
+
 use Program\Service\ProgramService;
 use Program\Service\FormServiceAwareInterface;
 use Program\Service\FormService;
 use Program\Options\ModuleOptions;
+
+use General\Service\GeneralService;
 
 /**
  * @category    Program
@@ -31,6 +35,10 @@ abstract class ProgramAbstractController extends AbstractActionController implem
      * @var ProgramService
      */
     protected $programService;
+    /**
+     * @var AffiliationService
+     */
+    protected $affiliationService;
     /**
      * @var ProjectService
      */
@@ -72,6 +80,34 @@ abstract class ProgramAbstractController extends AbstractActionController implem
     public function getProgramService()
     {
         return $this->getServiceLocator()->get('program_program_service');
+    }
+
+    /**
+     * Gateway to the Affiliation Service
+     *
+     * @return AffiliationService
+     */
+    public function getAffiliationService()
+    {
+        return $this->getServiceLocator()->get('affiliation_affiliation_service');
+    }
+
+    /**
+     * Gateway to the General Service
+     *
+     * @return GeneralService
+     */
+    public function getGeneralService()
+    {
+        return $this->getServiceLocator()->get('general_general_service');
+    }
+
+    /**
+     * @return \Program\Service\CallService
+     */
+    public function getCallService()
+    {
+        return $this->getServiceLocator()->get('program_call_service');
     }
 
     /**

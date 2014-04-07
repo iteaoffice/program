@@ -89,6 +89,45 @@ return array(
                             ),
                         ),
                     ),
+                    'doa' => array(
+                        'type'         => 'Segment',
+                        'options'      => array(
+                            'route'    => '/doa',
+                            'defaults' => array(
+                                'controller' => 'program-doa',
+                                'action'     => 'index',
+                            ),
+                        ),
+                        'child_routes' => array(
+                            'render'   => array(
+                                'type'    => 'Segment',
+                                'options' => array(
+                                    'route'    => '/render/affiliation-[:affiliation-id].html',
+                                    'defaults' => array(
+                                        'action' => 'render',
+                                    ),
+                                ),
+                            ),
+                            'upload'   => array(
+                                'type'    => 'Segment',
+                                'options' => array(
+                                    'route'    => '/upload/affiliation-[:affiliation-id].html',
+                                    'defaults' => array(
+                                        'action' => 'upload',
+                                    ),
+                                ),
+                            ),
+                            'download' => array(
+                                'type'    => 'Segment',
+                                'options' => array(
+                                    'route'    => '/download/[:id].pdf',
+                                    'defaults' => array(
+                                        'action' => 'download',
+                                    ),
+                                ),
+                            ),
+                        )
+                    ),
                 ),
             ),
             'zfcadmin' => array(

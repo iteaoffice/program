@@ -13,6 +13,7 @@ $config = array(
             'program'         => 'Program\Controller\ProgramController',
             'program-manager' => 'Program\Controller\ProgramManagerController',
             'program-nda'     => 'Program\Controller\NdaController',
+            'program-doa'     => 'Program\Controller\DoaController',
         ),
     ),
     'view_manager'    => array(
@@ -25,6 +26,7 @@ $config = array(
         ),
         'invokables' => array(
             'program_program_service'     => 'Program\Service\ProgramService',
+            'program_call_service'        => 'Program\Service\CallService',
             'program_form_service'        => 'Program\Service\FormService',
             'program_program_form_filter' => 'Program\Form\FilterCreateObject',
         )

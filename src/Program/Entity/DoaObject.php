@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @category    Program
  * @package     Entity
  */
-class ProgramDoaObject extends EntityAbstract
+class DoaObject extends EntityAbstract
 {
     /**
      * @ORM\Column(name="object_id", type="integer", nullable=false)
@@ -31,13 +31,13 @@ class ProgramDoaObject extends EntityAbstract
      */
     private $id;
     /**
-     * @ORM\ManyToOne(targetEntity="Program\Entity\ProgramDoa", inversedBy="object", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Program\Entity\Doa", inversedBy="object", cascade={"persist"})
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="doa_id", referencedColumnName="doa_id",nullable=false)
      * })
-     * @var \Program\Entity\ProgramDoa
+     * @var \Program\Entity\Doa
      */
-    private $programDoa;
+    private $doa;
     /**
      * @ORM\Column(name="object", type="blob", nullable=false)
      * @var resource
@@ -128,18 +128,18 @@ class ProgramDoaObject extends EntityAbstract
     }
 
     /**
-     * @param \Program\Entity\ProgramDoa $programDoa
+     * @return Doa
      */
-    public function setProgramDoa($programDoa)
+    public function getDoa()
     {
-        $this->programDoa = $programDoa;
+        return $this->doa;
     }
 
     /**
-     * @return \Program\Entity\ProgramDoa
+     * @param Doa $doa
      */
-    public function getProgramDoa()
+    public function setDoa($doa)
     {
-        return $this->programDoa;
+        $this->doa = $doa;
     }
 }

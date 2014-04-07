@@ -1,7 +1,7 @@
 <h1>{{ translate("txt-submit-non-disclosure-agreement-for-call-%s")|format(call) }}</h1>
 
-{% set programService = programServiceProxy() %}
-{% set nda = programService.findNdaByCallAndContact(call, zfcUserIdentity()) %}
+{% set callService = callServiceProxy() %}
+{% set nda = callService.findNdaByCallAndContact(call, zfcUserIdentity) %}
 
 {% if not nda %}
     <div class="alert alert-block alert-info">

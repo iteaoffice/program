@@ -49,11 +49,11 @@ class Program extends EntityAbstract
      */
     private $call;
     /**
-     * @ORM\OneToMany(targetEntity="\Program\Entity\ProgramDoa", cascade={"persist"}, mappedBy="program")
+     * @ORM\OneToMany(targetEntity="\Program\Entity\Doa", cascade={"persist"}, mappedBy="program")
      * @Annotation\Exclude()
-     * @var \Program\Entity\ProgramDoa[]
+     * @var \Program\Entity\Doa[]
      */
-    private $programDoa;
+    private $doa;
     /**
      * @ORM\OneToMany(targetEntity="\Contact\Entity\Dnd", cascade={"persist"}, mappedBy="program")
      * @Annotation\Exclude()
@@ -66,8 +66,8 @@ class Program extends EntityAbstract
      */
     public function __construct()
     {
-        $this->call       = new Collections\ArrayCollection();
-        $this->programDoa = new Collections\ArrayCollection();
+        $this->call = new Collections\ArrayCollection();
+        $this->doa  = new Collections\ArrayCollection();
     }
 
     /**
@@ -218,5 +218,37 @@ class Program extends EntityAbstract
     public function getProgram()
     {
         return $this->program;
+    }
+
+    /**
+     * @return \Contact\Entity\Dnd[]
+     */
+    public function getContactDnd()
+    {
+        return $this->contactDnd;
+    }
+
+    /**
+     * @param \Contact\Entity\Dnd[] $contactDnd
+     */
+    public function setContactDnd($contactDnd)
+    {
+        $this->contactDnd = $contactDnd;
+    }
+
+    /**
+     * @return Doa[]
+     */
+    public function getDoa()
+    {
+        return $this->doa;
+    }
+
+    /**
+     * @param Doa[] $doa
+     */
+    public function setDoa($doa)
+    {
+        $this->doa = $doa;
     }
 }

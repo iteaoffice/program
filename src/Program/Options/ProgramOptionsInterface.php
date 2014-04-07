@@ -27,4 +27,16 @@ interface ProgramOptionsInterface
      * @return boolean
      */
     public function getNdaTemplate();
+
+    /**
+     * @param $doaTemplate
+     *
+     * @return ProgramOptionsInterface
+     */
+    public function setDoaTemplate($doaTemplate);
+
+    /**
+     * @return string
+     */
+    public function getDoaTemplate();
 }

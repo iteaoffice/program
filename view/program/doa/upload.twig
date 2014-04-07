@@ -1,0 +1,47 @@
+{% set projectService = projectServiceProxy(affiliationService.affiliation.project) %}
+
+<h1>{{ translate("txt-upload-doa-for-organisation-%s-for-program-%s")|
+    format(affiliationService.affiliation.organisation, affiliationService.affiliation.project.call.program)|raw }}</h1>
+
+<p class="lead">{{ translate("txt-upload-doa-for-organisation-%s-for-program-%s-explanation")|
+    format(affiliationService.affiliation.organisation, affiliationService.affiliation.project.call.program)|raw }}</p>
+
+
+{{ form().openTag(form)|raw }}
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-program") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ projectService.project.call.program }}
+            ({{ projectLink(projectService,'view-community') }})</p>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-organisation") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ affiliationService.affiliation.organisation }}</p>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-render-program-doa") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ programDoaLink(null,'render','text', affiliationService.affiliation) }}</p>
+    </div>
+</div>
+
+{{ ztbformelement(form.get('file')) }}
+{{ ztbformelement(form.get('csrf')) }}
+
+<div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+        {{ ztbformelement(form.get('submit')) }}
+        {{ ztbformelement(form.get('cancel')) }}
+    </div>
+</div>
+
+{{ form().closeTag()|raw }}

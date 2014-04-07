@@ -30,6 +30,16 @@ use Doctrine\ORM\Mapping as ORM;
 class Call extends EntityAbstract
 {
     /**
+     * Produce a list of different statuses in a call, which are required for representation and access control
+     */
+    const PO_NOT_OPEN = 'PO_NOT_OPEN';
+    const PO_OPEN = 'PO_OPEN';
+    const PO_CLOSED = 'PO_CLOSED';
+    const FPP_NOT_OPEN = 'FPP_NOT_OPEN';
+    const FPP_OPEN = 'FPP_OPEN';
+    const FPP_CLOSED = 'FPP_CLOSED';
+
+    /**
      * @ORM\Column(name="programcall_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")

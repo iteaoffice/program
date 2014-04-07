@@ -18,6 +18,11 @@ use Program\Entity\EntityAbstract;
 use Program\Entity\Call\Call;
 use Program\Entity\Nda;
 
+
+use General\Service\GeneralService;
+use Project\Service\VersionService;
+
+
 /**
  * ServiceAbstract
  */
@@ -48,20 +53,14 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
     }
 
     /**
-     * Find 1 entity based on the id
+     * @param $entity
+     * @param $id
      *
-     * @param      $entity
-     * @param      $id
-     * @param bool $populate
-     *
-     * @return object|Call|Nda
+     * @return null|object
      */
-    public function findEntityById($entity, $id, $populate = false)
+    public function findEntityById($entity, $id)
     {
-        $entity = $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->find($id);
-        if ($entity) {
-            return $entity;
-        }
+        return $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->find($id);
     }
 
     /**
@@ -183,6 +182,24 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
     public function setEntityManager($entityManager)
     {
         $this->entityManager = $entityManager;
+    }
+
+    /**
+     * @return GeneralService
+     */
+    public function getGeneralService()
+    {
+        return $this->getServiceLocator()->get('general_general_service');
+    }
+
+    /**
+     * get the version service
+     *
+     * @return VersionService
+     */
+    public function getVersionService()
+    {
+        return $this->getServiceLocator()->get('project_version_service');
     }
 
     /**

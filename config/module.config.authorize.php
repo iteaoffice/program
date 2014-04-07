@@ -48,7 +48,9 @@ return array(
                 array('route' => 'program/nda/view', 'roles' => array('user')),
                 array('route' => 'program/nda/render', 'roles' => array('user')),
                 array('route' => 'program/nda/download', 'roles' => array('user'), 'assertion' => 'program_acl_assertion_nda'),
-
+                array('route' => 'program/doa/upload', 'roles' => array('office')),
+                array('route' => 'program/doa/render', 'roles' => array('office')),
+                array('route' => 'program/doa/download', 'roles' => array('office')),
             ),
         ),
     ),

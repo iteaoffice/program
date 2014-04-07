@@ -27,6 +27,13 @@ class ModuleOptions extends AbstractOptions implements
     protected $ndaTemplate = '';
 
     /**
+     * Location of the PDF having the DOA template
+     *
+     * @var string
+     */
+    protected $doaTemplate = '';
+
+    /**
      * @param $ndaTemplate
      *
      * @return ModuleOptions
@@ -44,5 +51,25 @@ class ModuleOptions extends AbstractOptions implements
     public function getNdaTemplate()
     {
         return $this->ndaTemplate;
+    }
+
+    /**
+     * @param $doaTemplate
+     *
+     * @return ModuleOptions
+     */
+    public function setDoaTemplate($doaTemplate)
+    {
+        $this->doaTemplate = $doaTemplate;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDoaTemplate()
+    {
+        return $this->doaTemplate;
     }
 }

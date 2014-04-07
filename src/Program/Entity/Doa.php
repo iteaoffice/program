@@ -28,7 +28,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @category    Program
  * @package     Entity
  */
-class ProgramDoa extends EntityAbstract
+class Doa extends EntityAbstract
 {
     /**
      * @ORM\Column(name="doa_id", type="integer", nullable=false)
@@ -78,10 +78,9 @@ class ProgramDoa extends EntityAbstract
      */
     private $dateCreated;
     /**
-     * @ORM\OneToMany(targetEntity="Program\Entity\ProgramDoaObject", cascade={"persist","remove"},
-     * mappedBy="programDoa", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="Program\Entity\DoaObject", cascade={"persist","remove"}, mappedBy="doa")
      * @Annotation\Exclude()
-     * @var \Program\Entity\ProgramDoaObject[]
+     * @var \Program\Entity\DoaObject[]
      */
     private $object;
     /**
@@ -101,7 +100,7 @@ class ProgramDoa extends EntityAbstract
      */
     private $organisation;
     /**
-     * @ORM\ManyToOne(targetEntity="Program\Entity\Program", inversedBy="programDoa")
+     * @ORM\ManyToOne(targetEntity="Program\Entity\Program", inversedBy="doa")
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="program_id", referencedColumnName="program_id")
      * })
@@ -215,6 +214,16 @@ class ProgramDoa extends EntityAbstract
         }
 
         return $this->inputFilter;
+    }
+
+    /**
+     * Parse a filename
+     *
+     * @return string
+     */
+    public function parseFileName()
+    {
+        return sprintf("DOA_%s_%s", $this->getOrganisation(), $this->getProgram());
     }
 
     /**
@@ -394,7 +403,7 @@ class ProgramDoa extends EntityAbstract
     }
 
     /**
-     * @param \Program\Entity\ProgramDoaObject[] $object
+     * @param \Program\Entity\DoaObject[] $object
      */
     public function setObject($object)
     {
@@ -402,7 +411,7 @@ class ProgramDoa extends EntityAbstract
     }
 
     /**
-     * @return \Program\Entity\ProgramDoaObject[]
+     * @return \Program\Entity\DoaObject[]
      */
     public function getObject()
     {

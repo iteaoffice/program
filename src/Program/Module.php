@@ -16,6 +16,7 @@ use Zend\EventManager\EventInterface;
 
 use Program\Service\FormServiceAwareInterface;
 use Program\Controller\Plugin\RenderNda;
+use Program\Controller\Plugin\RenderDoa;
 
 /**
  *
@@ -94,11 +95,17 @@ class Module implements
         return array(
             'factories' => array(
                 'renderNda' => function ($sm) {
-                        $renderNda = new RenderNda();
-                        $renderNda->setServiceLocator($sm->getServiceLocator());
+                    $renderNda = new RenderNda();
+                    $renderNda->setServiceLocator($sm->getServiceLocator());
 
-                        return $renderNda;
-                    },
+                    return $renderNda;
+                },
+                'renderProgramDoa' => function ($sm) {
+                    $renderDoa = new RenderDoa();
+                    $renderDoa->setServiceLocator($sm->getServiceLocator());
+
+                    return $renderDoa;
+                },
             )
         );
     }
