@@ -137,7 +137,7 @@ class NdaLink extends AbstractHelper
         return sprintf(
             $uri,
             $serverUrl->__invoke() . $url($router, $params),
-            $text,
+            strip_tags($text),
             implode($classes),
             implode($linkContent)
         );
