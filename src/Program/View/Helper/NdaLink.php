@@ -124,7 +124,7 @@ class NdaLink extends AbstractHelper
                 }
                 break;
             case 'button':
-                $linkContent[] = $text;
+                $linkContent[] = strip_tags($text);
                 if ($action === 'render') {
                     $classes[] = "btn btn-info";
                 } else {
