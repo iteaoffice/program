@@ -70,10 +70,10 @@ class NdaLink extends AbstractHelper
             case 'upload':
                 $router = 'program/nda/upload';
                 if (!is_null($call)) {
-                    $text              = sprintf($translate("txt-upload-nda-for-call-%s"), $call);
+                    $text              = sprintf($translate("txt-upload-nda-for-call-%s-title"), $call);
                     $params['call-id'] = $call->getId();
                 } elseif (!is_null($nda->getCall())) {
-                    $text              = sprintf($translate("txt-upload-nda-for-call-%s"), $nda->getCall());
+                    $text              = sprintf($translate("txt-upload-nda-for-call-%s-title"), $nda->getCall());
                     $params['call-id'] = $nda->getCall()->getId();
                 } else {
                     $text = sprintf($translate("txt-upload-nda"));
@@ -81,27 +81,27 @@ class NdaLink extends AbstractHelper
                 break;
             case 'replace':
                 $router = 'program/nda/replace';
-                $text   = sprintf($translate("txt-replace-nda-%s"), $nda);
+                $text   = sprintf($translate("txt-replace-nda-%s-title"), $nda);
                 break;
             case 'render':
                 $router = 'program/nda/render';
-                $text   = sprintf($translate("txt-render-general-nda"));
+                $text   = sprintf($translate("txt-render-general-nda-title"));
 
                 /**
                  * Produce special texts for call-dedicated NDA's
                  */
                 if (!is_null($nda->getCall())) {
-                    $text              = sprintf($translate("txt-render-nda-for-call-%s"), $nda->getCall());
+                    $text              = sprintf($translate("txt-render-nda-for-call-%s-title"), $nda->getCall());
                     $params['call-id'] = $nda->getCall()->getId();
                 } elseif (!is_null($call)) {
-                    $text              = sprintf($translate("txt-render-nda-for-call-%s"), $call);
+                    $text              = sprintf($translate("txt-render-nda-for-call-%s-title"), $call);
                     $params['call-id'] = $call->getId();
                 }
 
                 break;
             case 'download':
                 $router = 'program/nda/download';
-                $text   = sprintf($translate("txt-download-nda-%s"), $nda);
+                $text   = sprintf($translate("txt-download-nda-%s-title"), $nda);
                 break;
             default:
                 throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
