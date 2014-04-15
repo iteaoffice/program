@@ -125,6 +125,13 @@ class Nda extends EntityAbstract implements ResourceInterface
      */
     public function __toString()
     {
+        /**
+         * Return an empty value when no id is known
+         */
+        if (is_null($this->id)) {
+            return sprintf("NDA_EMPTY");
+        }
+
         return $this->parseFileName();
     }
 

@@ -123,7 +123,7 @@ class NdaLink extends AbstractHelper
                 break;
             case 'button':
                 $linkContent[] = $text;
-                if ($action === 'render' || $action === 'render-call') {
+                if ($action === 'render') {
                     $classes[] = "btn btn-info";
                 } else {
                     $classes[] = "btn btn-primary";
