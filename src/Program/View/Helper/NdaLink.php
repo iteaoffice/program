@@ -67,12 +67,14 @@ class NdaLink extends AbstractHelper
         );
 
         switch ($action) {
-            case 'view':
-                $router = 'program/nda/view';
+            case 'upload':
+                $router = 'program/nda/upload';
                 if (!is_null($call)) {
-                    $text = sprintf($translate("txt-view-nda-for-call-%s"), $call);
+                    $text              = sprintf($translate("txt-view-nda-for-call-%s"), $call);
+                    $params['call-id'] = $call->getId();
                 } elseif (!is_null($nda->getCall())) {
-                    $text = sprintf($translate("txt-view-nda-for-call-%s"), $nda->getCall());
+                    $text              = sprintf($translate("txt-view-nda-for-call-%s"), $nda->getCall());
+                    $params['call-id'] = $nda->getCall()->getId();
                 } else {
                     $text = sprintf($translate("txt-view-nda"));
                 }
