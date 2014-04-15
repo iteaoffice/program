@@ -69,7 +69,7 @@ class NdaLink extends AbstractHelper
         switch ($action) {
             case 'view':
                 $router = 'program/nda/view';
-                if (!is_null($call)) {
+                if (!is_null($call) || !is_null($nda->getCall())) {
                     $text = sprintf($translate("txt-view-nda-for-call-%s"), $call);
                 } else {
                     $text = sprintf($translate("txt-view-nda"));
