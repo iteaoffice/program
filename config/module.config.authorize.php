@@ -24,16 +24,7 @@ return array(
          */
         'rule_providers'     => array(
             'BjyAuthorize\Provider\Rule\Config' => array(
-                'allow' => array(
-                    // allow guests and users (and admins, through inheritance)
-                    // the "wear" privilege on the resource "pants"d
-                    array(array('public'), 'program', array('listings', 'view')),
-                    array(array('office'), 'program', array('edit', 'new', 'delete'))
-                ),
-                // Don't mix allow/deny rules if you are using role inheritance.
-                // There are some weird bugs.
-                'deny'  => array( // ...
-                ),
+                'allow' => array(),
             ),
         ),
         /* Currently, only controller and route guards exist
@@ -43,14 +34,17 @@ return array(
              * access to all routes unless they are specified here.
              */
             'BjyAuthorize\Guard\Route' => array(
-                array('route' => 'program/nda/view-call', 'roles' => array('user')),
-                array('route' => 'program/nda/render-call', 'roles' => array('user')),
-                array('route' => 'program/nda/view', 'roles' => array('user')),
-                array('route' => 'program/nda/render', 'roles' => array('user')),
+                array('route' => 'program/nda/view-call', 'roles' => array('user'), 'assertion' => 'program_acl_assertion_nda'),
+                array('route' => 'program/nda/render-call', 'roles' => array('user'), 'assertion' => 'program_acl_assertion_nda'),
+                array('route' => 'program/nda/view', 'roles' => array('user'), 'assertion' => 'program_acl_assertion_nda'),
+                array('route' => 'program/nda/render', 'roles' => array('user'), 'assertion' => 'program_acl_assertion_nda'),
+                array('route' => 'program/nda/replace', 'roles' => array('user'), 'assertion' => 'program_acl_assertion_nda'),
                 array('route' => 'program/nda/download', 'roles' => array('user'), 'assertion' => 'program_acl_assertion_nda'),
-                array('route' => 'program/doa/upload', 'roles' => array('office')),
-                array('route' => 'program/doa/render', 'roles' => array('office')),
-                array('route' => 'program/doa/download', 'roles' => array('office')),
+                array('route' => 'program/doa/upload', 'roles' => array('office'), 'assertion' => 'program_acl_assertion_doa'),
+                array('route' => 'program/doa/view', 'roles' => array('office'), 'assertion' => 'program_acl_assertion_doa'),
+                array('route' => 'program/doa/render', 'roles' => array('office'), 'assertion' => 'program_acl_assertion_doa'),
+                array('route' => 'program/doa/replace', 'roles' => array('office'), 'assertion' => 'program_acl_assertion_doa'),
+                array('route' => 'program/doa/download', 'roles' => array('office'), 'assertion' => 'program_acl_assertion_doa'),
             ),
         ),
     ),

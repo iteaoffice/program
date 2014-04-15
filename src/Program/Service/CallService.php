@@ -41,6 +41,18 @@ class CallService extends ServiceAbstract
     protected $call;
 
     /**
+     * @param $id
+     *
+     * @return $this
+     */
+    public function setCallId($id)
+    {
+        $this->setCall($this->findEntityById('Call\Call', $id));
+
+        return $this;
+    }
+
+    /**
      * Find the open call based on the request type
      *
      * @param int $type ;

@@ -12,14 +12,12 @@ namespace Program\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 
-use Project\Service\ProjectService;
-
-use Affiliation\Service\AffiliationService;
 
 use Program\Service\ProgramService;
 use Program\Service\FormServiceAwareInterface;
 use Program\Service\FormService;
 use Program\Options\ModuleOptions;
+use Organisation\Service\OrganisationService;
 
 use General\Service\GeneralService;
 
@@ -35,14 +33,6 @@ abstract class ProgramAbstractController extends AbstractActionController implem
      * @var ProgramService
      */
     protected $programService;
-    /**
-     * @var AffiliationService
-     */
-    protected $affiliationService;
-    /**
-     * @var ProjectService
-     */
-    protected $projectService;
     /**
      * @var FormService
      */
@@ -83,14 +73,15 @@ abstract class ProgramAbstractController extends AbstractActionController implem
     }
 
     /**
-     * Gateway to the Affiliation Service
+     * Gateway to the Organisation Service
      *
-     * @return AffiliationService
+     * @return OrganisationService
      */
-    public function getAffiliationService()
+    public function getOrganisationService()
     {
-        return $this->getServiceLocator()->get('affiliation_affiliation_service');
+        return $this->getServiceLocator()->get('organisation_organisation_service');
     }
+
 
     /**
      * Gateway to the General Service

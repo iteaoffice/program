@@ -33,49 +33,56 @@ return array(
                             ),
                         ),
                         'child_routes' => array(
-                            'view-call'   => array(
+                            'upload'   => array(
                                 'type'    => 'Segment',
                                 'options' => array(
-                                    'route'       => '/view/call-[:call].html',
+                                    'route'       => '/upload[/call-:call-id].pdf',
                                     'constraints' => array(
-                                        'call' => '\d+'
+                                        'call-id' => '\d+'
                                     ),
                                     'defaults'    => array(
-                                        'action' => 'view-call',
+                                        'action'    => 'upload',
+                                        'privilege' => 'upload'
                                     ),
                                 ),
                             ),
-                            'render-call' => array(
+                            'render'   => array(
                                 'type'    => 'Segment',
                                 'options' => array(
-                                    'route'       => '/render/call-[:call].pdf',
+                                    'route'       => '/render[/call-:call-id].pdf',
                                     'constraints' => array(
-                                        'call' => '\d+'
+                                        'call-id' => '\d+'
                                     ),
                                     'defaults'    => array(
-                                        'action' => 'render-call',
+                                        'action'    => 'render',
+                                        'privilege' => 'render'
                                     ),
                                 ),
                             ),
-                            'render'      => array(
+                            'view'     => array(
                                 'type'    => 'Segment',
                                 'options' => array(
-                                    'route'    => '/render/nda.pdf',
+                                    'route'    => '/view/nda-[:id].html',
                                     'defaults' => array(
-                                        'action' => 'render',
+                                        'action'    => 'view',
+                                        'privilege' => 'view'
                                     ),
                                 ),
                             ),
-                            'view'        => array(
+                            'replace'  => array(
                                 'type'    => 'Segment',
                                 'options' => array(
-                                    'route'    => '/view.html',
-                                    'defaults' => array(
-                                        'action' => 'view',
+                                    'route'       => '/replace/nda-[:id].html',
+                                    'constraints' => array(
+                                        'id' => '\d+'
+                                    ),
+                                    'defaults'    => array(
+                                        'action'    => 'replace',
+                                        'privilege' => 'replace'
                                     ),
                                 ),
                             ),
-                            'download'    => array(
+                            'download' => array(
                                 'type'    => 'Segment',
                                 'options' => array(
                                     'route'       => '/download/nda-[:id].pdf',
@@ -83,7 +90,8 @@ return array(
                                         'id' => '\d+'
                                     ),
                                     'defaults'    => array(
-                                        'action' => 'download',
+                                        'action'    => 'download',
+                                        'privilege' => 'download'
                                     ),
                                 ),
                             ),
@@ -102,18 +110,40 @@ return array(
                             'render'   => array(
                                 'type'    => 'Segment',
                                 'options' => array(
-                                    'route'    => '/render/affiliation-[:affiliation-id].html',
+                                    'route'    => '/render/organisation-[:organisation-id]/program-[:program-id].pdf',
                                     'defaults' => array(
-                                        'action' => 'render',
+                                        'action'    => 'render',
+                                        'privilege' => 'render'
                                     ),
                                 ),
                             ),
                             'upload'   => array(
                                 'type'    => 'Segment',
                                 'options' => array(
-                                    'route'    => '/upload/affiliation-[:affiliation-id].html',
+                                    'route'    => '/upload/organisation-[:organisation-id]/program-[:program-id].html',
                                     'defaults' => array(
-                                        'action' => 'upload',
+                                        'action'    => 'upload',
+                                        'privilege' => 'upload'
+                                    ),
+                                ),
+                            ),
+                            'view'     => array(
+                                'type'    => 'Segment',
+                                'options' => array(
+                                    'route'    => '/view/[:id].html',
+                                    'defaults' => array(
+                                        'action'    => 'view',
+                                        'privilege' => 'view'
+                                    ),
+                                ),
+                            ),
+                            'replace'  => array(
+                                'type'    => 'Segment',
+                                'options' => array(
+                                    'route'    => '/replace/[:id].html',
+                                    'defaults' => array(
+                                        'action'    => 'replace',
+                                        'privilege' => 'replace'
                                     ),
                                 ),
                             ),
@@ -122,7 +152,8 @@ return array(
                                 'options' => array(
                                     'route'    => '/download/[:id].pdf',
                                     'defaults' => array(
-                                        'action' => 'download',
+                                        'action'    => 'download',
+                                        'privilege' => 'download'
                                     ),
                                 ),
                             ),

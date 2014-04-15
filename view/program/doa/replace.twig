@@ -1,0 +1,52 @@
+<h1>{{ translate("txt-replace-doa-for-organisation-%s-for-program-%s")|
+    format(doa.organisation, doa.program)|raw }}</h1>
+
+<p class="lead">{{ translate("txt-replace-doa-for-organisation-%s-for-program-%s-explanation")|
+    format(doa.organisation, doa.program)|raw }}</p>
+
+
+{{ form().openTag(form)|raw }}
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-program") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ doa.program }}</p></div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-organisation") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ doa.organisation }}</p>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-download-current-program-doa") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ programDoaLink(doa,'download','text') }}</p>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-render-new-program-doa") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ programDoaLink(doa,'render','text') }}</p>
+    </div>
+</div>
+
+
+{{ ztbformelement(form.get('file')) }}
+{{ ztbformelement(form.get('csrf')) }}
+
+<div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+        {{ ztbformelement(form.get('submit')) }}
+        {{ ztbformelement(form.get('cancel')) }}
+    </div>
+</div>
+
+{{ form().closeTag()|raw }}

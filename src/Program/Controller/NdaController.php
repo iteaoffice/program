@@ -9,9 +9,12 @@
  */
 namespace Program\Controller;
 
-use Program\Form\UploadNda;
 use Zend\View\Model\ViewModel;
+
+use Program\Form\UploadNda;
+use Zend\Validator\File\FilesSize;
 use Program\Entity\Nda;
+use Program\Entity\NdaObject;
 
 /**
  * @category    Program
@@ -23,11 +26,29 @@ class NdaController extends ProgramAbstractController
     /**
      * @return ViewModel
      */
-    public function viewCallAction()
+    public function viewAction()
+    {
+        $nda = $this->getProgramService()->findEntityById(
+            'Nda',
+            $this->getEvent()->getRouteMatch()->getParam('id')
+        );
+
+        if (is_null($nda) || sizeof($nda->getObject()) === 0) {
+            return $this->notFoundAction();
+        }
+
+        return new ViewModel(array('nda' => $nda));
+    }
+
+
+    /**
+     * @return ViewModel
+     */
+    public function uploadAction()
     {
         $call = $this->getProgramService()->findEntityById(
             'Call\Call',
-            $this->getEvent()->getRouteMatch()->getParam('call')
+            $this->getEvent()->getRouteMatch()->getParam('call-id')
         );
 
         if (is_null($call)) {
@@ -60,10 +81,26 @@ class NdaController extends ProgramAbstractController
     }
 
     /**
+     * Action to replace an mis-uploaded DoA
+     *
      * @return ViewModel
+     * @throws \Zend\Form\Exception\InvalidArgumentException
+     * @throws \InvalidArgumentException
+     * @throws \Zend\Mvc\Exception\DomainException
+     * @throws \Zend\Form\Exception\DomainException
      */
-    public function viewAction()
+    public function replaceAction()
     {
+
+        $nda = $this->getProgramService()->findEntityById(
+            'Nda',
+            $this->getEvent()->getRouteMatch()->getParam('id')
+        );
+
+        if (is_null($nda) || sizeof($nda->getObject()) === 0) {
+            return $this->notFoundAction();
+        }
+
         $data = array_merge_recursive(
             $this->getRequest()->getPost()->toArray(),
             $this->getRequest()->getFiles()->toArray()
@@ -72,19 +109,50 @@ class NdaController extends ProgramAbstractController
         $form = new UploadNda();
         $form->setData($data);
 
-        if ($this->getRequest()->isPost() && $form->isValid()) {
-            $fileData = $form->getData('file');
-            $this->getCallService()->uploadNda(
-                $fileData['file'],
-                $this->zfcUserAuthentication()->getIdentity()
+        if ($this->getRequest()->isPost()) {
+
+            if (!isset($data['cancel']) && $form->isValid()) {
+                $fileData = $this->params()->fromFiles();
+
+                /**
+                 * Remove the current entity
+                 */
+                foreach ($nda->getObject() as $object) {
+                    $this->getProgramService()->removeEntity($object);
+                }
+
+                //Create a article object element
+                $ndaObject = new NdaObject();
+                $ndaObject->setObject(file_get_contents($fileData['file']['tmp_name']));
+
+                $fileSizeValidator = new FilesSize(PHP_INT_MAX);
+                $fileSizeValidator->isValid($fileData['file']);
+
+
+                $nda->setSize($fileSizeValidator->size);
+                $nda->setContentType(
+                    $this->getGeneralService()->findContentTypeByContentTypeName($fileData['file']['type'])
+                );
+
+                $ndaObject->setNda($nda);
+
+                $this->getProgramService()->newEntity($ndaObject);
+
+                $this->flashMessenger()->setNamespace('success')->addMessage(
+                    sprintf(_("txt-nda-has-been-replaced-successfully"))
+                );
+            }
+
+            $this->redirect()->toRoute('program/nda/view',
+                array('id' => $nda->getId())
             );
         }
 
-        return new ViewModel(
-            array(
-                'form' => $form
-            )
-        );
+
+        return new ViewModel(array(
+            'nda'  => $nda,
+            'form' => $form
+        ));
     }
 
     /**
@@ -119,7 +187,7 @@ class NdaController extends ProgramAbstractController
     {
         $call = $this->getProgramService()->findEntityById(
             'Call\Call',
-            $this->getEvent()->getRouteMatch()->getParam('call')
+            $this->getEvent()->getRouteMatch()->getParam('call-id')
         );
 
         if (is_null($call)) {

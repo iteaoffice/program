@@ -14,10 +14,12 @@ use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\FileInput;
 use Zend\Form\Annotation;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 use Doctrine\ORM\Mapping as ORM;
 
 use Gedmo\Mapping\Annotation as Gedmo;
+
 
 /**
  * @ORM\Table(name="program_doa")
@@ -28,7 +30,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @category    Program
  * @package     Entity
  */
-class Doa extends EntityAbstract
+class Doa extends EntityAbstract implements ResourceInterface
 {
     /**
      * @ORM\Column(name="doa_id", type="integer", nullable=false)
@@ -139,6 +141,25 @@ class Doa extends EntityAbstract
     {
         $this->$property = $value;
     }
+
+    /**
+     * @return mixed
+     */
+    public function __toString()
+    {
+        return sprintf("Doa: %s", $this->id);
+    }
+
+    /**
+     * Returns the string identifier of the Resource
+     *
+     * @return string
+     */
+    public function getResourceId()
+    {
+        return sprintf("%s:%s", __CLASS__, $this->id);
+    }
+
 
     /**
      * Set input filter

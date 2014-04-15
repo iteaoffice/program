@@ -40,49 +40,65 @@ class NdaLink extends AbstractHelper
         $url       = $this->view->plugin('url');
         $serverUrl = $this->view->plugin('serverUrl');
 
-        switch ($action) {
+        $isAllowed = $this->view->plugin('isAllowed');
 
-            case 'view-call':
-                if (is_null($call)) {
-                    throw new \Exception(sprintf("A call is needed to create a call DNA in %s", __CLASS__));
-                }
+        /**
+         * Add the resource on the fly
+         */
+        if (is_null($nda)) {
+            $nda = new Entity\Nda();
+        }
 
-                $router = 'program/nda/view-call';
-                $nda    = new Entity\Nda();
-                $text   = sprintf($translate("txt-create-nda-for-call-%s"), $call);
-                break;
-            case 'render-call':
-                if (is_null($call)) {
-                    throw new \Exception(sprintf("A call is needed to create a call DNA in %s", __CLASS__));
-                }
+        $auth      = $this->view->getHelperPluginManager()->getServiceLocator()->get('BjyAuthorize\Service\Authorize');
+        $assertion = $this->view->getHelperPluginManager()->getServiceLocator()->get('program_acl_assertion_nda');
 
-                $router = 'program/nda/render-call';
-                $nda    = new Entity\Nda();
-                $text   = sprintf($translate("txt-render-nda-for-call-%s"), $call);
-                break;
-            case 'view':
-                $router = 'program/nda/view';
-                $nda    = new Entity\Nda();
-                $text   = sprintf($translate("txt-view-general-nda"), $call);
-                break;
-            case 'render':
-                $router = 'program/nda/render';
-                $nda    = new Entity\Nda();
-                $text   = sprintf($translate("txt-render-general-nda"));
-                break;
-            case 'download':
-                $router = 'program/nda/download';
-                $text   = sprintf($translate("txt-download-nda"));
-                break;
-            default:
-                throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
+        if (!is_null($nda) && !$auth->getAcl()->hasResource($nda)) {
+            $auth->getAcl()->addResource($nda);
+            $auth->getAcl()->allow(array(), $nda, array(), $assertion);
+        }
+
+        if (!is_null($nda) && !$isAllowed($nda, $action)) {
+            return $action . ' is not possible for ' . $nda;
         }
 
         $params = array(
             'id'     => $nda->getId(),
             'entity' => 'nda',
-            'call'   => (!is_null($call) ? $call->getId() : null)
         );
+
+        switch ($action) {
+            case 'view':
+                $router = 'program/nda/view';
+                $text   = sprintf($translate("txt-view-nda-%s"), $nda);
+                break;
+            case 'replace':
+                $router = 'program/nda/replace';
+                $text   = sprintf($translate("txt-replace-nda-%s"), $nda);
+                break;
+            case 'render':
+                $router = 'program/nda/render';
+                $text   = sprintf($translate("txt-render-general-nda"));
+
+                /**
+                 * Produce special texts for call-dedicated NDA's
+                 */
+                if (!is_null($nda->getCall())) {
+                    $text              = sprintf($translate("txt-render-nda-for-call-%s"), $nda->getCall());
+                    $params['call-id'] = $nda->getCall()->getId();
+                } elseif (!is_null($call)) {
+                    $text              = sprintf($translate("txt-render-nda-for-call-%s"), $call);
+                    $params['call-id'] = $call->getId();
+                }
+
+                break;
+            case 'download':
+                $router = 'program/nda/download';
+                $text   = sprintf($translate("txt-download-nda-%s"), $nda);
+                break;
+            default:
+                throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
+        }
+
 
         $classes     = array();
         $linkContent = array();
@@ -90,11 +106,13 @@ class NdaLink extends AbstractHelper
         switch ($show) {
             case 'icon':
                 if ($action === 'edit') {
-                    $linkContent[] = '<i class="icon-pencil"></i>';
-                } elseif ($action === 'delete') {
-                    $linkContent[] = '<i class="icon-remove"></i>';
+                    $linkContent[] = '<span class="glyphicon glyphicon-edit"></span>';
+                } elseif ($action === 'download') {
+                    $linkContent[] = '<span class="glyphicon glyphicon-download"></span>';
+                } elseif ($action === 'replace') {
+                    $linkContent[] = '<span class="glyphicon glyphicon-repeat"></span>';
                 } else {
-                    $linkContent[] = '<i class="icon-info-sign"></i>';
+                    $linkContent[] = '<span class="glyphicon glyphicon-info-sign"></span>';
                 }
                 break;
             case 'button':

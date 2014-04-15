@@ -1,0 +1,54 @@
+<h1>{{ translate("txt-replace-nda-(%s)-for-contact-%s")|
+    format(nda, nda.contact.displayName)|raw }}</h1>
+
+<p class="lead">{{ translate("txt-replace-nda-for-contact-%s")|
+    format(nda.contact.displayName)|raw }}</p>
+
+
+{{ form().openTag(form)|raw }}
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-contact") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ nda.contact.displayName }}</p></div>
+</div>
+
+{% if nda.call %}
+    <div class="form-group">
+        <label class="col-sm-3 control-label">{{ translate("txt-program-call") }}</label>
+
+        <div class="col-sm-9">
+            <p class="form-control-static">{{ nda.call }}</p>
+        </div>
+    </div>
+{% endif %}
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-download-current-nda") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ ndaLink(nda,'download','text') }}</p>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-render-new-nda") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ ndaLink(nda,'render','text') }}</p>
+    </div>
+</div>
+
+
+{{ ztbformelement(form.get('file')) }}
+{{ ztbformelement(form.get('csrf')) }}
+
+<div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+        {{ ztbformelement(form.get('submit')) }}
+        {{ ztbformelement(form.get('cancel')) }}
+    </div>
+</div>
+
+{{ form().closeTag()|raw }}

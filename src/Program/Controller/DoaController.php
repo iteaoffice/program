@@ -24,6 +24,23 @@ class DoaController extends ProgramAbstractController
 {
 
     /**
+     * @return ViewModel
+     */
+    public function viewAction()
+    {
+        $doa = $this->getProgramService()->findEntityById(
+            'Doa',
+            $this->getEvent()->getRouteMatch()->getParam('id')
+        );
+
+        if (is_null($doa) || sizeof($doa->getObject()) === 0) {
+            return $this->notFoundAction();
+        }
+
+        return new ViewModel(array('doa' => $doa));
+    }
+
+    /**
      * Upload a DOA for a program (based on the affiliation, to be sure that the organisation is
      * active in at least a project in the database)
      *
@@ -31,8 +48,11 @@ class DoaController extends ProgramAbstractController
      */
     public function uploadAction()
     {
-        $affiliationService = $this->getAffiliationService()->setAffiliationId(
-            $this->getEvent()->getRouteMatch()->getParam('affiliation-id')
+        $organisationService = $this->getOrganisationService()->setOrganisationId(
+            $this->getEvent()->getRouteMatch()->getParam('organisation-id')
+        );
+        $program             = $this->getProgramService()->findEntityById('Program',
+            $this->getEvent()->getRouteMatch()->getParam('program-id')
         );
 
         $data = array_merge_recursive(
@@ -62,8 +82,8 @@ class DoaController extends ProgramAbstractController
                 );
 
                 $doa->setContact($this->zfcUserAuthentication()->getIdentity());
-                $doa->setOrganisation($affiliationService->getAffiliation()->getOrganisation());
-                $doa->setProgram($affiliationService->getAffiliation()->getProject()->getCall()->getProgram());
+                $doa->setOrganisation($organisationService->getOrganisation());
+                $doa->setProgram($program);
 
                 $doaObject->setDoa($doa);
 
@@ -71,21 +91,99 @@ class DoaController extends ProgramAbstractController
 
                 $this->flashMessenger()->setNamespace('success')->addMessage(
                     sprintf(_("txt-doa-for-organisation-%s-in-program-%s-has-been-uploaded"),
-                        $affiliationService->getAffiliation()->getOrganisation(),
-                        $affiliationService->getAffiliation()->getProject()->getCall()->getProgram()
+                        $organisationService->getOrganisation(),
+                        $program
+                    )
+                );
+                $this->redirect()->toRoute('community/program/doa/view',
+                    array('id' => $doaObject->getId())
+                );
+            }
+        }
+
+        return new ViewModel(array(
+            'organisationService' => $organisationService,
+            'program'             => $program,
+            'form'                => $form
+        ));
+    }
+
+    /**
+     * Action to replace an mis-uploaded DoA
+     *
+     * @return ViewModel
+     * @throws \Zend\Form\Exception\InvalidArgumentException
+     * @throws \InvalidArgumentException
+     * @throws \Zend\Mvc\Exception\DomainException
+     * @throws \Zend\Form\Exception\DomainException
+     */
+    public function replaceAction()
+    {
+
+        $doa = $this->getProgramService()->findEntityById(
+            'Doa',
+            $this->getEvent()->getRouteMatch()->getParam('id')
+        );
+
+        if (is_null($doa) || sizeof($doa->getObject()) === 0) {
+            return $this->notFoundAction();
+        }
+
+        $data = array_merge_recursive(
+            $this->getRequest()->getPost()->toArray(),
+            $this->getRequest()->getFiles()->toArray()
+        );
+
+        $form = new UploadDoa();
+        $form->setData($data);
+
+        if ($this->getRequest()->isPost()) {
+
+            if (!isset($data['cancel']) && $form->isValid()) {
+                $fileData = $this->params()->fromFiles();
+
+                /**
+                 * Remove the current entity
+                 */
+                foreach ($doa->getObject() as $object) {
+                    $this->getProgramService()->removeEntity($object);
+                }
+
+                //Create a article object element
+                $programDoaObject = new Entity\DoaObject();
+                $programDoaObject->setObject(file_get_contents($fileData['file']['tmp_name']));
+
+                $fileSizeValidator = new FilesSize(PHP_INT_MAX);
+                $fileSizeValidator->isValid($fileData['file']);
+
+
+                $doa->setSize($fileSizeValidator->size);
+                $doa->setContact($this->zfcUserAuthentication()->getIdentity());
+                $doa->setContentType(
+                    $this->getGeneralService()->findContentTypeByContentTypeName($fileData['file']['type'])
+                );
+
+                $programDoaObject->setDoa($doa);
+
+                $this->getProgramService()->newEntity($programDoaObject);
+
+                $this->flashMessenger()->setNamespace('success')->addMessage(
+                    sprintf(_("txt-doa-for-organisation-%s-in-program-%s-has-been-uploaded"),
+                        $doa->getOrganisation(),
+                        $doa->getProgram()
                     )
                 );
             }
 
-            $this->redirect()->toRoute('community/affiliation/affiliation',
-                array('id' => $affiliationService->getAffiliation()->getId()),
-                array('fragment' => 'details')
+            $this->redirect()->toRoute('program/doa/view',
+                array('id' => $doa->getId())
             );
         }
 
+
         return new ViewModel(array(
-            'affiliationService' => $affiliationService,
-            'form'               => $form
+            'doa'  => $doa,
+            'form' => $form
         ));
     }
 
@@ -94,15 +192,18 @@ class DoaController extends ProgramAbstractController
      */
     public function renderAction()
     {
-        $affiliationService = $this->getAffiliationService()->setAffiliationId(
-            $this->getEvent()->getRouteMatch()->getParam('affiliation-id')
+        $organisationService = $this->getOrganisationService()->setOrganisationId(
+            $this->getEvent()->getRouteMatch()->getParam('organisation-id')
+        );
+        $program             = $this->getProgramService()->findEntityById('Program',
+            $this->getEvent()->getRouteMatch()->getParam('program-id')
         );
 
         //Create an empty Doa object
         $programDoa = new Doa();
         $programDoa->setContact($this->zfcUserAuthentication()->getIdentity());
-        $programDoa->setOrganisation($affiliationService->getAffiliation()->getOrganisation());
-        $programDoa->setProgram($affiliationService->getAffiliation()->getProject()->getCall()->getProgram());
+        $programDoa->setOrganisation($organisationService->getOrganisation());
+        $programDoa->setProgram($program);
 
         $renderProjectDoa = $this->renderProgramDoa()->renderDoa($programDoa);
 

@@ -15,9 +15,7 @@ use Zend\Authentication\AuthenticationService;
 
 use Program\Entity\EntityAbstract;
 
-use Program\Entity\Call\Call;
-use Program\Entity\Nda;
-
+use Program\Entity;
 
 use General\Service\GeneralService;
 use Project\Service\VersionService;
@@ -56,7 +54,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
      * @param $entity
      * @param $id
      *
-     * @return null|object
+     * @return null|Entity\Doa|Entity\Call\Call|Entity\Nda
      */
     public function findEntityById($entity, $id)
     {

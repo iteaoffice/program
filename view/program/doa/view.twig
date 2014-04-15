@@ -1,0 +1,22 @@
+<h1>{{ translate("txt-view-doa-for-organisation-%s-for-program-%s")|
+    format(doa.organisation, doa.program)|raw }}</h1>
+
+<p class="lead">{{ translate("txt-view-doa-for-organisation-%s-for-program-%s-explanation")|
+    format(doa.organisation, doa.program)|raw }}</p>
+
+{% if doa.dateApproved %}
+    {{ ztbalert().success(translate("txt-doa-received-and-approved-on-%s")|format(doa.dateApproved|date("d-m-Y")))|raw }}
+{% else %}
+    {{ ztbalert().info(translate("txt-doa-received-on-%s-but-waiting-for-approval")|format(doa.dateCreated|date("d-m-Y")))|raw }}
+{% endif %}
+
+<dl class="dl-horizontal">
+    <dt>{{ translate("txt-program") }}</dt>
+    <dd>{{ doa.program }}</dd>
+    <dt>{{ translate("txt-organisation") }}</dt>
+    <dd>{{ doa.organisation }}</dd>
+    <dt>{{ translate("txt-download-current-program-doa") }}</dt>
+    <dd>{{ programDoaLink(doa,'download','text') }}</dd>
+</dl>
+
+{{ programDoaLink(doa,'replace','button') }}

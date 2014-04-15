@@ -16,9 +16,8 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
 use Zend\Permissions\Acl\Role\RoleInterface;
 use Zend\ServiceManager\ServiceManager;
 
-use Program\Service\CallService;
 use Program\Service\ProgramService;
-use Program\Entity\Nda as NdaEntity;
+use Program\Entity\Doa as DoaEntity;
 
 use Contact\Service\ContactService;
 
@@ -26,20 +25,16 @@ use Contact\Service\ContactService;
  * Class Program
  * @package Program\Acl\Assertion
  */
-class Nda implements AssertionInterface
+class Doa implements AssertionInterface
 {
     /**
      * @var ServiceManager
      */
     protected $serviceManager;
     /**
-     * @var CallService
-     */
-    protected $callService;
-    /**
      * @var ProgramService
      */
-    protected $projectService;
+    protected $programService;
     /**
      * @var ContactService
      */
@@ -56,7 +51,6 @@ class Nda implements AssertionInterface
     public function __construct(ServiceManager $serviceManager)
     {
         $this->serviceManager = $serviceManager;
-        $this->callService    = $this->serviceManager->get("program_call_service");
         $this->programService = $this->serviceManager->get("program_program_service");
         $this->contactService = $this->serviceManager->get("contact_contact_service");
 
@@ -88,6 +82,7 @@ class Nda implements AssertionInterface
         $routeMatch = $this->serviceManager->get("Application")->getMvcEvent()->getRouteMatch();
 
         $id = $routeMatch->getParam('id');
+
         /**
          * When the privilege is_null (not given by the isAllowed helper), get it from the routeMatch
          */
@@ -95,15 +90,14 @@ class Nda implements AssertionInterface
             $privilege = $routeMatch->getParam('privilege');
         }
 
-        if (!$resource instanceof NdaEntity && !is_null($id)) {
-            $resource = $this->programService->findEntityById('Nda', $id);
+        if (!$resource instanceof DoaEntity && !is_null($id)) {
+            $resource = $this->programService->findEntityById('Doa', $id);
         }
 
 
         switch ($privilege) {
             case 'upload':
 
-                return !is_null($this->contactService);
 
                 break;
 
@@ -112,32 +106,19 @@ class Nda implements AssertionInterface
                  * For the replace we need to see if the user has access on the editing of the program
                  * and the acl should not be approved
                  */
-
                 return is_null($resource->getDateApproved()) && $resource->getContact()->getId() === $this->contactService->getContact()->getId();
 
                 break;
 
             case 'render':
 
-                if (is_null($this->contactService)) {
-                    return false;
-                }
-
-                /**
-                 * When a call is set, check if that call has the right status
-                 */
-                if (!is_null($routeMatch->getParam('call-id'))) {
-                    $this->callService->setCallId($routeMatch->getParam('call-id'));
-
-                    return $this->callService->getCallStatus()->result !== CallService::UNDEFINED;
-                }
-
-                return true;
+                return !is_null($this->contactService);
 
                 break;
 
             case 'download':
             case 'view':
+
                 return $resource->getContact()->getId() === $this->contactService->getContact()->getId();
                 break;
         }

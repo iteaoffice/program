@@ -17,6 +17,7 @@ use Zend\Form\Annotation;
 use Doctrine\ORM\Mapping as ORM;
 
 use Gedmo\Mapping\Annotation AS Gedmo;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * Entity for a nda
@@ -29,7 +30,7 @@ use Gedmo\Mapping\Annotation AS Gedmo;
  * @category    Contact
  * @package     Entity
  */
-class Nda extends EntityAbstract
+class Nda extends EntityAbstract implements ResourceInterface
 {
     /**
      * @ORM\Column(name="nda_id", type="integer", nullable=false)
@@ -126,6 +127,17 @@ class Nda extends EntityAbstract
     {
         return $this->parseFileName();
     }
+
+    /**
+     * Returns the string identifier of the Resource
+     *
+     * @return string
+     */
+    public function getResourceId()
+    {
+        return sprintf("%s:%s", __CLASS__, $this->id);
+    }
+
 
     /**
      * Parse a filename

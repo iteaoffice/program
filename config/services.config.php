@@ -14,11 +14,14 @@ use Program\Acl\Assertion;
 return array(
     'factories' => array(
         'program_program_form'      => function ($sm) {
-                return new Form\CreateObject($sm, new Entity\Program());
-            },
+            return new Form\CreateObject($sm, new Entity\Program());
+        },
         'program_acl_assertion_nda' => function ($sm) {
-                return new Assertion\Nda($sm);
-            },
+            return new Assertion\Nda($sm);
+        },
+        'program_acl_assertion_doa' => function ($sm) {
+            return new Assertion\Doa($sm);
+        },
 
     ),
 );
