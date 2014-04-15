@@ -36,7 +36,7 @@ return array(
                             'upload'   => array(
                                 'type'    => 'Segment',
                                 'options' => array(
-                                    'route'       => '/upload[/call-:call-id].pdf',
+                                    'route'       => '/upload[/call-:call-id].html',
                                     'constraints' => array(
                                         'call-id' => '\d+'
                                     ),
