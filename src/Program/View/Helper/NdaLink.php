@@ -76,7 +76,7 @@ class NdaLink extends AbstractHelper
                     $text              = sprintf($translate("txt-upload-nda-for-call-%s-title"), $nda->getCall());
                     $params['call-id'] = $nda->getCall()->getId();
                 } else {
-                    $text = sprintf($translate("txt-upload-nda"));
+                    $text = sprintf($translate("txt-upload-nda-title"));
                 }
                 break;
             case 'replace':
