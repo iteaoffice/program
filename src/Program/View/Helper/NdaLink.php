@@ -58,7 +58,7 @@ class NdaLink extends AbstractHelper
         }
 
         if (!is_null($nda) && !$isAllowed($nda, $action)) {
-            return $action . ' is not possible for ' . $nda;
+            return '';
         }
 
         $params = array(

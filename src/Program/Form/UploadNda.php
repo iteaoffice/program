@@ -58,7 +58,7 @@ class UploadNda extends Form implements InputFilterProviderInterface
                 'name'       => 'submit',
                 'attributes' => array(
                     'class' => "btn btn-primary",
-                    'value' => _("txt-upload-nda")
+                    'value' => _("txt-upload-nda-title")
                 )
             )
         );
