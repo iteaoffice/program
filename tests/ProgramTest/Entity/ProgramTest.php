@@ -14,7 +14,7 @@ use ProgramTest\Bootstrap;
 
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 
-class ProjectTest extends \PHPUnit_Framework_TestCase
+class ProgramTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \Zend\ServiceManager\ServiceLocatorInterface

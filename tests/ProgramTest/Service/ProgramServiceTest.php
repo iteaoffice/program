@@ -7,7 +7,7 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
-namespace ProjectTest\Service;
+namespace ProgramTest\Service;
 
 use Program\Service\ProgramService;
 use Contact\Service\ContactService;
@@ -55,41 +55,5 @@ class ProgramServiceTest extends \PHPUnit_Framework_TestCase
             $this->assertInstanceOf('Program\\Entity\\Funder', $funderResult);
             $this->assertEquals($funderResult->getCountry()->getId(), 1);
         }
-    }
-
-    public function testCanFindFirstAndLastCall()
-    {
-        $callSpan = $this->programService->findFirstAndLastCall();
-
-        $this->assertInstanceOf('stdClass', $callSpan);
-    }
-
-    public function testCanFindNdaByCallAndContact()
-    {
-        $call    = $this->programService->findEntityById('call', 1);
-        $contact = $this->contactService->findEntityById('contact', 1);
-
-        $nda = $this->programService->findNdaByCallAndContact($call, $contact);
-        $this->assertNull($nda);
-    }
-
-    public function testCanUploadNDA()
-    {
-
-        $call    = $this->programService->findEntityById('call', 1);
-        $contact = $this->contactService->findEntityById('contact', 1);
-
-        $file = array(
-            'name'     => 'This is an uploaded file',
-            'type'     => 'application/pdf',
-            'tmp_name' => __DIR__ . '/../../data/template_nda.pdf',
-            'error'    => 0,
-            'size'     => 145000,
-        );
-
-        $uploadedNda = $this->programService->uploadNda($file, $contact, $call);
-        $this->assertInstanceOf("Program\\Entity\\NdaObject", $uploadedNda);
-        $this->assertEquals($file['size'], $uploadedNda->getNda()->getSize());
-        $this->assertNotNull($uploadedNda->getObject());
     }
 }
