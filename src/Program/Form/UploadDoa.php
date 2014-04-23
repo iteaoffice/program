@@ -33,7 +33,6 @@ class UploadDoa extends Form implements InputFilterProviderInterface
         $this->setAttribute('class', 'form-horizontal');
         $this->setAttribute('enctype', 'multipart/form-data');
 
-
         $this->add(
             array(
                 'type'    => '\Zend\Form\Element\File',
@@ -87,16 +86,19 @@ class UploadDoa extends Form implements InputFilterProviderInterface
             'file' => array(
                 'required'   => true,
                 'validators' => array(
-                    new Size(array(
+                    new Size(
+                        array(
                             'min' => '5kB',
                             'max' => '8MB',
                         )
                     ),
-                    new Extension(array(
+                    new Extension(
+                        array(
                             'extension' => array('pdf')
                         )
                     ),
-                    new MimeType(array(
+                    new MimeType(
+                        array(
                             'mimeType' => array('application/pdf')
                         )
                     )

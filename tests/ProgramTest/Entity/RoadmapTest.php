@@ -2,7 +2,7 @@
 /**
  * ITEA copyright message placeholder
  *
- * @category    RoadmapTest
+ * @category    ProgramTest
  * @package     Entity
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
@@ -18,7 +18,6 @@ use Zend\Form\Element\DateTime;
 
 class RoadmapTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var \Zend\ServiceManager\ServiceLocatorInterface
      */

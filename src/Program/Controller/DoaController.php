@@ -22,7 +22,6 @@ use Program\Entity\Doa;
  */
 class DoaController extends ProgramAbstractController
 {
-
     /**
      * @return ViewModel
      */
@@ -51,7 +50,8 @@ class DoaController extends ProgramAbstractController
         $organisationService = $this->getOrganisationService()->setOrganisationId(
             $this->getEvent()->getRouteMatch()->getParam('organisation-id')
         );
-        $program             = $this->getProgramService()->findEntityById('Program',
+        $program             = $this->getProgramService()->findEntityById(
+            'Program',
             $this->getEvent()->getRouteMatch()->getParam('program-id')
         );
 
@@ -90,22 +90,26 @@ class DoaController extends ProgramAbstractController
                 $this->getProgramService()->newEntity($doaObject);
 
                 $this->flashMessenger()->setNamespace('success')->addMessage(
-                    sprintf(_("txt-doa-for-organisation-%s-in-program-%s-has-been-uploaded"),
+                    sprintf(
+                        _("txt-doa-for-organisation-%s-in-program-%s-has-been-uploaded"),
                         $organisationService->getOrganisation(),
                         $program
                     )
                 );
-                $this->redirect()->toRoute('community/program/doa/view',
+                $this->redirect()->toRoute(
+                    'community/program/doa/view',
                     array('id' => $doaObject->getId())
                 );
             }
         }
 
-        return new ViewModel(array(
-            'organisationService' => $organisationService,
-            'program'             => $program,
-            'form'                => $form
-        ));
+        return new ViewModel(
+            array(
+                'organisationService' => $organisationService,
+                'program'             => $program,
+                'form'                => $form
+            )
+        );
     }
 
     /**
@@ -156,7 +160,6 @@ class DoaController extends ProgramAbstractController
                 $fileSizeValidator = new FilesSize(PHP_INT_MAX);
                 $fileSizeValidator->isValid($fileData['file']);
 
-
                 $doa->setSize($fileSizeValidator->size);
                 $doa->setContact($this->zfcUserAuthentication()->getIdentity());
                 $doa->setContentType(
@@ -168,23 +171,26 @@ class DoaController extends ProgramAbstractController
                 $this->getProgramService()->newEntity($programDoaObject);
 
                 $this->flashMessenger()->setNamespace('success')->addMessage(
-                    sprintf(_("txt-doa-for-organisation-%s-in-program-%s-has-been-uploaded"),
+                    sprintf(
+                        _("txt-doa-for-organisation-%s-in-program-%s-has-been-uploaded"),
                         $doa->getOrganisation(),
                         $doa->getProgram()
                     )
                 );
             }
 
-            $this->redirect()->toRoute('program/doa/view',
+            $this->redirect()->toRoute(
+                'program/doa/view',
                 array('id' => $doa->getId())
             );
         }
 
-
-        return new ViewModel(array(
-            'doa'  => $doa,
-            'form' => $form
-        ));
+        return new ViewModel(
+            array(
+                'doa'  => $doa,
+                'form' => $form
+            )
+        );
     }
 
     /**
@@ -195,7 +201,8 @@ class DoaController extends ProgramAbstractController
         $organisationService = $this->getOrganisationService()->setOrganisationId(
             $this->getEvent()->getRouteMatch()->getParam('organisation-id')
         );
-        $program             = $this->getProgramService()->findEntityById('Program',
+        $program             = $this->getProgramService()->findEntityById(
+            'Program',
             $this->getEvent()->getRouteMatch()->getParam('program-id')
         );
 

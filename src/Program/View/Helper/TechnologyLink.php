@@ -24,7 +24,6 @@ use Program\Entity;
  */
 class TechnologyLink extends AbstractHelper
 {
-
     /**
      * @param \Program\Entity\Technology $technology
      * @param                            $action

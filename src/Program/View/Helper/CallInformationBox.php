@@ -72,7 +72,8 @@ class CallInformationBox extends AbstractHelper
             $format = '%i minutes';
         }
 
-        $content = str_replace(array(
+        $content = str_replace(
+            array(
                 '%call%',
                 '%diff%',
                 '%time%'
@@ -81,7 +82,9 @@ class CallInformationBox extends AbstractHelper
                 $call,
                 $dateDifference->format($format),
                 $referenceDate->format('l, d F Y H:i:s T')
-            ), $contents[$result]);
+            ),
+            $contents[$result]
+        );
 
         $alert = '<div class="alert alert-info"><strong>%s</strong><br>%s</div>';
 

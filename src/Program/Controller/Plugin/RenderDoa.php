@@ -18,7 +18,6 @@ use Contact\Service\ContactService;
 use Program\Options\ModuleOptions;
 use Program\Entity\Doa;
 
-
 /**
  *
  *

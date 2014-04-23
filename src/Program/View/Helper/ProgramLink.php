@@ -24,7 +24,6 @@ use Program\Entity;
  */
 class ProgramLink extends AbstractHelper
 {
-
     /**
      * @param \Program\Entity\Program $program
      * @param                         $action

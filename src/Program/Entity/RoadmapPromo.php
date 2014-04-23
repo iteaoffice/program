@@ -30,21 +30,18 @@ class RoadmapPromo
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="date_created", type="datetime", nullable=false)
      */
     private $dateCreated;
-
     /**
      * @var string
      *
      * @ORM\Column(name="entity", type="string", length=45, nullable=false)
      */
     private $entity;
-
     /**
      * @var integer
      *

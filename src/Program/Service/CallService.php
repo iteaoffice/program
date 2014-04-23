@@ -9,7 +9,6 @@
  */
 namespace Program\Service;
 
-
 use Contact\Entity\Contact;
 use Program\Entity\Call\Call;
 use Program\Entity\Nda;
@@ -34,7 +33,6 @@ class CallService extends ServiceAbstract
     const FPP_OPEN = 'FPP_OPEN';
     const FPP_CLOSED = 'FPP_CLOSED';
     const UNDEFINED = 'UNDEFINED';
-
     /**
      * @var Call
      */

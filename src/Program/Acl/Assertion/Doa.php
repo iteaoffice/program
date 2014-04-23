@@ -44,7 +44,6 @@ class Doa implements AssertionInterface
      */
     protected $accessRoles = array();
 
-
     /**
      * @param ServiceManager $serviceManager
      */
@@ -94,10 +93,8 @@ class Doa implements AssertionInterface
             $resource = $this->programService->findEntityById('Doa', $id);
         }
 
-
         switch ($privilege) {
             case 'upload':
-
 
                 break;
 
@@ -106,19 +103,19 @@ class Doa implements AssertionInterface
                  * For the replace we need to see if the user has access on the editing of the program
                  * and the acl should not be approved
                  */
-                return is_null($resource->getDateApproved()) && $resource->getContact()->getId() === $this->contactService->getContact()->getId();
+
+                return is_null($resource->getDateApproved()) && $resource->getContact()->getId(
+                ) === $this->contactService->getContact()->getId();
 
                 break;
 
             case 'render':
-
                 return !is_null($this->contactService);
 
                 break;
 
             case 'download':
             case 'view':
-
                 return $resource->getContact()->getId() === $this->contactService->getContact()->getId();
                 break;
         }

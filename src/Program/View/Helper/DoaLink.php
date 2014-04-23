@@ -43,8 +43,7 @@ class DoaLink extends AbstractHelper
         $show = 'name',
         Organisation $organisation = null,
         Program $program = null
-    )
-    {
+    ) {
         $translate = $this->view->plugin('translate');
         $url       = $this->view->plugin('url');
         $serverUrl = $this->view->plugin('serverUrl');
@@ -67,11 +66,11 @@ class DoaLink extends AbstractHelper
             'entity' => 'doa'
         );
 
-
         switch ($action) {
             case 'upload':
                 $router = 'program/doa/upload';
-                $text   = sprintf($translate("txt-upload-doa-for-organisation-%s-in-program-%s-link-title"),
+                $text   = sprintf(
+                    $translate("txt-upload-doa-for-organisation-%s-in-program-%s-link-title"),
                     $organisation->getOrganisation(),
                     $program->getProgram()
                 );
@@ -83,7 +82,8 @@ class DoaLink extends AbstractHelper
                  */
                 $renderText = "txt-render-doa-for-organisation-%s-in-program-%s-link-title";
                 if (is_null($doa)) {
-                    $text = sprintf($translate($renderText),
+                    $text = sprintf(
+                        $translate($renderText),
                         $organisation->getOrganisation(),
                         $program->getProgram()
                     );
@@ -91,7 +91,8 @@ class DoaLink extends AbstractHelper
                     $params['organisation-id'] = $organisation->getId();
                     $params['program-id']      = $program->getId();
                 } else {
-                    $text = sprintf($translate($renderText),
+                    $text = sprintf(
+                        $translate($renderText),
                         $doa->getOrganisation(),
                         $doa->getProgram()
                     );
@@ -100,18 +101,19 @@ class DoaLink extends AbstractHelper
                     $params['program-id']      = $doa->getProgram()->getId();
                 }
 
-
                 break;
             case 'replace':
                 $router = 'program/doa/replace';
-                $text   = sprintf($translate("txt-replace-doa-for-organisation-%s-in-program-%s-link-title"),
+                $text   = sprintf(
+                    $translate("txt-replace-doa-for-organisation-%s-in-program-%s-link-title"),
                     $doa->getOrganisation(),
                     $doa->getProgram()
                 );
                 break;
             case 'download':
                 $router = 'program/doa/download';
-                $text   = sprintf($translate("txt-download-doa-for-organisation-%s-in-program-%s-link-title"),
+                $text   = sprintf(
+                    $translate("txt-download-doa-for-organisation-%s-in-program-%s-link-title"),
                     $doa->getOrganisation(),
                     $doa->getProgram()
                 );
@@ -119,7 +121,6 @@ class DoaLink extends AbstractHelper
             default:
                 throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
         }
-
 
         $classes     = array();
         $linkContent = array();

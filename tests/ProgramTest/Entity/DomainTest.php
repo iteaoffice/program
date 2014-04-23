@@ -2,7 +2,7 @@
 /**
  * ITEA copyright message placeholder
  *
- * @category    DomainTest
+ * @category    ProgramTest
  * @package     Entity
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
@@ -17,7 +17,6 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 
 class DomainTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var \Zend\ServiceManager\ServiceLocatorInterface
      */

@@ -27,7 +27,6 @@ class Module implements
     Feature\ConfigProviderInterface,
     Feature\BootstrapListenerInterface
 {
-
     public function getAutoloaderConfig()
     {
         return array(
@@ -94,7 +93,7 @@ class Module implements
     {
         return array(
             'factories' => array(
-                'renderNda' => function ($sm) {
+                'renderNda'        => function ($sm) {
                     $renderNda = new RenderNda();
                     $renderNda->setServiceLocator($sm->getServiceLocator());
 

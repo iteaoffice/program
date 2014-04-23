@@ -102,7 +102,8 @@ class ProgramHandler extends AbstractHelper
                 return sprintf(
                     "No handler available for <code>%s</code> in class <code>%s</code>",
                     $this->getHandler()->getHandler(),
-                    __CLASS__);
+                    __CLASS__
+                );
         }
     }
 

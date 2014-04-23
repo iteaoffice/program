@@ -13,10 +13,8 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Form\Annotation;
-
 use Doctrine\ORM\Mapping as ORM;
-
-use Gedmo\Mapping\Annotation AS Gedmo;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
@@ -144,7 +142,6 @@ class Nda extends EntityAbstract implements ResourceInterface
     {
         return sprintf("%s:%s", __CLASS__, $this->id);
     }
-
 
     /**
      * Parse a filename

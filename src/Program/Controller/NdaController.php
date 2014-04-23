@@ -22,7 +22,6 @@ use Program\Entity\NdaObject;
  */
 class NdaController extends ProgramAbstractController
 {
-
     /**
      * @return ViewModel
      */
@@ -39,7 +38,6 @@ class NdaController extends ProgramAbstractController
 
         return new ViewModel(array('nda' => $nda));
     }
-
 
     /**
      * @return ViewModel
@@ -128,7 +126,6 @@ class NdaController extends ProgramAbstractController
                 $fileSizeValidator = new FilesSize(PHP_INT_MAX);
                 $fileSizeValidator->isValid($fileData['file']);
 
-
                 $nda->setSize($fileSizeValidator->size);
                 $nda->setContentType(
                     $this->getGeneralService()->findContentTypeByContentTypeName($fileData['file']['type'])
@@ -143,16 +140,18 @@ class NdaController extends ProgramAbstractController
                 );
             }
 
-            $this->redirect()->toRoute('program/nda/view',
+            $this->redirect()->toRoute(
+                'program/nda/view',
                 array('id' => $nda->getId())
             );
         }
 
-
-        return new ViewModel(array(
-            'nda'  => $nda,
-            'form' => $form
-        ));
+        return new ViewModel(
+            array(
+                'nda'  => $nda,
+                'form' => $form
+            )
+        );
     }
 
     /**
@@ -163,7 +162,6 @@ class NdaController extends ProgramAbstractController
         //Create an empty NDA object
         $nda = new Nda();
         $nda->setContact($this->zfcUserAuthentication()->getIdentity());
-
 
         /**
          * Add the call when a call-id is given

@@ -34,17 +34,56 @@ return array(
              * access to all routes unless they are specified here.
              */
             'BjyAuthorize\Guard\Route' => array(
-                array('route' => 'program/nda/upload', 'roles' => array('user'), 'assertion' => 'program_acl_assertion_nda'),
-                array('route' => 'program/nda/view', 'roles' => array('user'), 'assertion' => 'program_acl_assertion_nda'),
-                array('route' => 'program/nda/render', 'roles' => array('user'), 'assertion' => 'program_acl_assertion_nda'),
-                array('route' => 'program/nda/replace', 'roles' => array('user'), 'assertion' => 'program_acl_assertion_nda'),
-                array('route' => 'program/nda/download', 'roles' => array('user'), 'assertion' => 'program_acl_assertion_nda'),
-
-                array('route' => 'program/doa/upload', 'roles' => array('office'), 'assertion' => 'program_acl_assertion_doa'),
-                array('route' => 'program/doa/view', 'roles' => array('office'), 'assertion' => 'program_acl_assertion_doa'),
-                array('route' => 'program/doa/render', 'roles' => array('office'), 'assertion' => 'program_acl_assertion_doa'),
-                array('route' => 'program/doa/replace', 'roles' => array('office'), 'assertion' => 'program_acl_assertion_doa'),
-                array('route' => 'program/doa/download', 'roles' => array('office'), 'assertion' => 'program_acl_assertion_doa'),
+                array(
+                    'route'     => 'program/nda/upload',
+                    'roles'     => array('user'),
+                    'assertion' => 'program_acl_assertion_nda'
+                ),
+                array(
+                    'route'     => 'program/nda/view',
+                    'roles'     => array('user'),
+                    'assertion' => 'program_acl_assertion_nda'
+                ),
+                array(
+                    'route'     => 'program/nda/render',
+                    'roles'     => array('user'),
+                    'assertion' => 'program_acl_assertion_nda'
+                ),
+                array(
+                    'route'     => 'program/nda/replace',
+                    'roles'     => array('user'),
+                    'assertion' => 'program_acl_assertion_nda'
+                ),
+                array(
+                    'route'     => 'program/nda/download',
+                    'roles'     => array('user'),
+                    'assertion' => 'program_acl_assertion_nda'
+                ),
+                array(
+                    'route'     => 'program/doa/upload',
+                    'roles'     => array('office'),
+                    'assertion' => 'program_acl_assertion_doa'
+                ),
+                array(
+                    'route'     => 'program/doa/view',
+                    'roles'     => array('office'),
+                    'assertion' => 'program_acl_assertion_doa'
+                ),
+                array(
+                    'route'     => 'program/doa/render',
+                    'roles'     => array('office'),
+                    'assertion' => 'program_acl_assertion_doa'
+                ),
+                array(
+                    'route'     => 'program/doa/replace',
+                    'roles'     => array('office'),
+                    'assertion' => 'program_acl_assertion_doa'
+                ),
+                array(
+                    'route'     => 'program/doa/download',
+                    'roles'     => array('office'),
+                    'assertion' => 'program_acl_assertion_doa'
+                ),
             ),
         ),
     ),

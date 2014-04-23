@@ -10,7 +10,6 @@
 namespace Program\Entity;
 
 use Zend\Form\Annotation;
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -34,7 +33,6 @@ class Funder
      * Constant for hideOnWebsite = 1
      */
     const SHOW_ON_WEBSITE = 1;
-
     /**
      * Textual versions of the showOnWebsite
      *
@@ -44,7 +42,6 @@ class Funder
         self::HIDE_ON_WEBSITE => 'txt-hide-on-website',
         self::SHOW_ON_WEBSITE => 'txt-show-on-website',
     );
-
     /**
      * @var integer
      *

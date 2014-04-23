@@ -24,7 +24,6 @@ use Program\Entity;
  */
 class DomainLink extends AbstractHelper
 {
-
     /**
      * @param \Program\Entity\Domain $domain
      * @param                        $action

@@ -35,7 +35,6 @@ class Roadmap extends EntityAbstract
      * @var integer
      */
     private $id;
-
     /**
      * @ORM\Column(name="roadmap", type="string", length=40, nullable=true)
      * @Annotation\Type("\Zend\Form\Element\Text")

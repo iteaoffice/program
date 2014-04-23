@@ -25,7 +25,6 @@ class ProgramManagerController extends AbstractActionController implements
     FormServiceAwareInterface,
     ServiceLocatorAwareInterface
 {
-
     /**
      * @var ProgramService;
      */

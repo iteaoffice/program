@@ -32,14 +32,12 @@ class FloorPlan
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
     /**
      * @var integer
      *
      * @ORM\Column(name="programcall_id", type="integer", nullable=false)
      */
     private $programcallId;
-
     /**
      * @var integer
      *

@@ -27,7 +27,7 @@ class ProgramPdf extends \FPDI
     /**
      * Draw an imported PDF logo on every page
      */
-    public function Header()
+    public function header()
     {
         if (is_null($this->_tplIdx)) {
 
@@ -38,14 +38,14 @@ class ProgramPdf extends \FPDI
             $this->setSourceFile($this->template);
             $this->_tplIdx = $this->importPage(1);
         }
-        $size = $this->useTemplate($this->_tplIdx, 0, 0);
+        $this->useTemplate($this->_tplIdx, 0, 0);
 
         $this->SetFont('freesans', 'N', 15);
         $this->SetTextColor(0);
         $this->SetXY(PDF_MARGIN_LEFT, 5);
     }
 
-    public function Footer()
+    public function footer()
     {
         // emtpy method body
     }

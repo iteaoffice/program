@@ -20,7 +20,6 @@ use Program\Entity;
 use General\Service\GeneralService;
 use Project\Service\VersionService;
 
-
 /**
  * ServiceAbstract
  */

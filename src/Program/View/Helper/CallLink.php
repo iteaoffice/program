@@ -24,7 +24,6 @@ use Program\Entity;
  */
 class CallLink extends AbstractHelper
 {
-
     /**
      * @param Entity\Call\Call $call
      * @param string           $action

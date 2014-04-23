@@ -15,5 +15,4 @@ namespace Program\Controller;
  */
 class ProgramController extends ProgramAbstractActionController
 {
-
 }

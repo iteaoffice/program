@@ -33,7 +33,6 @@ class ProgramNavigationFactory extends DefaultNavigationFactory
      */
     protected $programService;
 
-
     /**
      * @param ServiceLocatorInterface $serviceLocator
      * @param array                   $pages
@@ -88,7 +87,6 @@ class ProgramNavigationFactory extends DefaultNavigationFactory
                 }
                 break;
         }
-
 
         return $pages;
     }

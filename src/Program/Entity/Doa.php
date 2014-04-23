@@ -20,7 +20,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 
-
 /**
  * @ORM\Table(name="program_doa")
  * @ORM\Entity
@@ -160,7 +159,6 @@ class Doa extends EntityAbstract implements ResourceInterface
         return sprintf("%s:%s", __CLASS__, $this->id);
     }
 
-
     /**
      * Set input filter
      *
@@ -184,40 +182,58 @@ class Doa extends EntityAbstract implements ResourceInterface
             $factory     = new InputFactory();
 
             $inputFilter->add(
-                $factory->createInput(array(
-                    'name'     => 'dateApproved',
-                    'required' => false,
-                )));
+                $factory->createInput(
+                    array(
+                        'name'     => 'dateApproved',
+                        'required' => false,
+                    )
+                )
+            );
 
             $inputFilter->add(
-                $factory->createInput(array(
-                    'name'     => 'dateSigned',
-                    'required' => false,
-                )));
+                $factory->createInput(
+                    array(
+                        'name'     => 'dateSigned',
+                        'required' => false,
+                    )
+                )
+            );
 
             $inputFilter->add(
-                $factory->createInput(array(
-                    'name'     => 'branch',
-                    'required' => false,
-                )));
+                $factory->createInput(
+                    array(
+                        'name'     => 'branch',
+                        'required' => false,
+                    )
+                )
+            );
 
             $inputFilter->add(
-                $factory->createInput(array(
-                    'name'     => 'contact',
-                    'required' => false,
-                )));
+                $factory->createInput(
+                    array(
+                        'name'     => 'contact',
+                        'required' => false,
+                    )
+                )
+            );
 
             $inputFilter->add(
-                $factory->createInput(array(
-                    'name'     => 'organisation',
-                    'required' => false,
-                )));
+                $factory->createInput(
+                    array(
+                        'name'     => 'organisation',
+                        'required' => false,
+                    )
+                )
+            );
 
             $inputFilter->add(
-                $factory->createInput(array(
-                    'name'     => 'program',
-                    'required' => false,
-                )));
+                $factory->createInput(
+                    array(
+                        'name'     => 'program',
+                        'required' => false,
+                    )
+                )
+            );
 
             $fileUpload = new FileInput('file');
             $fileUpload->setRequired(true);

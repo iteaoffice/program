@@ -24,7 +24,6 @@ use Program\Entity;
  */
 class NdaLink extends AbstractHelper
 {
-
     /**
      * @param Entity\Nda       $nda
      * @param string           $action
@@ -106,7 +105,6 @@ class NdaLink extends AbstractHelper
             default:
                 throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
         }
-
 
         $classes     = array();
         $linkContent = array();

@@ -38,7 +38,6 @@ class Call extends EntityAbstract
     const FPP_NOT_OPEN = 'FPP_NOT_OPEN';
     const FPP_OPEN = 'FPP_OPEN';
     const FPP_CLOSED = 'FPP_CLOSED';
-
     /**
      * @ORM\Column(name="programcall_id", type="integer", nullable=false)
      * @ORM\Id

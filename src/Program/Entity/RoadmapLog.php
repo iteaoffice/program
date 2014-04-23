@@ -31,28 +31,24 @@ class RoadmapLog
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
     /**
      * @var integer
      *
      * @ORM\Column(name="contact_id", type="integer", nullable=false)
      */
     private $contactId;
-
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="date_created", type="datetime", nullable=false)
      */
     private $dateCreated;
-
     /**
      * @var string
      *
      * @ORM\Column(name="uri", type="string", length=255, nullable=true)
      */
     private $uri;
-
     /**
      * @var string
      *

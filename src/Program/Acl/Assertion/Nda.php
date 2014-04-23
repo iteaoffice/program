@@ -49,7 +49,6 @@ class Nda implements AssertionInterface
      */
     protected $accessRoles = array();
 
-
     /**
      * @param ServiceManager $serviceManager
      */
@@ -99,10 +98,8 @@ class Nda implements AssertionInterface
             $resource = $this->programService->findEntityById('Nda', $id);
         }
 
-
         switch ($privilege) {
             case 'upload':
-
                 return !is_null($this->contactService);
 
                 break;
@@ -113,7 +110,8 @@ class Nda implements AssertionInterface
                  * and the acl should not be approved
                  */
 
-                return is_null($resource->getDateApproved()) && $resource->getContact()->getId() === $this->contactService->getContact()->getId();
+                return is_null($resource->getDateApproved()) && $resource->getContact()->getId(
+                ) === $this->contactService->getContact()->getId();
 
                 break;
 

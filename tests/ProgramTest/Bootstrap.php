@@ -1,6 +1,13 @@
 <?php
-
-namespace ContactTest;
+/**
+ * ITEA Office copyright message placeholder
+ *
+ * @category    Program
+ * @package     Test
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ */
+namespace ProgramTest;
 
 use Zend\Loader\AutoloaderFactory;
 use Zend\Mvc\Service\ServiceManagerConfig;
@@ -15,11 +22,6 @@ use RuntimeException;
 
 error_reporting(E_ALL | E_STRICT);
 chdir(__DIR__);
-
-define('DEBRANOVA_HOST', 'test');
-define('DEBRANOVA_APP', 'test');
-define('DEBRANOVA_APPLICATION', 'test');
-define('DEBRANOVA_ENV', 'development');
 
 /**
  * Test bootstrap, for setting up autoloading
