@@ -19,16 +19,14 @@
         }
     ],
     "minimum-stability": "dev",
-    "repositories": [
-    ],
     "require": {
-        "debranova/contact": "dev-develop",
-        "debranova/project": "dev-develop",
         "zendframework/zendframework": "dev-master",
-        "doctrine/doctrine-orm-module": "dev-master",
-        "gedmo/doctrine-extensions": "dev-master"
+        "doctrine/doctrine-orm-module": "dev-master"
     },
     "require-dev": {
+        "debranova/contact": "dev-develop",
+        "debranova/project": "dev-develop",
+        "gedmo/doctrine-extensions": "dev-master",
         "phpunit/phpunit": "3.7.*",
         "phpmd/phpmd": "1.4.*",
         "phploc/phploc": "*",
@@ -42,7 +40,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0.0",
+            "dev-master": "1.0.0-dev",
             "dev-develop": "1.0.1-dev"
         }
     }

@@ -244,7 +244,7 @@ class Doa extends EntityAbstract implements ResourceInterface
      */
     public function parseFileName()
     {
-        return sprintf("DOA_%s_%s", $this->getOrganisation(), $this->getProgram());
+        return str_replace(' ', '_', sprintf("DOA_%s_%s", $this->getOrganisation(), $this->getProgram()));
     }
 
     /**

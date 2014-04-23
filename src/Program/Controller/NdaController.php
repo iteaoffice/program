@@ -164,42 +164,25 @@ class NdaController extends ProgramAbstractController
         $nda = new Nda();
         $nda->setContact($this->zfcUserAuthentication()->getIdentity());
 
-        $renderNda = $this->renderNda()->render($nda);
 
-        $response = $this->getResponse();
-        $response->getHeaders()
-            ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
-            ->addHeaderLine("Pragma: public")
-            ->addHeaderLine('Content-Disposition', 'attachment; filename="' . $nda->parseFileName() . '.pdf"')
-            ->addHeaderLine('Content-Type: application/pdf')
-            ->addHeaderLine('Content-Length', strlen($renderNda->getPDFData()));
+        /**
+         * Add the call when a call-id is given
+         */
+        if (!is_null($this->getEvent()->getRouteMatch()->getParam('call-id'))) {
+            $call = $this->getProgramService()->findEntityById(
+                'Call\Call',
+                $this->getEvent()->getRouteMatch()->getParam('call-id')
+            );
 
-        $response->setContent($renderNda->getPDFData());
+            if (is_null($call)) {
+                return $this->notFoundAction();
+            }
 
-        return $response;
-    }
-
-    /**
-     * @return \Zend\Stdlib\ResponseInterface
-     */
-    public function renderCallAction()
-    {
-        $call = $this->getProgramService()->findEntityById(
-            'Call\Call',
-            $this->getEvent()->getRouteMatch()->getParam('call-id')
-        );
-
-        if (is_null($call)) {
-            return $this->notFoundAction();
+            $nda->setCall($call);
+            $renderNda = $this->renderNda()->renderCall($nda);
+        } else {
+            $renderNda = $this->renderNda()->render($nda);
         }
-
-        //Create an empty NDA object
-        $nda = new Nda();
-        $nda->setContact($this->zfcUserAuthentication()->getIdentity());
-        $nda->setCall($call);
-
-        $renderNda = $this->renderNda()->renderCall($nda);
 
         $response = $this->getResponse();
         $response->getHeaders()

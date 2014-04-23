@@ -154,10 +154,10 @@ class Nda extends EntityAbstract implements ResourceInterface
     public function parseFileName()
     {
         if (is_null($this->getCall())) {
-            return sprintf(sprintf("NDA_SEQ_%s", $this->getContact()->getId()));
+            return sprintf("NDA_SEQ_%s", $this->getContact()->getId());
         }
 
-        return sprintf(sprintf("NDA_%s_SEQ_%s", $this->getCall(), $this->getContact()->getId()));
+        return str_replace(' ', '_', sprintf("NDA_%s_SEQ_%s", $this->getCall(), $this->getContact()->getId()));
     }
 
     /**
