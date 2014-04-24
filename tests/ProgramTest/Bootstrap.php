@@ -54,18 +54,18 @@ class Bootstrap
 
         $entityManager = $serviceManager->get('doctrine.entitymanager.orm_default');
 
-//        //Validate the schema;
-//        $validator = new SchemaValidator($entityManager);
-//        $errors    = $validator->validateMapping();
-//
-//        if (count($errors) > 0) {
-//            foreach ($errors AS $entity => $errors) {
-//                echo "Error in Entity: '" . $entity . "':\n";
-//                echo implode("\n", $errors);
-//                echo "\n";
-//            }
-//            die();
-//        }
+        //Validate the schema;
+        $validator = new SchemaValidator($entityManager);
+        $errors    = $validator->validateMapping();
+
+        if (count($errors) > 0) {
+            foreach ($errors AS $entity => $errors) {
+                echo "Error in Entity: '" . $entity . "':\n";
+                echo implode("\n", $errors);
+                echo "\n";
+            }
+            die();
+        }
 
         //Create the schema
         $tool      = new \Doctrine\ORM\Tools\SchemaTool($entityManager);
@@ -77,7 +77,8 @@ class Bootstrap
 
         $loader = new Loader();
 //        $loader->addFixture(new \ProjectTest\Fixture\LoadVersionData());
-//        $loader->addFixture(new \ProgramTest\Fixture\LoadDomainData());
+        $loader->addFixture(new \ProgramTest\Fixture\LoadDomainData());
+        $loader->addFixture(new \ProgramTest\Fixture\LoadProgramData());
 //        $loader->addFixture(new \GeneralTest\Fixture\LoadGenderData());
 //        $loader->addFixture(new \GeneralTest\Fixture\LoadTitleData());
 //        $loader->addFixture(new \ContactTest\Fixture\LoadContactData());

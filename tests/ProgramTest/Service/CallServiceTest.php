@@ -10,6 +10,7 @@
 namespace ProgramTest\Service;
 
 use Program\Service\CallService;
+use Program\Service\ProgramService;
 use Contact\Service\ContactService;
 use ProgramTest\Bootstrap;
 
@@ -28,6 +29,10 @@ class CallServiceTest extends \PHPUnit_Framework_TestCase
      */
     protected $callService;
     /**
+     * @var ProgramService;
+     */
+    protected $programService;
+    /**
      * @var ContactService;
      */
     protected $contactService;
@@ -43,6 +48,9 @@ class CallServiceTest extends \PHPUnit_Framework_TestCase
         $this->callService = new CallService();
         $this->callService->setServiceLocator($this->serviceManager);
 
+        $this->programService = new ProgramService();
+        $this->programService->setServiceLocator($this->serviceManager);
+
         $this->contactService = new ContactService();
         $this->contactService->setServiceLocator($this->serviceManager);
     }
@@ -50,7 +58,7 @@ class CallServiceTest extends \PHPUnit_Framework_TestCase
     public function testCanFindFunderByCountry()
     {
         $country = $this->entityManager->find("General\Entity\Country", 1);
-        $funder  = $this->callService->findFunderByCountry($country);
+        $funder  = $this->programService->findFunderByCountry($country);
         foreach ($funder as $funderResult) {
             $this->assertInstanceOf('Program\\Entity\\Funder', $funderResult);
             $this->assertEquals($funderResult->getCountry()->getId(), 1);
@@ -59,7 +67,7 @@ class CallServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testCanFindNdaByCallAndContact()
     {
-        $call    = $this->callService->findEntityById('call', 1);
+        $call    = $this->callService->findEntityById('Call\Call', 1);
         $contact = $this->contactService->findEntityById('contact', 1);
 
         $nda = $this->callService->findNdaByCallAndContact($call, $contact);
@@ -68,9 +76,8 @@ class CallServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testCanUploadNDA()
     {
-
-        $call    = $this->callService->findEntityById('call', 1);
-        $contact = $this->contactService->findEntityById('contact', 1);
+        $call    = $this->callService->setCallId(1)->getCall();
+        $contact = $this->contactService->setContactId(1)->getContact();
 
         $file = array(
             'name'     => 'This is an uploaded file',

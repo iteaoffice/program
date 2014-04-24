@@ -36,9 +36,9 @@ class Program extends EntityAbstract
      */
     private $id;
     /**
-     * @ORM\Column(name="program", type="string", length=10, nullable=true)
+     * @ORM\Column(name="program", type="string", length=10, nullable=false)
      * @Annotation\Type("\Zend\Form\Element\Text")
-     * @Annotation\Options({"label":"txt-first-name"})
+     * @Annotation\Options({"label":"txt-program-name"})
      * @var string
      */
     private $program;
