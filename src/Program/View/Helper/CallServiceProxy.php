@@ -2,44 +2,72 @@
 /**
  * ITEA Office copyright message placeholder
  *
- * @category    Contact
- * @package     View
- * @subpackage  Helper
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @category   Program
+ * @package    View
+ * @subpackage Helper
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
-
 namespace Program\View\Helper;
 
-use Program\Service\CallService;
+use Program\Entity\Call\Call;
+use Program\Service\ProgramService;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Helper\AbstractHelper;
-use Zend\View\HelperPluginManager;
 
 /**
- * Class CallServiceProxy
+ * Create a link to an project
  *
- * @package Program\View\Helper
+ * @category   Program
+ * @package    View
+ * @subpackage Helper
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @license    http://debranova.org/licence.txt proprietary
+ * @link       http://debranova.org
  */
-class CallServiceProxy extends AbstractHelper
+class CallServiceProxy extends AbstractHelper implements ServiceLocatorAwareInterface
 {
     /**
-     * @var CallService
+     * @var ServiceLocatorInterface
      */
-    protected $callService;
+    protected $serviceLocator;
 
     /**
-     * @param HelperPluginManager $helperPluginManager
+     * @param Call $call
+     *
+     * @return ProgramService
      */
-    public function __construct(HelperPluginManager $helperPluginManager)
+    public function __invoke(Call $call)
     {
-        $this->callService = $helperPluginManager->getServiceLocator()->get('program_call_service');
+        $callService = $this->serviceLocator->getServiceLocator()->get('program_call_service');
+
+        return $callService->setCall($call);
     }
 
     /**
-     * @return CallService
+     * Get the service locator.
+     *
+     * @return ServiceLocatorInterface
      */
-    public function __invoke()
+    public function getServiceLocator()
     {
-        return $this->callService;
+        return $this->serviceLocator;
+    }
+
+    /**
+     * Set the service locator.
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     *
+     * @return AbstractHelper
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+
+        return $this;
     }
 }

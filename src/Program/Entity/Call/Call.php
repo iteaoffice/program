@@ -19,6 +19,7 @@ use Zend\Form\Annotation;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * @ORM\Table(name="programcall")
@@ -29,7 +30,7 @@ use Zend\InputFilter\InputFilterInterface;
  * @category    Program
  * @package     Entity
  */
-class Call extends EntityAbstract
+class Call extends EntityAbstract implements ResourceInterface
 {
     /**
      * Produce a list of different statuses in a call, which are required for representation and access control
@@ -219,6 +220,16 @@ class Call extends EntityAbstract
     public function setProgram($program)
     {
         $this->program = $program;
+    }
+
+    /**
+     * Returns the string identifier of the Resource
+     *
+     * @return string
+     */
+    public function getResourceId()
+    {
+        return sprintf("%s:%s", __CLASS__, $this->id);
     }
 
     /**

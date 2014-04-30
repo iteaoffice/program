@@ -2,43 +2,72 @@
 /**
  * ITEA Office copyright message placeholder
  *
- * @category    Contact
- * @package     View
- * @subpackage  Helper
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @category   Program
+ * @package    View
+ * @subpackage Helper
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
-
 namespace Program\View\Helper;
 
+use Program\Entity\Program;
 use Program\Service\ProgramService;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Helper\AbstractHelper;
-use Zend\View\HelperPluginManager;
 
 /**
- * Class ContactHandler
- * @package Contact\View\Helper
+ * Create a link to an project
+ *
+ * @category   Program
+ * @package    View
+ * @subpackage Helper
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @license    http://debranova.org/licence.txt proprietary
+ * @link       http://debranova.org
  */
-class ProgramServiceProxy extends AbstractHelper
+class ProgramServiceProxy extends AbstractHelper implements ServiceLocatorAwareInterface
 {
     /**
-     * @var ProgramService
+     * @var ServiceLocatorInterface
      */
-    protected $programService;
+    protected $serviceLocator;
 
     /**
-     * @param HelperPluginManager $helperPluginManager
+     * @param Program $program
+     *
+     * @return ProgramService
      */
-    public function __construct(HelperPluginManager $helperPluginManager)
+    public function __invoke(Program $program)
     {
-        $this->programService = $helperPluginManager->getServiceLocator()->get('program_program_service');
+        $callService = $this->serviceLocator->getServiceLocator()->get('program_program_service');
+
+        return $callService->setProgram($program);
     }
 
     /**
-     * @return ProgramService
+     * Get the service locator.
+     *
+     * @return ServiceLocatorInterface
      */
-    public function __invoke()
+    public function getServiceLocator()
     {
-        return $this->programService;
+        return $this->serviceLocator;
+    }
+
+    /**
+     * Set the service locator.
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     *
+     * @return AbstractHelper
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+
+        return $this;
     }
 }

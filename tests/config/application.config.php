@@ -4,6 +4,8 @@ return array(
         'Admin',
         'Publication',
         'ZfcTwig',
+        'BjyAuthorize',
+        'ZfcUser',
         'Content',
         'Deeplink',
         'Calendar',

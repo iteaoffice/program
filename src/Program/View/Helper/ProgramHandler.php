@@ -2,11 +2,13 @@
 /**
  * ITEA Office copyright message placeholder
  *
- * @category    Program
- * @package     View
- * @subpackage  Helper
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @category   Program
+ * @package    View
+ * @subpackage Helper
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 
 namespace Program\View\Helper;
@@ -23,8 +25,14 @@ use Zend\View\HelperPluginManager;
 use ZfcTwig\View\TwigRenderer;
 
 /**
- * Class ProgramHandler
- * @package Program\View\Helper
+ * Create a link to an project
+ *
+ * @category   Program
+ * @package    View
+ * @subpackage Helper
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @license    http://debranova.org/licence.txt proprietary
+ * @link       http://debranova.org
  */
 class ProgramHandler extends AbstractHelper
 {
@@ -60,6 +68,22 @@ class ProgramHandler extends AbstractHelper
     }
 
     /**
+     * @return \Content\Entity\Handler
+     */
+    public function getHandler()
+    {
+        return $this->handler;
+    }
+
+    /**
+     * @param \Content\Entity\Handler $handler
+     */
+    public function setHandler($handler)
+    {
+        $this->handler = $handler;
+    }
+
+    /**
      * @param Call    $call
      * @param Program $program
      *
@@ -78,19 +102,27 @@ class ProgramHandler extends AbstractHelper
     }
 
     /**
-     * @param \Content\Entity\Handler $handler
+     * @return TwigRenderer
      */
-    public function setHandler($handler)
+    public function getZfcTwigRenderer()
     {
-        $this->handler = $handler;
+        return $this->serviceLocator->get('ZfcTwigRenderer');
     }
 
     /**
-     * @return \Content\Entity\Handler
+     * @return CallService
      */
-    public function getHandler()
+    public function getCallService()
     {
-        return $this->handler;
+        return $this->serviceLocator->get('program_call_service');
+    }
+
+    /**
+     * @return ProgramService
+     */
+    public function getProgramService()
+    {
+        return $this->serviceLocator->get('program_program_service');
     }
 
     /**
@@ -110,14 +142,6 @@ class ProgramHandler extends AbstractHelper
     }
 
     /**
-     * @return TwigRenderer
-     */
-    public function getZfcTwigRenderer()
-    {
-        return $this->serviceLocator->get('ZfcTwigRenderer');
-    }
-
-    /**
      * @return RouteMatch
      */
     public function getRouteMatch()
@@ -126,19 +150,13 @@ class ProgramHandler extends AbstractHelper
     }
 
     /**
-     * @return ProgramService
+     * Get the service locator.
+     *
+     * @return ServiceLocatorInterface
      */
-    public function getProgramService()
+    public function getServiceLocator()
     {
-        return $this->serviceLocator->get('program_program_service');
-    }
-
-    /**
-     * @return CallService
-     */
-    public function getCallService()
-    {
-        return $this->serviceLocator->get('program_call_service');
+        return $this->serviceLocator;
     }
 
     /**
@@ -153,15 +171,5 @@ class ProgramHandler extends AbstractHelper
         $this->serviceLocator = $serviceLocator;
 
         return $this;
-    }
-
-    /**
-     * Get the service locator.
-     *
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
     }
 }

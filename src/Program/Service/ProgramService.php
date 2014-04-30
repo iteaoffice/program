@@ -88,10 +88,14 @@ class ProgramService extends ServiceAbstract
     }
 
     /**
-     * @param Program $program
+     * @param $program
+     *
+     * @return $this
      */
     public function setProgram($program)
     {
         $this->program = $program;
+
+        return $this;
     }
 }

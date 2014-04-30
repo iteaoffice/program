@@ -26,12 +26,12 @@ use Program\Entity\NdaObject;
  */
 class CallService extends ServiceAbstract
 {
-    const PO_NOT_OPEN = 'PO_NOT_OPEN';
-    const PO_OPEN = 'PO_OPEN';
-    const PO_CLOSED = 'PO_CLOSED';
+    const FPP_CLOSED = 'FPP_CLOSED';
     const FPP_NOT_OPEN = 'FPP_NOT_OPEN';
     const FPP_OPEN = 'FPP_OPEN';
-    const FPP_CLOSED = 'FPP_CLOSED';
+    const PO_CLOSED = 'PO_CLOSED';
+    const PO_NOT_OPEN = 'PO_NOT_OPEN';
+    const PO_OPEN = 'PO_OPEN';
     const UNDEFINED = 'UNDEFINED';
     /**
      * @var Call
@@ -125,8 +125,7 @@ class CallService extends ServiceAbstract
         /**
          * Go over the dates and find the most suited date.
          */
-        $today    = new \DateTime();
-        $dateTime = new \DateTime();
+        $today = $dateTime = new \DateTime();
 
         $notificationDeadline = $dateTime->sub(new \DateInterval("P1W"));
 
@@ -158,6 +157,26 @@ class CallService extends ServiceAbstract
         $callStatus->referenceDate = $referenceDate;
 
         return $callStatus;
+    }
+
+    /**
+     * @return Call
+     */
+    public function getCall()
+    {
+        return $this->call;
+    }
+
+    /**
+     * @param $call
+     *
+     * @return $this
+     */
+    public function setCall($call)
+    {
+        $this->call = $call;
+
+        return $this;
     }
 
     /**
@@ -199,21 +218,5 @@ class CallService extends ServiceAbstract
         $ndaObject->setNda($nda);
 
         return $this->newEntity($ndaObject);
-    }
-
-    /**
-     * @return Call
-     */
-    public function getCall()
-    {
-        return $this->call;
-    }
-
-    /**
-     * @param Call $call
-     */
-    public function setCall($call)
-    {
-        $this->call = $call;
     }
 }

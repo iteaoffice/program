@@ -3,30 +3,47 @@
 /**
  * ITEA Office copyright message placeholder
  *
- * @category    Affiliation
- * @package     View
- * @subpackage  Helper
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @category   Program
+ * @package    View
+ * @subpackage Helper
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\View\Helper;
 
 use Organisation\Entity\Organisation;
+use Program\Entity\Doa;
 use Program\Entity\Program;
-use Program\Entity;
-use Zend\View\Helper\AbstractHelper;
 
 /**
- * Create a link to an affiliation
+ * Create a link to an project
  *
- * @category    Affiliation
- * @package     View
- * @subpackage  Helper
+ * @category   Program
+ * @package    View
+ * @subpackage Helper
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @license    http://debranova.org/licence.txt proprietary
+ * @link       http://debranova.org
  */
-class DoaLink extends AbstractHelper
+class DoaLink extends LinkAbstract
 {
     /**
-     * @param Entity\Doa   $doa
+     * @var Doa
+     */
+    protected $doa;
+    /**
+     * @var Organisation
+     */
+    protected $organisation;
+    /**
+     * @var Program
+     */
+    protected $program;
+
+    /**
+     * @param Doa          $doa
      * @param string       $action
      * @param string       $show
      * @param Organisation $organisation
@@ -36,125 +53,156 @@ class DoaLink extends AbstractHelper
      * @throws \Exception
      */
     public function __invoke(
-        Entity\Doa $doa = null,
+        Doa $doa = null,
         $action = 'view',
-        $show = 'name',
+        $show = 'text',
         Organisation $organisation = null,
         Program $program = null
     ) {
-        $translate = $this->view->plugin('translate');
-        $url       = $this->view->plugin('url');
-        $serverUrl = $this->view->plugin('serverUrl');
-        $isAllowed = $this->view->plugin('isAllowed');
 
-        $auth      = $this->view->getHelperPluginManager()->getServiceLocator()->get('BjyAuthorize\Service\Authorize');
-        $assertion = $this->view->getHelperPluginManager()->getServiceLocator()->get('program_acl_assertion_doa');
+        $this->setDoa($doa);
+        $this->setOrganisation($organisation);
+        $this->setProgram($program);
+        $this->setAction($action);
+        $this->setShow($show);
 
-        if (!is_null($doa) && !$auth->getAcl()->hasResource($doa)) {
-            $auth->getAcl()->addResource($doa);
-            $auth->getAcl()->allow(array(), $doa, array(), $assertion);
+        if (!$this->hasAccess(
+            $this->getDoa(),
+            'program_acl_assertion_doa',
+            $this->getAction()
+        )
+        ) {
+            return 'Access denied';
         }
 
-        if (!is_null($doa) && !$isAllowed($doa, $action)) {
-            return $action . ' is not possible for ' . $doa;
+        $this->addRouterParam('entity', 'Doa');
+        if (!is_null($this->getDoa())) {
+            $this->addRouterParam('id', $this->getDoa()->getId());
         }
 
-        $params = array(
-            'id'     => (!is_null($doa) ? $doa->getId() : null),
-            'entity' => 'doa'
-        );
+        return $this->createLink();
+    }
 
-        switch ($action) {
+    /**
+     * @return Doa
+     */
+    public function getDoa()
+    {
+        return $this->doa;
+    }
+
+    /**
+     * @param Doa $doa
+     */
+    public function setDoa($doa)
+    {
+        $this->doa = $doa;
+    }
+
+    /**
+     * Extract the relevant parameters based on the action
+     *
+     * @return void;
+     */
+    public function parseAction()
+    {
+        switch ($this->getAction()) {
+
             case 'upload':
-                $router = 'program/doa/upload';
-                $text   = sprintf(
-                    $translate("txt-upload-doa-for-organisation-%s-in-program-%s-link-title"),
-                    $organisation->getOrganisation(),
-                    $program->getProgram()
+                $this->setRouter('program/doa/upload');
+                $this->setText(
+                    sprintf(
+                        _("txt-upload-doa-for-organisation-%s-in-program-%s-link-title"),
+                        $this->getOrganisation(),
+                        $this->getProgram()
+                    )
                 );
                 break;
             case 'render':
-                $router = 'program/doa/render';
+                $this->setRouter('program/doa/render');
                 /**
                  * The $doa can be null, we then use the $organisation and $program to produce the link
                  */
-                $renderText = "txt-render-doa-for-organisation-%s-in-program-%s-link-title";
-                if (is_null($doa)) {
-                    $text = sprintf(
-                        $translate($renderText),
-                        $organisation->getOrganisation(),
-                        $program->getProgram()
+                $renderText = _("txt-render-doa-for-organisation-%s-in-program-%s-link-title");
+                if (is_null($this->getDoa())) {
+                    $this->setText(
+                        sprintf(
+                            $renderText,
+                            $this->getOrganisation(),
+                            $this->getProgram()
+                        )
                     );
 
-                    $params['organisation-id'] = $organisation->getId();
-                    $params['program-id']      = $program->getId();
+                    $this->addRouterParam('organisation-id', $this->getOrganisation()->getId());
+                    $this->addRouterParam('program-id', $this->getProgram()->getId());
                 } else {
-                    $text = sprintf(
-                        $translate($renderText),
-                        $doa->getOrganisation(),
-                        $doa->getProgram()
+                    $this->setText(
+                        sprintf(
+                            $renderText,
+                            $this->getDoa()->getOrganisation(),
+                            $this->getDoa()->getProgram()
+                        )
                     );
-
-                    $params['organisation-id'] = $doa->getOrganisation()->getId();
-                    $params['program-id']      = $doa->getProgram()->getId();
+                    $this->addRouterParam('organisation-id', $this->getDoa()->getOrganisation()->getId());
+                    $this->addRouterParam('program-id', $this->getDoa()->getProgram()->getId());
                 }
-
                 break;
             case 'replace':
-                $router = 'program/doa/replace';
-                $text   = sprintf(
-                    $translate("txt-replace-doa-for-organisation-%s-in-program-%s-link-title"),
-                    $doa->getOrganisation(),
-                    $doa->getProgram()
+                $this->setRouter('program/doa/replace');
+                $this->setText(
+                    sprintf(
+                        _("txt-replace-doa-for-organisation-%s-in-program-%s-link-title"),
+                        $this->getDoa()->getOrganisation(),
+                        $this->getDoa()->getProgram()
+                    )
                 );
                 break;
             case 'download':
-                $router = 'program/doa/download';
-                $text   = sprintf(
-                    $translate("txt-download-doa-for-organisation-%s-in-program-%s-link-title"),
-                    $doa->getOrganisation(),
-                    $doa->getProgram()
+                $this->setRouter('program/doa/download');
+                $this->setText(
+                    sprintf(
+                        _("txt-download-doa-for-organisation-%s-in-program-%s-link-title"),
+                        $this->getDoa()->getOrganisation(),
+                        $this->getDoa()->getProgram()
+                    )
                 );
                 break;
             default:
-                throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
+                throw new \InvalidArgumentException(
+                    sprintf("%s is an incorrect action for %s", $this->getAction(), __CLASS__)
+                );
         }
+    }
 
-        $classes     = array();
-        $linkContent = array();
+    /**
+     * @return Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
 
-        switch ($show) {
-            case 'icon':
-                if ($action === 'edit') {
-                    $linkContent[] = '<span class="glyphicon glyphicon-edit"></span>';
-                } elseif ($action === 'download') {
-                    $linkContent[] = '<span class="glyphicon glyphicon-download"></span>';
-                } elseif ($action === 'replace') {
-                    $linkContent[] = '<span class="glyphicon glyphicon-repeat"></span>';
-                } else {
-                    $linkContent[] = '<span class="glyphicon glyphicon-info-sign"></span>';
-                }
-                break;
-            case 'button':
-                $linkContent[] = '<span class="glyphicon glyphicon-info"></span> ' . $text;
-                $classes[]     = "btn btn-primary";
-                break;
-            case 'text':
-                $linkContent[] = $text;
-                break;
-            default:
-                $linkContent[] = $text;
-                break;
-        }
+    /**
+     * @param Organisation $organisation
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+    }
 
-        $uri = '<a href="%s" title="%s" class="%s">%s</a>';
+    /**
+     * @return Program
+     */
+    public function getProgram()
+    {
+        return $this->program;
+    }
 
-        return sprintf(
-            $uri,
-            $serverUrl->__invoke() . $url($router, $params),
-            $text,
-            implode($classes),
-            implode($linkContent)
-        );
+    /**
+     * @param Program $program
+     */
+    public function setProgram($program)
+    {
+        $this->program = $program;
     }
 }

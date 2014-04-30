@@ -1,28 +1,36 @@
 <?php
-
 /**
  * ITEA Office copyright message placeholder
  *
- * @category    Program
- * @package     View
- * @subpackage  Helper
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @category   Program
+ * @package    View
+ * @subpackage Helper
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\View\Helper;
 
-use Program\Entity;
-use Zend\View\Helper\AbstractHelper;
+use Program\Entity\Program;
 
 /**
- * Create a link to an program
+ * Create a link to an project
  *
- * @category    Program
- * @package     View
- * @subpackage  Helper
+ * @category   Program
+ * @package    View
+ * @subpackage Helper
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @license    http://debranova.org/licence.txt proprietary
+ * @link       http://debranova.org
  */
-class ProgramLink extends AbstractHelper
+class ProgramLink extends LinkAbstract
 {
+    /**
+     * @var Program
+     */
+    protected $program;
+
     /**
      * @param \Program\Entity\Program $program
      * @param                         $action
@@ -32,90 +40,67 @@ class ProgramLink extends AbstractHelper
      * @throws \RuntimeException
      * @throws \Exception
      */
-    public function __invoke(Entity\Program $program = null, $action = 'view', $show = 'name')
+    public function __invoke(Program $program = null, $action = 'view', $show = 'name')
     {
-        $translate = $this->view->plugin('translate');
-        $url       = $this->view->plugin('url');
-        $serverUrl = $this->view->plugin('serverUrl');
-        $isAllowed = $this->view->plugin('isAllowed');
+        $this->setProgram($program);
+        $this->setAction($action);
+        $this->setShow($show);
 
-        $routeMatch = $this->view->getHelperPluginManager()->getServiceLocator()
-            ->get('application')
-            ->getMvcEvent()
-            ->getRouteMatch();
-
-        $params = array(
-            'id'     => $program->getId(),
-            'entity' => 'program'
+        /**
+         * Set the non-standard options needed to give an other link value
+         */
+        $this->setShowOptions(
+            array(
+                'name' => $this->getProgram(),
+            )
         );
 
-        switch ($action) {
-            case 'new':
-                $router  = 'zfcadmin/program-manager/new';
-                $text    = sprintf($translate("txt-new-program"));
-                $program = new Entity\Program();
-                break;
-            case 'edit':
-                $router = 'zfcadmin/program-manager/edit';
-                $text   = sprintf($translate("txt-edit-program-%s"), $program);
-                break;
-            case 'view':
-                $router = 'program/view';
-                $text   = sprintf($translate("txt-view-program-%s"), $program);
-                break;
+        $this->addRouterParam('entity', 'program');
+
+        if (!is_null($program)) {
+            $this->addRouterParam('id', $this->getProgram()->getId());
+        }
+
+        return $this->createLink();
+    }
+
+    /**
+     * @return Program
+     */
+    public function getProgram()
+    {
+        return $this->program;
+    }
+
+    /**
+     * @param Program $program
+     */
+    public function setProgram($program)
+    {
+        $this->program = $program;
+    }
+
+    /**
+     * Parse te action and fill the correct parameters
+     */
+    protected function parseAction()
+    {
+        switch ($this->getAction()) {
             case 'view-list':
 
                 /**
                  * For a list in the front-end simply use the MatchedRouteName
                  */
-                $router            = $routeMatch->getMatchedRouteName();
-                $params['docRef']  = $routeMatch->getParam('docRef');
-                $params['program'] = $program->getId();
+                $this->setRouter($this->getRouteMatch()->getMatchedRouteName());
+                $this->addRouterParam('docRef', $this->getRouteMatch()->getParam('docRef'));
+                $this->addRouterParam('program', $this->getRouteMatch()->getParam('program'));
 
-                $text = sprintf($translate("txt-view-program-%s"), $program);
-                break;
-            case 'list':
-                $router  = 'program/list';
-                $text    = sprintf($translate("txt-list-program"));
-                $program = new Entity\Program();
+                $this->setText(sprintf(_("txt-view-program-%s"), $this->getProgram()));
                 break;
             default:
-                throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
+                throw new \InvalidArgumentException(
+                    sprintf("%s is an incorrect action for %s", $this->getAction(), __CLASS__)
+                );
         }
-
-        $classes     = array();
-        $linkContent = array();
-
-        switch ($show) {
-            case 'icon':
-                if ($action === 'edit') {
-                    $linkContent[] = ' < i class="icon-pencil" ></i > ';
-                } elseif ($action === 'delete') {
-                    $linkContent[] = ' < i class="icon-remove" ></i > ';
-                } else {
-                    $linkContent[] = '<i class="icon-info-sign" ></i > ';
-                }
-                break;
-            case 'button':
-                $linkContent[] = ' < i class="icon-pencil icon-white" ></i > ' . $text;
-                $classes[]     = "btn btn-primary";
-                break;
-            case 'name':
-                $linkContent[] = $program;
-                break;
-            default:
-                $linkContent[] = $program;
-                break;
-        }
-
-        $uri = '<a href="%s" title="%s" class="%s">%s</a>';
-
-        return sprintf(
-            $uri,
-            $serverUrl->__invoke() . $url($router, $params),
-            $text,
-            implode($classes),
-            implode($linkContent)
-        );
     }
 }

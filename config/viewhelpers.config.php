@@ -10,21 +10,15 @@
 
 return array(
     'factories'  => array(
-        'programHandler'      => 'Program\View\Helper\Service\ProgramHandlerFactory',
-        'callServiceProxy'    => function ($sm) {
-            return new \Program\View\Helper\CallServiceProxy($sm);
-        },
-        'programServiceProxy' => function ($sm) {
-            return new \Program\View\Helper\ProgramServiceProxy($sm);
-        },
+        'programHandler' => 'Program\View\Helper\Service\ProgramHandlerFactory',
+        'programLink'    => 'Program\View\Helper\Service\ProgramLinkFactory',
+        'programDoaLink' => 'Program\View\Helper\Service\DoaLinkFactory',
+        'callLink'       => 'Program\View\Helper\Service\CallLinkFactory',
+        'ndaLink'        => 'Program\View\Helper\Service\NdaLinkFactory',
     ),
     'invokables' => array(
-        'programLink'        => 'Program\View\Helper\ProgramLink',
-        'programDoaLink'     => 'Program\View\Helper\DoaLink',
-        'callLink'           => 'Program\View\Helper\CallLink',
-        'callInformationBox' => 'Program\View\Helper\CallInformationBox',
-        'ndaLink'            => 'Program\View\Helper\NdaLink',
-        'domainLink'         => 'Program\View\Helper\DomainLink',
-        'technologyLink'     => 'Program\View\Helper\TechnologyLink',
+        'callServiceProxy'    => 'Program\View\Helper\CallServiceProxy',
+        'programServiceProxy' => 'Program\View\Helper\ProgramServiceProxy',
+        'callInformationBox'  => 'Program\View\Helper\CallInformationBox',
     )
 );

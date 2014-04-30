@@ -79,6 +79,7 @@ class Bootstrap
         $tool->createSchema($mdFactory->getAllMetadata());
 
         $loader = new Loader();
+        $loader->addFixture(new \AdminTest\Fixture\LoadAccessData());
         $loader->addFixture(new LoadCountryData());
         $loader->addFixture(new LoadDomainData());
         $loader->addFixture(new LoadProgramData());

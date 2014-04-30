@@ -17,6 +17,7 @@ use Zend\Form\Annotation;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * @ORM\Table(name="program")
@@ -27,7 +28,7 @@ use Zend\InputFilter\InputFilterInterface;
  * @category    Contact
  * @package     Entity
  */
-class Program extends EntityAbstract
+class Program extends EntityAbstract implements ResourceInterface
 {
     /**
      * @ORM\Column(name="program_id", type="integer", nullable=false)
@@ -69,6 +70,16 @@ class Program extends EntityAbstract
     {
         $this->call = new Collections\ArrayCollection();
         $this->doa  = new Collections\ArrayCollection();
+    }
+
+    /**
+     * Returns the string identifier of the Resource
+     *
+     * @return string
+     */
+    public function getResourceId()
+    {
+        return sprintf("%s:%s", __CLASS__, $this->id);
     }
 
     /**
