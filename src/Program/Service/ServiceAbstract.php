@@ -9,16 +9,13 @@
  */
 namespace Program\Service;
 
+use General\Service\GeneralService;
+use Program\Entity\EntityAbstract;
+use Program\Entity;
+use Project\Service\VersionService;
+use Zend\Authentication\AuthenticationService;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Authentication\AuthenticationService;
-
-use Program\Entity\EntityAbstract;
-
-use Program\Entity;
-
-use General\Service\GeneralService;
-use Project\Service\VersionService;
 
 /**
  * ServiceAbstract
@@ -53,7 +50,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
      * @param $entity
      * @param $id
      *
-     * @return null|Entity\Doa|Entity\Call\Call|Entity\Nda
+     * @return null|Entity\Doa|Entity\Call\Call|Entity\Nda|Entity\Program
      */
     public function findEntityById($entity, $id)
     {

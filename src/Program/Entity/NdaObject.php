@@ -1,18 +1,20 @@
 <?php
 /**
- * Debranova copyright message placeholder
+ * ITEA Office copyright message placeholder
  *
- * @category    Program
- * @package     Entity
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 Debranova
+ * @category   Project
+ * @package    Entity
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
-use Zend\InputFilter\Factory as InputFactory;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="nda_object")
@@ -74,6 +76,11 @@ class NdaObject extends EntityAbstract
         return $this->domain;
     }
 
+    public function populate()
+    {
+        return $this->getArrayCopy();
+    }
+
     /**
      * Needed for the hydration of form elements
      *
@@ -86,11 +93,6 @@ class NdaObject extends EntityAbstract
             'object' => $this->object,
             'nda'    => $this->nda,
         );
-    }
-
-    public function populate()
-    {
-        return $this->getArrayCopy();
     }
 
     /**
@@ -120,14 +122,6 @@ class NdaObject extends EntityAbstract
     }
 
     /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
      * @return int
      */
     public function getId()
@@ -136,11 +130,11 @@ class NdaObject extends EntityAbstract
     }
 
     /**
-     * @param \Program\Entity\Nda $nda
+     * @param int $id
      */
-    public function setNda($nda)
+    public function setId($id)
     {
-        $this->nda = $nda;
+        $this->id = $id;
     }
 
     /**
@@ -152,11 +146,11 @@ class NdaObject extends EntityAbstract
     }
 
     /**
-     * @param string $object
+     * @param \Program\Entity\Nda $nda
      */
-    public function setObject($object)
+    public function setNda($nda)
     {
-        $this->object = $object;
+        $this->nda = $nda;
     }
 
     /**
@@ -165,5 +159,13 @@ class NdaObject extends EntityAbstract
     public function getObject()
     {
         return $this->object;
+    }
+
+    /**
+     * @param string $object
+     */
+    public function setObject($object)
+    {
+        $this->object = $object;
     }
 }

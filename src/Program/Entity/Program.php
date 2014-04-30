@@ -1,21 +1,22 @@
 <?php
 /**
- * Debranova copyright message placeholder
+ * ITEA Office copyright message placeholder
  *
- * @category    Program
- * @package     Entity
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 Debranova
+ * @category   Project
+ * @package    Entity
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\Entity;
 
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\Form\Annotation;
-
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
+use Zend\Form\Annotation;
+use Zend\InputFilter\Factory as InputFactory;
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\InputFilterInterface;
 
 /**
  * @ORM\Table(name="program")
@@ -155,6 +156,11 @@ class Program extends EntityAbstract
         return $this->inputFilter;
     }
 
+    public function populate()
+    {
+        return $this->getArrayCopy();
+    }
+
     /**
      * Needed for the hydration of form elements
      *
@@ -167,9 +173,12 @@ class Program extends EntityAbstract
         );
     }
 
-    public function populate()
+    /**
+     * @return \Program\Entity\Call\Call[]
+     */
+    public function getCall()
     {
-        return $this->getArrayCopy();
+        return $this->call;
     }
 
     /**
@@ -181,11 +190,11 @@ class Program extends EntityAbstract
     }
 
     /**
-     * @return \Program\Entity\Call\Call[]
+     * @return int
      */
-    public function getCall()
+    public function getId()
     {
-        return $this->call;
+        return $this->id;
     }
 
     /**
@@ -197,11 +206,11 @@ class Program extends EntityAbstract
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getId()
+    public function getProgram()
     {
-        return $this->id;
+        return $this->program;
     }
 
     /**
@@ -210,14 +219,6 @@ class Program extends EntityAbstract
     public function setProgram($program)
     {
         $this->program = $program;
-    }
-
-    /**
-     * @return string
-     */
-    public function getProgram()
-    {
-        return $this->program;
     }
 
     /**

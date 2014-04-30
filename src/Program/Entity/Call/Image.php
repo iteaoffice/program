@@ -1,11 +1,14 @@
 <?php
 /**
- * Debranova copyright message placeholder
+ * ITEA Office copyright message placeholder
  *
- * @category    Program
- * @package     Entity
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 Debranova
+ * @category   Project
+ * @package    Entity
+ * @subpackage Call
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\Entity\Call;
 
@@ -47,14 +50,6 @@ class Image
     private $call;
 
     /**
-     * @param \Program\Entity\Call\Call $call
-     */
-    public function setCall($call)
-    {
-        $this->call = $call;
-    }
-
-    /**
      * @return \Program\Entity\Call\Call
      */
     public function getCall()
@@ -63,11 +58,11 @@ class Image
     }
 
     /**
-     * @param int $id
+     * @param \Program\Entity\Call\Call $call
      */
-    public function setId($id)
+    public function setCall($call)
     {
-        $this->id = $id;
+        $this->call = $call;
     }
 
     /**
@@ -79,11 +74,11 @@ class Image
     }
 
     /**
-     * @param resource $image
+     * @param int $id
      */
-    public function setImage($image)
+    public function setId($id)
     {
-        $this->image = $image;
+        $this->id = $id;
     }
 
     /**
@@ -95,11 +90,11 @@ class Image
     }
 
     /**
-     * @param string $imageExtension
+     * @param resource $image
      */
-    public function setImageExtension($imageExtension)
+    public function setImage($image)
     {
-        $this->imageExtension = $imageExtension;
+        $this->image = $image;
     }
 
     /**
@@ -108,5 +103,13 @@ class Image
     public function getImageExtension()
     {
         return $this->imageExtension;
+    }
+
+    /**
+     * @param string $imageExtension
+     */
+    public function setImageExtension($imageExtension)
+    {
+        $this->imageExtension = $imageExtension;
     }
 }

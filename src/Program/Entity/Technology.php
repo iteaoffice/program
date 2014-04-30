@@ -1,21 +1,22 @@
 <?php
 /**
- * Debranova copyright message placeholder
+ * ITEA Office copyright message placeholder
  *
- * @category    Program
- * @package     Entity
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 Debranova
+ * @category   Project
+ * @package    Entity
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\Entity;
 
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\Form\Annotation;
-
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
+use Zend\Form\Annotation;
+use Zend\InputFilter\Factory as InputFactory;
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\InputFilterInterface;
 
 /**
  * Technology
@@ -207,6 +208,14 @@ class Technology extends EntityAbstract
     }
 
     /**
+     * @return array
+     */
+    public function populate()
+    {
+        return $this->getArrayCopy();
+    }
+
+    /**
      * Needed for the hydration of form elements
      * @return array
      */
@@ -220,11 +229,11 @@ class Technology extends EntityAbstract
     }
 
     /**
-     * @return array
+     * @return \Contact\Entity\Contact[]
      */
-    public function populate()
+    public function getContact()
     {
-        return $this->getArrayCopy();
+        return $this->contact;
     }
 
     /**
@@ -236,11 +245,11 @@ class Technology extends EntityAbstract
     }
 
     /**
-     * @return \Contact\Entity\Contact[]
+     * @return string
      */
-    public function getContact()
+    public function getDescription()
     {
-        return $this->contact;
+        return $this->description;
     }
 
     /**
@@ -252,11 +261,11 @@ class Technology extends EntityAbstract
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getDescription()
+    public function getId()
     {
-        return $this->description;
+        return $this->id;
     }
 
     /**
@@ -268,11 +277,11 @@ class Technology extends EntityAbstract
     }
 
     /**
-     * @return int
+     * @return \Organisation\Entity\Organisation[]
      */
-    public function getId()
+    public function getOrganisation()
     {
-        return $this->id;
+        return $this->organisation;
     }
 
     /**
@@ -284,11 +293,11 @@ class Technology extends EntityAbstract
     }
 
     /**
-     * @return \Organisation\Entity\Organisation[]
+     * @return \Project\Entity\Project[]
      */
-    public function getOrganisation()
+    public function getProject()
     {
-        return $this->organisation;
+        return $this->project;
     }
 
     /**
@@ -300,11 +309,11 @@ class Technology extends EntityAbstract
     }
 
     /**
-     * @return \Project\Entity\Project[]
+     * @return \Program\Entity\Roadmap
      */
-    public function getProject()
+    public function getRoadmap()
     {
-        return $this->project;
+        return $this->roadmap;
     }
 
     /**
@@ -316,11 +325,11 @@ class Technology extends EntityAbstract
     }
 
     /**
-     * @return \Program\Entity\Roadmap
+     * @return string
      */
-    public function getRoadmap()
+    public function getTechnology()
     {
-        return $this->roadmap;
+        return $this->technology;
     }
 
     /**
@@ -332,11 +341,11 @@ class Technology extends EntityAbstract
     }
 
     /**
-     * @return string
+     * @return \Project\Entity\Idea\Idea[]
      */
-    public function getTechnology()
+    public function getIdea()
     {
-        return $this->technology;
+        return $this->idea;
     }
 
     /**
@@ -345,13 +354,5 @@ class Technology extends EntityAbstract
     public function setIdea($idea)
     {
         $this->idea = $idea;
-    }
-
-    /**
-     * @return \Project\Entity\Idea\Idea[]
-     */
-    public function getIdea()
-    {
-        return $this->idea;
     }
 }

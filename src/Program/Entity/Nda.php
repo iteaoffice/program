@@ -1,20 +1,22 @@
 <?php
 /**
- * Debranova copyright message placeholder
+ * ITEA Office copyright message placeholder
  *
- * @category    Contact
- * @package     Entity
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 Debranova
+ * @category   Project
+ * @package    Entity
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\Entity;
 
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\Form\Annotation;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Zend\Form\Annotation;
+use Zend\InputFilter\Factory as InputFactory;
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\InputFilterInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
@@ -134,16 +136,6 @@ class Nda extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * Returns the string identifier of the Resource
-     *
-     * @return string
-     */
-    public function getResourceId()
-    {
-        return sprintf("%s:%s", __CLASS__, $this->id);
-    }
-
-    /**
      * Parse a filename
      *
      * @return string
@@ -155,6 +147,53 @@ class Nda extends EntityAbstract implements ResourceInterface
         }
 
         return str_replace(' ', '_', sprintf("NDA_%s_SEQ_%s", $this->getCall(), $this->getContact()->getId()));
+    }
+
+    /**
+     * @return \Program\Entity\Call\Call
+     */
+    public function getCall()
+    {
+        return $this->call;
+    }
+
+    /**
+     * @param \Program\Entity\Call\Call $call
+     */
+    public function setCall($call)
+    {
+        $this->call = $call;
+    }
+
+    /**
+     * @return \Contact\Entity\Contact
+     */
+    public function getContact()
+    {
+        return $this->contact;
+    }
+
+    /**
+     * @param \Contact\Entity\Contact $contact
+     */
+    public function setContact($contact)
+    {
+        $this->contact = $contact;
+    }
+
+    /**
+     * Returns the string identifier of the Resource
+     *
+     * @return string
+     */
+    public function getResourceId()
+    {
+        return sprintf("%s:%s", __CLASS__, $this->id);
+    }
+
+    public function populate()
+    {
+        return $this->getArrayCopy();
     }
 
     /**
@@ -176,11 +215,6 @@ class Nda extends EntityAbstract implements ResourceInterface
             'call'         => $this->call,
             'object'       => $this->object,
         );
-    }
-
-    public function populate()
-    {
-        return $this->getArrayCopy();
     }
 
     /**
@@ -246,35 +280,11 @@ class Nda extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param \Program\Entity\Call\Call $call
+     * @return \General\Entity\ContentType
      */
-    public function setCall($call)
+    public function getContentType()
     {
-        $this->call = $call;
-    }
-
-    /**
-     * @return \Program\Entity\Call\Call
-     */
-    public function getCall()
-    {
-        return $this->call;
-    }
-
-    /**
-     * @param \Contact\Entity\Contact $contact
-     */
-    public function setContact($contact)
-    {
-        $this->contact = $contact;
-    }
-
-    /**
-     * @return \Contact\Entity\Contact
-     */
-    public function getContact()
-    {
-        return $this->contact;
+        return $this->contentType;
     }
 
     /**
@@ -286,11 +296,11 @@ class Nda extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return \General\Entity\ContentType
+     * @return \DateTime
      */
-    public function getContentType()
+    public function getDateApproved()
     {
-        return $this->contentType;
+        return $this->dateApproved;
     }
 
     /**
@@ -304,9 +314,9 @@ class Nda extends EntityAbstract implements ResourceInterface
     /**
      * @return \DateTime
      */
-    public function getDateApproved()
+    public function getDateCreated()
     {
-        return $this->dateApproved;
+        return $this->dateCreated;
     }
 
     /**
@@ -320,9 +330,9 @@ class Nda extends EntityAbstract implements ResourceInterface
     /**
      * @return \DateTime
      */
-    public function getDateCreated()
+    public function getDateSigned()
     {
-        return $this->dateCreated;
+        return $this->dateSigned;
     }
 
     /**
@@ -336,9 +346,9 @@ class Nda extends EntityAbstract implements ResourceInterface
     /**
      * @return \DateTime
      */
-    public function getDateSigned()
+    public function getDateUpdated()
     {
-        return $this->dateSigned;
+        return $this->dateUpdated;
     }
 
     /**
@@ -350,11 +360,11 @@ class Nda extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return \DateTime
+     * @return int
      */
-    public function getDateUpdated()
+    public function getId()
     {
-        return $this->dateUpdated;
+        return $this->id;
     }
 
     /**
@@ -366,11 +376,11 @@ class Nda extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return int
+     * @return \Program\Entity\NdaObject[]
      */
-    public function getId()
+    public function getObject()
     {
-        return $this->id;
+        return $this->object;
     }
 
     /**
@@ -382,11 +392,11 @@ class Nda extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return \Program\Entity\NdaObject[]
+     * @return int
      */
-    public function getObject()
+    public function getSize()
     {
-        return $this->object;
+        return $this->size;
     }
 
     /**
@@ -395,13 +405,5 @@ class Nda extends EntityAbstract implements ResourceInterface
     public function setSize($size)
     {
         $this->size = $size;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSize()
-    {
-        return $this->size;
     }
 }

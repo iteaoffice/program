@@ -11,12 +11,10 @@
  */
 namespace Program\View\Helper;
 
-use Zend\View\Helper\AbstractHelper;
-
-use Program\Entity;
-
 use Organisation\Entity\Organisation;
 use Program\Entity\Program;
+use Program\Entity;
+use Zend\View\Helper\AbstractHelper;
 
 /**
  * Create a link to an affiliation

@@ -11,9 +11,8 @@ namespace Program\Service;
 
 use General\Entity\Country;
 use Organisation\Entity\Organisation;
-use Program\Entity\Program;
-
 use Program\Entity\Funder;
+use Program\Entity\Program;
 
 /**
  * ProgramService
@@ -27,6 +26,31 @@ use Program\Entity\Funder;
  */
 class ProgramService extends ServiceAbstract
 {
+    /**
+     * @var Program
+     */
+    protected $program;
+
+    /**
+     * @param $id
+     *
+     * @return $this
+     */
+    public function setProgramId($id)
+    {
+        $this->setProgram($this->findEntityById('Program', $id));
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return is_null($this->program) || is_null($this->program->getId());
+    }
+
     /**
      * @param Country $country
      *
@@ -53,5 +77,21 @@ class ProgramService extends ServiceAbstract
                 'organisation' => $organisation
             )
         );
+    }
+
+    /**
+     * @return Program
+     */
+    public function getProgram()
+    {
+        return $this->program;
+    }
+
+    /**
+     * @param Program $program
+     */
+    public function setProgram($program)
+    {
+        $this->program = $program;
     }
 }

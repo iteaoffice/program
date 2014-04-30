@@ -10,11 +10,10 @@
  */
 namespace Program\Navigation\Service;
 
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Navigation\Service\DefaultNavigationFactory;
-use Zend\Mvc\Router\Http\RouteMatch;
-
 use Program\Service\ProgramService;
+use Zend\Mvc\Router\Http\RouteMatch;
+use Zend\Navigation\Service\DefaultNavigationFactory;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Factory for the Project admin navigation

@@ -3,34 +3,32 @@
  * ITEA Office copyright message placeholder
  *
  * @category    Program
- * @package     Service
+ * @package     View
+ * @subpackage  Helper\Service
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
-namespace Program\Service;
 
-use Program\Options\ModuleOptions;
+namespace Program\View\Helper\Service;
+
+use Program\View\Helper\ProgramHandler;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-/**
- * Factory responsible of retrieving an array containing the program configuration
- *
- * @author Johan van der Heide <johan.van.der.heide@itea3.org>
- */
-class OptionServiceFactory implements FactoryInterface
+class ProgramHandlerFactory implements FactoryInterface
 {
     /**
-     * {@inheritDoc}
-     *
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return ModuleOptions
+     * @return ProgramHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
+        $serviceLocator = $serviceLocator->getServiceLocator();
+        $programHandler = new ProgramHandler();
 
-        return new ModuleOptions($config['program-option']);
+        $programHandler->setServiceLocator($serviceLocator);
+
+        return $programHandler;
     }
 }

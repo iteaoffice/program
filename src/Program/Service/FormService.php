@@ -10,9 +10,9 @@
  */
 namespace Program\Service;
 
+use Zend\Form;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Form;
 
 class FormService implements ServiceLocatorAwareInterface
 {

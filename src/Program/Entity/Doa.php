@@ -1,24 +1,24 @@
 <?php
 /**
- * Debranova copyright message placeholder
+ * ITEA Office copyright message placeholder
  *
- * @category    Program
- * @package     Entity
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 Debranova
+ * @category   Project
+ * @package    Entity
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\Entity;
 
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Zend\Form\Annotation;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\FileInput;
-use Zend\Form\Annotation;
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\InputFilterInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
-
-use Doctrine\ORM\Mapping as ORM;
-
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Table(name="program_doa")
@@ -264,11 +264,35 @@ class Doa extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param string $branch
+     * @return \Organisation\Entity\Organisation
      */
-    public function setBranch($branch)
+    public function getOrganisation()
     {
-        $this->branch = $branch;
+        return $this->organisation;
+    }
+
+    /**
+     * @param \Organisation\Entity\Organisation $organisation
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+    }
+
+    /**
+     * @return \Program\Entity\Program
+     */
+    public function getProgram()
+    {
+        return $this->program;
+    }
+
+    /**
+     * @param \Program\Entity\Program $program
+     */
+    public function setProgram($program)
+    {
+        $this->program = $program;
     }
 
     /**
@@ -280,11 +304,11 @@ class Doa extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param \Contact\Entity\Contact $contact
+     * @param string $branch
      */
-    public function setContact($contact)
+    public function setBranch($branch)
     {
-        $this->contact = $contact;
+        $this->branch = $branch;
     }
 
     /**
@@ -296,11 +320,11 @@ class Doa extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param \General\Entity\ContentType $contentType
+     * @param \Contact\Entity\Contact $contact
      */
-    public function setContentType($contentType)
+    public function setContact($contact)
     {
-        $this->contentType = $contentType;
+        $this->contact = $contact;
     }
 
     /**
@@ -309,6 +333,22 @@ class Doa extends EntityAbstract implements ResourceInterface
     public function getContentType()
     {
         return $this->contentType;
+    }
+
+    /**
+     * @param \General\Entity\ContentType $contentType
+     */
+    public function setContentType($contentType)
+    {
+        $this->contentType = $contentType;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateApproved()
+    {
+        return $this->dateApproved;
     }
 
     /**
@@ -322,9 +362,9 @@ class Doa extends EntityAbstract implements ResourceInterface
     /**
      * @return \DateTime
      */
-    public function getDateApproved()
+    public function getDateCreated()
     {
-        return $this->dateApproved;
+        return $this->dateCreated;
     }
 
     /**
@@ -338,9 +378,9 @@ class Doa extends EntityAbstract implements ResourceInterface
     /**
      * @return \DateTime
      */
-    public function getDateCreated()
+    public function getDateSigned()
     {
-        return $this->dateCreated;
+        return $this->dateSigned;
     }
 
     /**
@@ -354,9 +394,9 @@ class Doa extends EntityAbstract implements ResourceInterface
     /**
      * @return \DateTime
      */
-    public function getDateSigned()
+    public function getDateUpdated()
     {
-        return $this->dateSigned;
+        return $this->dateUpdated;
     }
 
     /**
@@ -368,11 +408,11 @@ class Doa extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return \DateTime
+     * @return int
      */
-    public function getDateUpdated()
+    public function getId()
     {
-        return $this->dateUpdated;
+        return $this->id;
     }
 
     /**
@@ -386,41 +426,9 @@ class Doa extends EntityAbstract implements ResourceInterface
     /**
      * @return int
      */
-    public function getId()
+    public function getSize()
     {
-        return $this->id;
-    }
-
-    /**
-     * @param \Organisation\Entity\Organisation $organisation
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-    }
-
-    /**
-     * @return \Organisation\Entity\Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
-    }
-
-    /**
-     * @param \Program\Entity\Program $program
-     */
-    public function setProgram($program)
-    {
-        $this->program = $program;
-    }
-
-    /**
-     * @return \Program\Entity\Program
-     */
-    public function getProgram()
-    {
-        return $this->program;
+        return $this->size;
     }
 
     /**
@@ -432,11 +440,11 @@ class Doa extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return int
+     * @return \Program\Entity\DoaObject[]
      */
-    public function getSize()
+    public function getObject()
     {
-        return $this->size;
+        return $this->object;
     }
 
     /**
@@ -445,13 +453,5 @@ class Doa extends EntityAbstract implements ResourceInterface
     public function setObject($object)
     {
         $this->object = $object;
-    }
-
-    /**
-     * @return \Program\Entity\DoaObject[]
-     */
-    public function getObject()
-    {
-        return $this->object;
     }
 }

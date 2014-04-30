@@ -1,20 +1,22 @@
 <?php
 /**
- * Debranova copyright message placeholder
+ * ITEA Office copyright message placeholder
  *
- * @category    Program
- * @package     Entity
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 Debranova
+ * @category   Project
+ * @package    Entity
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\Entity;
 
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\Form\Annotation;
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
+use Zend\Form\Annotation;
+use Zend\InputFilter\Factory as InputFactory;
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\InputFilterInterface;
 
 /**
  * ProjectDomain
@@ -147,6 +149,11 @@ class Domain extends EntityAbstract
         return $this->domain;
     }
 
+    public function populate()
+    {
+        return $this->getArrayCopy();
+    }
+
     /**
      * Needed for the hydration of form elements
      *
@@ -165,11 +172,6 @@ class Domain extends EntityAbstract
             'organisation' => $this->organisation,
             'contact'      => $this->contact,
         );
-    }
-
-    public function populate()
-    {
-        return $this->getArrayCopy();
     }
 
     /**
@@ -269,6 +271,14 @@ class Domain extends EntityAbstract
     }
 
     /**
+     * @return string
+     */
+    public function getColor()
+    {
+        return $this->color;
+    }
+
+    /**
      * @param string $color
      */
     public function setColor($color)
@@ -279,9 +289,9 @@ class Domain extends EntityAbstract
     /**
      * @return string
      */
-    public function getColor()
+    public function getDescription()
     {
-        return $this->color;
+        return $this->description;
     }
 
     /**
@@ -295,9 +305,9 @@ class Domain extends EntityAbstract
     /**
      * @return string
      */
-    public function getDescription()
+    public function getDomain()
     {
-        return $this->description;
+        return $this->domain;
     }
 
     /**
@@ -309,11 +319,11 @@ class Domain extends EntityAbstract
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getDomain()
+    public function getId()
     {
-        return $this->domain;
+        return $this->id;
     }
 
     /**
@@ -327,9 +337,9 @@ class Domain extends EntityAbstract
     /**
      * @return int
      */
-    public function getId()
+    public function getMainId()
     {
-        return $this->id;
+        return $this->mainId;
     }
 
     /**
@@ -341,11 +351,11 @@ class Domain extends EntityAbstract
     }
 
     /**
-     * @return int
+     * @return \Program\Entity\Roadmap
      */
-    public function getMainId()
+    public function getRoadmap()
     {
-        return $this->mainId;
+        return $this->roadmap;
     }
 
     /**
@@ -357,11 +367,11 @@ class Domain extends EntityAbstract
     }
 
     /**
-     * @return \Program\Entity\Roadmap
+     * @return \Contact\Entity\Contact[]
      */
-    public function getRoadmap()
+    public function getContact()
     {
-        return $this->roadmap;
+        return $this->contact;
     }
 
     /**
@@ -373,11 +383,11 @@ class Domain extends EntityAbstract
     }
 
     /**
-     * @return \Contact\Entity\Contact[]
+     * @return \Project\Entity\Project[]
      */
-    public function getContact()
+    public function getProject()
     {
-        return $this->contact;
+        return $this->project;
     }
 
     /**
@@ -389,11 +399,11 @@ class Domain extends EntityAbstract
     }
 
     /**
-     * @return \Project\Entity\Project[]
+     * @return \Project\Entity\Idea\Idea[]
      */
-    public function getProject()
+    public function getIdea()
     {
-        return $this->project;
+        return $this->idea;
     }
 
     /**
@@ -405,11 +415,11 @@ class Domain extends EntityAbstract
     }
 
     /**
-     * @return \Project\Entity\Idea\Idea[]
+     * @return \Organisation\Entity\Organisation[]
      */
-    public function getIdea()
+    public function getOrganisation()
     {
-        return $this->idea;
+        return $this->organisation;
     }
 
     /**
@@ -418,13 +428,5 @@ class Domain extends EntityAbstract
     public function setOrganisation($organisation)
     {
         $this->organisation = $organisation;
-    }
-
-    /**
-     * @return \Organisation\Entity\Organisation[]
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
     }
 }

@@ -11,11 +11,11 @@
 namespace Program\Repository\Call;
 
 use Doctrine\ORM\EntityRepository;
-use Project\Entity\Version\Type;
 use Program\Repository\Call\Call as CallEntity;
+use Project\Entity\Version\Type;
 
 /**
- * @category    Project
+ * @category    Program
  * @package     Repository
  */
 class Call extends EntityRepository

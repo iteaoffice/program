@@ -10,9 +10,7 @@
 
 return array(
     'factories'  => array(
-        'programHandler'      => function ($sm) {
-            return new \Program\View\Helper\ProgramHandler($sm);
-        },
+        'programHandler'      => 'Program\View\Helper\Service\ProgramHandlerFactory',
         'callServiceProxy'    => function ($sm) {
             return new \Program\View\Helper\CallServiceProxy($sm);
         },

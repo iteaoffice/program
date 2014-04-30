@@ -2,17 +2,27 @@
 /**
  * ITEA Office copyright message placeholder
  *
- * @category    Project
- * @package     Options
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @category   Program
+ * @package    Options
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\Options;
 
 use Zend\Stdlib\AbstractOptions;
 
-class ModuleOptions extends AbstractOptions implements
-    ProgramOptionsInterface
+/**
+ * Create a link to an project
+ *
+ * @category   Program
+ * @package    Options
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @license    http://debranova.org/licence.txt proprietary
+ * @link       http://debranova.org
+ */
+class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
 {
     /**
      * Turn off strict options mode
@@ -32,6 +42,14 @@ class ModuleOptions extends AbstractOptions implements
     protected $doaTemplate = '';
 
     /**
+     * @return string
+     */
+    public function getNdaTemplate()
+    {
+        return $this->ndaTemplate;
+    }
+
+    /**
      * @param $ndaTemplate
      *
      * @return ModuleOptions
@@ -46,9 +64,9 @@ class ModuleOptions extends AbstractOptions implements
     /**
      * @return string
      */
-    public function getNdaTemplate()
+    public function getDoaTemplate()
     {
-        return $this->ndaTemplate;
+        return $this->doaTemplate;
     }
 
     /**
@@ -61,13 +79,5 @@ class ModuleOptions extends AbstractOptions implements
         $this->doaTemplate = $doaTemplate;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDoaTemplate()
-    {
-        return $this->doaTemplate;
     }
 }

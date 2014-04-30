@@ -1,21 +1,22 @@
 <?php
 /**
- * Debranova copyright message placeholder
+ * ITEA Office copyright message placeholder
  *
- * @category    Program
- * @package     Entity
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 Debranova
+ * @category   Project
+ * @package    Entity
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Zend\Form\Annotation;
+use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\Form\Annotation;
-
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Roadmap
@@ -225,6 +226,11 @@ class Roadmap extends EntityAbstract
         return $this->inputFilter;
     }
 
+    public function populate()
+    {
+        return $this->getArrayCopy();
+    }
+
     /**
      * Needed for the hydration of form elements
      *
@@ -239,9 +245,12 @@ class Roadmap extends EntityAbstract
         );
     }
 
-    public function populate()
+    /**
+     * @return \DateTime
+     */
+    public function getDateReleased()
     {
-        return $this->getArrayCopy();
+        return $this->dateReleased;
     }
 
     /**
@@ -253,11 +262,11 @@ class Roadmap extends EntityAbstract
     }
 
     /**
-     * @return \DateTime
+     * @return string
      */
-    public function getDateReleased()
+    public function getDescription()
     {
-        return $this->dateReleased;
+        return $this->description;
     }
 
     /**
@@ -269,11 +278,11 @@ class Roadmap extends EntityAbstract
     }
 
     /**
-     * @return string
+     * @return \Project\Entity\Project[]
      */
-    public function getDescription()
+    public function getDomain()
     {
-        return $this->description;
+        return $this->domain;
     }
 
     /**
@@ -285,11 +294,11 @@ class Roadmap extends EntityAbstract
     }
 
     /**
-     * @return \Project\Entity\Project[]
+     * @return int
      */
-    public function getDomain()
+    public function getId()
     {
-        return $this->domain;
+        return $this->id;
     }
 
     /**
@@ -301,11 +310,11 @@ class Roadmap extends EntityAbstract
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getId()
+    public function getRoadmap()
     {
-        return $this->id;
+        return $this->roadmap;
     }
 
     /**
@@ -317,11 +326,11 @@ class Roadmap extends EntityAbstract
     }
 
     /**
-     * @return string
+     * @return \Program\Entity\Call\Call[]
      */
-    public function getRoadmap()
+    public function getCall()
     {
-        return $this->roadmap;
+        return $this->call;
     }
 
     /**
@@ -333,11 +342,11 @@ class Roadmap extends EntityAbstract
     }
 
     /**
-     * @return \Program\Entity\Call\Call[]
+     * @return \Program\Entity\Technology[]
      */
-    public function getCall()
+    public function getTechnology()
     {
-        return $this->call;
+        return $this->technology;
     }
 
     /**
@@ -346,13 +355,5 @@ class Roadmap extends EntityAbstract
     public function setTechnology($technology)
     {
         $this->technology = $technology;
-    }
-
-    /**
-     * @return \Program\Entity\Technology[]
-     */
-    public function getTechnology()
-    {
-        return $this->technology;
     }
 }

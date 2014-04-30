@@ -5,7 +5,7 @@
 <ul class="nav nav-pills nav-stacked">
     {% for call in calls|reverse %}
         {% if call.program.id != programId %}
-            <li {% if programId == call.program.id %}class="active"{% endif %}>{{ programLink(call.program, 'view-list','name') }}</li>
+            <li {% if selectedProgramId == call.program.id %}class="active"{% endif %}>{{ programLink(call.program, 'view-list','name') }}</li>
         {% endif %}
         <li {% if callId == call.id %}class="active"{% endif %}>{{ callLink(call, 'view-list', 'name') }}</li>
         {% if call.program.id != programId %}

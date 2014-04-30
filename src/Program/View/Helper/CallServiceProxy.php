@@ -11,10 +11,9 @@
 
 namespace Program\View\Helper;
 
-use Zend\View\HelperPluginManager;
-use Zend\View\Helper\AbstractHelper;
-
 use Program\Service\CallService;
+use Zend\View\Helper\AbstractHelper;
+use Zend\View\HelperPluginManager;
 
 /**
  * Class CallServiceProxy

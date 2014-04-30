@@ -1,16 +1,21 @@
 <?php
 /**
- * Debranova copyright message placeholder
+ * ITEA Office copyright message placeholder
  *
- * @category    Program
- * @package     Entity
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 Debranova
+ * @category   Project
+ * @package    Entity
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\Entity;
 
-use Zend\Form\Annotation;
 use Doctrine\ORM\Mapping as ORM;
+use Zend\Form\Annotation;
+use Zend\InputFilter\Factory as InputFactory;
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\InputFilterInterface;
 
 /**
  * Program
@@ -23,7 +28,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @category    Program
  * @package     Entity
  */
-class Funder
+class Funder extends EntityAbstract
 {
     /**
      * Constant for hideOnWebsite = 0
@@ -96,19 +101,96 @@ class Funder
     private $showOnWebsite;
 
     /**
+     * Magic Getter
+     *
+     * @param $property
+     *
+     * @return mixed
+     */
+    public function __get($property)
+    {
+        return $this->$property;
+    }
+
+    /**
+     * Magic Setter
+     *
+     * @param $property
+     * @param $value
+     *
+     * @return void
+     */
+    public function __set($property, $value)
+    {
+        $this->$property = $value;
+    }
+
+    /**
+     * toString returns the name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->program;
+    }
+
+    /**
+     * Set input filter
+     *
+     * @param InputFilterInterface $inputFilter
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function setInputFilter(InputFilterInterface $inputFilter)
+    {
+        throw new \Exception("Setting an inputFilter is currently not supported");
+    }
+
+    /**
+     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
+     */
+    public function getInputFilter()
+    {
+        if (!$this->inputFilter) {
+            $inputFilter = new InputFilter();
+            $factory     = new InputFactory();
+
+            $inputFilter->add(
+                $factory->createInput(
+                    array(
+                        'name'       => 'name',
+                        'required'   => true,
+                        'filters'    => array(
+                            array('name' => 'StripTags'),
+                            array('name' => 'StringTrim'),
+                        ),
+                        'validators' => array(
+                            array(
+                                'name'    => 'StringLength',
+                                'options' => array(
+                                    'encoding' => 'UTF-8',
+                                    'min'      => 1,
+                                    'max'      => 100,
+                                ),
+                            ),
+                        ),
+                    )
+                )
+            );
+            $this->inputFilter = $inputFilter;
+        }
+
+        return $this->inputFilter;
+    }
+
+    /**
      * @return array
      */
     public function getShowOnWebsiteTemplates()
     {
         return $this->showOnWebsiteTemplates;
-    }
-
-    /**
-     * @param \Program\Entity\Program $contact
-     */
-    public function setContact($contact)
-    {
-        $this->contact = $contact;
     }
 
     /**
@@ -120,11 +202,11 @@ class Funder
     }
 
     /**
-     * @param int $id
+     * @param \Program\Entity\Program $contact
      */
-    public function setId($id)
+    public function setContact($contact)
     {
-        $this->id = $id;
+        $this->contact = $contact;
     }
 
     /**
@@ -133,6 +215,22 @@ class Funder
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInfoOffice()
+    {
+        return $this->infoOffice;
     }
 
     /**
@@ -146,9 +244,9 @@ class Funder
     /**
      * @return string
      */
-    public function getInfoOffice()
+    public function getInfoPublic()
     {
-        return $this->infoOffice;
+        return $this->infoPublic;
     }
 
     /**
@@ -160,11 +258,11 @@ class Funder
     }
 
     /**
-     * @return string
+     * @return \General\Entity\Country
      */
-    public function getInfoPublic()
+    public function getCountry()
     {
-        return $this->infoPublic;
+        return $this->country;
     }
 
     /**
@@ -176,11 +274,11 @@ class Funder
     }
 
     /**
-     * @return \General\Entity\Country
+     * @return int
      */
-    public function getCountry()
+    public function getShowOnWebsite()
     {
-        return $this->country;
+        return $this->showOnWebsite;
     }
 
     /**
@@ -189,13 +287,5 @@ class Funder
     public function setShowOnWebsite($showOnWebsite)
     {
         $this->showOnWebsite = $showOnWebsite;
-    }
-
-    /**
-     * @return int
-     */
-    public function getShowOnWebsite()
-    {
-        return $this->showOnWebsite;
     }
 }

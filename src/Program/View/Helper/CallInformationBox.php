@@ -11,10 +11,9 @@
  */
 namespace Program\View\Helper;
 
-use Zend\View\Helper\AbstractHelper;
-
 use Program\Entity\Call\Call;
 use Program\Service\CallService;
+use Zend\View\Helper\AbstractHelper;
 
 /**
  * Produce a box with information about the call opening

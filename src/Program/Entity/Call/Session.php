@@ -1,22 +1,24 @@
 <?php
 /**
- * Debranova copyright message placeholder
+ * ITEA Office copyright message placeholder
  *
- * @category    Program
- * @package     Entity
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 Debranova
+ * @category   Project
+ * @package    Entity
+ * @subpackage Call
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\Entity\Call;
 
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
-use Zend\InputFilter\Factory as InputFactory;
+use Doctrine\Common\Collections;
+use Doctrine\ORM\Mapping as ORM;
 use Program\Entity\EntityAbstract;
 use Zend\Form\Annotation;
-use Doctrine\Common\Collections;
-
-use Doctrine\ORM\Mapping as ORM;
+use Zend\InputFilter\Factory as InputFactory;
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\InputFilterInterface;
 
 /**
  * @ORM\Table(name="programcall_session")
@@ -61,9 +63,13 @@ class Session extends EntityAbstract
      */
     private $date;
     /**
-     * @ORM\OneToMany(targetEntity="\Program\Entity\Call\SessionTrack", cascade={"persist"}, mappedBy="session")
+     * @ORM\ManyToMany(targetEntity="Event\Entity\Track", cascade={"persist"}, inversedBy="session")
+     * @ORM\JoinTable(name="programcall_session_track",
+     *    joinColumns={@ORM\JoinColumn(name="session_id", referencedColumnName="session_id")},
+     *    inverseJoinColumns={@ORM\JoinColumn(name="track_id", referencedColumnName="track_id")}
+     * )
      * @Annotation\Exclude()
-     * @var \Program\Entity\Call\SessionTrack[]
+     * @var \Event\Entity\Track[]
      */
     private $track;
     /**
@@ -160,14 +166,6 @@ class Session extends EntityAbstract
     }
 
     /**
-     * @param \Program\Entity\Call\Call $call
-     */
-    public function setCall($call)
-    {
-        $this->call = $call;
-    }
-
-    /**
      * @return \Program\Entity\Call\Call
      */
     public function getCall()
@@ -176,11 +174,11 @@ class Session extends EntityAbstract
     }
 
     /**
-     * @param \DateTime $date
+     * @param \Program\Entity\Call\Call $call
      */
-    public function setDate($date)
+    public function setCall($call)
     {
-        $this->date = $date;
+        $this->call = $call;
     }
 
     /**
@@ -192,11 +190,11 @@ class Session extends EntityAbstract
     }
 
     /**
-     * @param int $id
+     * @param \DateTime $date
      */
-    public function setId($id)
+    public function setDate($date)
     {
-        $this->id = $id;
+        $this->date = $date;
     }
 
     /**
@@ -208,11 +206,11 @@ class Session extends EntityAbstract
     }
 
     /**
-     * @param \Project\Entity\Idea\Session[] $ideaSession
+     * @param int $id
      */
-    public function setIdeaSession($ideaSession)
+    public function setId($id)
     {
-        $this->ideaSession = $ideaSession;
+        $this->id = $id;
     }
 
     /**
@@ -224,11 +222,11 @@ class Session extends EntityAbstract
     }
 
     /**
-     * @param string $session
+     * @param \Project\Entity\Idea\Session[] $ideaSession
      */
-    public function setSession($session)
+    public function setIdeaSession($ideaSession)
     {
-        $this->session = $session;
+        $this->ideaSession = $ideaSession;
     }
 
     /**
@@ -240,11 +238,11 @@ class Session extends EntityAbstract
     }
 
     /**
-     * @param \Program\Entity\Call\SessionTrack[] $track
+     * @param string $session
      */
-    public function setTrack($track)
+    public function setSession($session)
     {
-        $this->track = $track;
+        $this->session = $session;
     }
 
     /**
@@ -253,5 +251,13 @@ class Session extends EntityAbstract
     public function getTrack()
     {
         return $this->track;
+    }
+
+    /**
+     * @param \Program\Entity\Call\SessionTrack[] $track
+     */
+    public function setTrack($track)
+    {
+        $this->track = $track;
     }
 }

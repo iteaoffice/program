@@ -1,22 +1,24 @@
 <?php
 /**
- * Debranova copyright message placeholder
+ * ITEA Office copyright message placeholder
  *
- * @category    Program
- * @package     Entity
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 Debranova
+ * @category   Project
+ * @package    Entity
+ * @subpackage Call
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\Entity\Call;
 
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
-use Zend\InputFilter\Factory as InputFactory;
-use Program\Entity\EntityAbstract;
-use Zend\Form\Annotation;
-
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
+use Program\Entity\EntityAbstract;
+use Zend\Form\Annotation;
+use Zend\InputFilter\Factory as InputFactory;
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\InputFilterInterface;
 
 /**
  * @ORM\Table(name="programcall")
@@ -32,12 +34,12 @@ class Call extends EntityAbstract
     /**
      * Produce a list of different statuses in a call, which are required for representation and access control
      */
-    const PO_NOT_OPEN = 'PO_NOT_OPEN';
-    const PO_OPEN = 'PO_OPEN';
-    const PO_CLOSED = 'PO_CLOSED';
+    const FPP_CLOSED = 'FPP_CLOSED';
     const FPP_NOT_OPEN = 'FPP_NOT_OPEN';
     const FPP_OPEN = 'FPP_OPEN';
-    const FPP_CLOSED = 'FPP_CLOSED';
+    const PO_CLOSED = 'PO_CLOSED';
+    const PO_NOT_OPEN = 'PO_NOT_OPEN';
+    const PO_OPEN = 'PO_OPEN';
     /**
      * @ORM\Column(name="programcall_id", type="integer", nullable=false)
      * @ORM\Id
@@ -204,6 +206,22 @@ class Call extends EntityAbstract
     }
 
     /**
+     * @return \Program\Entity\Program
+     */
+    public function getProgram()
+    {
+        return $this->program;
+    }
+
+    /**
+     * @param \Program\Entity\Program $program
+     */
+    public function setProgram($program)
+    {
+        $this->program = $program;
+    }
+
+    /**
      * Set input filter
      *
      * @param InputFilterInterface $inputFilter
@@ -335,6 +353,11 @@ class Call extends EntityAbstract
         return $this->inputFilter;
     }
 
+    public function populate()
+    {
+        return $this->getArrayCopy();
+    }
+
     /**
      * Needed for the hydration of form elements
      *
@@ -353,9 +376,12 @@ class Call extends EntityAbstract
         );
     }
 
-    public function populate()
+    /**
+     * @return string
+     */
+    public function getCall()
     {
-        return $this->getArrayCopy();
+        return $this->call;
     }
 
     /**
@@ -367,11 +393,11 @@ class Call extends EntityAbstract
     }
 
     /**
-     * @return string
+     * @return \DateTime
      */
-    public function getCall()
+    public function getFppCloseDate()
     {
-        return $this->call;
+        return $this->fppCloseDate;
     }
 
     /**
@@ -385,9 +411,9 @@ class Call extends EntityAbstract
     /**
      * @return \DateTime
      */
-    public function getFppCloseDate()
+    public function getFppOpenDate()
     {
-        return $this->fppCloseDate;
+        return $this->fppOpenDate;
     }
 
     /**
@@ -401,9 +427,9 @@ class Call extends EntityAbstract
     /**
      * @return \DateTime
      */
-    public function getFppOpenDate()
+    public function getPoCloseDate()
     {
-        return $this->fppOpenDate;
+        return $this->poCloseDate;
     }
 
     /**
@@ -417,9 +443,9 @@ class Call extends EntityAbstract
     /**
      * @return \DateTime
      */
-    public function getPoCloseDate()
+    public function getPoOpenDate()
     {
-        return $this->poCloseDate;
+        return $this->poOpenDate;
     }
 
     /**
@@ -431,27 +457,11 @@ class Call extends EntityAbstract
     }
 
     /**
-     * @return \DateTime
+     * @return int
      */
-    public function getPoOpenDate()
+    public function getId()
     {
-        return $this->poOpenDate;
-    }
-
-    /**
-     * @param \Program\Entity\Program $program
-     */
-    public function setProgram($program)
-    {
-        $this->program = $program;
-    }
-
-    /**
-     * @return \Program\Entity\Program
-     */
-    public function getProgram()
-    {
-        return $this->program;
+        return $this->id;
     }
 
     /**
@@ -463,11 +473,11 @@ class Call extends EntityAbstract
     }
 
     /**
-     * @return int
+     * @return \Project\Entity\Project[]
      */
-    public function getId()
+    public function getProject()
     {
-        return $this->id;
+        return $this->project;
     }
 
     /**
@@ -479,11 +489,11 @@ class Call extends EntityAbstract
     }
 
     /**
-     * @return \Project\Entity\Project[]
+     * @return \Program\Entity\Roadmap
      */
-    public function getProject()
+    public function getRoadmap()
     {
-        return $this->project;
+        return $this->roadmap;
     }
 
     /**
@@ -495,11 +505,11 @@ class Call extends EntityAbstract
     }
 
     /**
-     * @return \Program\Entity\Roadmap
+     * @return \Program\Entity\Nda[]
      */
-    public function getRoadmap()
+    public function getNda()
     {
-        return $this->roadmap;
+        return $this->nda;
     }
 
     /**
@@ -511,11 +521,11 @@ class Call extends EntityAbstract
     }
 
     /**
-     * @return \Program\Entity\Nda[]
+     * @return \Event\Entity\Meeting\Meeting[]
      */
-    public function getNda()
+    public function getMeeting()
     {
-        return $this->nda;
+        return $this->meeting;
     }
 
     /**
@@ -527,11 +537,11 @@ class Call extends EntityAbstract
     }
 
     /**
-     * @return \Event\Entity\Meeting\Meeting[]
+     * @return \Publication\Entity\Publication[]
      */
-    public function getMeeting()
+    public function getPublication()
     {
-        return $this->meeting;
+        return $this->publication;
     }
 
     /**
@@ -543,11 +553,11 @@ class Call extends EntityAbstract
     }
 
     /**
-     * @return \Publication\Entity\Publication[]
+     * @return \Calendar\Entity\Calendar[]
      */
-    public function getPublication()
+    public function getCalendar()
     {
-        return $this->publication;
+        return $this->calendar;
     }
 
     /**
@@ -559,11 +569,11 @@ class Call extends EntityAbstract
     }
 
     /**
-     * @return \Calendar\Entity\Calendar[]
+     * @return \Program\Entity\Call\Doa[]
      */
-    public function getCalendar()
+    public function getDoa()
     {
-        return $this->calendar;
+        return $this->doa;
     }
 
     /**
@@ -575,11 +585,11 @@ class Call extends EntityAbstract
     }
 
     /**
-     * @return \Program\Entity\Call\Doa[]
+     * @return \Program\Entity\Call\Image[]
      */
-    public function getDoa()
+    public function getImage()
     {
-        return $this->doa;
+        return $this->image;
     }
 
     /**
@@ -591,11 +601,11 @@ class Call extends EntityAbstract
     }
 
     /**
-     * @return \Program\Entity\Call\Image[]
+     * @return \Project\Entity\Idea\Idea[]
      */
-    public function getImage()
+    public function getIdea()
     {
-        return $this->image;
+        return $this->idea;
     }
 
     /**
@@ -607,11 +617,11 @@ class Call extends EntityAbstract
     }
 
     /**
-     * @return \Project\Entity\Idea\Idea[]
+     * @return \Program\Entity\Call\Session[]
      */
-    public function getIdea()
+    public function getSession()
     {
-        return $this->idea;
+        return $this->session;
     }
 
     /**
@@ -620,13 +630,5 @@ class Call extends EntityAbstract
     public function setSession($session)
     {
         $this->session = $session;
-    }
-
-    /**
-     * @return \Program\Entity\Call\Session[]
-     */
-    public function getSession()
-    {
-        return $this->session;
     }
 }

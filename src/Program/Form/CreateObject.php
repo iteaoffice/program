@@ -2,20 +2,25 @@
 /**
  * ITEA Office copyright message placeholder
  *
- * @category    Project
+ * @category    Program
  * @package     Form
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
 namespace Program\Form;
 
+use Program\Entity\EntityAbstract;
 use Zend\Form\Form;
 use Zend\ServiceManager\ServiceManager;
 
-use Program\Entity\EntityAbstract;
-
 /**
+ * Create a link to an project
  *
+ * @category   Program
+ * @package    Form
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @license    http://debranova.org/licence.txt proprietary
+ * @link       http://debranova.org
  */
 class CreateObject extends Form
 {

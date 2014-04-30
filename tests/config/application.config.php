@@ -3,6 +3,7 @@ return array(
     'modules'                 => array(
         'Admin',
         'Publication',
+        'ZfcTwig',
         'Content',
         'Deeplink',
         'Calendar',

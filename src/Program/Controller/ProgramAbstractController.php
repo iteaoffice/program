@@ -9,16 +9,14 @@
  */
 namespace Program\Controller;
 
+use General\Service\GeneralService;
+use Organisation\Service\OrganisationService;
+use Program\Options\ModuleOptions;
+use Program\Service\FormService;
+use Program\Service\FormServiceAwareInterface;
+use Program\Service\ProgramService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
-
-use Program\Service\ProgramService;
-use Program\Service\FormServiceAwareInterface;
-use Program\Service\FormService;
-use Program\Options\ModuleOptions;
-use Organisation\Service\OrganisationService;
-
-use General\Service\GeneralService;
 
 /**
  * @category    Program

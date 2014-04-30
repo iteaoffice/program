@@ -2,23 +2,26 @@
 /**
  * ITEA Office copyright message placeholder
  *
- * @category    Project
+ * @category    Program
  * @package     Form
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
 namespace Program\Form;
 
-use Zend\Validator\File\Size;
-use Zend\Validator\File\Extension;
-use Zend\Validator\File\MimeType;
-
 use Zend\Form\Form;
-
 use Zend\InputFilter\InputFilterProviderInterface;
+use Zend\Validator\File\Extension;
+use Zend\Validator\File\Size;
 
 /**
+ * Create a link to an project
  *
+ * @category   Program
+ * @package    Form
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @license    http://debranova.org/licence.txt proprietary
+ * @link       http://debranova.org
  */
 class UploadNda extends Form implements InputFilterProviderInterface
 {
@@ -39,7 +42,7 @@ class UploadNda extends Form implements InputFilterProviderInterface
                 'name'    => 'file',
                 'options' => array(
                     "label"      => "txt-file",
-                    "help-block" => _("txt-a-signed-nda-in-pdf-format-is-required")
+                    "help-block" => _("txt-a-signed-nda-in-pdf-format-or-image-is-required")
                 )
             )
         );
@@ -94,14 +97,9 @@ class UploadNda extends Form implements InputFilterProviderInterface
                     ),
                     new Extension(
                         array(
-                            'extension' => array('pdf')
+                            'extension' => array('pdf', 'jpg', 'jpeg', 'png')
                         )
                     ),
-                    new MimeType(
-                        array(
-                            'mimeType' => array('application/pdf')
-                        )
-                    )
                 )
             )
         );

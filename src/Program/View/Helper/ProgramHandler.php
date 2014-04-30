@@ -11,17 +11,16 @@
 
 namespace Program\View\Helper;
 
-use Zend\View\HelperPluginManager;
-use Zend\View\Helper\AbstractHelper;
-use Zend\Mvc\Router\Http\RouteMatch;
-
-use ZfcTwig\View\TwigRenderer;
-
 use Content\Entity\Handler;
-use General\View\Helper\CountryMap;
-use Program\Entity\Program;
 use Program\Entity\Call\Call;
+use Program\Entity\Program;
+use Program\Service\CallService;
 use Program\Service\ProgramService;
+use Zend\Mvc\Router\Http\RouteMatch;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\View\Helper\AbstractHelper;
+use Zend\View\HelperPluginManager;
+use ZfcTwig\View\TwigRenderer;
 
 /**
  * Class ProgramHandler
@@ -30,52 +29,13 @@ use Program\Service\ProgramService;
 class ProgramHandler extends AbstractHelper
 {
     /**
-     * @var ProgramService
+     * @var HelperPluginManager
      */
-    protected $programService;
+    protected $serviceLocator;
     /**
      * @var Handler
      */
     protected $handler;
-    /**
-     * @var RouteMatch
-     */
-    protected $routeMatch = null;
-    /**
-     * @var Call
-     */
-    protected $call;
-    /**
-     * @var Program
-     */
-    protected $program;
-    /**
-     * @var CountryMap
-     */
-    protected $countryMap;
-    /**
-     * @var TwigRenderer;
-     */
-    protected $zfcTwigRenderer;
-
-    /**
-     * @param HelperPluginManager $helperPluginManager
-     */
-    public function __construct(HelperPluginManager $helperPluginManager)
-    {
-        $this->programService = $helperPluginManager->getServiceLocator()
-            ->get('program_program_service');
-        $this->routeMatch     = $helperPluginManager->getServiceLocator()
-            ->get('application')
-            ->getMvcEvent()
-            ->getRouteMatch();
-
-        $this->countryMap = $helperPluginManager->get('countryMap');
-        /**
-         * Load the TwigRenderer directly form the plugin manager to avoid a fallback to the standard PhpRenderer
-         */
-        $this->zfcTwigRenderer = $helperPluginManager->getServiceLocator()->get('ZfcTwigRenderer');
-    }
 
     /**
      * @return string
@@ -83,21 +43,13 @@ class ProgramHandler extends AbstractHelper
      */
     public function render()
     {
-
-        $translate = $this->getView()->plugin('translate');
-
         switch ($this->getHandler()->getHandler()) {
 
-            case 'programcall':
-                $this->getView()->headTitle()->append($translate("txt-program-call"));
-
-                return $this->parseCall($this->getCall());
-                break;
-
             case 'programcall_selector':
-                return $this->parseCallSelector();
-
-                break;
+                return $this->parseCallSelector(
+                    !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null,
+                    !$this->getProgramService()->isEmpty() ? $this->getProgramService()->getProgram() : null
+                );
             default:
                 return sprintf(
                     "No handler available for <code>%s</code> in class <code>%s</code>",
@@ -108,29 +60,21 @@ class ProgramHandler extends AbstractHelper
     }
 
     /**
-     * Set the projectService based on the id
+     * @param Call    $call
+     * @param Program $program
      *
-     * @param $projectId
+     * @return string
      */
-    public function setProgramId($projectId)
+    public function parseCallSelector(Call $call = null, Program $program = null)
     {
-        $this->setProgramService($this->getProgramService()->findEntityById('program', $projectId));
-    }
-
-    /**
-     * @param \Program\Service\ProgramService $projectService
-     */
-    public function setProgramService($projectService)
-    {
-        $this->projectService = $projectService;
-    }
-
-    /**
-     * @return \Program\Service\ProgramService
-     */
-    public function getProgramService()
-    {
-        return $this->programService;
+        return $this->getZfcTwigRenderer()->render(
+            'program/partial/call-selector',
+            array(
+                'calls'             => $this->getCallService()->findAll('Call\Call'),
+                'callId'            => !is_null($call) ? $call->getId() : null,
+                'selectedProgramId' => !is_null($program) ? $program->getId() : null
+            )
+        );
     }
 
     /**
@@ -150,49 +94,74 @@ class ProgramHandler extends AbstractHelper
     }
 
     /**
-     * Create a list of calls
-     *
-     * @return string
-     */
-    public function parseCallSelector()
-    {
-        $calls = $this->programService->findAll('Call\Call');
-
-        return $this->zfcTwigRenderer->render(
-            'program/partial/call-selector',
-            array(
-                'calls'     => $calls,
-                'callId'    => !is_null($this->getCall()) ? $this->getCall()->getId() : null,
-                'programId' => !is_null($this->getProgram()) ? $this->getProgram()->getId() : null
-            )
-        );
-    }
-
-    /**
-     * @param int $callId
-     *
-     * @return Call;
+     * @param $callId
      */
     public function setCallId($callId)
     {
-        $this->call = $this->programService->findEntityById('Call\Call', $callId);
-
-        return $this->call;
+        $this->getCallService()->setCallId($callId);
     }
 
     /**
-     * @return \Program\Entity\Call\Call
+     * @param $programId
      */
-    public function getCall()
+    public function setProgramId($programId)
     {
-        return $this->call;
+        $this->getProgramService()->setProgramId($programId);
     }
 
     /**
-     * @return \Program\Entity\Program
+     * @return TwigRenderer
      */
-    public function getProgram()
+    public function getZfcTwigRenderer()
     {
-        return $this->program;
+        return $this->serviceLocator->get('ZfcTwigRenderer');
+    }
+
+    /**
+     * @return RouteMatch
+     */
+    public function getRouteMatch()
+    {
+        return $this->serviceLocator->get('application')->getMvcEvent()->getRouteMatch();
+    }
+
+    /**
+     * @return ProgramService
+     */
+    public function getProgramService()
+    {
+        return $this->serviceLocator->get('program_program_service');
+    }
+
+    /**
+     * @return CallService
+     */
+    public function getCallService()
+    {
+        return $this->serviceLocator->get('program_call_service');
+    }
+
+    /**
+     * Set the service locator.
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     *
+     * @return AbstractHelper
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+
+        return $this;
+    }
+
+    /**
+     * Get the service locator.
+     *
+     * @return ServiceLocatorInterface
+     */
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator;
     }
 }

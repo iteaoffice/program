@@ -9,16 +9,19 @@
  */
 namespace ProgramTest;
 
+use ContactTest\Fixture\LoadContactData;
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\Loader;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Doctrine\ORM\Tools\SchemaValidator;
+use GeneralTest\Fixture\LoadContentTypeData;
+use GeneralTest\Fixture\LoadCountryData;
+use ProgramTest\Fixture\LoadDomainData;
+use ProgramTest\Fixture\LoadProgramData;
+use RuntimeException;
 use Zend\Loader\AutoloaderFactory;
 use Zend\Mvc\Service\ServiceManagerConfig;
 use Zend\ServiceManager\ServiceManager;
-
-use Doctrine\ORM\Tools\SchemaValidator;
-use Doctrine\Common\DataFixtures\Loader;
-use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-
-use RuntimeException;
 
 error_reporting(E_ALL | E_STRICT);
 chdir(__DIR__);
@@ -76,23 +79,30 @@ class Bootstrap
         $tool->createSchema($mdFactory->getAllMetadata());
 
         $loader = new Loader();
-//        $loader->addFixture(new \ProjectTest\Fixture\LoadVersionData());
-        $loader->addFixture(new \ProgramTest\Fixture\LoadDomainData());
-        $loader->addFixture(new \ProgramTest\Fixture\LoadProgramData());
-//        $loader->addFixture(new \GeneralTest\Fixture\LoadGenderData());
-//        $loader->addFixture(new \GeneralTest\Fixture\LoadTitleData());
-//        $loader->addFixture(new \ContactTest\Fixture\LoadContactData());
-//        $loader->addFixture(new \ProjectTest\Fixture\LoadProjectLogoData());
-//        $loader->addFixture(new \ProjectTest\Fixture\LoadDocumentTypeData());
-//
+        $loader->addFixture(new LoadCountryData());
+        $loader->addFixture(new LoadDomainData());
+        $loader->addFixture(new LoadProgramData());
+        $loader->addFixture(new LoadContactData());
+        $loader->addFixture(new LoadContentTypeData());
+
         $purger   = new ORMPurger();
         $executor = new ORMExecutor($entityManager, $purger);
         $executor->execute($loader->getFixtures());
     }
 
-    public static function getServiceManager()
+    protected static function findParentPath($path)
     {
-        return static::$serviceManager;
+        $dir         = __DIR__;
+        $previousDir = '.';
+        while (!is_dir($dir . '/' . $path)) {
+            $dir = dirname($dir);
+            if ($previousDir === $dir) {
+                return false;
+            }
+            $previousDir = $dir;
+        }
+
+        return $dir . '/' . $path;
     }
 
     protected static function initAutoloader()
@@ -134,19 +144,9 @@ class Bootstrap
         );
     }
 
-    protected static function findParentPath($path)
+    public static function getServiceManager()
     {
-        $dir         = __DIR__;
-        $previousDir = '.';
-        while (!is_dir($dir . '/' . $path)) {
-            $dir = dirname($dir);
-            if ($previousDir === $dir) {
-                return false;
-            }
-            $previousDir = $dir;
-        }
-
-        return $dir . '/' . $path;
+        return static::$serviceManager;
     }
 }
 

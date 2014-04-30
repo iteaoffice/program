@@ -9,14 +9,12 @@
  */
 namespace Program\Controller\Plugin;
 
+use Contact\Service\ContactService;
+use General\Service\GeneralService;
+use Program\Entity\Doa;
+use Program\Options\ModuleOptions;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\ServiceManager\ServiceLocatorInterface;
-
-use General\Service\GeneralService;
-use Contact\Service\ContactService;
-
-use Program\Options\ModuleOptions;
-use Program\Entity\Doa;
 
 /**
  *
@@ -104,26 +102,6 @@ class RenderDoa extends AbstractPlugin
     }
 
     /**
-     * Gateway to the General Service
-     *
-     * @return GeneralService
-     */
-    public function getGeneralService()
-    {
-        return $this->getServiceLocator()->get('general_general_service');
-    }
-
-    /**
-     * Gateway to the Contact Service
-     *
-     * @return ContactService
-     */
-    public function getContactService()
-    {
-        return $this->getServiceLocator()->get('contact_contact_service');
-    }
-
-    /**
      * @return ModuleOptions
      */
     public function getModuleOptions()
@@ -149,5 +127,25 @@ class RenderDoa extends AbstractPlugin
         $this->serviceLocator = $serviceLocator;
 
         return $this;
+    }
+
+    /**
+     * Gateway to the Contact Service
+     *
+     * @return ContactService
+     */
+    public function getContactService()
+    {
+        return $this->getServiceLocator()->get('contact_contact_service');
+    }
+
+    /**
+     * Gateway to the General Service
+     *
+     * @return GeneralService
+     */
+    public function getGeneralService()
+    {
+        return $this->getServiceLocator()->get('general_general_service');
     }
 }

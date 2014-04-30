@@ -11,10 +11,9 @@
 
 namespace Program\View\Helper;
 
-use Zend\View\HelperPluginManager;
-use Zend\View\Helper\AbstractHelper;
-
 use Program\Service\ProgramService;
+use Zend\View\Helper\AbstractHelper;
+use Zend\View\HelperPluginManager;
 
 /**
  * Class ContactHandler

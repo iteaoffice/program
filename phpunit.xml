@@ -1,5 +1,5 @@
 <phpunit bootstrap="tests/ProgramTest/Bootstrap.php"
-         colors="true"
+         colors="false"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
@@ -27,6 +27,7 @@
     </filter>
 
     <logging>
-        <log type="coverage-clover" target="./coverage.clover"/>
+        <log type="coverage-clover" target="./clover.xml"/>
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
     </logging>
 </phpunit>

@@ -9,12 +9,11 @@
  */
 namespace Program\Controller;
 
-use Zend\View\Model\ViewModel;
-use Zend\Validator\File\FilesSize;
-
-use Program\Form\UploadDoa;
-use Program\Entity;
 use Program\Entity\Doa;
+use Program\Entity;
+use Program\Form\UploadDoa;
+use Zend\Validator\File\FilesSize;
+use Zend\View\Model\ViewModel;
 
 /**
  * @category    Program

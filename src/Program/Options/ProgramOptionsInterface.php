@@ -2,17 +2,23 @@
 /**
  * ITEA Office copyright message placeholder
  *
- * @category    Program
- * @package     Options
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @category   Program
+ * @package    Options
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\Options;
 
 /**
- * Interface ProgramOptionsInterface
+ * Create a link to an project
  *
- * @package Program\Options
+ * @category   Program
+ * @package    Options
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @license    http://debranova.org/licence.txt proprietary
+ * @link       http://debranova.org
  */
 interface ProgramOptionsInterface
 {

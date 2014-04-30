@@ -2,20 +2,19 @@
 /**
  * ITEA Office copyright message placeholder
  *
- * @category    Project
+ * @category    Program
  * @package     Controller
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
 namespace Program\Controller\Plugin;
 
+use Contact\Service\ContactService;
+use General\Service\GeneralService;
+use Program\Entity\Nda;
+use Program\Options\ModuleOptions;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\ServiceManager\ServiceLocatorInterface;
-
-use Program\Entity\Nda;
-use General\Service\GeneralService;
-use Program\Options\ModuleOptions;
-use Contact\Service\ContactService;
 
 /**
  * Special plugin to produce an array with the evaluation

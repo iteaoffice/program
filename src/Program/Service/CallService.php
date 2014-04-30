@@ -51,6 +51,14 @@ class CallService extends ServiceAbstract
     }
 
     /**
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return is_null($this->call) || is_null($this->call->getId());
+    }
+
+    /**
      * Find the open call based on the request type
      *
      * @param int $type ;

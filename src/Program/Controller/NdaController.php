@@ -9,12 +9,11 @@
  */
 namespace Program\Controller;
 
-use Zend\View\Model\ViewModel;
-
-use Program\Form\UploadNda;
-use Zend\Validator\File\FilesSize;
 use Program\Entity\Nda;
 use Program\Entity\NdaObject;
+use Program\Form\UploadNda;
+use Zend\Validator\File\FilesSize;
+use Zend\View\Model\ViewModel;
 
 /**
  * @category    Program
@@ -44,12 +43,9 @@ class NdaController extends ProgramAbstractController
      */
     public function uploadAction()
     {
-        $call = $this->getProgramService()->findEntityById(
-            'Call\Call',
-            $this->getEvent()->getRouteMatch()->getParam('call-id')
-        );
+        $call = $this->getCallService()->setCallId($this->getEvent()->getRouteMatch()->getParam('call-id'))->getCall();
 
-        if (is_null($call)) {
+        if ($this->getCallService()->isEmpty()) {
             return $this->notFoundAction();
         }
 

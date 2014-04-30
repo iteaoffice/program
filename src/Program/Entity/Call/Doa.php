@@ -1,17 +1,19 @@
 <?php
 /**
- * Debranova copyright message placeholder
+ * ITEA Office copyright message placeholder
  *
- * @category    Program
- * @package     Entity
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 Debranova
+ * @category   Project
+ * @package    Entity
+ * @subpackage Call
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\Entity\Call;
 
-use Zend\Form\Annotation;
-
 use Doctrine\ORM\Mapping as ORM;
+use Zend\Form\Annotation;
 
 /**
  * @ORM\Table(name="programcall_doa")
@@ -64,6 +66,14 @@ class Doa
     private $call;
 
     /**
+     * @return string
+     */
+    public function getBranch()
+    {
+        return $this->branch;
+    }
+
+    /**
      * @param string $branch
      */
     public function setBranch($branch)
@@ -72,11 +82,11 @@ class Doa
     }
 
     /**
-     * @return string
+     * @return \Program\Entity\Call\Call
      */
-    public function getBranch()
+    public function getCall()
     {
-        return $this->branch;
+        return $this->call;
     }
 
     /**
@@ -88,11 +98,11 @@ class Doa
     }
 
     /**
-     * @return \Program\Entity\Call\Call
+     * @return \DateTime
      */
-    public function getCall()
+    public function getDateReceived()
     {
-        return $this->call;
+        return $this->dateReceived;
     }
 
     /**
@@ -106,9 +116,9 @@ class Doa
     /**
      * @return \DateTime
      */
-    public function getDateReceived()
+    public function getDateSigned()
     {
-        return $this->dateReceived;
+        return $this->dateSigned;
     }
 
     /**
@@ -120,11 +130,11 @@ class Doa
     }
 
     /**
-     * @return \DateTime
+     * @return int
      */
-    public function getDateSigned()
+    public function getId()
     {
-        return $this->dateSigned;
+        return $this->id;
     }
 
     /**
@@ -136,11 +146,11 @@ class Doa
     }
 
     /**
-     * @return int
+     * @return \Organisation\Entity\Organisation
      */
-    public function getId()
+    public function getOrganisation()
     {
-        return $this->id;
+        return $this->organisation;
     }
 
     /**
@@ -149,13 +159,5 @@ class Doa
     public function setOrganisation($organisation)
     {
         $this->organisation = $organisation;
-    }
-
-    /**
-     * @return \Organisation\Entity\Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
     }
 }

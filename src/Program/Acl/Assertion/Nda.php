@@ -10,17 +10,15 @@
  */
 namespace Program\Acl\Assertion;
 
-use Zend\Permissions\Acl\Assertion\AssertionInterface;
+use Contact\Service\ContactService;
+use Program\Entity\Nda as NdaEntity;
+use Program\Service\CallService;
+use Program\Service\ProgramService;
 use Zend\Permissions\Acl\Acl;
+use Zend\Permissions\Acl\Assertion\AssertionInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 use Zend\Permissions\Acl\Role\RoleInterface;
 use Zend\ServiceManager\ServiceManager;
-
-use Program\Service\CallService;
-use Program\Service\ProgramService;
-use Program\Entity\Nda as NdaEntity;
-
-use Contact\Service\ContactService;
 
 /**
  * Class Program

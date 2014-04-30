@@ -11,9 +11,8 @@
  */
 namespace Program\View\Helper;
 
-use Zend\View\Helper\AbstractHelper;
-
 use Program\Entity;
+use Zend\View\Helper\AbstractHelper;
 
 /**
  * Create a link to an nda
