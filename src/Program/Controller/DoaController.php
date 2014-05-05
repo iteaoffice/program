@@ -2,10 +2,12 @@
 /**
  * ITEA Office copyright message placeholder
  *
- * @category    Affiliation
- * @package     Controller
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @category   Program
+ * @package    Controller
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\Controller;
 
@@ -16,8 +18,13 @@ use Zend\Validator\File\FilesSize;
 use Zend\View\Model\ViewModel;
 
 /**
- * @category    Program
- * @package     Controller
+ * Create a link to an project
+ *
+ * @category   Program
+ * @package    Controller
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @license    http://debranova.org/licence.txt proprietary
+ * @link       http://debranova.org
  */
 class DoaController extends ProgramAbstractController
 {
@@ -211,7 +218,7 @@ class DoaController extends ProgramAbstractController
         $programDoa->setOrganisation($organisationService->getOrganisation());
         $programDoa->setProgram($program);
 
-        $renderProjectDoa = $this->renderProgramDoa()->renderDoa($programDoa);
+        $renderProjectDoa = $this->renderProgramDoa()->renderForDoa($programDoa);
 
         $response = $this->getResponse();
         $response->getHeaders()

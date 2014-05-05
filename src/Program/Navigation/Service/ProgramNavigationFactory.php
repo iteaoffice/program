@@ -10,7 +10,7 @@
  */
 namespace Program\Navigation\Service;
 
-use Program\Service\ProgramService;
+use Program\Service\CallService;
 use Zend\Mvc\Router\Http\RouteMatch;
 use Zend\Navigation\Service\DefaultNavigationFactory;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -28,9 +28,9 @@ class ProgramNavigationFactory extends DefaultNavigationFactory
      */
     protected $routeMatch;
     /**
-     * @var ProgramService;
+     * @var CallService;
      */
-    protected $programService;
+    protected $callService;
 
     /**
      * @param ServiceLocatorInterface $serviceLocator
@@ -40,11 +40,11 @@ class ProgramNavigationFactory extends DefaultNavigationFactory
      */
     public function getExtraPages(ServiceLocatorInterface $serviceLocator, array $pages)
     {
-        $application          = $serviceLocator->get('Application');
-        $this->routeMatch     = $application->getMvcEvent()->getRouteMatch();
-        $router               = $application->getMvcEvent()->getRouter();
-        $this->programService = $serviceLocator->get('program_program_service');
-        $translate            = $serviceLocator->get('viewhelpermanager')->get('translate');
+        $application       = $serviceLocator->get('Application');
+        $this->routeMatch  = $application->getMvcEvent()->getRouteMatch();
+        $router            = $application->getMvcEvent()->getRouter();
+        $this->callService = $serviceLocator->get('program_call_service');
+        $translate         = $serviceLocator->get('viewhelpermanager')->get('translate');
 
         /**
          * Return $pages when no match is found
@@ -69,7 +69,7 @@ class ProgramNavigationFactory extends DefaultNavigationFactory
                 );
 
                 if (!is_null($this->routeMatch->getParam('call-id'))) {
-                    $call = $this->programService->findEntityById('Call\Call', $this->routeMatch->getParam('call-id'));
+                    $call = $this->callService->setCallId($this->routeMatch->getParam('call-id'))->getCall();
                     /**
                      * Go over both arrays and check if the new entities can be added
                      */
@@ -84,6 +84,58 @@ class ProgramNavigationFactory extends DefaultNavigationFactory
                         )
                     );
                 }
+                break;
+
+            case 'program/nda/replace':
+
+                $pages['community'] = array(
+                    'label'      => $translate("txt-account-information"),
+                    'route'      => 'contact/profile',
+                    'routeMatch' => $this->routeMatch,
+                    'router'     => $router,
+                );
+
+                $nda = $this->callService->findEntityById('Nda', $this->routeMatch->getParam('id'));
+
+                /**
+                 * Go over both arrays and check if the new entities can be added
+                 */
+                $pages['community']['pages']['nda'] = array(
+                    'label'      => sprintf($translate("txt-replace-nda-for-%s"), $nda->getContact()->getDisplayName()),
+                    'route'      => 'program/nda/replace',
+                    'routeMatch' => $this->routeMatch,
+                    'router'     => $router,
+                    'active'     => true,
+                    'params'     => array(
+                        'id' => $this->routeMatch->getParam('id')
+                    )
+                );
+                break;
+
+            case 'program/nda/view':
+
+                $pages['community'] = array(
+                    'label'      => $translate("txt-account-information"),
+                    'route'      => 'contact/profile',
+                    'routeMatch' => $this->routeMatch,
+                    'router'     => $router,
+                );
+
+                $nda = $this->callService->findEntityById('Nda', $this->routeMatch->getParam('id'));
+
+                /**
+                 * Go over both arrays and check if the new entities can be added
+                 */
+                $pages['community']['pages']['nda'] = array(
+                    'label'      => sprintf($translate("txt-view-nda-for-%s"), $nda->getContact()->getDisplayName()),
+                    'route'      => 'program/nda/view',
+                    'routeMatch' => $this->routeMatch,
+                    'router'     => $router,
+                    'active'     => true,
+                    'params'     => array(
+                        'id' => $this->routeMatch->getParam('id')
+                    )
+                );
                 break;
         }
 

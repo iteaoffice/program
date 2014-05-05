@@ -2,16 +2,25 @@
 /**
  * ITEA Office copyright message placeholder
  *
- * @category    Program
- * @package     Controller
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @category   Program
+ * @package    Controller
+ * @subpackage Plugin
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\Controller\Plugin;
 
 /**
- * Class PDF
- * @package Program\Controller\Plugin
+ * Create a link to an project
+ *
+ * @category   Program
+ * @package    Controller
+ * @subpackage Plugin
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @license    http://debranova.org/licence.txt proprietary
+ * @link       http://debranova.org
  */
 class ProgramPdf extends \FPDI
 {
@@ -20,7 +29,7 @@ class ProgramPdf extends \FPDI
      */
     protected $_tplIdx;
     /**
-     * @var Location of the template
+     * @var string Location of the template
      */
     protected $template;
 
@@ -42,7 +51,7 @@ class ProgramPdf extends \FPDI
 
         $this->SetFont('freesans', 'N', 15);
         $this->SetTextColor(0);
-        $this->SetXY(PDF_MARGIN_LEFT, 5);
+        $this->SetXY(15, 5);
     }
 
     public function footer()

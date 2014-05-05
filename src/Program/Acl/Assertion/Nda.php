@@ -37,7 +37,7 @@ class Nda implements AssertionInterface
     /**
      * @var ProgramService
      */
-    protected $projectService;
+    protected $programService;
     /**
      * @var ContactService
      */
@@ -100,8 +100,6 @@ class Nda implements AssertionInterface
             case 'upload':
                 return !is_null($this->contactService);
 
-                break;
-
             case 'replace':
                 /**
                  * For the replace we need to see if the user has access on the editing of the program
@@ -110,8 +108,6 @@ class Nda implements AssertionInterface
 
                 return is_null($resource->getDateApproved()) && $resource->getContact()->getId(
                 ) === $this->contactService->getContact()->getId();
-
-                break;
 
             case 'render':
 
@@ -129,8 +125,6 @@ class Nda implements AssertionInterface
                 }
 
                 return true;
-
-                break;
 
             case 'download':
             case 'view':

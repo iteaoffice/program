@@ -13,9 +13,9 @@
  */
 namespace Program\View\Helper;
 
-use Program\Entity;
 use Program\Entity\Call\Call;
 use Program\Entity\Nda;
+use Program\Entity;
 
 /**
  * Create a link to an project
@@ -77,6 +77,10 @@ class NdaLink extends LinkAbstract
      */
     public function getNda()
     {
+        if (is_null($this->nda)) {
+            $this->nda = new Nda();
+        }
+
         return $this->nda;
     }
 

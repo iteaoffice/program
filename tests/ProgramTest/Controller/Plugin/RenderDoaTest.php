@@ -66,7 +66,7 @@ class RenderDoaTest extends \PHPUnit_Framework_TestCase
         $doa->setContact($contact);
         $doa->setProgram($program);
 
-        $pdf = $renderDoa->renderDoa($doa);
+        $pdf = $renderDoa->renderForDoa($doa);
 
         $this->assertInstanceOf("Program\Controller\Plugin\ProgramPdf", $pdf);
 

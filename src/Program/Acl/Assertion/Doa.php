@@ -93,8 +93,7 @@ class Doa implements AssertionInterface
 
         switch ($privilege) {
             case 'upload':
-
-                break;
+                return !$this->contactService->isEmpty();
 
             case 'replace':
                 /**
@@ -102,20 +101,15 @@ class Doa implements AssertionInterface
                  * and the acl should not be approved
                  */
 
-                return is_null($resource->getDateApproved()) && $resource->getContact()->getId(
-                ) === $this->contactService->getContact()->getId();
-
-                break;
+                return is_null($resource->getDateApproved()) && $resource->getContact()->getId() ===
+                $this->contactService->getContact()->getId();
 
             case 'render':
                 return !is_null($this->contactService);
 
-                break;
-
             case 'download':
             case 'view':
                 return $resource->getContact()->getId() === $this->contactService->getContact()->getId();
-                break;
         }
 
         return false;

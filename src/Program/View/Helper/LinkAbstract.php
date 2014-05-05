@@ -103,7 +103,7 @@ abstract class LinkAbstract extends AbstractHelper
         return sprintf(
             $uri,
             $serverUrl->__invoke() . $url($this->router, $this->routerParams),
-            $translate($this->text),
+            $this->text,
             implode($this->classes),
             implode('', $this->linkContent)
         );

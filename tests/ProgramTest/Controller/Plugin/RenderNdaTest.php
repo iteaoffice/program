@@ -80,7 +80,7 @@ class RenderNdaTest extends \PHPUnit_Framework_TestCase
         $nda = new Nda();
         $nda->setContact($contact);
 
-        $pdf = $renderNda->renderCall($nda);
+        $pdf = $renderNda->renderForCall($nda);
 
         $this->assertInstanceOf("Program\Controller\Plugin\ProgramPdf", $pdf);
 

@@ -15,7 +15,7 @@ use Program\Controller\Plugin\RenderDoa;
 use Program\Controller\Plugin\RenderNda;
 use Program\Service\FormServiceAwareInterface;
 use Zend\EventManager\EventInterface;
-use Zend\ModuleManager\Feature; //Makes the module class more strict
+use Zend\ModuleManager\Feature;
 
 /**
  *

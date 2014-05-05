@@ -2,10 +2,13 @@
 /**
  * ITEA Office copyright message placeholder
  *
- * @category    Program
- * @package     Controller
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @category   Program
+ * @package    Controller
+ * @subpackage Plugin
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\Controller\Plugin;
 
@@ -17,10 +20,14 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Special plugin to produce an array with the evaluation
+ * Create a link to an project
  *
- * Class CreateEvaluation
- * @package Content\Controller\Plugin
+ * @category   Program
+ * @package    Controller
+ * @subpackage Plugin
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @license    http://debranova.org/licence.txt proprietary
+ * @link       http://debranova.org
  */
 class RenderNda extends AbstractPlugin
 {
@@ -34,7 +41,7 @@ class RenderNda extends AbstractPlugin
      *
      * @return ProgramPdf
      */
-    public function renderCall(Nda $nda)
+    public function renderForCall(Nda $nda)
     {
         $pdf = new ProgramPdf();
         $pdf->setTemplate($this->getModuleOptions()->getNdaTemplate());
@@ -99,6 +106,44 @@ class RenderNda extends AbstractPlugin
         $pdf->Line(30, 275, 90, 275);
 
         return $pdf;
+    }
+
+    /**
+     * @return ModuleOptions
+     */
+    public function getModuleOptions()
+    {
+        return $this->getServiceLocator()->get('program_module_options');
+    }
+
+    /**
+     * @return ServiceLocatorInterface
+     */
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator;
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     *
+     * @return $this
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+
+        return $this;
+    }
+
+    /**
+     * Gateway to the Contact Service
+     *
+     * @return ContactService
+     */
+    public function getContactService()
+    {
+        return $this->getServiceLocator()->get('contact_contact_service');
     }
 
     /**
@@ -179,43 +224,5 @@ class RenderNda extends AbstractPlugin
     public function getGeneralService()
     {
         return $this->getServiceLocator()->get('general_general_service');
-    }
-
-    /**
-     * Gateway to the Contact Service
-     *
-     * @return ContactService
-     */
-    public function getContactService()
-    {
-        return $this->getServiceLocator()->get('contact_contact_service');
-    }
-
-    /**
-     * @return ModuleOptions
-     */
-    public function getModuleOptions()
-    {
-        return $this->getServiceLocator()->get('program_module_options');
-    }
-
-    /**
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return $this
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-
-        return $this;
     }
 }

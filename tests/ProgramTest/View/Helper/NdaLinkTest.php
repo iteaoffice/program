@@ -10,13 +10,14 @@
  * @license    http://debranova.org/license.txt proprietary
  * @link       http://debranova.org
  */
-namespace Program\View\Helper;
+namespace ProgramTest\View\Helper;
 
 use BjyAuthorize\Service\Authorize;
 use Contact\Entity\Contact;
 use Program\Entity\Call\Call;
 use Program\Entity\Nda;
 use Program\Entity\Program;
+use Program\View\Helper\NdaLink;
 use ProgramTest\Bootstrap;
 
 /**
@@ -107,6 +108,12 @@ class NdaLinkTest extends \PHPUnit_Framework_TestCase
     public function testCannotViewEmptyNda()
     {
         $this->ndaLink->__invoke(null, 'view');
+    }
+
+    public function canRenderEmptyNda()
+    {
+        $this->ndaLink->__invoke(null, 'upload');
+        $this->assertInstanceOf('Program\Entity\Nda', $this->ndaLink->getNda());
     }
 
     public function testGetAccessDenied()

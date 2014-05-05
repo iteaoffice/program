@@ -2,10 +2,12 @@
 /**
  * ITEA Office copyright message placeholder
  *
- * @category    Program
- * @package     Controller
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @category   Program
+ * @package    Controller
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\Controller;
 
@@ -18,7 +20,13 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Model\ViewModel;
 
 /**
+ * Create a link to an project
  *
+ * @category   Program
+ * @package    Controller
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @license    http://debranova.org/licence.txt proprietary
+ * @link       http://debranova.org
  */
 class ProgramManagerController extends AbstractActionController implements
     FormServiceAwareInterface,
@@ -64,6 +72,48 @@ class ProgramManagerController extends AbstractActionController implements
     }
 
     /**
+     * Gateway to the Program Service
+     *
+     * @return ProgramService
+     */
+    public function getProgramService()
+    {
+        return $this->getServiceLocator()->get('program_generic_service');
+    }
+
+    /**
+     * @param $programService
+     *
+     * @return ProgramManagerController
+     */
+    public function setProgramService($programService)
+    {
+        $this->programService = $programService;
+
+        return $this;
+    }
+
+    /**
+     * @return ServiceLocatorInterface
+     */
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator;
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     *
+     * @return ProgramManagerController|void
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+
+        return $this;
+    }
+
+    /**
      * Show the details of 1 message
      *
      * @return \Zend\View\Model\ViewModel
@@ -99,6 +149,26 @@ class ProgramManagerController extends AbstractActionController implements
         }
 
         return new ViewModel(array('form' => $form, 'entity' => $entity, 'fullVersion' => true));
+    }
+
+    /**
+     * @return \Program\Service\FormService
+     */
+    public function getFormService()
+    {
+        return $this->formService;
+    }
+
+    /**
+     * @param $formService
+     *
+     * @return ProgramManagerController
+     */
+    public function setFormService($formService)
+    {
+        $this->formService = $formService;
+
+        return $this;
     }
 
     /**
@@ -145,67 +215,5 @@ class ProgramManagerController extends AbstractActionController implements
         return $this->redirect()->toRoute(
             'zfcadmin/program-manager/' . $entity->get('dashed_entity_name') . 's'
         );
-    }
-
-    /**
-     * @return \Program\Service\FormService
-     */
-    public function getFormService()
-    {
-        return $this->formService;
-    }
-
-    /**
-     * @param $formService
-     *
-     * @return ProgramManagerController
-     */
-    public function setFormService($formService)
-    {
-        $this->formService = $formService;
-
-        return $this;
-    }
-
-    /**
-     * Gateway to the Program Service
-     *
-     * @return ProgramService
-     */
-    public function getProgramService()
-    {
-        return $this->getServiceLocator()->get('program_generic_service');
-    }
-
-    /**
-     * @param $programService
-     *
-     * @return ProgramManagerController
-     */
-    public function setProgramService($programService)
-    {
-        $this->programService = $programService;
-
-        return $this;
-    }
-
-    /**
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return ProgramManagerController|void
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-
-        return $this;
     }
 }

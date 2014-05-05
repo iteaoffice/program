@@ -88,6 +88,10 @@ class DoaLink extends LinkAbstract
      */
     public function getDoa()
     {
+        if (is_null($this->doa)) {
+            $this->doa = new Doa();
+        }
+
         return $this->doa;
     }
 

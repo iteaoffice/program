@@ -2,10 +2,12 @@
 /**
  * ITEA Office copyright message placeholder
  *
- * @category    Program
- * @package     Controller
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @category   Program
+ * @package    Controller
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\Controller;
 
@@ -16,8 +18,13 @@ use Zend\Validator\File\FilesSize;
 use Zend\View\Model\ViewModel;
 
 /**
- * @category    Program
- * @package     Controller
+ * Create a link to an project
+ *
+ * @category   Program
+ * @package    Controller
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @license    http://debranova.org/licence.txt proprietary
+ * @link       http://debranova.org
  */
 class NdaController extends ProgramAbstractController
 {
@@ -163,17 +170,16 @@ class NdaController extends ProgramAbstractController
          * Add the call when a call-id is given
          */
         if (!is_null($this->getEvent()->getRouteMatch()->getParam('call-id'))) {
-            $call = $this->getProgramService()->findEntityById(
-                'Call\Call',
+            $call = $this->getCallService()->setCallId(
                 $this->getEvent()->getRouteMatch()->getParam('call-id')
-            );
+            )->getCall();
 
-            if (is_null($call)) {
+            if ($this->getCallService()->isEmpty()) {
                 return $this->notFoundAction();
             }
 
             $nda->setCall($call);
-            $renderNda = $this->renderNda()->renderCall($nda);
+            $renderNda = $this->renderNda()->renderForCall($nda);
         } else {
             $renderNda = $this->renderNda()->render($nda);
         }

@@ -10,7 +10,7 @@
  * @license    http://debranova.org/license.txt proprietary
  * @link       http://debranova.org
  */
-namespace ProjectTest\View\Helper;
+namespace ProgramTest\View\Helper;
 
 use Program\Entity\Program;
 use ProgramTest\Bootstrap;

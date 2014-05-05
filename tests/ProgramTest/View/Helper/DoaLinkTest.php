@@ -10,12 +10,13 @@
  * @license    http://debranova.org/license.txt proprietary
  * @link       http://debranova.org
  */
-namespace Program\View\Helper;
+namespace ProgramTest\View\Helper;
 
 use BjyAuthorize\Service\Authorize;
 use Organisation\Entity\Organisation;
 use Program\Entity\Doa;
 use Program\Entity\Program;
+use Program\View\Helper\DoaLink;
 use ProgramTest\Bootstrap;
 
 /**
@@ -102,6 +103,12 @@ class DoaLinkTest extends \PHPUnit_Framework_TestCase
     public function testCannotViewEmptyDoa()
     {
         $this->doaLink->__invoke(null, 'view');
+    }
+
+    public function canRenderEmptyNda()
+    {
+        $this->doaLink->__invoke(null, 'upload');
+        $this->assertInstanceOf('Program\Entity\Doa', $this->doaLink->getDoa());
     }
 
     public function testGetAccessDenied()

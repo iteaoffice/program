@@ -9,7 +9,7 @@
  * @license    http://debranova.org/license.txt proprietary
  * @link       http://debranova.org
  */
-namespace ProgramTest\Form;
+namespace ProgramTest\Options;
 
 use Program\Options\ModuleOptions;
 use ProgramTest\Bootstrap;

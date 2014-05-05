@@ -2,13 +2,16 @@
 /**
  * ITEA Office copyright message placeholder
  *
- * @category    Program
- * @package     Controller
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @category   Program
+ * @package    Controller
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\Controller;
 
+use BjyAuthorize\Controller\Plugin\IsAllowed;
 use General\Service\GeneralService;
 use Organisation\Service\OrganisationService;
 use Program\Options\ModuleOptions;
@@ -16,11 +19,22 @@ use Program\Service\FormService;
 use Program\Service\FormServiceAwareInterface;
 use Program\Service\ProgramService;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\Controller\Plugin\FlashMessenger;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
 
 /**
- * @category    Program
- * @package     Controller
+ * Create a link to an project
+ *
+ * @category   Program
+ * @package    Controller
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @license    http://debranova.org/licence.txt proprietary
+ * @link       http://debranova.org
+ *
+ * @method      ZfcUserAuthentication zfcUserAuthentication()
+ * @method      FlashMessenger flashMessenger()
+ * @method      IsAllowed isAllowed($resource, $action)
  */
 abstract class ProgramAbstractController extends AbstractActionController implements
     FormServiceAwareInterface,
@@ -70,6 +84,18 @@ abstract class ProgramAbstractController extends AbstractActionController implem
     }
 
     /**
+     * @param $programService
+     *
+     * @return ProgramController
+     */
+    public function setProgramService($programService)
+    {
+        $this->programService = $programService;
+
+        return $this;
+    }
+
+    /**
      * Gateway to the Organisation Service
      *
      * @return OrganisationService
@@ -111,17 +137,5 @@ abstract class ProgramAbstractController extends AbstractActionController implem
     public function getModuleOptions()
     {
         return $this->getServiceLocator()->get('program_module_options');
-    }
-
-    /**
-     * @param $programService
-     *
-     * @return ProgramController
-     */
-    public function setProgramService($programService)
-    {
-        $this->programService = $programService;
-
-        return $this;
     }
 }

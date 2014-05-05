@@ -2,10 +2,13 @@
 /**
  * ITEA Office copyright message placeholder
  *
- * @category    Affiliation
- * @package     Controller
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @category   Program
+ * @package    Controller
+ * @subpackage Plugin
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2014 ITEA Office
+ * @license    http://debranova.org/license.txt proprietary
+ * @link       http://debranova.org
  */
 namespace Program\Controller\Plugin;
 
@@ -17,10 +20,14 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
+ * Create a link to an project
  *
- *
- * Class RenderDoa
- * @package Affiliation\Controller\Plugin
+ * @category   Program
+ * @package    Controller
+ * @subpackage Plugin
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @license    http://debranova.org/licence.txt proprietary
+ * @link       http://debranova.org
  */
 class RenderDoa extends AbstractPlugin
 {
@@ -34,7 +41,7 @@ class RenderDoa extends AbstractPlugin
      *
      * @return ProgramPdf
      */
-    public function renderDoa(Doa $doa)
+    public function renderForDoa(Doa $doa)
     {
         $pdf = new ProgramPdf();
         $pdf->setTemplate($this->getModuleOptions()->getDoaTemplate());
