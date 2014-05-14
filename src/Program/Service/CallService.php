@@ -26,13 +26,13 @@ use Program\Entity\NdaObject;
  */
 class CallService extends ServiceAbstract
 {
-    const FPP_CLOSED = 'FPP_CLOSED';
+    const FPP_CLOSED   = 'FPP_CLOSED';
     const FPP_NOT_OPEN = 'FPP_NOT_OPEN';
-    const FPP_OPEN = 'FPP_OPEN';
-    const PO_CLOSED = 'PO_CLOSED';
-    const PO_NOT_OPEN = 'PO_NOT_OPEN';
-    const PO_OPEN = 'PO_OPEN';
-    const UNDEFINED = 'UNDEFINED';
+    const FPP_OPEN     = 'FPP_OPEN';
+    const PO_CLOSED    = 'PO_CLOSED';
+    const PO_NOT_OPEN  = 'PO_NOT_OPEN';
+    const PO_OPEN      = 'PO_OPEN';
+    const UNDEFINED    = 'UNDEFINED';
     /**
      * @var Call
      */
@@ -119,6 +119,9 @@ class CallService extends ServiceAbstract
      * Return a status and the relevant date
      *
      * @return \stdClass
+     * @method \DateTime $result
+     * @method \DateTime $referenceDate
+     *
      */
     public function getCallStatus()
     {

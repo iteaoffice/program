@@ -83,7 +83,7 @@ class ProgramLink extends LinkAbstract
     /**
      * Parse te action and fill the correct parameters
      */
-    protected function parseAction()
+    public function parseAction()
     {
         switch ($this->getAction()) {
             case 'view-list':

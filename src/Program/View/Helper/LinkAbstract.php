@@ -14,10 +14,15 @@
 namespace Program\View\Helper;
 
 use BjyAuthorize\Service\Authorize;
+use BjyAuthorize\View\Helper\IsAllowed;
 use Program\Entity\EntityAbstract;
 use Zend\Mvc\Router\RouteMatch;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Helper\AbstractHelper;
+use Zend\View\Helper\ServerUrl;
+use Zend\View\Helper\Url;
+use Zend\View\HelperPluginManager;
 
 /**
  * Create a link to an document
@@ -30,10 +35,10 @@ use Zend\View\Helper\AbstractHelper;
  * @license    http://debranova.org/license.txt proprietary
  * @link       http://debranova.org
  */
-abstract class LinkAbstract extends AbstractHelper
+abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwareInterface
 {
     /**
-     * @var ServiceLocatorInterface
+     * @var HelperPluginManager
      */
     protected $serviceLocator;
     /**
@@ -84,9 +89,14 @@ abstract class LinkAbstract extends AbstractHelper
      */
     public function createLink()
     {
-        $translate = $this->serviceLocator->get('viewhelpermanager')->get('translate');
-        $url       = $this->serviceLocator->get('viewhelpermanager')->get('url');
-        $serverUrl = $this->serviceLocator->get('viewhelpermanager')->get('serverUrl');
+        /**
+         * @var $url Url
+         */
+        $url = $this->serviceLocator->get('url');
+        /**
+         * @var $serverUrl ServerUrl
+         */
+        $serverUrl = $this->serviceLocator->get('serverUrl');
 
         $this->linkContent = array();
         $this->classes     = array();
@@ -95,7 +105,7 @@ abstract class LinkAbstract extends AbstractHelper
         $this->parseShow();
 
         if ('social' === $this->getShow()) {
-            return $serverUrl->__invoke() . $url($this->router, $this->routerParams);
+            return $serverUrl() . $url($this->router, $this->routerParams);
         }
 
         $uri = '<a href="%s" title="%s" class="%s">%s</a>';
@@ -107,6 +117,14 @@ abstract class LinkAbstract extends AbstractHelper
             implode($this->classes),
             implode('', $this->linkContent)
         );
+    }
+
+    /**
+     * Default version of the action
+     */
+    public function parseAction()
+    {
+        $this->action = null;
     }
 
     /**
@@ -154,7 +172,6 @@ abstract class LinkAbstract extends AbstractHelper
                  */
 
                 return null;
-                break;
             default:
                 if (!array_key_exists($this->getShow(), $this->showOptions)) {
                     throw new \InvalidArgumentException(
@@ -306,7 +323,31 @@ abstract class LinkAbstract extends AbstractHelper
      */
     public function getAssertion($assertion)
     {
-        return $this->serviceLocator->get($assertion);
+        return $this->getServiceLocator()->get($assertion);
+    }
+
+    /**
+     * Get the service locator.
+     *
+     * @return ServiceLocatorInterface
+     */
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator->getServiceLocator();
+    }
+
+    /**
+     * Set the service locator.
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     *
+     * @return AbstractHelper
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+
+        return $this;
     }
 
     /**
@@ -314,20 +355,23 @@ abstract class LinkAbstract extends AbstractHelper
      */
     public function getAuthorizeService()
     {
-        return $this->serviceLocator->get('BjyAuthorize\Service\Authorize');
+        return $this->getServiceLocator()->get('BjyAuthorize\Service\Authorize');
     }
 
     /**
      * @param null|EntityAbstract $resource
-     * @param null                $privilege
+     * @param string              $privilege
      *
      * @return bool
      */
     public function isAllowed($resource, $privilege = null)
     {
-        $isAllowed = $this->serviceLocator->get('viewhelpermanager')->get('isAllowed');
+        /**
+         * @var $isAllowed IsAllowed
+         */
+        $isAllowed = $this->serviceLocator->get('isAllowed');
 
-        return $isAllowed->__invoke($resource, $privilege);
+        return $isAllowed($resource, $privilege);
     }
 
     /**
@@ -373,30 +417,6 @@ abstract class LinkAbstract extends AbstractHelper
     }
 
     /**
-     * Get the service locator.
-     *
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * Set the service locator.
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return AbstractHelper
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-
-        return $this;
-    }
-
-    /**
      * RouteInterface match returned by the router.
      * Use a test on is_null to have the possibility to overrule the serviceLocator lookup for unit tets reasons
      *
@@ -406,7 +426,7 @@ abstract class LinkAbstract extends AbstractHelper
     {
 
         if (is_null($this->routeMatch)) {
-            $this->routeMatch = $this->serviceLocator->get('application')->getMvcEvent()->getRouteMatch();
+            $this->routeMatch = $this->getServiceLocator()->get('application')->getMvcEvent()->getRouteMatch();
         }
 
         return $this->routeMatch;
@@ -418,5 +438,15 @@ abstract class LinkAbstract extends AbstractHelper
     public function setRouteMatch(RouteMatch $routeMatch)
     {
         $this->routeMatch = $routeMatch;
+    }
+
+    /**
+     * @param $string
+     *
+     * @return string
+     */
+    public function translate($string)
+    {
+        return $this->serviceLocator->get('translate')->__invoke($string);
     }
 }

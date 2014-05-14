@@ -80,7 +80,7 @@ class CallLink extends LinkAbstract
     /**
      * Parse te action and fill the correct parameters
      */
-    protected function parseAction()
+    public function parseAction()
     {
         switch ($this->getAction()) {
             case 'view-list':
@@ -92,7 +92,7 @@ class CallLink extends LinkAbstract
                 $this->addRouterParam('docRef', 'all-projects');
                 $this->addRouterParam('call', $this->getCall()->getId());
 
-                $this->setText(sprintf(_("txt-view-call-%s"), $this->getCall()));
+                $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));
                 break;
             default:
                 throw new \InvalidArgumentException(

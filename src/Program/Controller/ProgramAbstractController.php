@@ -13,14 +13,17 @@ namespace Program\Controller;
 
 use BjyAuthorize\Controller\Plugin\IsAllowed;
 use General\Service\GeneralService;
+use General\Service\GeneralServiceAwareInterface;
 use Organisation\Service\OrganisationService;
 use Program\Options\ModuleOptions;
+use Program\Service\CallService;
+use Program\Service\CallServiceAwareInterface;
 use Program\Service\FormService;
 use Program\Service\FormServiceAwareInterface;
 use Program\Service\ProgramService;
+use Program\Service\ProgramServiceAwareInterface;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
 
 /**
@@ -38,12 +41,22 @@ use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
  */
 abstract class ProgramAbstractController extends AbstractActionController implements
     FormServiceAwareInterface,
-    ServiceLocatorAwareInterface
+    CallServiceAwareInterface,
+    ProgramServiceAwareInterface,
+    GeneralServiceAwareInterface
 {
     /**
      * @var ProgramService
      */
     protected $programService;
+    /**
+     * @var GeneralService
+     */
+    protected $generalService;
+    /**
+     * @var CallService
+     */
+    protected $callService;
     /**
      * @var FormService
      */
@@ -64,7 +77,7 @@ abstract class ProgramAbstractController extends AbstractActionController implem
     /**
      * @param $formService
      *
-     * @return ProgramController
+     * @return ProgramAbstractController
      */
     public function setFormService($formService)
     {
@@ -80,17 +93,61 @@ abstract class ProgramAbstractController extends AbstractActionController implem
      */
     public function getProgramService()
     {
-        return $this->getServiceLocator()->get('program_program_service');
+        return $this->programService;
     }
 
     /**
      * @param $programService
      *
-     * @return ProgramController
+     * @return ProgramAbstractController
      */
-    public function setProgramService($programService)
+    public function setProgramService(ProgramService $programService)
     {
         $this->programService = $programService;
+
+        return $this;
+    }
+
+    /**
+     * Gateway to the Call Service
+     *
+     * @return CallService
+     */
+    public function getCallService()
+    {
+        return $this->callService;
+    }
+
+    /**
+     * @param $callService
+     *
+     * @return ProgramAbstractController
+     */
+    public function setCallService(CallService $callService)
+    {
+        $this->callService = $callService;
+
+        return $this;
+    }
+
+    /**
+     * Gateway to the General Service
+     *
+     * @return GeneralService
+     */
+    public function getGeneralService()
+    {
+        return $this->generalService;
+    }
+
+    /**
+     * @param $generalService
+     *
+     * @return ProgramAbstractController
+     */
+    public function setGeneralService(GeneralService $generalService)
+    {
+        $this->generalService = $generalService;
 
         return $this;
     }
@@ -103,24 +160,6 @@ abstract class ProgramAbstractController extends AbstractActionController implem
     public function getOrganisationService()
     {
         return $this->getServiceLocator()->get('organisation_organisation_service');
-    }
-
-    /**
-     * Gateway to the General Service
-     *
-     * @return GeneralService
-     */
-    public function getGeneralService()
-    {
-        return $this->getServiceLocator()->get('general_general_service');
-    }
-
-    /**
-     * @return \Program\Service\CallService
-     */
-    public function getCallService()
-    {
-        return $this->getServiceLocator()->get('program_call_service');
     }
 
     /**

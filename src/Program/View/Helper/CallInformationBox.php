@@ -15,7 +15,10 @@ namespace Program\View\Helper;
 
 use Program\Entity\Call\Call;
 use Program\Service\CallService;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Helper\AbstractHelper;
+use Zend\View\HelperPluginManager;
 
 /**
  * Create a link to an project
@@ -27,8 +30,13 @@ use Zend\View\Helper\AbstractHelper;
  * @license    http://debranova.org/licence.txt proprietary
  * @link       http://debranova.org
  */
-class CallInformationBox extends AbstractHelper
+class CallInformationBox extends AbstractHelper implements ServiceLocatorAwareInterface
 {
+    /**
+     * @var HelperPluginManager
+     */
+    protected $serviceLocator;
+
     /**
      * @param Call $call
      *
@@ -37,8 +45,6 @@ class CallInformationBox extends AbstractHelper
      */
     public function __invoke(Call $call)
     {
-        $translate = $this->view->plugin('translate');
-
         $contents = array(
             CallService::PO_NOT_OPEN  => "%call% for Project Outlines will open %diff% from now (%time%)",
             CallService::PO_OPEN      => "%call% for Project Outlines will close %diff% from now (deadline: %time%)",
@@ -48,10 +54,7 @@ class CallInformationBox extends AbstractHelper
             CallService::FPP_CLOSED   => "%call% for Full Project Proposals closed %diff% ago (deadline: %time%)"
         );
 
-        $callService = $this->view->getHelperPluginManager()->getServiceLocator()->get('program_call_service');
-        $callService->setCall($call);
-
-        $callStatus = $callService->getCallStatus();
+        $callStatus = $this->getCallService()->setCall($call)->getCallStatus();
 
         /**
          * Return null when we have an undefined status
@@ -97,5 +100,37 @@ class CallInformationBox extends AbstractHelper
             $result,
             $content
         );
+    }
+
+    /**
+     * @return CallService
+     */
+    public function getCallService()
+    {
+        return $this->getServiceLocator()->get("program_call_service");
+    }
+
+    /**
+     * Get the service locator.
+     *
+     * @return ServiceLocatorInterface
+     */
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator->getServiceLocator();
+    }
+
+    /**
+     * Set the service locator.
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     *
+     * @return AbstractHelper
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+
+        return $this;
     }
 }
