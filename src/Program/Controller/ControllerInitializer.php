@@ -13,9 +13,11 @@ namespace Program\Controller;
 
 use Program\Service\CallService;
 use Program\Service\CallServiceAwareInterface;
+use Program\Service\FormService;
 use Program\Service\FormServiceAwareInterface;
 use Program\Service\ProgramService;
 use Program\Service\ProgramServiceAwareInterface;
+use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\InitializerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -32,21 +34,27 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class ControllerInitializer implements InitializerInterface
 {
     /**
-     * @param                         $instance
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param                                           $instance
+     * @param ServiceLocatorInterface|ControllerManager $serviceLocator
      *
      * @return $this
      */
     public function initialize($instance, ServiceLocatorInterface $serviceLocator)
     {
+        /**
+         * @var $sm ServiceLocatorInterface
+         */
+        $sm = $serviceLocator->getServiceLocator();
+
         if ($instance instanceof FormServiceAwareInterface) {
-            $sm          = $serviceLocator->getServiceLocator();
+            /**
+             * @var $formService FormService
+             */
             $formService = $sm->get('content_form_service');
             $instance->setFormService($formService);
         }
 
         if ($instance instanceof ProgramServiceAwareInterface) {
-            $sm = $serviceLocator->getServiceLocator();
             /**
              * @var $programService ProgramService
              */
@@ -55,7 +63,6 @@ class ControllerInitializer implements InitializerInterface
         }
 
         if ($instance instanceof CallServiceAwareInterface) {
-            $sm = $serviceLocator->getServiceLocator();
             /**
              * @var $callService CallService
              */
