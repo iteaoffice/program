@@ -35,12 +35,12 @@ class Call extends EntityAbstract implements ResourceInterface
     /**
      * Produce a list of different statuses in a call, which are required for representation and access control
      */
-    const FPP_CLOSED = 'FPP_CLOSED';
+    const FPP_CLOSED   = 'FPP_CLOSED';
     const FPP_NOT_OPEN = 'FPP_NOT_OPEN';
-    const FPP_OPEN = 'FPP_OPEN';
-    const PO_CLOSED = 'PO_CLOSED';
-    const PO_NOT_OPEN = 'PO_NOT_OPEN';
-    const PO_OPEN = 'PO_OPEN';
+    const FPP_OPEN     = 'FPP_OPEN';
+    const PO_CLOSED    = 'PO_CLOSED';
+    const PO_NOT_OPEN  = 'PO_NOT_OPEN';
+    const PO_OPEN      = 'PO_OPEN';
     /**
      * @ORM\Column(name="programcall_id", type="integer", nullable=false)
      * @ORM\Id
@@ -108,7 +108,7 @@ class Call extends EntityAbstract implements ResourceInterface
      */
     private $roadmap;
     /**
-     * @ORM\OneToMany(targetEntity="Program\Entity\Nda", cascade={"persist"}, mappedBy="call")
+     * @ORM\ManyToMany(targetEntity="Program\Entity\Nda", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      * @var \Program\Entity\Nda[]
      */

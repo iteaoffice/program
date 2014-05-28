@@ -1,13 +1,14 @@
-<h1>{{ translate("txt-submit-non-disclosure-agreement-for-call-%s")|format(call) }}</h1>
-
-{% set callService = callServiceProxy(call) %}
-{% set nda = callService.findNdaByCallAndContact(call, zfcUserIdentity()) %}
+{% if call %}
+    <h1>{{ translate("txt-submit-non-disclosure-agreement-for-call-%s")|format(call) }}</h1>
+{% else %}
+    <h1>{{ translate("txt-submit-a-general-non-disclosure-agreement") }}</h1>
+{% endif %}
 
 {% if not nda %}
     <div class="alert alert-block alert-info">
         <div class="alert-heading"><h4>Submit your Non-Disclosure-Agreement</h4></div>
         <ul>
-            <li>Download the personalised Non-Disclosure-Agreement from this page;
+            <li>Render the personalised Non-Disclosure-Agreement from this page;
             <li>Print the document;
             <li>Have the document signed by the authorised person in your organisation to do so;
             <li>Scan the signed document;
@@ -43,7 +44,7 @@
 
     <div class="form-group">
         <div class="col-sm-offset-3 col-sm-9">
-            {{ formelement(form.get('submit')) }} {{ ndaLink(null, 'render', 'button', call ) }}
+            {{ formelement(form.get('submit')) }} {{ ndaLink(nda, 'render', 'button', call ) }}
         </div>
     </div>
 
@@ -67,12 +68,16 @@
     {% endif %}
 
     <dl class="dl-horizontal">
-        <dt>{{ translate("txt-program-call") }}</dt>
-        <dd>{{ callLink(call,'view-list', 'name') }}</dd>
+        {% if call %}
+            <dt>{{ translate("txt-program-call") }}</dt>
+            <dd>{{ callLink(call,'view-list', 'name') }}</dd>
+        {% endif %}
         <dt>{{ translate("txt-contact") }}</dt>
         <dd>{{ zfcUserIdentity().displayName() }}</dd>
         <dt>{{ translate("txt-download-nda") }}</dt>
         <dd>{{ ndaLink(nda,'download', 'text') }}</dd>
     </dl>
+
+    {{ ndaLink(nda,'replace','button') }}
 
 {% endif %}

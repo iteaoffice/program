@@ -16,6 +16,7 @@ return array(
                 'options'       => array(
                     'route'    => '/program',
                     'defaults' => array(
+                        'namespace'  => 'program',
                         'controller' => 'program',
                         'action'     => 'index',
                     ),
@@ -36,9 +37,9 @@ return array(
                             'upload'   => array(
                                 'type'    => 'Segment',
                                 'options' => array(
-                                    'route'       => '/upload[/call-:call-id].html',
+                                    'route'       => '/upload[/call-:id].html',
                                     'constraints' => array(
-                                        'call-id' => '\d+'
+                                        'id' => '\d+'
                                     ),
                                     'defaults'    => array(
                                         'action'    => 'upload',
@@ -49,7 +50,7 @@ return array(
                             'render'   => array(
                                 'type'    => 'Segment',
                                 'options' => array(
-                                    'route'       => '/render[/call-:call-id].pdf',
+                                    'route'       => '/render[/call-:id].pdf',
                                     'constraints' => array(
                                         'call-id' => '\d+'
                                     ),

@@ -11,6 +11,7 @@
  */
 namespace Program\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Zend\Form\Annotation;
@@ -23,7 +24,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * Entity for a nda
  *
  * @ORM\Table(name="nda")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Program\Repository\Nda")
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("nda")
  *
@@ -84,11 +85,15 @@ class Nda extends EntityAbstract implements ResourceInterface
      */
     private $contact;
     /**
-     * @ORM\ManyToOne(targetEntity="Program\Entity\Call\Call", cascade={"persist"}, inversedBy="nda")
-     * @ORM\JoinColumns({
-     * @ORM\JoinColumn(name="programcall_id", referencedColumnName="programcall_id")
-     * })
-     * @var \Program\Entity\Call\Call
+     * @ORM\ManyToMany(targetEntity="Program\Entity\Call\Call", cascade="persist", inversedBy="nda")
+     * @ORM\JoinTable(name="programcall_nda",
+     *      joinColumns={@ORM\JoinColumn(name="nda_id", referencedColumnName="nda_id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="programcall_id", referencedColumnName="programcall_id")}
+     * )
+     * @Annotation\Type("DoctrineORMModule\Form\Element\EntityMultiCheckbox")
+     * @Annotation\Options({"target_class":"Program\Entity\Call\Call"})
+     * @Annotation\Attributes({"label":"txt-program-call"})
+     * @var \Program\Entity\Call\Call[]|ArrayCollection
      */
     private $call;
     /**
@@ -97,6 +102,14 @@ class Nda extends EntityAbstract implements ResourceInterface
      * @var \Program\Entity\NdaObject[]
      */
     private $object;
+
+    /**
+     * Class constructor
+     */
+    public function __construct()
+    {
+        $this->version = new ArrayCollection();
+    }
 
     /**
      * @param $property
@@ -150,15 +163,19 @@ class Nda extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return \Program\Entity\Call\Call
+     * @return null|\Program\Entity\Call\Call
      */
     public function getCall()
     {
-        return $this->call;
+        if (is_null($this->call)) {
+            return null;
+        }
+
+        return $this->call->first();
     }
 
     /**
-     * @param \Program\Entity\Call\Call $call
+     * @param \Program\Entity\Call\Call[]|ArrayCollection[] $call
      */
     public function setCall($call)
     {

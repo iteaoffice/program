@@ -186,15 +186,25 @@ class CallService extends ServiceAbstract
      * @param Call    $call
      * @param Contact $contact
      *
-     * @return \Program\Entity\Nda
+     * @return null|\Program\Entity\Nda
      */
     public function findNdaByCallAndContact(Call $call, Contact $contact)
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName('nda'))->findOneBy(
-            array(
-                'call'    => $call,
-                'contact' => $contact
-            )
+        return $this->getEntityManager()->getRepository($this->getFullEntityName('nda'))->findNdaByCallAndContact(
+            $call,
+            $contact
+        );
+    }
+
+    /**
+     * @param Contact $contact
+     *
+     * @return null|\Program\Entity\Nda
+     */
+    public function findNdaByContact(Contact $contact)
+    {
+        return $this->getEntityManager()->getRepository($this->getFullEntityName('nda'))->findNdaByContact(
+            $contact
         );
     }
 
@@ -214,12 +224,16 @@ class CallService extends ServiceAbstract
 
         $nda = new Nda();
         $nda->setContact($contact);
-        $nda->setCall($call);
+        if (!is_null($call)) {
+            $nda->setCall(array($call));
+        }
         $nda->setSize($file['size']);
         $nda->setContentType($this->getGeneralService()->findContentTypeByContentTypeName($file['type']));
 
         $ndaObject->setNda($nda);
 
-        return $this->newEntity($ndaObject);
+        $this->newEntity($ndaObject);
+
+        return $ndaObject->getNda();
     }
 }
