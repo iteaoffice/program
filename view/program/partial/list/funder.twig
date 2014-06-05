@@ -1,13 +1,11 @@
-<h2>{{ translate("txt-list-funder") }}</h2>
-
 {% for funder in funder if funder.showOnWebsite is constant("\\Program\\Entity\\Funder::SHOW_ON_WEBSITE") %}
 
+    {% if loop.first %}
+        <h2>{{ translate("txt-list-funder") }}</h2>
+    {% endif %}
 
     <div class="well well-sm">
-
-
         {% set contactService = contactServiceProxy(funder.contact) %}
-
 
         <h3>{{ contactService.parseFullName }}</h3>
 

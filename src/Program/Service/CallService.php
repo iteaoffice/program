@@ -115,6 +115,18 @@ class CallService extends ServiceAbstract
     }
 
     /**
+     * Return all calls which have at least one project
+     *
+     * @return Call[]
+     */
+    public function findNonEmptyCalls()
+    {
+        return $this->getEntityManager()->getRepository(
+            $this->getFullEntityName('Call\Call')
+        )->findNonEmptyCalls();
+    }
+
+    /**
      * Return the current status of the given all with given the current date
      * Return a status and the relevant date
      *

@@ -166,7 +166,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
         return $this->getZfcTwigRenderer()->render(
             'program/partial/call-selector',
             array(
-                'calls'             => $this->getCallService()->findAll('Call\Call'),
+                'calls'             => $this->getCallService()->findNonEmptyCalls(),
                 'callId'            => !is_null($call) ? $call->getId() : null,
                 'selectedProgramId' => !is_null($program) ? $program->getId() : null
             )
