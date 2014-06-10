@@ -34,20 +34,35 @@ class ServiceInitializer implements InitializerInterface
      */
     public function initialize($instance, ServiceLocatorInterface $serviceLocator)
     {
-        if ($instance instanceof ProgramServiceAwareInterface) {
-            /**
-             * @var $programService ProgramService
-             */
-            $programService = $serviceLocator->get('program_program_service');
-            $instance->setProgramService($programService);
+        if (!is_object($instance)) {
+            return;
         }
 
-        if ($instance instanceof CallServiceAwareInterface) {
-            /**
-             * @var $callService CallService
-             */
-            $callService = $serviceLocator->get('program_call_service');
-            $instance->setCallService($callService);
+        $arrayCheck = [
+            ProgramServiceAwareInterface::class => 'program_program_service',
+            CallServiceAwareInterface::class    => 'program_call_service',
+        ];
+
+        foreach ($arrayCheck as $interface => $serviceName) {
+            if (isset(class_implements($instance)[$interface])) {
+                $this->setInterface($instance, $interface, $serviceLocator->get($serviceName));
+            }
+        }
+
+        return;
+    }
+
+    /**
+     * @param $interface
+     * @param $instance
+     * @param $service
+     */
+    protected function setInterface($instance, $interface, $service)
+    {
+        foreach (get_class_methods($interface) as $setter) {
+            if (strpos($setter, 'set') !== false) {
+                $instance->$setter($service);
+            }
         }
     }
 }

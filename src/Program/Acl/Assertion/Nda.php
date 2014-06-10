@@ -45,7 +45,7 @@ class Nda implements AssertionInterface
     /**
      * @var array
      */
-    protected $accessRoles = array();
+    protected $accessRoles = [];
 
     /**
      * @param ServiceManager $serviceManager

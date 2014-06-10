@@ -61,7 +61,7 @@ class ProgramLinkTest extends \PHPUnit_Framework_TestCase
 
         if (!$this->authorizeService->getAcl()->hasResource($this->program)) {
             $this->authorizeService->getAcl()->addResource($this->program);
-            $this->authorizeService->getAcl()->allow(array(), $this->program, array());
+            $this->authorizeService->getAcl()->allow([], $this->program, []);
         }
 
         /**
@@ -70,7 +70,7 @@ class ProgramLinkTest extends \PHPUnit_Framework_TestCase
         if (!$this->authorizeService->getAcl()->hasResource(new Program())) {
             $this->authorizeService->getAcl()->addResource(new Program());
         }
-        $this->authorizeService->getAcl()->allow(array(), new Program(), array());
+        $this->authorizeService->getAcl()->allow([], new Program(), []);
 
         $this->programLink = $this->serviceManager->get('viewhelpermanager')->get('programlink');
 

@@ -66,7 +66,7 @@ class CallLinkTest extends \PHPUnit_Framework_TestCase
 
         if (!$this->authorizeService->getAcl()->hasResource($this->call)) {
             $this->authorizeService->getAcl()->addResource($this->call);
-            $this->authorizeService->getAcl()->allow(array(), $this->call, array());
+            $this->authorizeService->getAcl()->allow([], $this->call, []);
         }
 
         /**
@@ -75,7 +75,7 @@ class CallLinkTest extends \PHPUnit_Framework_TestCase
         if (!$this->authorizeService->getAcl()->hasResource(new Call())) {
             $this->authorizeService->getAcl()->addResource(new Call());
         }
-        $this->authorizeService->getAcl()->allow(array(), new Call(), array());
+        $this->authorizeService->getAcl()->allow([], new Call(), []);
 
         $this->callLink = $this->serviceManager->get('viewhelpermanager')->get('calllink');
 

@@ -74,6 +74,7 @@ class Session extends EntityAbstract
     private $track;
     /**
      * @ORM\OneToMany(targetEntity="\Project\Entity\Idea\Session", cascade={"persist"}, mappedBy="session")
+     * @ORM\OrderBy({"schedule" = "ASC"})
      * @Annotation\Exclude()
      * @var \Project\Entity\Idea\Session[]
      */

@@ -8,5 +8,5 @@
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
 return array(
-    'navigation' => array(),
+    'navigation' => [],
 );

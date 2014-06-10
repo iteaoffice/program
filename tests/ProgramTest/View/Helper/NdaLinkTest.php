@@ -77,7 +77,7 @@ class NdaLinkTest extends \PHPUnit_Framework_TestCase
 
         if (!$this->authorizeService->getAcl()->hasResource($this->nda)) {
             $this->authorizeService->getAcl()->addResource($this->nda);
-            $this->authorizeService->getAcl()->allow(array(), $this->nda, array());
+            $this->authorizeService->getAcl()->allow([], $this->nda, []);
         }
 
         /**
@@ -86,7 +86,7 @@ class NdaLinkTest extends \PHPUnit_Framework_TestCase
         if (!$this->authorizeService->getAcl()->hasResource(new Nda())) {
             $this->authorizeService->getAcl()->addResource(new Nda());
         }
-        $this->authorizeService->getAcl()->allow(array(), new Nda(), array());
+        $this->authorizeService->getAcl()->allow([], new Nda(), []);
 
         $this->ndaLink = $this->serviceManager->get('viewhelpermanager')->get('ndaLink');
 
@@ -118,9 +118,9 @@ class NdaLinkTest extends \PHPUnit_Framework_TestCase
 
     public function testGetAccessDenied()
     {
-        $this->authorizeService->getAcl()->deny(array(), $this->nda, array());
+        $this->authorizeService->getAcl()->deny([], $this->nda, []);
         $this->assertNotContains('<a href', $this->ndaLink->__invoke($this->nda, 'download'));
-        $this->authorizeService->getAcl()->allow(array(), $this->nda, array());
+        $this->authorizeService->getAcl()->allow([], $this->nda, []);
     }
 
     public function testCanCreateDifferentNdaLinks()

@@ -11,11 +11,8 @@
  */
 namespace Program\Controller;
 
-use Program\Service\CallService;
 use Program\Service\CallServiceAwareInterface;
-use Program\Service\FormService;
 use Program\Service\FormServiceAwareInterface;
-use Program\Service\ProgramService;
 use Program\Service\ProgramServiceAwareInterface;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\InitializerInterface;
@@ -41,33 +38,42 @@ class ControllerInitializer implements InitializerInterface
      */
     public function initialize($instance, ServiceLocatorInterface $serviceLocator)
     {
+
+        if (!is_object($instance)) {
+            return;
+        }
+
+        $arrayCheck = [
+            FormServiceAwareInterface::class    => 'program_form_service',
+            ProgramServiceAwareInterface::class => 'program_program_service',
+            CallServiceAwareInterface::class    => 'program_call_service',
+        ];
+
         /**
          * @var $sm ServiceLocatorInterface
          */
         $sm = $serviceLocator->getServiceLocator();
 
-        if ($instance instanceof FormServiceAwareInterface) {
-            /**
-             * @var $formService FormService
-             */
-            $formService = $sm->get('content_form_service');
-            $instance->setFormService($formService);
+        foreach ($arrayCheck as $interface => $serviceName) {
+            if (isset(class_implements($instance)[$interface])) {
+                $this->setInterface($instance, $interface, $sm->get($serviceName));
+            }
         }
 
-        if ($instance instanceof ProgramServiceAwareInterface) {
-            /**
-             * @var $programService ProgramService
-             */
-            $programService = $sm->get('program_program_service');
-            $instance->setProgramService($programService);
-        }
+        return;
+    }
 
-        if ($instance instanceof CallServiceAwareInterface) {
-            /**
-             * @var $callService CallService
-             */
-            $callService = $sm->get('program_call_service');
-            $instance->setCallService($callService);
+    /**
+     * @param $interface
+     * @param $instance
+     * @param $service
+     */
+    protected function setInterface($instance, $interface, $service)
+    {
+        foreach (get_class_methods($interface) as $setter) {
+            if (strpos($setter, 'set') !== false) {
+                $instance->$setter($service);
+            }
         }
     }
 }

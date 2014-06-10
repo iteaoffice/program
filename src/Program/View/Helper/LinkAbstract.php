@@ -68,19 +68,19 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
     /**
      * @var array List of parameters needed to construct the URL from the router
      */
-    protected $routerParams = array();
+    protected $routerParams = [];
     /**
      * @var array content of the link (will be imploded during creation of the link)
      */
-    protected $linkContent = array();
+    protected $linkContent = [];
     /**
      * @var array Classes to be given to the link
      */
-    protected $classes = array();
+    protected $classes = [];
     /**
      * @var array
      */
-    protected $showOptions = array();
+    protected $showOptions = [];
 
     /**
      * This function produces the link in the end
@@ -98,8 +98,8 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
          */
         $serverUrl = $this->serviceLocator->get('serverUrl');
 
-        $this->linkContent = array();
-        $this->classes     = array();
+        $this->linkContent = [];
+        $this->classes     = [];
 
         $this->parseAction();
         $this->parseShow();
@@ -306,7 +306,7 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
 
         if (!is_null($entity) && !$this->getAuthorizeService()->getAcl()->hasResource($entity)) {
             $this->getAuthorizeService()->getAcl()->addResource($entity);
-            $this->getAuthorizeService()->getAcl()->allow(array(), $entity, array(), $assertion);
+            $this->getAuthorizeService()->getAcl()->allow([], $entity, [], $assertion);
         }
 
         if (!$this->isAllowed($entity, $action)) {

@@ -5,209 +5,209 @@
  * @category    Program
  * @package     Config
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @copyright   Copyright (c] 2004-2014 ITEA Office (http://itea3.org]
  */
-return array(
-    'router' => array(
-        'routes' => array(
-            'program'  => array(
+return [
+    'router' => [
+        'routes' => [
+            'program'  => [
                 'type'          => 'Literal',
                 'priority'      => 1000,
-                'options'       => array(
+                'options'       => [
                     'route'    => '/program',
-                    'defaults' => array(
+                    'defaults' => [
                         'namespace'  => 'program',
                         'controller' => 'program',
                         'action'     => 'index',
-                    ),
-                ),
+                    ],
+                ],
                 'may_terminate' => true,
-                'child_routes'  => array(
-                    'nda' => array(
+                'child_routes'  => [
+                    'nda' => [
                         'type'         => 'Literal',
                         'priority'     => 1000,
-                        'options'      => array(
+                        'options'      => [
                             'route'    => '/nda',
-                            'defaults' => array(
+                            'defaults' => [
                                 'controller' => 'program-nda',
                                 'action'     => 'index',
-                            ),
-                        ),
-                        'child_routes' => array(
-                            'upload'   => array(
+                            ],
+                        ],
+                        'child_routes' => [
+                            'upload'   => [
                                 'type'    => 'Segment',
-                                'options' => array(
+                                'options' => [
                                     'route'       => '/upload[/call-:id].html',
-                                    'constraints' => array(
+                                    'constraints' => [
                                         'id' => '\d+'
-                                    ),
-                                    'defaults'    => array(
+                                    ],
+                                    'defaults'    => [
                                         'action'    => 'upload',
                                         'privilege' => 'upload'
-                                    ),
-                                ),
-                            ),
-                            'render'   => array(
+                                    ],
+                                ],
+                            ],
+                            'render'   => [
                                 'type'    => 'Segment',
-                                'options' => array(
+                                'options' => [
                                     'route'       => '/render[/call-:id].pdf',
-                                    'constraints' => array(
+                                    'constraints' => [
                                         'call-id' => '\d+'
-                                    ),
-                                    'defaults'    => array(
+                                    ],
+                                    'defaults'    => [
                                         'action'    => 'render',
                                         'privilege' => 'render'
-                                    ),
-                                ),
-                            ),
-                            'view'     => array(
+                                    ],
+                                ],
+                            ],
+                            'view'     => [
                                 'type'    => 'Segment',
-                                'options' => array(
+                                'options' => [
                                     'route'    => '/view/nda-[:id].html',
-                                    'defaults' => array(
+                                    'defaults' => [
                                         'action'    => 'view',
                                         'privilege' => 'view'
-                                    ),
-                                ),
-                            ),
-                            'replace'  => array(
+                                    ],
+                                ],
+                            ],
+                            'replace'  => [
                                 'type'    => 'Segment',
-                                'options' => array(
+                                'options' => [
                                     'route'       => '/replace/nda-[:id].html',
-                                    'constraints' => array(
+                                    'constraints' => [
                                         'id' => '\d+'
-                                    ),
-                                    'defaults'    => array(
+                                    ],
+                                    'defaults'    => [
                                         'action'    => 'replace',
                                         'privilege' => 'replace'
-                                    ),
-                                ),
-                            ),
-                            'download' => array(
+                                    ],
+                                ],
+                            ],
+                            'download' => [
                                 'type'    => 'Segment',
-                                'options' => array(
+                                'options' => [
                                     'route'       => '/download/nda-[:id].pdf',
-                                    'constraints' => array(
+                                    'constraints' => [
                                         'id' => '\d+'
-                                    ),
-                                    'defaults'    => array(
+                                    ],
+                                    'defaults'    => [
                                         'action'    => 'download',
                                         'privilege' => 'download'
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                    'doa' => array(
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'doa' => [
                         'type'         => 'Segment',
-                        'options'      => array(
+                        'options'      => [
                             'route'    => '/doa',
-                            'defaults' => array(
+                            'defaults' => [
                                 'controller' => 'program-doa',
                                 'action'     => 'index',
-                            ),
-                        ),
-                        'child_routes' => array(
-                            'render'   => array(
+                            ],
+                        ],
+                        'child_routes' => [
+                            'render'   => [
                                 'type'    => 'Segment',
-                                'options' => array(
+                                'options' => [
                                     'route'    => '/render/organisation-[:organisation-id]/program-[:program-id].pdf',
-                                    'defaults' => array(
+                                    'defaults' => [
                                         'action'    => 'render',
                                         'privilege' => 'render'
-                                    ),
-                                ),
-                            ),
-                            'upload'   => array(
+                                    ],
+                                ],
+                            ],
+                            'upload'   => [
                                 'type'    => 'Segment',
-                                'options' => array(
+                                'options' => [
                                     'route'    => '/upload/organisation-[:organisation-id]/program-[:program-id].html',
-                                    'defaults' => array(
+                                    'defaults' => [
                                         'action'    => 'upload',
                                         'privilege' => 'upload'
-                                    ),
-                                ),
-                            ),
-                            'view'     => array(
+                                    ],
+                                ],
+                            ],
+                            'view'     => [
                                 'type'    => 'Segment',
-                                'options' => array(
+                                'options' => [
                                     'route'    => '/view/[:id].html',
-                                    'defaults' => array(
+                                    'defaults' => [
                                         'action'    => 'view',
                                         'privilege' => 'view'
-                                    ),
-                                ),
-                            ),
-                            'replace'  => array(
+                                    ],
+                                ],
+                            ],
+                            'replace'  => [
                                 'type'    => 'Segment',
-                                'options' => array(
+                                'options' => [
                                     'route'    => '/replace/[:id].html',
-                                    'defaults' => array(
+                                    'defaults' => [
                                         'action'    => 'replace',
                                         'privilege' => 'replace'
-                                    ),
-                                ),
-                            ),
-                            'download' => array(
+                                    ],
+                                ],
+                            ],
+                            'download' => [
                                 'type'    => 'Segment',
-                                'options' => array(
+                                'options' => [
                                     'route'    => '/download/[:id].pdf',
-                                    'defaults' => array(
+                                    'defaults' => [
                                         'action'    => 'download',
                                         'privilege' => 'download'
-                                    ),
-                                ),
-                            ),
-                        )
-                    ),
-                ),
-            ),
-            'zfcadmin' => array(
-                'child_routes' => array(
-                    'program-manager' => array(
+                                    ],
+                                ],
+                            ],
+                        ]
+                    ],
+                ],
+            ],
+            'zfcadmin' => [
+                'child_routes' => [
+                    'program-manager' => [
                         'type'          => 'Segment',
                         'priority'      => 1000,
-                        'options'       => array(
+                        'options'       => [
                             'route'    => '/program-manager',
-                            'defaults' => array(
+                            'defaults' => [
                                 'controller' => 'program-manager',
                                 'action'     => 'index',
-                            ),
-                        ),
+                            ],
+                        ],
                         'may_terminate' => true,
-                        'child_routes'  => array(
-                            'new'    => array(
+                        'child_routes'  => [
+                            'new'    => [
                                 'type'    => 'Segment',
-                                'options' => array(
+                                'options' => [
                                     'route'    => '/new/:entity',
-                                    'defaults' => array(
+                                    'defaults' => [
                                         'action' => 'new',
-                                    ),
-                                ),
-                            ),
-                            'edit'   => array(
+                                    ],
+                                ],
+                            ],
+                            'edit'   => [
                                 'type'    => 'Segment',
-                                'options' => array(
+                                'options' => [
                                     'route'    => '/edit/:entity/:id',
-                                    'defaults' => array(
+                                    'defaults' => [
                                         'action' => 'edit',
-                                    ),
-                                ),
-                            ),
-                            'delete' => array(
+                                    ],
+                                ],
+                            ],
+                            'delete' => [
                                 'type'    => 'Segment',
-                                'options' => array(
+                                'options' => [
                                     'route'    => '/delete/:entity/:id',
-                                    'defaults' => array(
+                                    'defaults' => [
                                         'action' => 'delete',
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-            ),
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
 
-        ),
-    ),
-);
+        ],
+    ],
+];

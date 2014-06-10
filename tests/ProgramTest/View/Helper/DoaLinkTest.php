@@ -72,7 +72,7 @@ class DoaLinkTest extends \PHPUnit_Framework_TestCase
 
         if (!$this->authorizeService->getAcl()->hasResource($this->doa)) {
             $this->authorizeService->getAcl()->addResource($this->doa);
-            $this->authorizeService->getAcl()->allow(array(), $this->doa, array());
+            $this->authorizeService->getAcl()->allow([], $this->doa, []);
         }
 
         /**
@@ -81,7 +81,7 @@ class DoaLinkTest extends \PHPUnit_Framework_TestCase
         if (!$this->authorizeService->getAcl()->hasResource(new Doa())) {
             $this->authorizeService->getAcl()->addResource(new Doa());
         }
-        $this->authorizeService->getAcl()->allow(array(), new Doa(), array());
+        $this->authorizeService->getAcl()->allow([], new Doa(), []);
 
         $this->doaLink = $this->serviceManager->get('viewhelpermanager')->get('programDoaLink');
 
@@ -113,9 +113,9 @@ class DoaLinkTest extends \PHPUnit_Framework_TestCase
 
     public function testGetAccessDenied()
     {
-        $this->authorizeService->getAcl()->deny(array(), $this->doa, array());
+        $this->authorizeService->getAcl()->deny([], $this->doa, []);
         $this->assertNotContains('<a href', $this->doaLink->__invoke($this->doa, 'view-community'));
-        $this->authorizeService->getAcl()->allow(array(), $this->doa, array());
+        $this->authorizeService->getAcl()->allow([], $this->doa, []);
     }
 
     public function testCanCreateDifferentDoaLinks()
