@@ -76,6 +76,7 @@ class NdaController extends ProgramAbstractController
 
         if ($this->getRequest()->isPost() && $form->isValid()) {
             $fileData = $form->getData('file');
+
             $nda = $this->getCallService()->uploadNda(
                 $fileData['file'],
                 $this->zfcUserAuthentication()->getIdentity(),

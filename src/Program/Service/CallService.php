@@ -240,7 +240,14 @@ class CallService extends ServiceAbstract
             $nda->setCall(array($call));
         }
         $nda->setSize($file['size']);
-        $nda->setContentType($this->getGeneralService()->findContentTypeByContentTypeName($file['type']));
+
+        $contentType = $this->getGeneralService()->findContentTypeByContentTypeName($file['type']);
+
+        if (is_null($contentType)) {
+            $contentType = $this->getGeneralService()->findEntityById('ContentType', 0);
+        }
+
+        $nda->setContentType($contentType);
 
         $ndaObject->setNda($nda);
 
