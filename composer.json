@@ -20,8 +20,9 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "zendframework/zendframework": "dev-master",
-        "doctrine/doctrine-orm-module": "dev-master"
+        "zendframework/zendframework": "2.3.*@dev",
+        "doctrine/doctrine-orm-module": "0.9.*@dev",
+        "gedmo/doctrine-extensions": "2.3.*@dev"
     },
     "require-dev": {
         "debranova/contact": "dev-develop",

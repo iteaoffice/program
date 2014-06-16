@@ -9,6 +9,8 @@
  */
 namespace Program\Version;
 
+use Zend\Json\Json;
+
 /**
  * @category    Program
  * @package     Version

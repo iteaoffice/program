@@ -10,7 +10,7 @@
         <ul>
             <li>Render the personalised Non-Disclosure-Agreement from this page;
             <li>Print the document;
-            <li>Have the document signed by the authorised person in your organisation to do so;
+            <li>Have the document signed by the authorised person in your organisation;
             <li>Scan the signed document;
             <li>Upload the scanned document on this page.
         </ul>
@@ -44,7 +44,7 @@
 
     <div class="form-group">
         <div class="col-sm-offset-3 col-sm-9">
-            {{ formelement(form.get('submit')) }} {{ ndaLink(nda, 'render', 'button', call ) }}
+             {{ ndaLink(nda, 'render', 'button', call ) }} {{ formelement(form.get('submit')) }}
         </div>
     </div>
 

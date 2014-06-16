@@ -42,7 +42,7 @@ class ProgramServiceProxy extends AbstractHelper implements ServiceLocatorAwareI
      */
     public function __invoke(Program $program)
     {
-        $callService = $this->serviceLocator->getServiceLocator()->get('program_program_service');
+        $callService = clone $this->serviceLocator->getServiceLocator()->get('program_program_service');
 
         return $callService->setProgram($program);
     }

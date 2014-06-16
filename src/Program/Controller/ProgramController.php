@@ -20,6 +20,6 @@ namespace Program\Controller;
  * @license    http://debranova.org/licence.txt proprietary
  * @link       http://debranova.org
  */
-class ProgramController extends ProgramAbstractActionController
+class ProgramController extends ProgramAbstractController
 {
 }
