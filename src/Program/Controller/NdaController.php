@@ -129,7 +129,6 @@ class NdaController extends ProgramAbstractController
         $form->setData($data);
 
         if ($this->getRequest()->isPost()) {
-
             if (!isset($data['cancel']) && $form->isValid()) {
                 $fileData = $this->params()->fromFiles();
 

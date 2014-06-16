@@ -11,8 +11,8 @@
  */
 namespace Program\Controller;
 
-use Program\Entity\Doa;
 use Program\Entity;
+use Program\Entity\Doa;
 use Program\Form\UploadDoa;
 use Zend\Validator\File\FilesSize;
 use Zend\View\Model\ViewModel;
@@ -70,7 +70,6 @@ class DoaController extends ProgramAbstractController
         $form->setData($data);
 
         if ($this->getRequest()->isPost() && $form->isValid()) {
-
             if (!isset($data['cancel'])) {
                 $fileData = $this->params()->fromFiles();
 
@@ -148,7 +147,6 @@ class DoaController extends ProgramAbstractController
         $form->setData($data);
 
         if ($this->getRequest()->isPost()) {
-
             if (!isset($data['cancel']) && $form->isValid()) {
                 $fileData = $this->params()->fromFiles();
 
@@ -222,12 +220,15 @@ class DoaController extends ProgramAbstractController
 
         $response = $this->getResponse();
         $response->getHeaders()
-            ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
-            ->addHeaderLine("Pragma: public")
-            ->addHeaderLine('Content-Disposition', 'attachment; filename="' . $programDoa->parseFileName() . '.pdf"')
-            ->addHeaderLine('Content-Type: application/pdf')
-            ->addHeaderLine('Content-Length', strlen($renderProjectDoa->getPDFData()));
+                 ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
+                 ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
+                 ->addHeaderLine("Pragma: public")
+                 ->addHeaderLine(
+                     'Content-Disposition',
+                     'attachment; filename="' . $programDoa->parseFileName() . '.pdf"'
+                 )
+                 ->addHeaderLine('Content-Type: application/pdf')
+                 ->addHeaderLine('Content-Length', strlen($renderProjectDoa->getPDFData()));
 
         $response->setContent($renderProjectDoa->getPDFData());
 
@@ -255,16 +256,16 @@ class DoaController extends ProgramAbstractController
         $response->setContent(stream_get_contents($object));
 
         $response->getHeaders()
-            ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
-            ->addHeaderLine(
-                'Content-Disposition',
-                'attachment; filename="' . $doa->parseFileName() . '.' .
-                $doa->getContentType()->getExtension() . '"'
-            )
-            ->addHeaderLine("Pragma: public")
-            ->addHeaderLine('Content-Type: ' . $doa->getContentType()->getContentType())
-            ->addHeaderLine('Content-Length: ' . $doa->getSize());
+                 ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
+                 ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
+                 ->addHeaderLine(
+                     'Content-Disposition',
+                     'attachment; filename="' . $doa->parseFileName() . '.' .
+                     $doa->getContentType()->getExtension() . '"'
+                 )
+                 ->addHeaderLine("Pragma: public")
+                 ->addHeaderLine('Content-Type: ' . $doa->getContentType()->getContentType())
+                 ->addHeaderLine('Content-Length: ' . $doa->getSize());
 
         return $this->response;
     }
