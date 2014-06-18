@@ -45,22 +45,16 @@ class Bootstrap
         if (($path = static::findParentPath('src')) !== $zf2ModulePaths[0]) {
             $zf2ModulePaths[] = $path;
         }
-
         static::initAutoloader();
-
         $config = include __DIR__ . '/../config/application.config.php';
-
         $serviceManager = new ServiceManager(new ServiceManagerConfig());
         $serviceManager->setService('ApplicationConfig', $config);
         $serviceManager->get('ModuleManager')->loadModules();
         static::$serviceManager = $serviceManager;
-
         $entityManager = $serviceManager->get('doctrine.entitymanager.orm_default');
-
         //Validate the schema;
         $validator = new SchemaValidator($entityManager);
         $errors    = $validator->validateMapping();
-
         if (count($errors) > 0) {
             foreach ($errors AS $entity => $errors) {
                 echo "Error in Entity: '" . $entity . "':\n";
@@ -69,15 +63,12 @@ class Bootstrap
             }
             die();
         }
-
         //Create the schema
         $tool      = new \Doctrine\ORM\Tools\SchemaTool($entityManager);
         $mdFactory = $entityManager->getMetadataFactory();
         $mdFactory->getAllMetadata();
-
         $tool->dropDatabase();
         $tool->createSchema($mdFactory->getAllMetadata());
-
         $loader = new Loader();
         $loader->addFixture(new \AdminTest\Fixture\LoadAccessData());
         $loader->addFixture(new LoadCountryData());
@@ -85,7 +76,6 @@ class Bootstrap
         $loader->addFixture(new LoadProgramData());
         $loader->addFixture(new LoadContactData());
         $loader->addFixture(new LoadContentTypeData());
-
         $purger   = new ORMPurger();
         $executor = new ORMExecutor($entityManager, $purger);
         $executor->execute($loader->getFixtures());
@@ -109,7 +99,6 @@ class Bootstrap
     protected static function initAutoloader()
     {
         $vendorPath = static::findParentPath('vendor');
-
         $zf2Path = getenv('ZF2_PATH');
         if (!$zf2Path) {
             if (defined('ZF2_PATH')) {
@@ -120,17 +109,14 @@ class Bootstrap
                 $zf2Path = $vendorPath . '/zendframework/zendframework/library';
             }
         }
-
         if (!$zf2Path) {
             throw new RuntimeException(
                 'Unable to load ZF2. Run `php composer.phar install` or define a ZF2_PATH environment variable.'
             );
         }
-
         if (file_exists($vendorPath . '/autoload.php')) {
             include $vendorPath . '/autoload.php';
         }
-
         include $zf2Path . '/Zend/Loader/AutoloaderFactory.php';
         AutoloaderFactory::factory(
             array(

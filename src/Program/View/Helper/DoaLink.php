@@ -59,13 +59,11 @@ class DoaLink extends LinkAbstract
         Organisation $organisation = null,
         Program $program = null
     ) {
-
         $this->setDoa($doa);
         $this->setOrganisation($organisation);
         $this->setProgram($program);
         $this->setAction($action);
         $this->setShow($show);
-
         if (!$this->hasAccess(
             $this->getDoa(),
             'program_acl_assertion_doa',
@@ -74,7 +72,6 @@ class DoaLink extends LinkAbstract
         ) {
             return 'Access denied';
         }
-
         $this->addRouterParam('entity', 'Doa');
         if (!is_null($this->getDoa())) {
             $this->addRouterParam('id', $this->getDoa()->getId());
@@ -111,7 +108,6 @@ class DoaLink extends LinkAbstract
     public function parseAction()
     {
         switch ($this->getAction()) {
-
             case 'upload':
                 $this->setRouter('program/doa/upload');
                 $this->setText(
@@ -136,7 +132,6 @@ class DoaLink extends LinkAbstract
                             $this->getProgram()
                         )
                     );
-
                     $this->addRouterParam('organisation-id', $this->getOrganisation()->getId());
                     $this->addRouterParam('program-id', $this->getProgram()->getId());
                 } else {

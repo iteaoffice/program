@@ -9,11 +9,9 @@
  */
 namespace ProgramTest\Entity;
 
-use Program\Entity\Call\Call;
-
-use ProgramTest\Bootstrap;
-
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
+use Program\Entity\Call\Call;
+use ProgramTest\Bootstrap;
 
 class CallTest extends \PHPUnit_Framework_TestCase
 {
@@ -41,30 +39,22 @@ class CallTest extends \PHPUnit_Framework_TestCase
     {
         $this->serviceManager = Bootstrap::getServiceManager();
         $this->entityManager  = $this->serviceManager->get('doctrine.entitymanager.orm_default');
-
         $program = $this->entityManager->find("Program\Entity\Program", 1);
-
         $this->callData = array(
             'call'    => 'ITEA2',
             'program' => $program
         );
-
         $this->call = new Call();
     }
 
     public function testCanCreateEntity()
     {
-
         $this->assertInstanceOf("Program\Entity\Call\Call", $this->call);
         $this->assertInstanceOf("Program\Entity\EntityInterface", $this->call);
-
         $this->assertNull($this->call->getCall(), 'The "Call" should be null');
-
         $id = 1;
         $this->call->setId($id);
-
         $this->assertEquals($id, $this->call->getId(), 'The "Id" should be the same as the setter');
-
         $this->assertTrue(is_array($this->call->getArrayCopy()));
         $this->assertTrue(is_array($this->call->populate()));
     }
@@ -86,11 +76,8 @@ class CallTest extends \PHPUnit_Framework_TestCase
             $this->entityManager,
             'Program\Entity\Call\Call'
         );
-
         $this->call = $hydrator->hydrate($this->callData, new Call());
-
         $dataArray = $hydrator->extract($this->call);
-
         $this->assertSame($this->callData['call'], $dataArray['call']);
     }
 
@@ -100,11 +87,9 @@ class CallTest extends \PHPUnit_Framework_TestCase
             $this->entityManager,
             'Program\Entity\Call\Call'
         );
-
         $this->call = $hydrator->hydrate($this->callData, new Call());
         $this->entityManager->persist($this->call);
         $this->entityManager->flush();
-
         $this->assertInstanceOf('Program\Entity\Call\Call', $this->call);
         $this->assertNotNull($this->call->getId());
         $this->assertSame($this->callData['call'], $this->call->getCall());

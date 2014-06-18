@@ -43,14 +43,12 @@ class CallServiceProxyTest extends \PHPUnit_Framework_TestCase
     public function testCanCreateCallLink()
     {
         $callServiceProxy = $this->serviceManager->get('viewhelpermanager')->get('callServiceProxy');
-
         $this->assertInstanceOf("Program\View\Helper\CallServiceProxy", $callServiceProxy);
     }
 
     public function testHasServiceManager()
     {
         $callServiceProxy = $this->serviceManager->get('viewhelpermanager')->get('callServiceProxy');
-
         $this->assertInstanceOf(
             "Zend\ServiceManager\ServiceLocatorInterface",
             $callServiceProxy->getServiceLocator()
@@ -60,9 +58,7 @@ class CallServiceProxyTest extends \PHPUnit_Framework_TestCase
     public function testCanInvokeMethod()
     {
         $callServiceProxy = $this->serviceManager->get('viewhelpermanager')->get('callServiceProxy');
-
         $call = new Call();
-
         $this->assertInstanceOf("Program\Service\CallService", $callServiceProxy->__invoke($call));
     }
 }

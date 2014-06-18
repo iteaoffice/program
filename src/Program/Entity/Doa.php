@@ -180,7 +180,6 @@ class Doa extends EntityAbstract implements ResourceInterface
         if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
             $factory     = new InputFactory();
-
             $inputFilter->add(
                 $factory->createInput(
                     array(
@@ -189,7 +188,6 @@ class Doa extends EntityAbstract implements ResourceInterface
                     )
                 )
             );
-
             $inputFilter->add(
                 $factory->createInput(
                     array(
@@ -198,7 +196,6 @@ class Doa extends EntityAbstract implements ResourceInterface
                     )
                 )
             );
-
             $inputFilter->add(
                 $factory->createInput(
                     array(
@@ -207,7 +204,6 @@ class Doa extends EntityAbstract implements ResourceInterface
                     )
                 )
             );
-
             $inputFilter->add(
                 $factory->createInput(
                     array(
@@ -216,7 +212,6 @@ class Doa extends EntityAbstract implements ResourceInterface
                     )
                 )
             );
-
             $inputFilter->add(
                 $factory->createInput(
                     array(
@@ -225,7 +220,6 @@ class Doa extends EntityAbstract implements ResourceInterface
                     )
                 )
             );
-
             $inputFilter->add(
                 $factory->createInput(
                     array(
@@ -234,7 +228,6 @@ class Doa extends EntityAbstract implements ResourceInterface
                     )
                 )
             );
-
             $fileUpload = new FileInput('file');
             $fileUpload->setRequired(true);
             $fileUpload->getValidatorChain()->attachByName(
@@ -244,9 +237,7 @@ class Doa extends EntityAbstract implements ResourceInterface
                     'max' => '8MB',
                 )
             );
-
             $inputFilter->add($fileUpload);
-
             $this->inputFilter = $inputFilter;
         }
 

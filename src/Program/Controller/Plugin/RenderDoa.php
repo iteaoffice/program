@@ -45,12 +45,9 @@ class RenderDoa extends AbstractPlugin
     {
         $pdf = new ProgramPdf();
         $pdf->setTemplate($this->getModuleOptions()->getDoaTemplate());
-
         $pdf->addPage();
         $pdf->SetFontSize(9);
-
         $twig = $this->getServiceLocator()->get('ZfcTwigRenderer');
-
         /**
          * Write the contact details
          */
@@ -59,13 +56,11 @@ class RenderDoa extends AbstractPlugin
         $pdf->Write(0, $contactService->parseFullName());
         $pdf->SetXY(14, 60);
         $pdf->Write(0, $contactService->parseOrganisation());
-
         /**
          * Write the current date
          */
         $pdf->SetXY(77, 55);
         $pdf->Write(0, date("Y-m-d"));
-
         /**
          * Write the Reference
          */
@@ -74,7 +69,6 @@ class RenderDoa extends AbstractPlugin
          * Use the NDA object to render the filename
          */
         $pdf->Write(0, $doa->parseFileName());
-
         $ndaContent = $twig->render(
             'program/pdf/doa-program',
             array(
@@ -82,9 +76,7 @@ class RenderDoa extends AbstractPlugin
                 'program' => $doa->getProgram(),
             )
         );
-
         $pdf->writeHTMLCell(0, 0, 14, 70, $ndaContent);
-
         /**
          * Signage block
          */
@@ -96,10 +88,8 @@ class RenderDoa extends AbstractPlugin
         $pdf->Write(0, 'Date of Signature:');
         $pdf->SetXY(14, 270);
         $pdf->Write(0, 'Function:');
-
         $pdf->SetXY(100, 270);
         $pdf->Write(0, 'Signature:');
-
         $pdf->Line(130, 275, 190, 275);
         $pdf->Line(30, 265, 90, 265);
         $pdf->Line(130, 265, 190, 265);

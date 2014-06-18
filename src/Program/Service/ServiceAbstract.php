@@ -10,8 +10,8 @@
 namespace Program\Service;
 
 use General\Service\GeneralService;
-use Program\Entity\EntityAbstract;
 use Program\Entity;
+use Program\Entity\EntityAbstract;
 use Project\Service\VersionService;
 use Zend\Authentication\AuthenticationService;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -72,7 +72,6 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
                 $entity->setLastUpdateBy('guest');
             }
         }
-
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
 
@@ -94,7 +93,6 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
                 $entity->setLastUpdateBy('guest');
             }
         }
-
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
 

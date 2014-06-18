@@ -37,7 +37,6 @@ class DoaController extends ProgramAbstractController
             'Doa',
             $this->getEvent()->getRouteMatch()->getParam('id')
         );
-
         if (is_null($doa) || sizeof($doa->getObject()) === 0) {
             return $this->notFoundAction();
         }
@@ -60,40 +59,30 @@ class DoaController extends ProgramAbstractController
             'Program',
             $this->getEvent()->getRouteMatch()->getParam('program-id')
         );
-
         $data = array_merge_recursive(
             $this->getRequest()->getPost()->toArray(),
             $this->getRequest()->getFiles()->toArray()
         );
-
         $form = new UploadDoa();
         $form->setData($data);
-
         if ($this->getRequest()->isPost() && $form->isValid()) {
             if (!isset($data['cancel'])) {
                 $fileData = $this->params()->fromFiles();
-
                 //Create a article object element
                 $doaObject = new Entity\DoaObject();
                 $doaObject->setObject(file_get_contents($fileData['file']['tmp_name']));
-
                 $fileSizeValidator = new FilesSize(PHP_INT_MAX);
                 $fileSizeValidator->isValid($fileData['file']);
-
                 $doa = new Entity\Doa();
                 $doa->setSize($fileSizeValidator->size);
                 $doa->setContentType(
                     $this->getGeneralService()->findContentTypeByContentTypeName($fileData['file']['type'])
                 );
-
                 $doa->setContact($this->zfcUserAuthentication()->getIdentity());
                 $doa->setOrganisation($organisationService->getOrganisation());
                 $doa->setProgram($program);
-
                 $doaObject->setDoa($doa);
-
                 $this->getProgramService()->newEntity($doaObject);
-
                 $this->flashMessenger()->setNamespace('success')->addMessage(
                     sprintf(
                         _("txt-doa-for-organisation-%s-in-program-%s-has-been-uploaded"),
@@ -128,52 +117,40 @@ class DoaController extends ProgramAbstractController
      */
     public function replaceAction()
     {
-
         $doa = $this->getProgramService()->findEntityById(
             'Doa',
             $this->getEvent()->getRouteMatch()->getParam('id')
         );
-
         if (is_null($doa) || sizeof($doa->getObject()) === 0) {
             return $this->notFoundAction();
         }
-
         $data = array_merge_recursive(
             $this->getRequest()->getPost()->toArray(),
             $this->getRequest()->getFiles()->toArray()
         );
-
         $form = new UploadDoa();
         $form->setData($data);
-
         if ($this->getRequest()->isPost()) {
             if (!isset($data['cancel']) && $form->isValid()) {
                 $fileData = $this->params()->fromFiles();
-
                 /**
                  * Remove the current entity
                  */
                 foreach ($doa->getObject() as $object) {
                     $this->getProgramService()->removeEntity($object);
                 }
-
                 //Create a article object element
                 $programDoaObject = new Entity\DoaObject();
                 $programDoaObject->setObject(file_get_contents($fileData['file']['tmp_name']));
-
                 $fileSizeValidator = new FilesSize(PHP_INT_MAX);
                 $fileSizeValidator->isValid($fileData['file']);
-
                 $doa->setSize($fileSizeValidator->size);
                 $doa->setContact($this->zfcUserAuthentication()->getIdentity());
                 $doa->setContentType(
                     $this->getGeneralService()->findContentTypeByContentTypeName($fileData['file']['type'])
                 );
-
                 $programDoaObject->setDoa($doa);
-
                 $this->getProgramService()->newEntity($programDoaObject);
-
                 $this->flashMessenger()->setNamespace('success')->addMessage(
                     sprintf(
                         _("txt-doa-for-organisation-%s-in-program-%s-has-been-uploaded"),
@@ -182,7 +159,6 @@ class DoaController extends ProgramAbstractController
                     )
                 );
             }
-
             $this->redirect()->toRoute(
                 'program/doa/view',
                 array('id' => $doa->getId())
@@ -209,15 +185,12 @@ class DoaController extends ProgramAbstractController
             'Program',
             $this->getEvent()->getRouteMatch()->getParam('program-id')
         );
-
         //Create an empty Doa object
         $programDoa = new Doa();
         $programDoa->setContact($this->zfcUserAuthentication()->getIdentity());
         $programDoa->setOrganisation($organisationService->getOrganisation());
         $programDoa->setProgram($program);
-
         $renderProjectDoa = $this->renderProgramDoa()->renderForDoa($programDoa);
-
         $response = $this->getResponse();
         $response->getHeaders()
                  ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
@@ -229,7 +202,6 @@ class DoaController extends ProgramAbstractController
                  )
                  ->addHeaderLine('Content-Type: application/pdf')
                  ->addHeaderLine('Content-Length', strlen($renderProjectDoa->getPDFData()));
-
         $response->setContent($renderProjectDoa->getPDFData());
 
         return $response;
@@ -241,20 +213,16 @@ class DoaController extends ProgramAbstractController
     public function downloadAction()
     {
         set_time_limit(0);
-
         $doa = $this->getProgramService()->findEntityById('Doa', $this->getEvent()->getRouteMatch()->getParam('id'));
-
         if (is_null($doa) || sizeof($doa->getObject()) === 0) {
             return $this->notFoundAction();
         }
-
         /**
          * Due to the BLOB issue, we treat this as an array and we need to capture the first element
          */
         $object   = $doa->getObject()->first()->getObject();
         $response = $this->getResponse();
         $response->setContent(stream_get_contents($object));
-
         $response->getHeaders()
                  ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
                  ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")

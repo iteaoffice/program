@@ -2,7 +2,6 @@
 
 return array(
     'bjyauthorize' => array(
-
         // set the 'guest' role as default (must be defined in a role provider)
         'default_role'      => 'public',
         /* this module uses a meta-role that inherits from any roles that should

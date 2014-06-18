@@ -134,9 +134,7 @@ class Session extends EntityAbstract
     {
         if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
-
             $factory = new InputFactory();
-
             $inputFilter->add(
                 $factory->createInput(
                     array(
@@ -159,7 +157,6 @@ class Session extends EntityAbstract
                     )
                 )
             );
-
             $this->inputFilter = $inputFilter;
         }
 

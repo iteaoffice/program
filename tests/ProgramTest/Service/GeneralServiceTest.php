@@ -9,7 +9,6 @@
  */
 namespace ProgramTest\Service;
 
-use Program\Entity\Program;
 use Program\Service\ProgramService;
 use ProgramTest\Bootstrap;
 
@@ -35,7 +34,6 @@ class GeneralServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this->serviceManager = Bootstrap::getServiceManager();
         $this->entityManager  = $this->serviceManager->get('doctrine.entitymanager.orm_default');
-
         $this->programService = new ProgramService();
         $this->programService->setServiceLocator($this->serviceManager);
     }
@@ -73,7 +71,6 @@ class GeneralServiceTest extends \PHPUnit_Framework_TestCase
         $program        = $this->entityManager->find("Program\Entity\Program", 1);
         $program->setProgram($newProgramName);
         $this->programService->updateEntity($program);
-
         $reloadProgram = $this->entityManager->find("Program\Entity\Program", 1);
         $this->assertInstanceOf("Program\Entity\Program", $reloadProgram);
         $this->assertEquals($reloadProgram->getProgram(), $newProgramName);
@@ -83,7 +80,6 @@ class GeneralServiceTest extends \PHPUnit_Framework_TestCase
     {
         $program = $this->entityManager->find("Program\Entity\Program", 2);
         $this->programService->removeEntity($program);
-
         $reloadProgram = $this->entityManager->find("Program\Entity\Program", 2);
         $this->assertNull($reloadProgram);
     }
@@ -101,7 +97,6 @@ class GeneralServiceTest extends \PHPUnit_Framework_TestCase
         $entity     = 'program';
         $entityName = $this->programService->getFullEntityName($entity);
         $this->assertEquals('Program\Entity\Program', $entityName);
-
         $entity     = 'test-program';
         $entityName = $this->programService->getFullEntityName($entity);
         $this->assertEquals('Program\Entity\TestProgram', $entityName);

@@ -52,10 +52,8 @@ class NdaLink extends LinkAbstract
     {
         $this->setNda($nda);
         $this->setCall($call);
-
         $this->setAction($action);
         $this->setShow($show);
-
         if (!$this->hasAccess(
             $this->getNda(),
             'program_acl_assertion_nda',
@@ -64,7 +62,6 @@ class NdaLink extends LinkAbstract
         ) {
             return '';
         }
-
         $this->addRouterParam('entity', 'Nda');
         if (!is_null($this->getNda())) {
             $this->addRouterParam('id', $this->getNda()->getId());
@@ -80,7 +77,6 @@ class NdaLink extends LinkAbstract
     {
         if (is_null($this->nda)) {
             $this->nda = new Nda();
-
             if (!is_null($this->getCall())) {
                 $arrayCollection = new ArrayCollection(array($this->getCall()));
                 $this->nda->setCall($arrayCollection);
@@ -143,7 +139,6 @@ class NdaLink extends LinkAbstract
             case 'render':
                 $this->setRouter('program/nda/render');
                 $this->setText(sprintf($this->translate("txt-render-general-nda-title")));
-
                 /**
                  * Produce special texts for call-dedicated NDA's
                  */
@@ -156,7 +151,6 @@ class NdaLink extends LinkAbstract
                     $this->setText(sprintf($this->translate("txt-render-nda-for-call-%s-title"), $this->getCall()));
                     $this->addRouterParam('id', $this->getCall()->getId());
                 }
-
                 break;
             case 'download':
                 $this->setRouter('program/nda/download');

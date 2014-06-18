@@ -32,11 +32,9 @@ class UploadDoa extends Form implements InputFilterProviderInterface
     public function __construct()
     {
         parent::__construct();
-
         $this->setAttribute('method', 'post');
         $this->setAttribute('class', 'form-horizontal');
         $this->setAttribute('enctype', 'multipart/form-data');
-
         $this->add(
             array(
                 'type'    => '\Zend\Form\Element\File',
@@ -47,14 +45,12 @@ class UploadDoa extends Form implements InputFilterProviderInterface
                 )
             )
         );
-
         $this->add(
             array(
                 'type' => 'Zend\Form\Element\Csrf',
                 'name' => 'csrf',
             )
         );
-
         $this->add(
             array(
                 'type'       => 'Zend\Form\Element\Submit',
@@ -65,7 +61,6 @@ class UploadDoa extends Form implements InputFilterProviderInterface
                 )
             )
         );
-
         $this->add(
             array(
                 'type'       => 'Zend\Form\Element\Submit',

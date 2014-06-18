@@ -53,21 +53,16 @@ class CallInformationBox extends AbstractHelper implements ServiceLocatorAwareIn
             CallService::FPP_OPEN     => "%call% for Full Project Proposals will close %diff% from now (deadline: %time%)",
             CallService::FPP_CLOSED   => "%call% for Full Project Proposals closed %diff% ago (deadline: %time%)"
         );
-
         $callStatus = $this->getCallService()->setCall($call)->getCallStatus();
-
         /**
          * Return null when we have an undefined status
          */
         if ($callStatus->result === CallService::UNDEFINED) {
             return null;
         }
-
         $result        = $callStatus->result;
         $referenceDate = $callStatus->referenceDate;
-
         $today = new \DateTime();
-
         $dateDifference = $referenceDate->diff($today);
         if ($dateDifference->days > 7) {
             $format = '%a days';
@@ -78,7 +73,6 @@ class CallInformationBox extends AbstractHelper implements ServiceLocatorAwareIn
         } else {
             $format = '%i minutes';
         }
-
         $content = str_replace(
             array(
                 '%call%',
@@ -92,7 +86,6 @@ class CallInformationBox extends AbstractHelper implements ServiceLocatorAwareIn
             ),
             $contents[$result]
         );
-
         $alert = '<div class="alert alert-info"><strong>%s</strong><br>%s</div>';
 
         return sprintf(

@@ -9,8 +9,8 @@
  */
 namespace ProgramTest\Fixture;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 
 class LoadProgramData implements FixtureInterface
 {
@@ -23,7 +23,6 @@ class LoadProgramData implements FixtureInterface
     {
         $program = new \Program\Entity\Program();
         $program->setProgram('ITEA1');
-
         $manager->persist($program);
         $manager->flush();
     }

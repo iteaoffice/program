@@ -42,12 +42,10 @@ class ProgramPdf extends \FPDI
             if (!file_exists($this->template)) {
                 throw new \InvalidArgumentException(sprintf("Template %s cannot be found", $this->template));
             }
-
             $this->setSourceFile($this->template);
             $this->_tplIdx = $this->importPage(1);
         }
         $this->useTemplate($this->_tplIdx, 0, 0);
-
         $this->SetFont('freesans', 'N', 15);
         $this->SetTextColor(0);
         $this->SetXY(15, 5);

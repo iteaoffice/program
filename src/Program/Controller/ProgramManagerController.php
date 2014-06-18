@@ -137,9 +137,7 @@ class ProgramManagerController extends AbstractActionController implements
     {
         $entity = $this->getEvent()->getRouteMatch()->getParam('entity');
         $form   = $this->getFormService()->prepare($this->params('entity'), null, $_POST);
-
         $form->setAttribute('class', 'form-horizontal');
-
         if ($this->getRequest()->isPost() && $form->isValid()) {
             $result = $this->getProgramService()->newEntity($form->getData());
             $this->redirect()->toRoute(
@@ -182,11 +180,9 @@ class ProgramManagerController extends AbstractActionController implements
             $this->getEvent()->getRouteMatch()->getParam('entity'),
             $this->getEvent()->getRouteMatch()->getParam('id')
         );
-
         $form = $this->getFormService()->prepare($entity->get('entity_name'), $entity, $_POST);
         $form->setAttribute('class', 'form-horizontal live-form');
         $form->setAttribute('id', 'program-program-' . $entity->getId());
-
         if ($this->getRequest()->isPost() && $form->isValid()) {
             $result = $this->getProgramService()->updateEntity($form->getData());
             $this->redirect()->toRoute(
@@ -209,7 +205,6 @@ class ProgramManagerController extends AbstractActionController implements
             $this->getEvent()->getRouteMatch()->getParam('entity'),
             $this->getEvent()->getRouteMatch()->getParam('id')
         );
-
         $this->getProgramService()->removeEntity($entity);
 
         return $this->redirect()->toRoute(

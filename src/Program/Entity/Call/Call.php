@@ -253,7 +253,6 @@ class Call extends EntityAbstract implements ResourceInterface
         if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
             $factory     = new InputFactory();
-
             $inputFilter->add(
                 $factory->createInput(
                     array(
@@ -276,7 +275,6 @@ class Call extends EntityAbstract implements ResourceInterface
                     )
                 )
             );
-
             $inputFilter->add(
                 $factory->createInput(
                     array(
@@ -294,7 +292,6 @@ class Call extends EntityAbstract implements ResourceInterface
                     )
                 )
             );
-
             $inputFilter->add(
                 $factory->createInput(
                     array(
@@ -312,7 +309,6 @@ class Call extends EntityAbstract implements ResourceInterface
                     )
                 )
             );
-
             $inputFilter->add(
                 $factory->createInput(
                     array(
@@ -330,7 +326,6 @@ class Call extends EntityAbstract implements ResourceInterface
                     )
                 )
             );
-
             $inputFilter->add(
                 $factory->createInput(
                     array(
@@ -348,7 +343,6 @@ class Call extends EntityAbstract implements ResourceInterface
                     )
                 )
             );
-
             $inputFilter->add(
                 $factory->createInput(
                     array(
@@ -357,7 +351,6 @@ class Call extends EntityAbstract implements ResourceInterface
                     )
                 )
             );
-
             $this->inputFilter = $inputFilter;
         }
 

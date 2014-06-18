@@ -9,10 +9,9 @@
  */
 namespace ProgramTest\Entity;
 
+use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use Program\Entity\Program;
 use ProgramTest\Bootstrap;
-
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 
 class ProgramTest extends \PHPUnit_Framework_TestCase
 {
@@ -40,27 +39,20 @@ class ProgramTest extends \PHPUnit_Framework_TestCase
     {
         $this->serviceManager = Bootstrap::getServiceManager();
         $this->entityManager  = $this->serviceManager->get('doctrine.entitymanager.orm_default');
-
         $this->programData = array(
             'program' => 'ITEA2',
         );
-
         $this->program = new Program();
     }
 
     public function testCanCreateEntity()
     {
-
         $this->assertInstanceOf("Program\Entity\Program", $this->program);
         $this->assertInstanceOf("Program\Entity\EntityInterface", $this->program);
-
         $this->assertNull($this->program->getProgram(), 'The "Program" should be null');
-
         $id = 1;
         $this->program->setId($id);
-
         $this->assertEquals($id, $this->program->getId(), 'The "Id" should be the same as the setter');
-
         $this->assertTrue(is_array($this->program->getArrayCopy()));
         $this->assertTrue(is_array($this->program->populate()));
     }
@@ -77,11 +69,8 @@ class ProgramTest extends \PHPUnit_Framework_TestCase
             $this->entityManager,
             'Program\Entity\Program'
         );
-
         $this->program = $hydrator->hydrate($this->programData, new Program());
-
         $dataArray = $hydrator->extract($this->program);
-
         $this->assertSame($this->programData['program'], $dataArray['program']);
     }
 
@@ -96,11 +85,9 @@ class ProgramTest extends \PHPUnit_Framework_TestCase
             $this->entityManager,
             'Program\Entity\Program'
         );
-
         $this->program = $hydrator->hydrate($this->programData, new Program());
         $this->entityManager->persist($this->program);
         $this->entityManager->flush();
-
         $this->assertInstanceOf('Program\Entity\Program', $this->program);
         $this->assertNotNull($this->program->getId());
         $this->assertSame($this->programData['program'], $this->program->getProgram());

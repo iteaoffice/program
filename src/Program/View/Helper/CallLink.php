@@ -45,7 +45,6 @@ class CallLink extends LinkAbstract
         $this->setCall($call);
         $this->setAction($action);
         $this->setShow($show);
-
         /**
          * Set the non-standard options needed to give an other link value
          */
@@ -54,7 +53,6 @@ class CallLink extends LinkAbstract
                 'name' => $this->getCall(),
             )
         );
-
         $this->addRouterParam('entity', 'Call\Call');
         $this->addRouterParam('id', $this->getCall()->getId());
 
@@ -84,14 +82,12 @@ class CallLink extends LinkAbstract
     {
         switch ($this->getAction()) {
             case 'view-list':
-
                 /**
                  * For a list in the front-end simply use the MatchedRouteName
                  */
                 $this->setRouter('route-content_entity_node');
                 $this->addRouterParam('docRef', 'all-projects');
                 $this->addRouterParam('call', $this->getCall()->getId());
-
                 $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));
                 break;
             default:

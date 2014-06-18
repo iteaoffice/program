@@ -9,8 +9,8 @@
  */
 namespace ProgramTest\Fixture;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 use ZendTest\View\_stubs\HelperDir2\Datetime;
 
 class LoadRoadmapData implements FixtureInterface
@@ -26,7 +26,6 @@ class LoadRoadmapData implements FixtureInterface
         $roadmap->setRoadmap('11');
         $roadmap->setDateReleased(new \Datetime());
         $roadmap->setDescription('This is the description');
-
         $manager->persist($roadmap);
         $manager->flush();
     }

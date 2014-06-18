@@ -54,27 +54,21 @@ class DoaLinkTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->serviceManager = Bootstrap::getServiceManager();
-
         $this->doa = new Doa();
         $this->doa->setId(1);
-
         $program = new Program();
         $program->setId(1);
         $program->setProgram('Program');
         $this->doa->setProgram($program);
-
         $organisation = new Organisation();
         $organisation->setId(1);
         $organisation->setOrganisation("Organisation");
         $this->doa->setOrganisation($organisation);
-
         $this->authorizeService = $this->serviceManager->get('BjyAuthorize\Service\Authorize');
-
         if (!$this->authorizeService->getAcl()->hasResource($this->doa)) {
             $this->authorizeService->getAcl()->addResource($this->doa);
             $this->authorizeService->getAcl()->allow([], $this->doa, []);
         }
-
         /**
          * Add the resource on the fly
          */
@@ -82,9 +76,7 @@ class DoaLinkTest extends \PHPUnit_Framework_TestCase
             $this->authorizeService->getAcl()->addResource(new Doa());
         }
         $this->authorizeService->getAcl()->allow([], new Doa(), []);
-
         $this->doaLink = $this->serviceManager->get('viewhelpermanager')->get('programDoaLink');
-
         /**
          * Bootstrap the application to have the other information available
          */

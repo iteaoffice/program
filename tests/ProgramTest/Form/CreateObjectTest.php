@@ -11,9 +11,9 @@
  */
 namespace ProgramTest\Form;
 
+use Program\Entity\Program;
 use Program\Form\CreateObject;
 use ProgramTest\Bootstrap;
-use Program\Entity\Program;
 
 /**
  * Create a link to an project

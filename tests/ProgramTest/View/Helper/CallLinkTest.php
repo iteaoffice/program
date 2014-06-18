@@ -56,19 +56,14 @@ class CallLinkTest extends \PHPUnit_Framework_TestCase
         $this->call           = new Call();
         $this->call->setId(1);
         $this->call->setCall('This is the call');
-
         $program = new Program();
         $program->setProgram('This is the program');
-
         $this->call->setProgram($program);
-
         $this->authorizeService = $this->serviceManager->get('BjyAuthorize\Service\Authorize');
-
         if (!$this->authorizeService->getAcl()->hasResource($this->call)) {
             $this->authorizeService->getAcl()->addResource($this->call);
             $this->authorizeService->getAcl()->allow([], $this->call, []);
         }
-
         /**
          * Add the resource on the fly
          */
@@ -76,9 +71,7 @@ class CallLinkTest extends \PHPUnit_Framework_TestCase
             $this->authorizeService->getAcl()->addResource(new Call());
         }
         $this->authorizeService->getAcl()->allow([], new Call(), []);
-
         $this->callLink = $this->serviceManager->get('viewhelpermanager')->get('calllink');
-
         /**
          * Bootstrap the application to have the other information available
          */

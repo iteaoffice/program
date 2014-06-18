@@ -10,7 +10,6 @@
  * @license    http://debranova.org/license.txt proprietary
  * @link       http://debranova.org
  */
-
 namespace Program\View\Helper;
 
 use Content\Entity\Content;
@@ -50,9 +49,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     public function __invoke(Content $content)
     {
         $this->extractContentParam($content);
-
         switch ($content->getHandler()->getHandler()) {
-
             case 'programcall_selector':
                 return $this->parseCallSelector(
                     !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null,

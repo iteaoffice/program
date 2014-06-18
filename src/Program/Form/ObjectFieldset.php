@@ -35,12 +35,9 @@ class ObjectFieldset extends Fieldset
     public function __construct(EntityManager $entityManager, Entity\EntityAbstract $object)
     {
         parent::__construct($object->get('underscore_entity_name'));
-
         $doctrineHydrator = new DoctrineHydrator($entityManager);
         $this->setHydrator($doctrineHydrator)->setObject($object);
-
         $builder = new AnnotationBuilder();
-
         /**
          * Go over the different form elements and add them to the form
          */
@@ -55,7 +52,6 @@ class ObjectFieldset extends Fieldset
                     )
                 );
             }
-
             //Add only when a type is provided
             if (array_key_exists('type', $element->getAttributes())) {
                 $this->add($element);

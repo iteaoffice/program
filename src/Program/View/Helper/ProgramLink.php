@@ -45,7 +45,6 @@ class ProgramLink extends LinkAbstract
         $this->setProgram($program);
         $this->setAction($action);
         $this->setShow($show);
-
         /**
          * Set the non-standard options needed to give an other link value
          */
@@ -54,9 +53,7 @@ class ProgramLink extends LinkAbstract
                 'name' => $this->getProgram(),
             )
         );
-
         $this->addRouterParam('entity', 'program');
-
         if (!is_null($program)) {
             $this->addRouterParam('id', $this->getProgram()->getId());
         }
@@ -87,14 +84,12 @@ class ProgramLink extends LinkAbstract
     {
         switch ($this->getAction()) {
             case 'view-list':
-
                 /**
                  * For a list in the front-end simply use the MatchedRouteName
                  */
                 $this->setRouter($this->getRouteMatch()->getMatchedRouteName());
                 $this->addRouterParam('docRef', $this->getRouteMatch()->getParam('docRef'));
                 $this->addRouterParam('program', $this->getRouteMatch()->getParam('program'));
-
                 $this->setText(sprintf(_("txt-view-program-%s"), $this->getProgram()));
                 break;
             default:

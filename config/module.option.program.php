@@ -12,7 +12,6 @@ $options = array(
     'nda_template' => __DIR__ . '/../../../../styles/itea/template/pdf/nda-template.pdf',
     'doa_template' => __DIR__ . '/../../../../styles/itea/template/pdf/nda-template.pdf',
 );
-
 /**
  * You do not need to edit below this line
  */

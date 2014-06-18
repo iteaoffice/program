@@ -56,7 +56,6 @@ class Nda implements AssertionInterface
         $this->callService    = $this->serviceManager->get("program_call_service");
         $this->programService = $this->serviceManager->get("program_program_service");
         $this->contactService = $this->serviceManager->get("contact_contact_service");
-
         /**
          * Store locally in the object the contact information
          */
@@ -83,7 +82,6 @@ class Nda implements AssertionInterface
     public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
     {
         $routeMatch = $this->serviceManager->get("Application")->getMvcEvent()->getRouteMatch();
-
         $id = $routeMatch->getParam('id');
         /**
          * When the privilege is_null (not given by the isAllowed helper), get it from the routeMatch
@@ -91,15 +89,12 @@ class Nda implements AssertionInterface
         if (is_null($privilege)) {
             $privilege = $routeMatch->getParam('privilege');
         }
-
         if (!$resource instanceof NdaEntity && !is_null($id)) {
             $resource = $this->programService->findEntityById('Nda', $id);
         }
-
         switch ($privilege) {
             case 'upload':
                 return !is_null($this->contactService);
-
             case 'replace':
                 /**
                  * For the replace we need to see if the user has access on the editing of the program
@@ -108,13 +103,10 @@ class Nda implements AssertionInterface
 
                 return is_null($resource->getDateApproved()) && $resource->getContact()->getId(
                 ) === $this->contactService->getContact()->getId();
-
             case 'render':
-
                 if (is_null($this->contactService)) {
                     return false;
                 }
-
                 /**
                  * When a call is set, check if that call has the right status
                  */
@@ -125,7 +117,6 @@ class Nda implements AssertionInterface
                 }
 
                 return true;
-
             case 'download':
             case 'view':
                 return $resource->getContact()->getId() === $this->contactService->getContact()->getId();

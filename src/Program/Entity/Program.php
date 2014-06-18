@@ -138,7 +138,6 @@ class Program extends EntityAbstract implements ResourceInterface
         if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
             $factory     = new InputFactory();
-
             $inputFilter->add(
                 $factory->createInput(
                     array(

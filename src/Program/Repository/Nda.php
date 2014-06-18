@@ -30,17 +30,13 @@ class Nda extends EntityRepository
      */
     public function findNdaByCallAndContact(Call $call, Contact $contact)
     {
-
         $qb = $this->_em->createQueryBuilder();
         $qb->select('n');
         $qb->from("Program\Entity\Nda", 'n');
         $qb->join('n.call', 'call');
-
         $qb->andWhere($qb->expr()->in('call', array($call->getId())));
-
         $qb->andWhere('n.contact = ?2');
         $qb->setParameter(2, $contact);
-
         $qb->addOrderBy('n.dateCreated', 'DESC');
         $qb->setMaxResults(1);
 
@@ -55,11 +51,9 @@ class Nda extends EntityRepository
      */
     public function findNdaByContact(Contact $contact)
     {
-
         $qb = $this->_em->createQueryBuilder();
         $qb->select('n');
         $qb->from("Program\Entity\Nda", 'n');
-
         $qb->andWhere('n.contact = ?2');
         $qb->addOrderBy('n.dateCreated', 'DESC');
         $qb->setMaxResults(1);

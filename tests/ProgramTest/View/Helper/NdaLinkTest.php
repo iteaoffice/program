@@ -55,31 +55,24 @@ class NdaLinkTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->serviceManager = Bootstrap::getServiceManager();
-
         $this->nda = new Nda();
         $this->nda->setId(1);
-
         $contact = new Contact();
         $contact->setId(1234);
         $this->nda->setContact($contact);
-
         $program = new Program();
         $program->setId(1);
         $program->setProgram('Program');
-
         $call = new Call();
         $call->setId(1);
         $call->setCall("Call");
         $call->setProgram($program);
         $this->nda->setCall($call);
-
         $this->authorizeService = $this->serviceManager->get('BjyAuthorize\Service\Authorize');
-
         if (!$this->authorizeService->getAcl()->hasResource($this->nda)) {
             $this->authorizeService->getAcl()->addResource($this->nda);
             $this->authorizeService->getAcl()->allow([], $this->nda, []);
         }
-
         /**
          * Add the resource on the fly
          */
@@ -87,9 +80,7 @@ class NdaLinkTest extends \PHPUnit_Framework_TestCase
             $this->authorizeService->getAcl()->addResource(new Nda());
         }
         $this->authorizeService->getAcl()->allow([], new Nda(), []);
-
         $this->ndaLink = $this->serviceManager->get('viewhelpermanager')->get('ndaLink');
-
         /**
          * Bootstrap the application to have the other information available
          */

@@ -78,16 +78,13 @@ $config = [
         ],
     ]
 ];
-
 $configFiles = [
     __DIR__ . '/module.config.routes.php',
     __DIR__ . '/module.config.navigation.php',
     __DIR__ . '/module.config.authorize.php',
     __DIR__ . '/module.option.program.php',
 ];
-
 foreach ($configFiles as $configFile) {
     $config = Zend\Stdlib\ArrayUtils::merge($config, include $configFile);
 }
-
 return $config;

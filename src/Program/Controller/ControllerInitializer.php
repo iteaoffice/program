@@ -38,22 +38,18 @@ class ControllerInitializer implements InitializerInterface
      */
     public function initialize($instance, ServiceLocatorInterface $serviceLocator)
     {
-
         if (!is_object($instance)) {
             return;
         }
-
         $arrayCheck = [
             FormServiceAwareInterface::class    => 'program_form_service',
             ProgramServiceAwareInterface::class => 'program_program_service',
             CallServiceAwareInterface::class    => 'program_call_service',
         ];
-
         /**
          * @var $sm ServiceLocatorInterface
          */
         $sm = $serviceLocator->getServiceLocator();
-
         /**
          * Go over each interface to see if we should add an interface
          */

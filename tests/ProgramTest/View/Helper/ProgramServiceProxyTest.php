@@ -43,14 +43,12 @@ class ProgramServiceProxyTest extends \PHPUnit_Framework_TestCase
     public function testCanCreateProgramLink()
     {
         $programServiceProxy = $this->serviceManager->get('viewhelpermanager')->get('programServiceProxy');
-
         $this->assertInstanceOf("Program\View\Helper\ProgramServiceProxy", $programServiceProxy);
     }
 
     public function testHasServiceManager()
     {
         $programServiceProxy = $this->serviceManager->get('viewhelpermanager')->get('programServiceProxy');
-
         $this->assertInstanceOf(
             "Zend\ServiceManager\ServiceLocatorInterface",
             $programServiceProxy->getServiceLocator()
@@ -60,9 +58,7 @@ class ProgramServiceProxyTest extends \PHPUnit_Framework_TestCase
     public function testCanInvokeMethod()
     {
         $programServiceProxy = $this->serviceManager->get('viewhelpermanager')->get('programServiceProxy');
-
         $program = new Program();
-
         $this->assertInstanceOf("Program\Service\ProgramService", $programServiceProxy->__invoke($program));
     }
 }

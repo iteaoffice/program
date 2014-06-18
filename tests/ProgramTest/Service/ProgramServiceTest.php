@@ -9,8 +9,8 @@
  */
 namespace ProgramTest\Service;
 
-use Program\Service\ProgramService;
 use Contact\Service\ContactService;
+use Program\Service\ProgramService;
 use ProgramTest\Bootstrap;
 
 class ProgramServiceTest extends \PHPUnit_Framework_TestCase
@@ -39,10 +39,8 @@ class ProgramServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this->serviceManager = Bootstrap::getServiceManager();
         $this->entityManager  = $this->serviceManager->get('doctrine.entitymanager.orm_default');
-
         $this->programService = new ProgramService();
         $this->programService->setServiceLocator($this->serviceManager);
-
         $this->contactService = new ContactService();
         $this->contactService->setServiceLocator($this->serviceManager);
     }

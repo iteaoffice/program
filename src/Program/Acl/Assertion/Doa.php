@@ -50,7 +50,6 @@ class Doa implements AssertionInterface
         $this->serviceManager = $serviceManager;
         $this->programService = $this->serviceManager->get("program_program_service");
         $this->contactService = $this->serviceManager->get("contact_contact_service");
-
         /**
          * Store locally in the object the contact information
          */
@@ -77,24 +76,19 @@ class Doa implements AssertionInterface
     public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
     {
         $routeMatch = $this->serviceManager->get("Application")->getMvcEvent()->getRouteMatch();
-
         $id = $routeMatch->getParam('id');
-
         /**
          * When the privilege is_null (not given by the isAllowed helper), get it from the routeMatch
          */
         if (is_null($privilege)) {
             $privilege = $routeMatch->getParam('privilege');
         }
-
         if (!$resource instanceof DoaEntity && !is_null($id)) {
             $resource = $this->programService->findEntityById('Doa', $id);
         }
-
         switch ($privilege) {
             case 'upload':
                 return !$this->contactService->isEmpty();
-
             case 'replace':
                 /**
                  * For the replace we need to see if the user has access on the editing of the program
@@ -103,10 +97,8 @@ class Doa implements AssertionInterface
 
                 return is_null($resource->getDateApproved()) && $resource->getContact()->getId() ===
                 $this->contactService->getContact()->getId();
-
             case 'render':
                 return !is_null($this->contactService);
-
             case 'download':
             case 'view':
                 return $resource->getContact()->getId() === $this->contactService->getContact()->getId();

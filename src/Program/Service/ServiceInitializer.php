@@ -37,12 +37,10 @@ class ServiceInitializer implements InitializerInterface
         if (!is_object($instance)) {
             return;
         }
-
         $arrayCheck = [
             ProgramServiceAwareInterface::class => 'program_program_service',
             CallServiceAwareInterface::class    => 'program_call_service',
         ];
-
         /**
          * Go over each interface to see if we should add an interface
          */

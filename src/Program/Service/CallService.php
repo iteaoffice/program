@@ -80,7 +80,6 @@ class CallService extends ServiceAbstract
         $result = $this->getEntityManager()->getRepository(
             $this->getFullEntityName('Call\Call')
         )->findLastCallAndActiveVersionType();
-
         $lastCallAndActiveVersionType              = new \stdClass();
         $lastCallAndActiveVersionType->call        = $result['call'];
         $lastCallAndActiveVersionType->versionType = $this->getVersionService()->findEntityById(
@@ -106,7 +105,6 @@ class CallService extends ServiceAbstract
             [],
             array('call' => 'DESC')
         );
-
         $callSpan            = new \stdClass();
         $callSpan->firstCall = $firstCall;
         $callSpan->lastCall  = $lastCall;
@@ -141,9 +139,7 @@ class CallService extends ServiceAbstract
          * Go over the dates and find the most suited date.
          */
         $today = $dateTime = new \DateTime();
-
         $notificationDeadline = $dateTime->sub(new \DateInterval("P1W"));
-
         if ($this->getCall()->getPoOpenDate() > $today) {
             $referenceDate = $this->getCall()->getPoOpenDate();
             $result        = self::PO_NOT_OPEN;
@@ -166,7 +162,6 @@ class CallService extends ServiceAbstract
             $referenceDate = null;
             $result        = self::UNDEFINED;
         }
-
         $callStatus                = new \stdClass();
         $callStatus->result        = $result;
         $callStatus->referenceDate = $referenceDate;
@@ -233,24 +228,18 @@ class CallService extends ServiceAbstract
     {
         $ndaObject = new NdaObject();
         $ndaObject->setObject(file_get_contents($file['tmp_name']));
-
         $nda = new Nda();
         $nda->setContact($contact);
         if (!is_null($call)) {
             $nda->setCall(array($call));
         }
         $nda->setSize($file['size']);
-
         $contentType = $this->getGeneralService()->findContentTypeByContentTypeName($file['type']);
-
         if (is_null($contentType)) {
             $contentType = $this->getGeneralService()->findEntityById('ContentType', 0);
         }
-
         $nda->setContentType($contentType);
-
         $ndaObject->setNda($nda);
-
         $this->newEntity($ndaObject);
 
         return $ndaObject->getNda();

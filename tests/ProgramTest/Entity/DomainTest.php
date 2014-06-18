@@ -9,11 +9,9 @@
  */
 namespace ProgramTest\Entity;
 
-use Program\Entity\Domain;
-
-use ProgramTest\Bootstrap;
-
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
+use Program\Entity\Domain;
+use ProgramTest\Bootstrap;
 
 class DomainTest extends \PHPUnit_Framework_TestCase
 {
@@ -41,9 +39,7 @@ class DomainTest extends \PHPUnit_Framework_TestCase
     {
         $this->serviceManager = Bootstrap::getServiceManager();
         $this->entityManager  = $this->serviceManager->get('doctrine.entitymanager.orm_default');
-
         $roadmap = $this->entityManager->find("Program\Entity\Roadmap", 1);
-
         $this->domainData = array(
             'domain'      => 'ITEA2',
             'roadmap'     => $roadmap,
@@ -51,23 +47,17 @@ class DomainTest extends \PHPUnit_Framework_TestCase
             'color'       => '#abcdef',
             'mainId'      => '2'
         );
-
         $this->domain = new Domain();
     }
 
     public function testCanCreateEntity()
     {
-
         $this->assertInstanceOf("Program\Entity\Domain", $this->domain);
         $this->assertInstanceOf("Program\Entity\EntityInterface", $this->domain);
-
         $this->assertNull($this->domain->getDomain(), 'The "Program" should be null');
-
         $id = 1;
         $this->domain->setId($id);
-
         $this->assertEquals($id, $this->domain->getId(), 'The "Id" should be the same as the setter');
-
         $this->assertTrue(is_array($this->domain->getArrayCopy()));
         $this->assertTrue(is_array($this->domain->populate()));
     }
@@ -89,11 +79,8 @@ class DomainTest extends \PHPUnit_Framework_TestCase
             $this->entityManager,
             'Program\Entity\Domain'
         );
-
         $this->domain = $hydrator->hydrate($this->domainData, new Domain());
-
         $dataArray = $hydrator->extract($this->domain);
-
         $this->assertSame($this->domainData['domain'], $dataArray['domain']);
         $this->assertSame($this->domainData['roadmap']->getId(), $dataArray['roadmap']->getId());
         $this->assertSame($this->domainData['description'], $dataArray['description']);
@@ -107,11 +94,9 @@ class DomainTest extends \PHPUnit_Framework_TestCase
             $this->entityManager,
             'Program\Entity\Domain'
         );
-
         $this->domain = $hydrator->hydrate($this->domainData, new Domain());
         $this->entityManager->persist($this->domain);
         $this->entityManager->flush();
-
         $this->assertInstanceOf('Program\Entity\Domain', $this->domain);
         $this->assertNotNull($this->domain->getId());
         $this->assertSame($this->domainData['domain'], $this->domain->getDomain());

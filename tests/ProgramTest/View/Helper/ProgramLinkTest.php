@@ -56,14 +56,11 @@ class ProgramLinkTest extends \PHPUnit_Framework_TestCase
         $this->program        = new Program();
         $this->program->setId(1);
         $this->program->setProgram('This is the program');
-
         $this->authorizeService = $this->serviceManager->get('BjyAuthorize\Service\Authorize');
-
         if (!$this->authorizeService->getAcl()->hasResource($this->program)) {
             $this->authorizeService->getAcl()->addResource($this->program);
             $this->authorizeService->getAcl()->allow([], $this->program, []);
         }
-
         /**
          * Add the resource on the fly
          */
@@ -71,18 +68,14 @@ class ProgramLinkTest extends \PHPUnit_Framework_TestCase
             $this->authorizeService->getAcl()->addResource(new Program());
         }
         $this->authorizeService->getAcl()->allow([], new Program(), []);
-
         $this->programLink = $this->serviceManager->get('viewhelpermanager')->get('programlink');
-
         $routeMatch = new RouteMatch(
             array(
                 'program' => 1,
             )
         );
         $routeMatch->setMatchedRouteName('route-program_entity_program');
-
         $this->programLink->setRouteMatch($routeMatch);
-
         /**
          * Bootstrap the application to have the other information available
          */

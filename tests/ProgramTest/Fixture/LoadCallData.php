@@ -23,7 +23,6 @@ class LoadCallData extends AbstractFixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         $program = $manager->find("Program\Entity\Program", 1);
-
         $call = new \Program\Entity\Call\Call();
         $call->setProgram($program);
         $call->setCall('1');
@@ -31,7 +30,6 @@ class LoadCallData extends AbstractFixture implements DependentFixtureInterface
         $call->setPoCloseDate(new \DateTime());
         $call->setFppOpenDate(new \DateTime());
         $call->setFppCloseDate(new \DateTime());
-
         $manager->persist($call);
         $manager->flush();
     }

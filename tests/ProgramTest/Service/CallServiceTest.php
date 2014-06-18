@@ -9,9 +9,9 @@
  */
 namespace ProgramTest\Service;
 
+use Contact\Service\ContactService;
 use Program\Service\CallService;
 use Program\Service\ProgramService;
-use Contact\Service\ContactService;
 use ProgramTest\Bootstrap;
 
 class CallServiceTest extends \PHPUnit_Framework_TestCase
@@ -44,13 +44,10 @@ class CallServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this->serviceManager = Bootstrap::getServiceManager();
         $this->entityManager  = $this->serviceManager->get('doctrine.entitymanager.orm_default');
-
         $this->callService = new CallService();
         $this->callService->setServiceLocator($this->serviceManager);
-
         $this->programService = new ProgramService();
         $this->programService->setServiceLocator($this->serviceManager);
-
         $this->contactService = new ContactService();
         $this->contactService->setServiceLocator($this->serviceManager);
     }
@@ -69,7 +66,6 @@ class CallServiceTest extends \PHPUnit_Framework_TestCase
     {
         $call    = $this->callService->findEntityById('Call\Call', 1);
         $contact = $this->contactService->findEntityById('contact', 1);
-
         $nda = $this->callService->findNdaByCallAndContact($call, $contact);
         $this->assertNull($nda);
     }
@@ -78,7 +74,6 @@ class CallServiceTest extends \PHPUnit_Framework_TestCase
     {
         $call    = $this->callService->setCallId(1)->getCall();
         $contact = $this->contactService->setContactId(1)->getContact();
-
         $file = array(
             'name'     => 'This is an uploaded file',
             'type'     => 'application/pdf',
@@ -86,7 +81,6 @@ class CallServiceTest extends \PHPUnit_Framework_TestCase
             'error'    => 0,
             'size'     => 145000,
         );
-
         $uploadedNda = $this->callService->uploadNda($file, $contact, $call);
         $this->assertInstanceOf("Program\\Entity\\NdaObject", $uploadedNda);
         $this->assertEquals($file['size'], $uploadedNda->getNda()->getSize());

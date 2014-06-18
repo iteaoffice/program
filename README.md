@@ -1,9 +1,15 @@
-Program
-=======
+debranova\program
+=================
 
 Version: 1.0.1-dev
 
-Repository which holds the program information and living roadmap
+[![Build Status](https://travis-ci.org/debranova/program.svg?branch=develop)](https://travis-ci.org/debranova/program)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/debranova/program/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/debranova/program/?branch=develop)
+[![Code Coverage](https://scrutinizer-ci.com/g/debranova/program/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/debranova/program/?branch=develop)
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/debranova/program/badges/quality-score.png?s=4813e1a8fc555ac21e3ea553f643e0025cde4837)](https://scrutinizer-ci.com/g/debranova/program/)
-[![Code Coverage](https://scrutinizer-ci.com/g/debranova/program/badges/coverage.png?s=29f8fa9dfee085fdcea210379ba20164695e24de)](https://scrutinizer-ci.com/g/debranova/program/)
+[![Latest Stable Version](https://poser.pugx.org/debranova/program/v/stable.svg)](https://packagist.org/packages/debranova/program) 
+[![Total Downloads](https://poser.pugx.org/debranova/program/downloads.svg)](https://packagist.org/packages/debranova/program) 
+[![Latest Unstable Version](https://poser.pugx.org/debranova/program/v/unstable.svg)](https://packagist.org/packages/debranova/program) 
+[![License](https://poser.pugx.org/debranova/program/license.svg)](https://packagist.org/packages/debranova/program)
+
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/33e27136-2baf-4b95-b61e-58a803db5e89/mini.png)](https://insight.sensiolabs.com/projects/33e27136-2baf-4b95-b61e-58a803db5e89)

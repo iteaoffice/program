@@ -12,9 +12,9 @@
 namespace ProgramTest\Form;
 
 use Program\Entity\Funder;
+use Program\Entity\Program;
 use Program\Form\ObjectFieldset;
 use ProgramTest\Bootstrap;
-use Program\Entity\Program;
 
 /**
  * Create a link to an project
@@ -54,7 +54,6 @@ class ObjectFieldsetTest extends \PHPUnit_Framework_TestCase
             $this->serviceManager->get('doctrine.entitymanager.orm_default'),
             new Program()
         );
-
         $this->assertInstanceOf("Zend\Form\Fieldset", $objectFieldset);
     }
 
@@ -64,7 +63,6 @@ class ObjectFieldsetTest extends \PHPUnit_Framework_TestCase
             $this->serviceManager->get('doctrine.entitymanager.orm_default'),
             new Funder()
         );
-
         $this->assertInstanceOf("Zend\Form\Fieldset", $objectFieldset);
     }
 }

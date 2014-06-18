@@ -22,14 +22,12 @@ class NdaNavigationService extends NavigationServiceAbstract
      */
     public function update()
     {
-
         if (!is_null($this->getRouteMatch()) &&
             strtolower($this->getRouteMatch()->getParam('namespace')) === 'program'
         ) {
             if (strpos($this->getRouteMatch()->getMatchedRouteName(), 'community') !== false) {
                 //                $this->updateCommunityNavigation();
             }
-
             $this->updatePublicNavigation();
         }
     }
@@ -40,10 +38,8 @@ class NdaNavigationService extends NavigationServiceAbstract
     public function updatePublicNavigation()
     {
         $publicNavigation = $this->getNavigation();
-
         switch ($this->getRouteMatch()->getMatchedRouteName()) {
             case 'program/nda/upload':
-
                 if (!is_null($callId = $this->getRouteMatch()->getParam('id'))) {
                     $call = $this->getCallService()->setCallId($callId)->getCall();
                     $publicNavigation->addPage(
@@ -101,11 +97,8 @@ class NdaNavigationService extends NavigationServiceAbstract
                     );
                 }
                 break;
-
             case 'program/nda/replace':
-
                 $nda = $this->getProgramService()->findEntityById('Nda', $this->getRouteMatch()->getParam('id'));
-
                 $publicNavigation->addPage(
                     array(
                         'label'  => $this->translate("txt-home"),
@@ -136,11 +129,8 @@ class NdaNavigationService extends NavigationServiceAbstract
                     )
                 );
                 break;
-
             case 'program/nda/view':
-
                 $nda = $this->getProgramService()->findEntityById('Nda', $this->getRouteMatch()->getParam('id'));
-
                 $publicNavigation->addPage(
                     array(
                         'label'  => $this->translate("txt-home"),

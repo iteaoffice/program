@@ -13,7 +13,6 @@ use Program\Form;
 
 return array(
     'factories' => array(
-
         'program_program_form'      => function ($sm) {
             return new Form\CreateObject($sm, new Entity\Program());
         },
@@ -23,6 +22,5 @@ return array(
         'program_acl_assertion_doa' => function ($sm) {
             return new Assertion\Doa($sm);
         },
-
     ),
 );

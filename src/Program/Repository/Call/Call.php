@@ -29,13 +29,10 @@ class Call extends EntityRepository
      */
     public function findOpenCall($type)
     {
-
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('c');
         $queryBuilder->from("Program\Entity\Call\Call", 'c');
-
         $today = new \DateTime();
-
         switch ($type) {
             case Type::TYPE_PO:
                 $queryBuilder->where('c.poOpenDate < :today')
@@ -63,13 +60,11 @@ class Call extends EntityRepository
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('c');
         $queryBuilder->from("Program\Entity\Call\Call", 'c');
-
         //Show only calls which are already in projects
         $subSelect = $this->_em->createQueryBuilder();
         $subSelect->select('call.id');
         $subSelect->from('Project\Entity\Project', 'project');
         $subSelect->join('project.call', 'call');
-
         $queryBuilder->andWhere($queryBuilder->expr()->in('c.id', $subSelect->getDQL()));
 
         return $queryBuilder->getQuery()->getResult();
@@ -80,17 +75,13 @@ class Call extends EntityRepository
      */
     public function findLastCallAndActiveVersionType()
     {
-
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('c');
         $queryBuilder->from("Program\Entity\Call\Call", 'c');
-
         $today = new \DateTime();
-
         $queryBuilder->where('c.poOpenDate < :today')
                      ->andWhere('c.poCloseDate > :today')
                      ->setParameter('today', $today);
-
         /**
          * Check first if we find an open PO
          */
@@ -104,11 +95,9 @@ class Call extends EntityRepository
                 'versionType' => Type::TYPE_PO
             );
         }
-
         $queryBuilder->where('c.fppOpenDate < :today')
                      ->andWhere('c.fppCloseDate > :today')
                      ->setParameter('today', $today);
-
         /**
          * Check first if we find an open FPP
          */
@@ -122,7 +111,6 @@ class Call extends EntityRepository
                 'versionType' => Type::TYPE_FPP
             );
         }
-
         /**
          * Still no result? Return the latest FPP (and reset the previous settings)
          */

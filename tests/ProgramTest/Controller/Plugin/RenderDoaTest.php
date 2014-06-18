@@ -45,31 +45,23 @@ class RenderDoaTest extends \PHPUnit_Framework_TestCase
 
     public function testCanRenderDoa()
     {
-
         /**
          * Bootstrap the application to have the other information available
          */
 //        $application = $this->serviceManager->get('application');
 //        $application->bootstrap();
-
         $renderDoa = new RenderDoa();
         $renderDoa->setServiceLocator($this->serviceManager);
-
         $contact = new Contact();
         $contact->setFirstName('Johan');
         $contact->setLastName('van der Heide');
-
         $program = new Program();
         $program->setProgram('testProgram');
-
         $doa = new Doa();
         $doa->setContact($contact);
         $doa->setProgram($program);
-
         $pdf = $renderDoa->renderForDoa($doa);
-
         $this->assertInstanceOf("Program\Controller\Plugin\ProgramPdf", $pdf);
-
         $this->assertTrue(strlen($pdf->getPDFData()) > 0);
     }
 }
