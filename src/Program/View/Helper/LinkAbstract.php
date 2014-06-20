@@ -96,7 +96,7 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
         /**
          * @var $serverUrl ServerUrl
          */
-        $serverUrl = $this->serviceLocator->get('serverUrl');
+        $serverUrl         = $this->serviceLocator->get('serverUrl');
         $this->linkContent = [];
         $this->classes     = [];
         $this->parseAction();
@@ -110,7 +110,7 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
             $uri,
             $serverUrl->__invoke() . $url($this->router, $this->routerParams),
             $this->text,
-            implode($this->classes),
+            implode(' ', $this->classes),
             implode('', $this->linkContent)
         );
     }

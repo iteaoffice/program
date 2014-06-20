@@ -46,12 +46,12 @@ class Bootstrap
             $zf2ModulePaths[] = $path;
         }
         static::initAutoloader();
-        $config = include __DIR__ . '/../config/application.config.php';
+        $config         = include __DIR__ . '/../config/application.config.php';
         $serviceManager = new ServiceManager(new ServiceManagerConfig());
         $serviceManager->setService('ApplicationConfig', $config);
         $serviceManager->get('ModuleManager')->loadModules();
         static::$serviceManager = $serviceManager;
-        $entityManager = $serviceManager->get('doctrine.entitymanager.orm_default');
+        $entityManager          = $serviceManager->get('doctrine.entitymanager.orm_default');
         //Validate the schema;
         $validator = new SchemaValidator($entityManager);
         $errors    = $validator->validateMapping();
@@ -99,7 +99,7 @@ class Bootstrap
     protected static function initAutoloader()
     {
         $vendorPath = static::findParentPath('vendor');
-        $zf2Path = getenv('ZF2_PATH');
+        $zf2Path    = getenv('ZF2_PATH');
         if (!$zf2Path) {
             if (defined('ZF2_PATH')) {
                 $zf2Path = ZF2_PATH;

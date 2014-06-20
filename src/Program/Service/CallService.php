@@ -77,7 +77,7 @@ class CallService extends ServiceAbstract
      */
     public function findLastCallAndActiveVersionType()
     {
-        $result = $this->getEntityManager()->getRepository(
+        $result                                    = $this->getEntityManager()->getRepository(
             $this->getFullEntityName('Call\Call')
         )->findLastCallAndActiveVersionType();
         $lastCallAndActiveVersionType              = new \stdClass();
@@ -97,14 +97,16 @@ class CallService extends ServiceAbstract
      */
     public function findFirstAndLastCall()
     {
-        $firstCall = $this->getEntityManager()->getRepository($this->getFullEntityName('Call\Call'))->findOneBy(
-            [],
-            array('call' => 'ASC')
-        );
-        $lastCall  = $this->getEntityManager()->getRepository($this->getFullEntityName('Call\Call'))->findOneBy(
-            [],
-            array('call' => 'DESC')
-        );
+        $firstCall           = $this->getEntityManager()->getRepository($this->getFullEntityName('Call\Call'))
+                                    ->findOneBy(
+                                        [],
+                                        array('call' => 'ASC')
+                                    );
+        $lastCall            = $this->getEntityManager()->getRepository($this->getFullEntityName('Call\Call'))
+                                    ->findOneBy(
+                                        [],
+                                        array('call' => 'DESC')
+                                    );
         $callSpan            = new \stdClass();
         $callSpan->firstCall = $firstCall;
         $callSpan->lastCall  = $lastCall;
@@ -138,7 +140,7 @@ class CallService extends ServiceAbstract
         /**
          * Go over the dates and find the most suited date.
          */
-        $today = $dateTime = new \DateTime();
+        $today                = $dateTime = new \DateTime();
         $notificationDeadline = $dateTime->sub(new \DateInterval("P1W"));
         if ($this->getCall()->getPoOpenDate() > $today) {
             $referenceDate = $this->getCall()->getPoOpenDate();

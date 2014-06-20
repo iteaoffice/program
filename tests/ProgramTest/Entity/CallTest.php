@@ -39,12 +39,12 @@ class CallTest extends \PHPUnit_Framework_TestCase
     {
         $this->serviceManager = Bootstrap::getServiceManager();
         $this->entityManager  = $this->serviceManager->get('doctrine.entitymanager.orm_default');
-        $program = $this->entityManager->find("Program\Entity\Program", 1);
-        $this->callData = array(
+        $program              = $this->entityManager->find("Program\Entity\Program", 1);
+        $this->callData       = array(
             'call'    => 'ITEA2',
             'program' => $program
         );
-        $this->call = new Call();
+        $this->call           = new Call();
     }
 
     public function testCanCreateEntity()
@@ -72,18 +72,18 @@ class CallTest extends \PHPUnit_Framework_TestCase
 
     public function testCanHydrateEntity()
     {
-        $hydrator = new DoctrineObject(
+        $hydrator   = new DoctrineObject(
             $this->entityManager,
             'Program\Entity\Call\Call'
         );
         $this->call = $hydrator->hydrate($this->callData, new Call());
-        $dataArray = $hydrator->extract($this->call);
+        $dataArray  = $hydrator->extract($this->call);
         $this->assertSame($this->callData['call'], $dataArray['call']);
     }
 
     public function testCanSaveEntityInDatabase()
     {
-        $hydrator = new DoctrineObject(
+        $hydrator   = new DoctrineObject(
             $this->entityManager,
             'Program\Entity\Call\Call'
         );

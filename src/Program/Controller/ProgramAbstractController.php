@@ -34,7 +34,6 @@ use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @license    http://debranova.org/licence.txt proprietary
  * @link       http://debranova.org
- *
  * @method      ZfcUserAuthentication zfcUserAuthentication()
  * @method      FlashMessenger flashMessenger()
  * @method      IsAllowed isAllowed($resource, $action)

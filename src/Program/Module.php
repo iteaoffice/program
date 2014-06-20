@@ -13,7 +13,6 @@ namespace Program;
 
 use Program\Controller\Plugin\RenderDoa;
 use Program\Controller\Plugin\RenderNda;
-use Program\Service\FormServiceAwareInterface;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature;
 use Zend\Mvc\MvcEvent;
@@ -72,17 +71,6 @@ class Module implements
      */
     public function getControllerConfig()
     {
-        return array(
-            'initializers' => array(
-                function ($instance, $sm) {
-                    if ($instance instanceof FormServiceAwareInterface) {
-                        $sm          = $sm->getServiceLocator();
-                        $formService = $sm->get('program_form_service');
-                        $instance->setFormService($formService);
-                    }
-                },
-            ),
-        );
     }
 
     /**

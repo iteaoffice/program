@@ -42,4 +42,52 @@ class DndObject
      * @var \Program\Entity\Dnd
      */
     private $dnd;
+
+    /**
+     * @return Dnd
+     */
+    public function getDnd()
+    {
+        return $this->dnd;
+    }
+
+    /**
+     * @param Dnd $dnd
+     */
+    public function setDnd($dnd)
+    {
+        $this->dnd = $dnd;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getObject()
+    {
+        return $this->object;
+    }
+
+    /**
+     * @param string $object
+     */
+    public function setObject($object)
+    {
+        $this->object = $object;
+    }
 }

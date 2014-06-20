@@ -35,8 +35,8 @@ class CreateObject extends Form
     public function __construct(ServiceManager $serviceManager, EntityAbstract $object)
     {
         parent::__construct($object->get('underscore_entity_name'));
-        $this->serviceManager = $serviceManager;
-        $entityManager = $this->serviceManager->get('doctrine.entitymanager.orm_default');
+        $this->serviceManager   = $serviceManager;
+        $entityManager          = $this->serviceManager->get('doctrine.entitymanager.orm_default');
         $objectSpecificFieldset = '\Program\Form\\' . ucfirst($object->get('entity_name')) . 'Fieldset';
         /**
          * Load a specific fieldSet when present

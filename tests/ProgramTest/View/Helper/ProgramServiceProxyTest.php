@@ -58,7 +58,7 @@ class ProgramServiceProxyTest extends \PHPUnit_Framework_TestCase
     public function testCanInvokeMethod()
     {
         $programServiceProxy = $this->serviceManager->get('viewhelpermanager')->get('programServiceProxy');
-        $program = new Program();
+        $program             = new Program();
         $this->assertInstanceOf("Program\Service\ProgramService", $programServiceProxy->__invoke($program));
     }
 }

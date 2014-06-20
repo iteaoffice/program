@@ -44,7 +44,7 @@ class CallServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this->serviceManager = Bootstrap::getServiceManager();
         $this->entityManager  = $this->serviceManager->get('doctrine.entitymanager.orm_default');
-        $this->callService = new CallService();
+        $this->callService    = new CallService();
         $this->callService->setServiceLocator($this->serviceManager);
         $this->programService = new ProgramService();
         $this->programService->setServiceLocator($this->serviceManager);
@@ -66,15 +66,15 @@ class CallServiceTest extends \PHPUnit_Framework_TestCase
     {
         $call    = $this->callService->findEntityById('Call\Call', 1);
         $contact = $this->contactService->findEntityById('contact', 1);
-        $nda = $this->callService->findNdaByCallAndContact($call, $contact);
+        $nda     = $this->callService->findNdaByCallAndContact($call, $contact);
         $this->assertNull($nda);
     }
 
     public function testCanUploadNDA()
     {
-        $call    = $this->callService->setCallId(1)->getCall();
-        $contact = $this->contactService->setContactId(1)->getContact();
-        $file = array(
+        $call        = $this->callService->setCallId(1)->getCall();
+        $contact     = $this->contactService->setContactId(1)->getContact();
+        $file        = array(
             'name'     => 'This is an uploaded file',
             'type'     => 'application/pdf',
             'tmp_name' => __DIR__ . '/../../data/template_nda.pdf',

@@ -26,7 +26,7 @@ class NdaNavigationService extends NavigationServiceAbstract
             strtolower($this->getRouteMatch()->getParam('namespace')) === 'program'
         ) {
             if (strpos($this->getRouteMatch()->getMatchedRouteName(), 'community') !== false) {
-                //                $this->updateCommunityNavigation();
+                //updateCommunityNavigation
             }
             $this->updatePublicNavigation();
         }

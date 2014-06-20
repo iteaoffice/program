@@ -52,7 +52,7 @@ return [
                                 'options' => [
                                     'route'       => '/render[/call-:id].pdf',
                                     'constraints' => [
-                                        'call-id' => '\d+'
+                                        'id' => '\d+'
                                     ],
                                     'defaults'    => [
                                         'action'    => 'render',

@@ -24,29 +24,89 @@ use Zend\Form\Annotation;
 class RoadmapPromo
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="promo_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @var integer
      */
     private $id;
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="date_created", type="datetime", nullable=false)
+     * @var \DateTime
      */
     private $dateCreated;
     /**
-     * @var string
-     *
      * @ORM\Column(name="entity", type="string", length=45, nullable=false)
+     * @var string
      */
     private $entity;
     /**
-     * @var integer
-     *
      * @ORM\Column(name="key_id", type="integer", nullable=false)
+     * @var integer
      */
     private $keyId;
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
+
+    /**
+     * @param \DateTime $dateCreated
+     */
+    public function setDateCreated($dateCreated)
+    {
+        $this->dateCreated = $dateCreated;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntity()
+    {
+        return $this->entity;
+    }
+
+    /**
+     * @param string $entity
+     */
+    public function setEntity($entity)
+    {
+        $this->entity = $entity;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getKeyId()
+    {
+        return $this->keyId;
+    }
+
+    /**
+     * @param int $keyId
+     */
+    public function setKeyId($keyId)
+    {
+        $this->keyId = $keyId;
+    }
 }

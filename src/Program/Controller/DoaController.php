@@ -59,11 +59,11 @@ class DoaController extends ProgramAbstractController
             'Program',
             $this->getEvent()->getRouteMatch()->getParam('program-id')
         );
-        $data = array_merge_recursive(
+        $data                = array_merge_recursive(
             $this->getRequest()->getPost()->toArray(),
             $this->getRequest()->getFiles()->toArray()
         );
-        $form = new UploadDoa();
+        $form                = new UploadDoa();
         $form->setData($data);
         if ($this->getRequest()->isPost() && $form->isValid()) {
             if (!isset($data['cancel'])) {
@@ -191,7 +191,7 @@ class DoaController extends ProgramAbstractController
         $programDoa->setOrganisation($organisationService->getOrganisation());
         $programDoa->setProgram($program);
         $renderProjectDoa = $this->renderProgramDoa()->renderForDoa($programDoa);
-        $response = $this->getResponse();
+        $response         = $this->getResponse();
         $response->getHeaders()
                  ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
                  ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")

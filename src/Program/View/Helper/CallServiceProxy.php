@@ -13,6 +13,7 @@
 namespace Program\View\Helper;
 
 use Program\Entity\Call\Call;
+use Program\Service\CallService;
 use Program\Service\ProgramService;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -42,7 +43,7 @@ class CallServiceProxy extends AbstractHelper implements ServiceLocatorAwareInte
      */
     public function __invoke(Call $call)
     {
-        $callService = $this->serviceLocator->getServiceLocator()->get('program_call_service');
+        $callService = clone $this->serviceLocator->getServiceLocator()->get(CallService::class);
 
         return $callService->setCall($call);
     }

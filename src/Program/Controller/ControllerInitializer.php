@@ -11,8 +11,11 @@
  */
 namespace Program\Controller;
 
+use Program\Service\CallService;
 use Program\Service\CallServiceAwareInterface;
+use Program\Service\FormService;
 use Program\Service\FormServiceAwareInterface;
+use Program\Service\ProgramService;
 use Program\Service\ProgramServiceAwareInterface;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\InitializerInterface;
@@ -42,9 +45,9 @@ class ControllerInitializer implements InitializerInterface
             return;
         }
         $arrayCheck = [
-            FormServiceAwareInterface::class    => 'program_form_service',
-            ProgramServiceAwareInterface::class => 'program_program_service',
-            CallServiceAwareInterface::class    => 'program_call_service',
+            FormServiceAwareInterface::class    => FormService::class,
+            ProgramServiceAwareInterface::class => ProgramService::class,
+            CallServiceAwareInterface::class    => CallService::class,
         ];
         /**
          * @var $sm ServiceLocatorInterface

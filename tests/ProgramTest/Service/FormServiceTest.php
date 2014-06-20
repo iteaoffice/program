@@ -35,7 +35,7 @@ class FormServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this->serviceManager = Bootstrap::getServiceManager();
         $this->entityManager  = $this->serviceManager->get('doctrine.entitymanager.orm_default');
-        $this->formService = new FormService();
+        $this->formService    = new FormService();
         $this->formService->setServiceLocator($this->serviceManager);
     }
 

@@ -55,7 +55,7 @@ class NdaLinkTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->serviceManager = Bootstrap::getServiceManager();
-        $this->nda = new Nda();
+        $this->nda            = new Nda();
         $this->nda->setId(1);
         $contact = new Contact();
         $contact->setId(1234);

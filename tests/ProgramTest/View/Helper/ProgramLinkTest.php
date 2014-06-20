@@ -69,7 +69,7 @@ class ProgramLinkTest extends \PHPUnit_Framework_TestCase
         }
         $this->authorizeService->getAcl()->allow([], new Program(), []);
         $this->programLink = $this->serviceManager->get('viewhelpermanager')->get('programlink');
-        $routeMatch = new RouteMatch(
+        $routeMatch        = new RouteMatch(
             array(
                 'program' => 1,
             )

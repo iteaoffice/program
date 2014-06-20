@@ -10,55 +10,17 @@
  */
 namespace Program\Acl\Assertion;
 
-use Contact\Service\ContactService;
 use Program\Entity\Doa as DoaEntity;
-use Program\Service\ProgramService;
 use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Assertion\AssertionInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 use Zend\Permissions\Acl\Role\RoleInterface;
-use Zend\ServiceManager\ServiceManager;
 
 /**
  * Class Program
  * @package Program\Acl\Assertion
  */
-class Doa implements AssertionInterface
+class Doa extends AssertionAbstract
 {
-    /**
-     * @var ServiceManager
-     */
-    protected $serviceManager;
-    /**
-     * @var ProgramService
-     */
-    protected $programService;
-    /**
-     * @var ContactService
-     */
-    protected $contactService;
-    /**
-     * @var array
-     */
-    protected $accessRoles = [];
-
-    /**
-     * @param ServiceManager $serviceManager
-     */
-    public function __construct(ServiceManager $serviceManager)
-    {
-        $this->serviceManager = $serviceManager;
-        $this->programService = $this->serviceManager->get("program_program_service");
-        $this->contactService = $this->serviceManager->get("contact_contact_service");
-        /**
-         * Store locally in the object the contact information
-         */
-        if ($this->serviceManager->get('zfcuser_auth_service')->hasIdentity()) {
-            $this->contactService->setContact($this->serviceManager->get('zfcuser_auth_service')->getIdentity());
-            $this->accessRoles = $this->contactService->getContact()->getRoles();
-        }
-    }
-
     /**
      * Returns true if and only if the assertion conditions are met
      *
@@ -75,20 +37,19 @@ class Doa implements AssertionInterface
      */
     public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
     {
-        $routeMatch = $this->serviceManager->get("Application")->getMvcEvent()->getRouteMatch();
-        $id = $routeMatch->getParam('id');
+        $id = $this->getRouteMatch()->getParam('id');
         /**
          * When the privilege is_null (not given by the isAllowed helper), get it from the routeMatch
          */
         if (is_null($privilege)) {
-            $privilege = $routeMatch->getParam('privilege');
+            $privilege = $this->getRouteMatch()->getParam('privilege');
         }
         if (!$resource instanceof DoaEntity && !is_null($id)) {
-            $resource = $this->programService->findEntityById('Doa', $id);
+            $resource = $this->getProgramService()->findEntityById('Doa', $id);
         }
         switch ($privilege) {
             case 'upload':
-                return !$this->contactService->isEmpty();
+                return $this->hasContact();
             case 'replace':
                 /**
                  * For the replace we need to see if the user has access on the editing of the program
@@ -96,9 +57,9 @@ class Doa implements AssertionInterface
                  */
 
                 return is_null($resource->getDateApproved()) && $resource->getContact()->getId() ===
-                $this->contactService->getContact()->getId();
+                $this->getContactService()->getContact()->getId();
             case 'render':
-                return !is_null($this->contactService);
+                return $this->hasContact();
             case 'download':
             case 'view':
                 return $resource->getContact()->getId() === $this->contactService->getContact()->getId();

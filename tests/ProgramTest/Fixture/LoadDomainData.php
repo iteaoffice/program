@@ -23,7 +23,7 @@ class LoadDomainData extends AbstractFixture implements DependentFixtureInterfac
     public function load(ObjectManager $manager)
     {
         $roadmap = $manager->find("Program\Entity\Roadmap", 1);
-        $domain = new \Program\Entity\Domain();
+        $domain  = new \Program\Entity\Domain();
         $domain->setDomain('This is the domain');
         $domain->setRoadmap($roadmap);
         $domain->setDescription('This is the description');

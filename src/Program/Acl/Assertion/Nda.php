@@ -10,61 +10,18 @@
  */
 namespace Program\Acl\Assertion;
 
-use Contact\Service\ContactService;
 use Program\Entity\Nda as NdaEntity;
 use Program\Service\CallService;
-use Program\Service\ProgramService;
 use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Assertion\AssertionInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 use Zend\Permissions\Acl\Role\RoleInterface;
-use Zend\ServiceManager\ServiceManager;
 
 /**
  * Class Program
  * @package Program\Acl\Assertion
  */
-class Nda implements AssertionInterface
+class Nda extends AssertionAbstract
 {
-    /**
-     * @var ServiceManager
-     */
-    protected $serviceManager;
-    /**
-     * @var CallService
-     */
-    protected $callService;
-    /**
-     * @var ProgramService
-     */
-    protected $programService;
-    /**
-     * @var ContactService
-     */
-    protected $contactService;
-    /**
-     * @var array
-     */
-    protected $accessRoles = [];
-
-    /**
-     * @param ServiceManager $serviceManager
-     */
-    public function __construct(ServiceManager $serviceManager)
-    {
-        $this->serviceManager = $serviceManager;
-        $this->callService    = $this->serviceManager->get("program_call_service");
-        $this->programService = $this->serviceManager->get("program_program_service");
-        $this->contactService = $this->serviceManager->get("contact_contact_service");
-        /**
-         * Store locally in the object the contact information
-         */
-        if ($this->serviceManager->get('zfcuser_auth_service')->hasIdentity()) {
-            $this->contactService->setContact($this->serviceManager->get('zfcuser_auth_service')->getIdentity());
-            $this->accessRoles = $this->contactService->getContact()->getRoles();
-        }
-    }
-
     /**
      * Returns true if and only if the assertion conditions are met
      *
@@ -81,46 +38,44 @@ class Nda implements AssertionInterface
      */
     public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
     {
-        $routeMatch = $this->serviceManager->get("Application")->getMvcEvent()->getRouteMatch();
-        $id = $routeMatch->getParam('id');
+        $id = $this->getRouteMatch()->getParam('id');
         /**
          * When the privilege is_null (not given by the isAllowed helper), get it from the routeMatch
          */
         if (is_null($privilege)) {
-            $privilege = $routeMatch->getParam('privilege');
+            $privilege = $this->getRouteMatch()->getParam('privilege');
         }
         if (!$resource instanceof NdaEntity && !is_null($id)) {
-            $resource = $this->programService->findEntityById('Nda', $id);
+            $resource = $this->getProgramService()->findEntityById('Nda', $id);
         }
         switch ($privilege) {
             case 'upload':
-                return !is_null($this->contactService);
+                return $this->hasContact();
             case 'replace':
                 /**
                  * For the replace we need to see if the user has access on the editing of the program
                  * and the acl should not be approved
                  */
 
-                return is_null($resource->getDateApproved()) && $resource->getContact()->getId(
-                ) === $this->contactService->getContact()->getId();
+                return is_null($resource->getDateApproved()) &&
+                $resource->getContact()->getId() === $this->getContactService()->getContact()->getId();
             case 'render':
-                if (is_null($this->contactService)) {
+                if (!$this->hasContact()) {
                     return false;
                 }
                 /**
                  * When a call is set, check if that call has the right status
                  */
-                if (!is_null($routeMatch->getParam('call-id'))) {
-                    $this->callService->setCallId($routeMatch->getParam('call-id'));
+                if (!is_null($id)) {
+                    $this->getCallService()->setCallId($id);
 
-                    return $this->callService->getCallStatus()->result !== CallService::UNDEFINED;
+                    return $this->getCallService()->getCallStatus()->result !== CallService::UNDEFINED;
                 }
 
                 return true;
             case 'download':
             case 'view':
-                return $resource->getContact()->getId() === $this->contactService->getContact()->getId();
-                break;
+                return $resource->getContact()->getId() === $this->getContactService()->getContact()->getId();
         }
 
         return false;

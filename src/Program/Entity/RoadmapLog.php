@@ -25,35 +25,113 @@ use Zend\Form\Annotation;
 class RoadmapLog
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="log_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @var integer
      */
     private $id;
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="contact_id", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", inversedBy="roadmapLog")
+     * @ORM\JoinColumns({
+     * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id")
+     * })
+     * @var \Contact\Entity\Contact
      */
-    private $contactId;
+    private $contact;
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="date_created", type="datetime", nullable=false)
+     * @var \DateTime
      */
     private $dateCreated;
     /**
-     * @var string
-     *
      * @ORM\Column(name="uri", type="string", length=255, nullable=true)
+     * @var string
      */
     private $uri;
     /**
-     * @var string
-     *
      * @ORM\Column(name="log", type="string", length=255, nullable=true)
+     * @var string
      */
     private $log;
+
+    /**
+     * @return \Contact\Entity\Contact
+     */
+    public function getContact()
+    {
+        return $this->contact;
+    }
+
+    /**
+     * @param \Contact\Entity\Contact $contact
+     */
+    public function setContact($contact)
+    {
+        $this->contact = $contact;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
+
+    /**
+     * @param \DateTime $dateCreated
+     */
+    public function setDateCreated($dateCreated)
+    {
+        $this->dateCreated = $dateCreated;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLog()
+    {
+        return $this->log;
+    }
+
+    /**
+     * @param string $log
+     */
+    public function setLog($log)
+    {
+        $this->log = $log;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUri()
+    {
+        return $this->uri;
+    }
+
+    /**
+     * @param string $uri
+     */
+    public function setUri($uri)
+    {
+        $this->uri = $uri;
+    }
 }

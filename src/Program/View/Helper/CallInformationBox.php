@@ -45,7 +45,7 @@ class CallInformationBox extends AbstractHelper implements ServiceLocatorAwareIn
      */
     public function __invoke(Call $call)
     {
-        $contents = array(
+        $contents   = array(
             CallService::PO_NOT_OPEN  => "%call% for Project Outlines will open %diff% from now (%time%)",
             CallService::PO_OPEN      => "%call% for Project Outlines will close %diff% from now (deadline: %time%)",
             CallService::PO_CLOSED    => "%call% for Project Outlines closed %diff% ago (deadline: %time%)",
@@ -60,9 +60,9 @@ class CallInformationBox extends AbstractHelper implements ServiceLocatorAwareIn
         if ($callStatus->result === CallService::UNDEFINED) {
             return null;
         }
-        $result        = $callStatus->result;
-        $referenceDate = $callStatus->referenceDate;
-        $today = new \DateTime();
+        $result         = $callStatus->result;
+        $referenceDate  = $callStatus->referenceDate;
+        $today          = new \DateTime();
         $dateDifference = $referenceDate->diff($today);
         if ($dateDifference->days > 7) {
             $format = '%a days';
@@ -86,7 +86,7 @@ class CallInformationBox extends AbstractHelper implements ServiceLocatorAwareIn
             ),
             $contents[$result]
         );
-        $alert = '<div class="alert alert-info"><strong>%s</strong><br>%s</div>';
+        $alert   = '<div class="alert alert-info"><strong>%s</strong><br>%s</div>';
 
         return sprintf(
             $alert,

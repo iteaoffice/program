@@ -24,53 +24,173 @@ use Zend\Form\Annotation;
 class RoadmapStar
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="star_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @var integer
      */
     private $id;
     /**
-     * @var integer
-     *
      * @ORM\Column(name="contact_id", type="integer", nullable=false)
+     * @var integer
      */
     private $contactId;
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="date_created", type="datetime", nullable=false)
+     * @var \DateTime
      */
     private $dateCreated;
     /**
-     * @var string
-     *
      * @ORM\Column(name="entity", type="string", length=45, nullable=false)
+     * @var string
      */
     private $entity;
     /**
-     * @var integer
-     *
      * @ORM\Column(name="key_id", type="integer", nullable=false)
+     * @var integer
      */
     private $keyId;
     /**
-     * @var string
-     *
      * @ORM\Column(name="star", type="string", length=60, nullable=true)
+     * @var string
      */
     private $star;
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="date_end", type="datetime", nullable=true)
+     * @var \DateTime
      */
     private $dateEnd;
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="date_updated", type="datetime", nullable=false)
+     * @var \DateTime
      */
     private $dateUpdated;
+
+    /**
+     * @return mixed
+     */
+    public function getContactId()
+    {
+        return $this->contactId;
+    }
+
+    /**
+     * @param mixed $contactId
+     */
+    public function setContactId($contactId)
+    {
+        $this->contactId = $contactId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
+
+    /**
+     * @param mixed $dateCreated
+     */
+    public function setDateCreated($dateCreated)
+    {
+        $this->dateCreated = $dateCreated;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateEnd()
+    {
+        return $this->dateEnd;
+    }
+
+    /**
+     * @param \DateTime $dateEnd
+     */
+    public function setDateEnd($dateEnd)
+    {
+        $this->dateEnd = $dateEnd;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateUpdated()
+    {
+        return $this->dateUpdated;
+    }
+
+    /**
+     * @param \DateTime $dateUpdated
+     */
+    public function setDateUpdated($dateUpdated)
+    {
+        $this->dateUpdated = $dateUpdated;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntity()
+    {
+        return $this->entity;
+    }
+
+    /**
+     * @param string $entity
+     */
+    public function setEntity($entity)
+    {
+        $this->entity = $entity;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getKeyId()
+    {
+        return $this->keyId;
+    }
+
+    /**
+     * @param int $keyId
+     */
+    public function setKeyId($keyId)
+    {
+        $this->keyId = $keyId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStar()
+    {
+        return $this->star;
+    }
+
+    /**
+     * @param mixed $star
+     */
+    public function setStar($star)
+    {
+        $this->star = $star;
+    }
 }

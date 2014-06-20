@@ -180,7 +180,7 @@ class ProgramManagerController extends AbstractActionController implements
             $this->getEvent()->getRouteMatch()->getParam('entity'),
             $this->getEvent()->getRouteMatch()->getParam('id')
         );
-        $form = $this->getFormService()->prepare($entity->get('entity_name'), $entity, $_POST);
+        $form   = $this->getFormService()->prepare($entity->get('entity_name'), $entity, $_POST);
         $form->setAttribute('class', 'form-horizontal live-form');
         $form->setAttribute('id', 'program-program-' . $entity->getId());
         if ($this->getRequest()->isPost() && $form->isValid()) {

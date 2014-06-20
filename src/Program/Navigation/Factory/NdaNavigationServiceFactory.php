@@ -36,12 +36,12 @@ class NdaNavigationServiceFactory implements FactoryInterface
         /**
          * @var $programService ProgramService
          */
-        $programService = $serviceLocator->get('program_program_service');
+        $programService = $serviceLocator->get(ProgramService::class);
         $ndaNavigationService->setProgramService($programService);
         /**
          * @var $callService CallService
          */
-        $callService = $serviceLocator->get('program_call_service');
+        $callService = $serviceLocator->get(CallService::class);
         $ndaNavigationService->setCallService($callService);
         $application = $serviceLocator->get('application');
         $ndaNavigationService->setRouteMatch($application->getMvcEvent()->getRouteMatch());

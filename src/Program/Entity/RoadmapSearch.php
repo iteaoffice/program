@@ -24,41 +24,131 @@ use Zend\Form\Annotation;
 class RoadmapSearch
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="search_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @var integer
      */
     private $id;
     /**
-     * @var integer
-     *
      * @ORM\Column(name="key_id", type="integer", nullable=false)
+     * @var integer
      */
     private $keyId;
     /**
-     * @var string
-     *
      * @ORM\Column(name="type", type="string", length=20, nullable=false)
+     * @var string
      */
     private $type;
     /**
-     * @var string
-     *
      * @ORM\Column(name="subject", type="string", length=64, nullable=true)
+     * @var string
      */
     private $subject;
     /**
-     * @var string
-     *
      * @ORM\Column(name="content", type="text", nullable=true)
+     * @var string
      */
     private $content;
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="date_updated", type="datetime", nullable=false)
+     * @var \DateTime
      */
     private $dateUpdated;
+
+    /**
+     * @return string
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * @param string $content
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateUpdated()
+    {
+        return $this->dateUpdated;
+    }
+
+    /**
+     * @param \DateTime $dateUpdated
+     */
+    public function setDateUpdated($dateUpdated)
+    {
+        $this->dateUpdated = $dateUpdated;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getKeyId()
+    {
+        return $this->keyId;
+    }
+
+    /**
+     * @param mixed $keyId
+     */
+    public function setKeyId($keyId)
+    {
+        $this->keyId = $keyId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubject()
+    {
+        return $this->subject;
+    }
+
+    /**
+     * @param mixed $subject
+     */
+    public function setSubject($subject)
+    {
+        $this->subject = $subject;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
 }

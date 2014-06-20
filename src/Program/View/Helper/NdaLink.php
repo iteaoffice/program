@@ -14,6 +14,7 @@
 namespace Program\View\Helper;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Program\Acl\Assertion\Nda as NdaAssertion;
 use Program\Entity;
 use Program\Entity\Call\Call;
 use Program\Entity\Nda;
@@ -56,7 +57,7 @@ class NdaLink extends LinkAbstract
         $this->setShow($show);
         if (!$this->hasAccess(
             $this->getNda(),
-            'program_acl_assertion_nda',
+            NdaAssertion::class,
             $this->getAction()
         )
         ) {
