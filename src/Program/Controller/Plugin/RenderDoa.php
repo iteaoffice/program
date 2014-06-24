@@ -143,6 +143,6 @@ class RenderDoa extends AbstractPlugin
      */
     public function getGeneralService()
     {
-        return $this->getServiceLocator()->get('general_general_service');
+        return $this->getServiceLocator()->get(GeneralService::class);
     }
 }

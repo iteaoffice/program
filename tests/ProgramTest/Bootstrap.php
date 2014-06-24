@@ -50,35 +50,37 @@ class Bootstrap
         $serviceManager = new ServiceManager(new ServiceManagerConfig());
         $serviceManager->setService('ApplicationConfig', $config);
         $serviceManager->get('ModuleManager')->loadModules();
-        static::$serviceManager = $serviceManager;
-        $entityManager          = $serviceManager->get('doctrine.entitymanager.orm_default');
-        //Validate the schema;
-        $validator = new SchemaValidator($entityManager);
-        $errors    = $validator->validateMapping();
-        if (count($errors) > 0) {
-            foreach ($errors AS $entity => $errors) {
-                echo "Error in Entity: '" . $entity . "':\n";
-                echo implode("\n", $errors);
-                echo "\n";
+        if (defined("TEST_SUITE") && constant("TEST_SUITE") == 'full') {
+            static::$serviceManager = $serviceManager;
+            $entityManager          = $serviceManager->get('doctrine.entitymanager.orm_default');
+            //Validate the schema;
+            $validator = new SchemaValidator($entityManager);
+            $errors    = $validator->validateMapping();
+            if (count($errors) > 0) {
+                foreach ($errors AS $entity => $errors) {
+                    echo "Error in Entity: '" . $entity . "':\n";
+                    echo implode("\n", $errors);
+                    echo "\n";
+                }
+                die();
             }
-            die();
+            //Create the schema
+            $tool      = new \Doctrine\ORM\Tools\SchemaTool($entityManager);
+            $mdFactory = $entityManager->getMetadataFactory();
+            $mdFactory->getAllMetadata();
+            $tool->dropDatabase();
+            $tool->createSchema($mdFactory->getAllMetadata());
+            $loader = new Loader();
+            $loader->addFixture(new \AdminTest\Fixture\LoadAccessData());
+            $loader->addFixture(new LoadCountryData());
+            $loader->addFixture(new LoadDomainData());
+            $loader->addFixture(new LoadProgramData());
+            $loader->addFixture(new LoadContactData());
+            $loader->addFixture(new LoadContentTypeData());
+            $purger   = new ORMPurger();
+            $executor = new ORMExecutor($entityManager, $purger);
+            $executor->execute($loader->getFixtures());
         }
-        //Create the schema
-        $tool      = new \Doctrine\ORM\Tools\SchemaTool($entityManager);
-        $mdFactory = $entityManager->getMetadataFactory();
-        $mdFactory->getAllMetadata();
-        $tool->dropDatabase();
-        $tool->createSchema($mdFactory->getAllMetadata());
-        $loader = new Loader();
-        $loader->addFixture(new \AdminTest\Fixture\LoadAccessData());
-        $loader->addFixture(new LoadCountryData());
-        $loader->addFixture(new LoadDomainData());
-        $loader->addFixture(new LoadProgramData());
-        $loader->addFixture(new LoadContactData());
-        $loader->addFixture(new LoadContentTypeData());
-        $purger   = new ORMPurger();
-        $executor = new ORMExecutor($entityManager, $purger);
-        $executor->execute($loader->getFixtures());
     }
 
     protected static function findParentPath($path)

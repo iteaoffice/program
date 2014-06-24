@@ -18,6 +18,7 @@
         <const name="DEBRANOVA_APP" value="test"/>
         <const name="DEBRANOVA_APPLICATION" value="test"/>
         <const name="DEBRANOVA_ENV" value="development"/>
+        <const name="TEST_SUITE" value="full"/>
     </php>
 
     <filter>
