@@ -133,7 +133,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
      */
     public function getCallService()
     {
-        return $this->getServiceLocator()->get('program_call_service');
+        return $this->getServiceLocator()->get(CallService::class);
     }
 
     /**

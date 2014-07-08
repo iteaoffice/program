@@ -64,14 +64,6 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
      */
     public function newEntity(EntityAbstract $entity)
     {
-        if (method_exists($entity, 'getLastUpdateBy')) {
-            $authService = $this->getServiceLocator()->get('zfcuser_auth_service');
-            if ($authService->hasIdentity()) {
-                $entity->setLastUpdateBy($authService->getIdentity()->getDisplayName());
-            } else {
-                $entity->setLastUpdateBy('guest');
-            }
-        }
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
 
@@ -85,14 +77,6 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
      */
     public function updateEntity(EntityAbstract $entity)
     {
-        if (method_exists($entity, 'getLastUpdateBy')) {
-            $authService = $this->getServiceLocator()->get('zfcuser_auth_service');
-            if ($authService->hasIdentity()) {
-                $entity->setLastUpdateBy($authService->getIdentity()->getDisplayName());
-            } else {
-                $entity->setLastUpdateBy('guest');
-            }
-        }
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
 
@@ -191,7 +175,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
      */
     public function getVersionService()
     {
-        return $this->getServiceLocator()->get('project_version_service');
+        return $this->getServiceLocator()->get(VersionService::class);
     }
 
     /**

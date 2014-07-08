@@ -111,6 +111,8 @@ class DoaLink extends LinkAbstract
         switch ($this->getAction()) {
             case 'upload':
                 $this->setRouter('program/doa/upload');
+                $this->addRouterParam('organisation-id', $this->getOrganisation()->getId());
+                $this->addRouterParam('program-id', $this->getProgram()->getId());
                 $this->setText(
                     sprintf(
                         _("txt-upload-doa-for-organisation-%s-in-program-%s-link-title"),
@@ -125,7 +127,7 @@ class DoaLink extends LinkAbstract
                  * The $doa can be null, we then use the $organisation and $program to produce the link
                  */
                 $renderText = _("txt-render-doa-for-organisation-%s-in-program-%s-link-title");
-                if (is_null($this->getDoa())) {
+                if (is_null($this->getDoa()->getId())) {
                     $this->setText(
                         sprintf(
                             $renderText,

@@ -100,7 +100,7 @@ class CallInformationBox extends AbstractHelper implements ServiceLocatorAwareIn
      */
     public function getCallService()
     {
-        return $this->getServiceLocator()->get("program_call_service");
+        return $this->getServiceLocator()->get(CallService::class);
     }
 
     /**
