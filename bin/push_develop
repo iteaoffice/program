@@ -3,7 +3,8 @@ SRC_DIR="`pwd`"
 cd "`dirname "$0"`"
 cd ".."
 
-git push origin develop
+git push origin develop --tag
+git push origin master
 
 REV="`git rev-parse HEAD`"
 

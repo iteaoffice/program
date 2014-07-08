@@ -1,7 +1,8 @@
 debranova\program
 =================
 
-Version: 1.0.1-dev
+master branch: 1.1-dev
+develop branch: 1.2-dev
 
 [![Build Status](https://travis-ci.org/debranova/program.svg?branch=develop)](https://travis-ci.org/debranova/program)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/debranova/program/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/debranova/program/?branch=develop)

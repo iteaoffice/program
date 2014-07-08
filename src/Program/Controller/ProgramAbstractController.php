@@ -166,7 +166,7 @@ abstract class ProgramAbstractController extends AbstractActionController implem
      */
     public function getProjectService()
     {
-        return $this->getServiceLocator()->get('project_project_service');
+        return $this->getServiceLocator()->get(ProjectService::class);
     }
 
     /**
