@@ -79,7 +79,7 @@ final class Version
      * @link   https://api.github.com/repos/zendframework/zf2/git/refs/tags/release-
      * @link   http://framework.zend.com/api/zf-version?v=2
      *
-     * @param string      $service    Version service with which to retrieve the version
+     * @param string $service Version service with which to retrieve the version
      * @param Http\Client $httpClient HTTP client with which to retrieve the version
      *
      * @return string
@@ -133,11 +133,12 @@ final class Version
     protected static function getLatestFromGithub(Http\Client $httpClient = null)
     {
         $url = 'https://api.github.com/repos/debranova/program/git/refs/tags/release-';
+        $url .= '?client_id=2b1088587b9820f33583&amp;client_secret=1738809f67b3fbf4198f2bc36ef54c52d6a3bb6c';
         if ($httpClient === null) {
-            $context     = stream_context_create(
+            $context = stream_context_create(
                 array(
                     'http' => array(
-                        'user_agent' => sprintf('Zend-Version/%s', self::VERSION),
+                        'user_agent' => sprintf('debranova-version/%s', self::VERSION),
                     ),
                 )
             );

@@ -88,7 +88,7 @@ class FormService implements ServiceLocatorAwareInterface
     public function getProgramService()
     {
         if (null === $this->programService) {
-            $this->setProgramService($this->getServiceLocator()->get('program_program_service'));
+            $this->setProgramService($this->getServiceLocator()->get(ProgramService::class));
         }
 
         return $this->programService;
