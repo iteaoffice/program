@@ -14,6 +14,7 @@ namespace ProgramTest\View\Helper;
 
 use BjyAuthorize\Service\Authorize;
 use Contact\Entity\Contact;
+use Doctrine\Common\Collections\ArrayCollection;
 use Program\Entity\Call\Call;
 use Program\Entity\Nda;
 use Program\Entity\Program;
@@ -55,7 +56,7 @@ class NdaLinkTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->serviceManager = Bootstrap::getServiceManager();
-        $this->nda            = new Nda();
+        $this->nda = new Nda();
         $this->nda->setId(1);
         $contact = new Contact();
         $contact->setId(1234);
@@ -67,19 +68,8 @@ class NdaLinkTest extends \PHPUnit_Framework_TestCase
         $call->setId(1);
         $call->setCall("Call");
         $call->setProgram($program);
-        $this->nda->setCall($call);
-        $this->authorizeService = $this->serviceManager->get('BjyAuthorize\Service\Authorize');
-        if (!$this->authorizeService->getAcl()->hasResource($this->nda)) {
-            $this->authorizeService->getAcl()->addResource($this->nda);
-            $this->authorizeService->getAcl()->allow([], $this->nda, []);
-        }
-        /**
-         * Add the resource on the fly
-         */
-        if (!$this->authorizeService->getAcl()->hasResource(new Nda())) {
-            $this->authorizeService->getAcl()->addResource(new Nda());
-        }
-        $this->authorizeService->getAcl()->allow([], new Nda(), []);
+        $this->nda->setCall(new ArrayCollection([$call]));
+
         $this->ndaLink = $this->serviceManager->get('viewhelpermanager')->get('ndaLink');
         /**
          * Bootstrap the application to have the other information available
@@ -93,13 +83,6 @@ class NdaLinkTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf("Program\View\Helper\NdaLink", $this->ndaLink);
     }
 
-    /**
-     * @expectedException \PHPUnit_Framework_Error
-     */
-    public function testCannotViewEmptyNda()
-    {
-        $this->ndaLink->__invoke(null, 'view');
-    }
 
     public function canRenderEmptyNda()
     {
@@ -109,13 +92,29 @@ class NdaLinkTest extends \PHPUnit_Framework_TestCase
 
     public function testGetAccessDenied()
     {
-        $this->authorizeService->getAcl()->deny([], $this->nda, []);
+        $authorizeServiceMock = $this->getMockBuilder('BjyAuthorize\View\Helper\IsAllowed')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $authorizeServiceMock->expects($this->once())
+            ->method('__invoke')
+            ->will($this->returnValue(false));
+        $viewHelperManager = $this->serviceManager->get('viewhelpermanager');
+        $viewHelperManager->setService('isAllowed', $authorizeServiceMock);
         $this->assertNotContains('<a href', $this->ndaLink->__invoke($this->nda, 'download'));
-        $this->authorizeService->getAcl()->allow([], $this->nda, []);
+
     }
 
     public function testCanCreateDifferentNdaLinks()
     {
+        $authorizeServiceMock = $this->getMockBuilder('BjyAuthorize\View\Helper\IsAllowed')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $authorizeServiceMock->expects($this->any())
+            ->method('__invoke')
+            ->will($this->returnValue(true));
+        $viewHelperManager = $this->serviceManager->get('viewhelpermanager');
+        $viewHelperManager->setService('isAllowed', $authorizeServiceMock);
+
         $this->assertContains(
             '<a href',
             $this->ndaLink->__invoke($this->nda, 'upload')
@@ -134,9 +133,8 @@ class NdaLinkTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testThrowsExceptionForWrongInviteLink()
+    public function testIncorrectShowReturnEmtpyString()
     {
-        $this->setExpectedException('InvalidArgumentException');
-        $this->ndaLink->__invoke($this->nda, 'blaat');
+        $this->assertEquals('', $this->ndaLink->__invoke($this->nda, 'blaat'));
     }
 }
