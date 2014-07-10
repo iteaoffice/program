@@ -29,22 +29,26 @@ class Nda extends AssertionAbstract
      * $role, $resource, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
      * privileges, respectively.
      *
-     * @param Acl               $acl
-     * @param RoleInterface     $role
+     * @param Acl $acl
+     * @param RoleInterface $role
      * @param ResourceInterface $resource
-     * @param string            $privilege
+     * @param string $privilege
      *
      * @return bool
      */
     public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
     {
         $id = $this->getRouteMatch()->getParam('id');
+
         /**
          * When the privilege is_null (not given by the isAllowed helper), get it from the routeMatch
          */
         if (is_null($privilege)) {
             $privilege = $this->getRouteMatch()->getParam('privilege');
         }
+        /**
+         * @var $resource NdaEntity
+         */
         if (!$resource instanceof NdaEntity && !is_null($id)) {
             $resource = $this->getProgramService()->findEntityById('Nda', $id);
         }
@@ -65,10 +69,17 @@ class Nda extends AssertionAbstract
                 }
                 /**
                  * When a call is set, check if that call has the right status
+                 * The call can be found in 1 ways, or via the $id, or via the resource.
+                 * The resource has goes first
                  */
-                if (!is_null($id)) {
+                if ($resource instanceof NdaEntity && !is_null($resource->getCall())) {
+                    $this->getCallService()->setCall($resource->getCall());
+                } elseif (!is_null($id)) {
                     $this->getCallService()->setCallId($id);
+                }
 
+                //We have no 2 methods to get the call, if the call is set check if the status is correct
+                if (!$this->getCallService()->isEmpty()) {
                     return $this->getCallService()->getCallStatus()->result !== CallService::UNDEFINED;
                 }
 
