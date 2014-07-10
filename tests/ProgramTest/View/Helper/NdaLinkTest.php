@@ -83,7 +83,6 @@ class NdaLinkTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf("Program\View\Helper\NdaLink", $this->ndaLink);
     }
 
-
     public function canRenderEmptyNda()
     {
         $this->ndaLink->__invoke(null, 'upload');
