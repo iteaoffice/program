@@ -19,6 +19,7 @@ use Contact\Service\ContactService;
 use Contact\Service\ContactServiceAwareInterface;
 use Doctrine\ORM\PersistentCollection;
 use Program\Service\CallService;
+use Program\Service\CallServiceAwareInterface;
 use Program\Service\ProgramService;
 use Program\Service\ProgramServiceAwareInterface;
 use Zend\Mvc\Router\Http\RouteMatch;
@@ -42,6 +43,7 @@ abstract class AssertionAbstract implements
     AdminServiceAwareInterface,
     ServiceLocatorAwareInterface,
     ProgramServiceAwareInterface,
+    CallServiceAwareInterface,
     ContactServiceAwareInterface
 {
     /**

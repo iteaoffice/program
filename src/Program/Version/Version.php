@@ -79,7 +79,7 @@ final class Version
      * @link   https://api.github.com/repos/zendframework/zf2/git/refs/tags/release-
      * @link   http://framework.zend.com/api/zf-version?v=2
      *
-     * @param string $service Version service with which to retrieve the version
+     * @param string      $service    Version service with which to retrieve the version
      * @param Http\Client $httpClient HTTP client with which to retrieve the version
      *
      * @return string
