@@ -10,8 +10,9 @@
 namespace ProgramTest;
 
 use ContactTest\Fixture\LoadContactData;
-
-use Doctrine\Fixture\Loader\ClassLoader;
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\Loader;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\Tools\SchemaValidator;
 use GeneralTest\Fixture\LoadContentTypeData;
 use GeneralTest\Fixture\LoadCountryData;
@@ -69,7 +70,7 @@ class Bootstrap
             $mdFactory->getAllMetadata();
             $tool->dropDatabase();
             $tool->createSchema($mdFactory->getAllMetadata());
-            $loader = new ClassLoader();
+            $loader = new Loader();
             $loader->addFixture(new \AdminTest\Fixture\LoadAccessData());
             $loader->addFixture(new LoadCountryData());
             $loader->addFixture(new LoadDomainData());
