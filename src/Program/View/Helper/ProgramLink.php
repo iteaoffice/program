@@ -89,7 +89,7 @@ class ProgramLink extends LinkAbstract
                  */
                 $this->setRouter($this->getRouteMatch()->getMatchedRouteName());
                 $this->addRouterParam('docRef', $this->getRouteMatch()->getParam('docRef'));
-                $this->addRouterParam('program', $this->getRouteMatch()->getParam('program'));
+                $this->addRouterParam('program', $this->getProgram()->getId());
                 $this->setText(sprintf(_("txt-view-program-%s"), $this->getProgram()));
                 break;
             default:

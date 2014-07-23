@@ -100,12 +100,12 @@ class CallService extends ServiceAbstract
         $firstCall           = $this->getEntityManager()->getRepository($this->getFullEntityName('Call\Call'))
                                     ->findOneBy(
                                         [],
-                                        array('call' => 'ASC')
+                                        array('id' => 'ASC')
                                     );
         $lastCall            = $this->getEntityManager()->getRepository($this->getFullEntityName('Call\Call'))
                                     ->findOneBy(
                                         [],
-                                        array('call' => 'DESC')
+                                        array('id' => 'DESC')
                                     );
         $callSpan            = new \stdClass();
         $callSpan->firstCall = $firstCall;

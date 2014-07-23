@@ -96,11 +96,12 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
         /**
          * @var $serverUrl ServerUrl
          */
-        $serverUrl         = $this->serviceLocator->get('serverUrl');
+        $serverUrl = $this->serviceLocator->get('serverUrl');
         $this->linkContent = [];
-        $this->classes     = [];
+        $this->classes = [];
         $this->parseAction();
         $this->parseShow();
+
         if ('social' === $this->getShow()) {
             return $serverUrl() . $url($this->router, $this->routerParams);
         }
@@ -133,16 +134,16 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
                 switch ($this->getAction()) {
                     case 'edit':
                     case 'edit-community':
-                        $this->addLinkContent('<span class="glyphicon glyphicon-edit"></span>');
+                        $this->addLinkContent('<i class="fa fa-pencil-square-o"></i>');
                         break;
                     case 'download':
-                        $this->addLinkContent('<span class="glyphicon glyphicon-download"></span>');
+                        $this->addLinkContent('<i class="fa fa-download"></i>');
                         break;
                     case 'replace':
                         $this->addLinkContent('<span class="glyphicon glyphicon-repeat"></span>');
                         break;
                     default:
-                        $this->addLinkContent('<span class="glyphicon glyphicon-info-sign"></span>');
+                        $this->addLinkContent('<i class="fa fa-link"></i>');
                         break;
                 }
                 break;

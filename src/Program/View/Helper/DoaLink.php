@@ -59,7 +59,8 @@ class DoaLink extends LinkAbstract
         $show = 'text',
         Organisation $organisation = null,
         Program $program = null
-    ) {
+    )
+    {
         $this->setDoa($doa);
         $this->setOrganisation($organisation);
         $this->setProgram($program);
@@ -115,7 +116,7 @@ class DoaLink extends LinkAbstract
                 $this->addRouterParam('program-id', $this->getProgram()->getId());
                 $this->setText(
                     sprintf(
-                        _("txt-upload-doa-for-organisation-%s-in-program-%s-link-title"),
+                        $this->translate("txt-upload-doa-for-organisation-%s-in-program-%s-link-title"),
                         $this->getOrganisation(),
                         $this->getProgram()
                     )
