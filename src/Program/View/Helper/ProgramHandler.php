@@ -55,6 +55,16 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
                     !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null,
                     !$this->getProgramService()->isEmpty() ? $this->getProgramService()->getProgram() : null
                 );
+            case 'programcall_info':
+                return $this->parseProgramcallInfo(
+                    !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null,
+                    !$this->getProgramService()->isEmpty() ? $this->getProgramService()->getProgram() : null
+                );
+            case 'programcall_map':
+                return $this->parseProgramcallMap(
+                    !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null,
+                    !$this->getProgramService()->isEmpty() ? $this->getProgramService()->getProgram() : null
+                );
             default:
                 return sprintf(
                     "No handler available for <code>%s</code> in class <code>%s</code>",
@@ -162,6 +172,24 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     {
         return $this->getZfcTwigRenderer()->render(
             'program/partial/call-selector',
+            array(
+                'calls'             => $this->getCallService()->findNonEmptyCalls(),
+                'callId'            => !is_null($call) ? $call->getId() : null,
+                'selectedProgramId' => !is_null($program) ? $program->getId() : null
+            )
+        );
+    }
+
+    /**
+     * @param Call    $call
+     * @param Program $program
+     *
+     * @return string
+     */
+    public function parseProgramcallInfo(Call $call = null, Program $program = null)
+    {
+        return $this->getZfcTwigRenderer()->render(
+            'program/partial/entity/programcall-info',
             array(
                 'calls'             => $this->getCallService()->findNonEmptyCalls(),
                 'callId'            => !is_null($call) ? $call->getId() : null,
