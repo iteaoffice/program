@@ -76,6 +76,7 @@ class NdaController extends ProgramAbstractController
                 $this->zfcUserAuthentication()->getIdentity(),
                 $call
             );
+
             return $this->redirect()->toRoute(
                 'program/nda/view',
                 ['id' => $nda->getId()]
@@ -138,6 +139,7 @@ class NdaController extends ProgramAbstractController
                 $this->flashMessenger()->setNamespace('success')->addMessage(
                     sprintf(_("txt-nda-has-been-replaced-successfully"))
                 );
+
                 return $this->redirect()->toRoute(
                     'program/nda/view',
                     ['id' => $nda->getId()]
@@ -147,6 +149,7 @@ class NdaController extends ProgramAbstractController
                 $this->flashMessenger()->setNamespace('info')->addMessage(
                     sprintf(_("txt-action-has-been-cancelled"))
                 );
+
                 return $this->redirect()->toRoute(
                     'program/nda/view',
                     ['id' => $nda->getId()]

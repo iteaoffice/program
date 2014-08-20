@@ -90,6 +90,7 @@ class DoaController extends ProgramAbstractController
                         $program
                     )
                 );
+
                 return $this->redirect()->toRoute(
                     'community/program/doa/view',
                     ['id' => $doaObject->getId()]
@@ -159,6 +160,7 @@ class DoaController extends ProgramAbstractController
                     )
                 );
             }
+
             return $this->redirect()->toRoute(
                 'program/doa/view',
                 ['id' => $doa->getId()]

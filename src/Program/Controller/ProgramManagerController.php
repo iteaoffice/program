@@ -140,6 +140,7 @@ class ProgramManagerController extends AbstractActionController implements
         $form->setAttribute('class', 'form-horizontal');
         if ($this->getRequest()->isPost() && $form->isValid()) {
             $result = $this->getProgramService()->newEntity($form->getData());
+
             return $this->redirect()->toRoute(
                 'zfcadmin/program-manager/' . strtolower($this->params('entity')),
                 ['id' => $result->getId()]
@@ -185,6 +186,7 @@ class ProgramManagerController extends AbstractActionController implements
         $form->setAttribute('id', 'program-program-' . $entity->getId());
         if ($this->getRequest()->isPost() && $form->isValid()) {
             $result = $this->getProgramService()->updateEntity($form->getData());
+
             return $this->redirect()->toRoute(
                 'zfcadmin/program/' . strtolower($entity->get('dashed_entity_name')),
                 ['id' => $result->getId()]
