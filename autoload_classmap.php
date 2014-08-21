@@ -85,5 +85,7 @@ return array(
   'Program\Options\ProgramOptionsInterface'                => __DIR__ . '/src/Program/Options/ProgramOptionsInterface.php',
   'Program\Acl\Assertion\Nda'                              => __DIR__ . '/src/Program/Acl/Assertion/Nda.php',
   'Program\Acl\Assertion\AssertionAbstract'                => __DIR__ . '/src/Program/Acl/Assertion/AssertionAbstract.php',
+  'getOrganisationAssert'                                  => __DIR__ . '/src/Program/Acl/Assertion/AssertionAbstract.php',
+  'rolesHaveAccess'                                        => __DIR__ . '/src/Program/Acl/Assertion/AssertionAbstract.php',
   'Program\Acl\Assertion\Doa'                              => __DIR__ . '/src/Program/Acl/Assertion/Doa.php',
 );
