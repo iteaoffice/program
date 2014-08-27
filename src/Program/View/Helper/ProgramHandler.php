@@ -14,6 +14,7 @@ namespace Program\View\Helper;
 
 use Content\Entity\Content;
 use Program\Entity\Call\Call;
+use Program\Entity\Call\Session;
 use Program\Entity\Program;
 use Program\Service\CallService;
 use Program\Service\ProgramService;
@@ -40,6 +41,10 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
      * @var HelperPluginManager
      */
     protected $serviceLocator;
+    /**
+     * @var Session
+     */
+    protected $session;
 
     /**
      * @param Content $content
@@ -60,6 +65,8 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
                     !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null,
                     !$this->getProgramService()->isEmpty() ? $this->getProgramService()->getProgram() : null
                 );
+            case 'programcall_session':
+                return $this->parseSessionOverview($this->getSession());
             case 'programcall_map':
                 return $this->parseProgramcallMap(
                     !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null,
@@ -75,6 +82,14 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     }
 
     /**
+     * @param $sessionId
+     */
+    public function setSessionId($sessionId)
+    {
+        $this->session = $this->getCallService()->findEntityById('Call\Session', $sessionId);
+    }
+
+    /**
      * @param Content $content
      */
     public function extractContentParam(Content $content)
@@ -84,6 +99,13 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
              * When the parameterId is 0 (so we want to get the article from the URL
              */
             switch ($param->getParameter()->getParam()) {
+                case 'session':
+                    if (!is_null($sessionId = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
+                        $this->setSessionId($sessionId);
+                    } else {
+                        $this->setSessionId($param->getParameterId());
+                    }
+                    break;
                 case 'call':
                     if (!is_null($callId = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
                         $this->setCallId($callId);
@@ -172,11 +194,11 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     {
         return $this->getZfcTwigRenderer()->render(
             'program/partial/call-selector',
-            array(
+            [
                 'calls'             => $this->getCallService()->findNonEmptyCalls(),
                 'callId'            => !is_null($call) ? $call->getId() : null,
                 'selectedProgramId' => !is_null($program) ? $program->getId() : null
-            )
+            ]
         );
     }
 
@@ -190,11 +212,11 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     {
         return $this->getZfcTwigRenderer()->render(
             'program/partial/entity/programcall-info',
-            array(
+            [
                 'calls'             => $this->getCallService()->findNonEmptyCalls(),
                 'callId'            => !is_null($call) ? $call->getId() : null,
                 'selectedProgramId' => !is_null($program) ? $program->getId() : null
-            )
+            ]
         );
     }
 
@@ -204,5 +226,38 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     public function getZfcTwigRenderer()
     {
         return $this->getServiceLocator()->get('ZfcTwigRenderer');
+    }
+
+    /**
+     * @param Session $session
+     *
+     * @return string
+     */
+    public function parseSessionOverview(Session $session)
+    {
+        return $this->getZfcTwigRenderer()->render(
+            'program/partial/entity/session',
+            ['session' => $session]
+        );
+    }
+
+    /**
+     * @return Session
+     */
+    public function getSession()
+    {
+        return $this->session;
+    }
+
+    /**
+     * @param Session $session
+     *
+     * @return $this;
+     */
+    public function setSession($session)
+    {
+        $this->session = $session;
+
+        return $this;
     }
 }

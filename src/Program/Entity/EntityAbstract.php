@@ -40,7 +40,7 @@ abstract class EntityAbstract implements EntityInterface, InputFilterAwareInterf
     }
 
     /**
-     * @param $switch
+     * @param string $switch
      *
      * @return mixed|string
      */
@@ -62,15 +62,7 @@ abstract class EntityAbstract implements EntityInterface, InputFilterAwareInterf
 
                 return preg_replace_callback('/([A-Z])/', $underscore, lcfirst($this->get('entity_name')));
             case 'underscore_full_entity_name':
-                $underscore = function ($m) {
-                    return '_' . strtolower($m[1]);
-                };
-
-                return preg_replace_callback(
-                    '/([A-Z])/',
-                    $underscore,
-                    lcfirst(str_replace('\\', '', __NAMESPACE__) . $this->get('entity_name'))
-                );
+                return strtolower(str_replace('\\', '_', get_class($this)));
         }
     }
 }
