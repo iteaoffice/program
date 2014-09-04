@@ -42,7 +42,7 @@ class NdaController extends ProgramAbstractController
             return $this->notFoundAction();
         }
 
-        return new ViewModel(array('nda' => $nda));
+        return new ViewModel(['nda' => $nda]);
     }
 
     /**
@@ -71,23 +71,24 @@ class NdaController extends ProgramAbstractController
         $form->setData($data);
         if ($this->getRequest()->isPost() && $form->isValid()) {
             $fileData = $form->getData('file');
-            $nda      = $this->getCallService()->uploadNda(
+            $nda = $this->getCallService()->uploadNda(
                 $fileData['file'],
                 $this->zfcUserAuthentication()->getIdentity(),
                 $call
             );
-            $this->redirect()->toRoute(
+
+            return $this->redirect()->toRoute(
                 'program/nda/view',
-                array('id' => $nda->getId())
+                ['id' => $nda->getId()]
             );
         }
 
         return new ViewModel(
-            array(
+            [
                 'call' => $call,
                 'nda'  => $nda,
                 'form' => $form
-            )
+            ]
         );
     }
 
@@ -138,27 +139,29 @@ class NdaController extends ProgramAbstractController
                 $this->flashMessenger()->setNamespace('success')->addMessage(
                     sprintf(_("txt-nda-has-been-replaced-successfully"))
                 );
-                $this->redirect()->toRoute(
+
+                return $this->redirect()->toRoute(
                     'program/nda/view',
-                    array('id' => $nda->getId())
+                    ['id' => $nda->getId()]
                 );
             }
             if (isset($data['cancel'])) {
                 $this->flashMessenger()->setNamespace('info')->addMessage(
                     sprintf(_("txt-action-has-been-cancelled"))
                 );
-                $this->redirect()->toRoute(
+
+                return $this->redirect()->toRoute(
                     'program/nda/view',
-                    array('id' => $nda->getId())
+                    ['id' => $nda->getId()]
                 );
             }
         }
 
         return new ViewModel(
-            array(
+            [
                 'nda'  => $nda,
                 'form' => $form
-            )
+            ]
         );
     }
 
@@ -180,7 +183,7 @@ class NdaController extends ProgramAbstractController
             if ($this->getCallService()->isEmpty()) {
                 return $this->notFoundAction();
             }
-            $arrayCollection = new ArrayCollection(array($call));
+            $arrayCollection = new ArrayCollection([$call]);
             $nda->setCall($arrayCollection);
             $renderNda = $this->renderNda()->renderForCall($nda);
         } else {
@@ -188,12 +191,12 @@ class NdaController extends ProgramAbstractController
         }
         $response = $this->getResponse();
         $response->getHeaders()
-                 ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-                 ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
-                 ->addHeaderLine("Pragma: public")
-                 ->addHeaderLine('Content-Disposition', 'attachment; filename="' . $nda->parseFileName() . '.pdf"')
-                 ->addHeaderLine('Content-Type: application/pdf')
-                 ->addHeaderLine('Content-Length', strlen($renderNda->getPDFData()));
+            ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
+            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
+            ->addHeaderLine("Pragma: public")
+            ->addHeaderLine('Content-Disposition', 'attachment; filename="' . $nda->parseFileName() . '.pdf"')
+            ->addHeaderLine('Content-Type: application/pdf')
+            ->addHeaderLine('Content-Length', strlen($renderNda->getPDFData()));
         $response->setContent($renderNda->getPDFData());
 
         return $response;
@@ -212,20 +215,20 @@ class NdaController extends ProgramAbstractController
         /**
          * Due to the BLOB issue, we treat this as an array and we need to capture the first element
          */
-        $object   = $nda->getObject()->first()->getObject();
+        $object = $nda->getObject()->first()->getObject();
         $response = $this->getResponse();
         $response->setContent(stream_get_contents($object));
         $response->getHeaders()
-                 ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-                 ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
-                 ->addHeaderLine(
-                     'Content-Disposition',
-                     'attachment; filename="' . $nda->parseFileName() . '.' .
-                     $nda->getContentType()->getExtension() . '"'
-                 )
-                 ->addHeaderLine("Pragma: public")
-                 ->addHeaderLine('Content-Type: ' . $nda->getContentType()->getContentType())
-                 ->addHeaderLine('Content-Length: ' . $nda->getSize());
+            ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
+            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
+            ->addHeaderLine(
+                'Content-Disposition',
+                'attachment; filename="' . $nda->parseFileName() . '.' .
+                $nda->getContentType()->getExtension() . '"'
+            )
+            ->addHeaderLine("Pragma: public")
+            ->addHeaderLine('Content-Type: ' . $nda->getContentType()->getContentType())
+            ->addHeaderLine('Content-Length: ' . $nda->getSize());
 
         return $this->response;
     }

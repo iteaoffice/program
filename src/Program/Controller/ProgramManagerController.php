@@ -68,7 +68,7 @@ class ProgramManagerController extends AbstractActionController implements
     {
         $messages = $this->getProgramService()->findAll('message');
 
-        return new ViewModel(array('messages' => $messages));
+        return new ViewModel(['messages' => $messages]);
     }
 
     /**
@@ -125,7 +125,7 @@ class ProgramManagerController extends AbstractActionController implements
             $this->getEvent()->getRouteMatch()->getParam('id')
         );
 
-        return new ViewModel(array('message' => $message));
+        return new ViewModel(['message' => $message]);
     }
 
     /**
@@ -136,17 +136,18 @@ class ProgramManagerController extends AbstractActionController implements
     public function newAction()
     {
         $entity = $this->getEvent()->getRouteMatch()->getParam('entity');
-        $form   = $this->getFormService()->prepare($this->params('entity'), null, $_POST);
+        $form = $this->getFormService()->prepare($this->params('entity'), null, $_POST);
         $form->setAttribute('class', 'form-horizontal');
         if ($this->getRequest()->isPost() && $form->isValid()) {
             $result = $this->getProgramService()->newEntity($form->getData());
-            $this->redirect()->toRoute(
+
+            return $this->redirect()->toRoute(
                 'zfcadmin/program-manager/' . strtolower($this->params('entity')),
-                array('id' => $result->getId())
+                ['id' => $result->getId()]
             );
         }
 
-        return new ViewModel(array('form' => $form, 'entity' => $entity, 'fullVersion' => true));
+        return new ViewModel(['form' => $form, 'entity' => $entity, 'fullVersion' => true]);
     }
 
     /**
@@ -180,18 +181,19 @@ class ProgramManagerController extends AbstractActionController implements
             $this->getEvent()->getRouteMatch()->getParam('entity'),
             $this->getEvent()->getRouteMatch()->getParam('id')
         );
-        $form   = $this->getFormService()->prepare($entity->get('entity_name'), $entity, $_POST);
+        $form = $this->getFormService()->prepare($entity->get('entity_name'), $entity, $_POST);
         $form->setAttribute('class', 'form-horizontal live-form');
         $form->setAttribute('id', 'program-program-' . $entity->getId());
         if ($this->getRequest()->isPost() && $form->isValid()) {
             $result = $this->getProgramService()->updateEntity($form->getData());
-            $this->redirect()->toRoute(
+
+            return $this->redirect()->toRoute(
                 'zfcadmin/program/' . strtolower($entity->get('dashed_entity_name')),
-                array('id' => $result->getId())
+                ['id' => $result->getId()]
             );
         }
 
-        return new ViewModel(array('form' => $form, 'entity' => $entity, 'fullVersion' => true));
+        return new ViewModel(['form' => $form, 'entity' => $entity, 'fullVersion' => true]);
     }
 
     /**

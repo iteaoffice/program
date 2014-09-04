@@ -59,8 +59,7 @@ class DoaLink extends LinkAbstract
         $show = 'text',
         Organisation $organisation = null,
         Program $program = null
-    )
-    {
+    ) {
         $this->setDoa($doa);
         $this->setOrganisation($organisation);
         $this->setProgram($program);
@@ -191,6 +190,8 @@ class DoaLink extends LinkAbstract
     public function setOrganisation($organisation)
     {
         $this->organisation = $organisation;
+
+        $this->getDoa()->setOrganisation($organisation);
     }
 
     /**

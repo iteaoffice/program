@@ -48,7 +48,6 @@ class UploadDoaTest extends \PHPUnit_Framework_TestCase
     {
         $uploadDoaForm = new UploadDoa();
         $this->assertTrue($uploadDoaForm->has('file'));
-        $this->assertTrue($uploadDoaForm->has('csrf'));
         $this->assertTrue($uploadDoaForm->has('submit'));
         $this->assertTrue($uploadDoaForm->has('cancel'));
     }
@@ -56,7 +55,7 @@ class UploadDoaTest extends \PHPUnit_Framework_TestCase
     public function testUploadDoaFormHasCorrectInputFilter()
     {
         $uploadDoaForm = new UploadDoa();
-        $inputFilter   = $uploadDoaForm->getInputFilterSpecification();
+        $inputFilter = $uploadDoaForm->getInputFilterSpecification();
         $this->assertTrue(is_array($inputFilter));
         $this->assertArrayHasKey('file', $inputFilter);
     }

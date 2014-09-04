@@ -49,7 +49,29 @@ class Doa extends AssertionAbstract
         }
         switch ($privilege) {
             case 'upload':
-                return $this->hasContact();
+                /**
+                 * For the upload we need to see if the user has access on the editing of the affiliation
+                 * The affiliation can already be known, but if not grab it from the routeMatch
+                 */
+                $organisation = null;
+                if ($resource instanceof DoaEntity) {
+                    $organisation = $resource->getOrganisation();
+                }
+                if (is_null($organisation)) {
+                    /**
+                     * The id can originate from two different params
+                     */
+                    if (!is_null($this->getRouteMatch()->getParam('id'))) {
+                        $organisationId = $this->getRouteMatch()->getParam('id');
+                    } else {
+                        $organisationId = $this->getRouteMatch()->getParam('organisation-id');
+                    }
+                    $organisation = $this->getOrganisationService()->setOrganisationId(
+                        $organisationId
+                    )->getOrganisation();
+                }
+
+                return $this->getOrganisationAssert()->assert($acl, $role, $organisation, 'edit-community');
             case 'replace':
                 /**
                  * For the replace we need to see if the user has access on the editing of the program

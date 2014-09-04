@@ -48,7 +48,6 @@ class UploadNdaTest extends \PHPUnit_Framework_TestCase
     {
         $uploadNdaForm = new UploadNda();
         $this->assertTrue($uploadNdaForm->has('file'));
-        $this->assertTrue($uploadNdaForm->has('csrf'));
         $this->assertTrue($uploadNdaForm->has('submit'));
         $this->assertTrue($uploadNdaForm->has('cancel'));
     }
@@ -56,7 +55,7 @@ class UploadNdaTest extends \PHPUnit_Framework_TestCase
     public function testUploadNdaFormHasCorrectInputFilter()
     {
         $uploadNdaForm = new UploadNda();
-        $inputFilter   = $uploadNdaForm->getInputFilterSpecification();
+        $inputFilter = $uploadNdaForm->getInputFilterSpecification();
         $this->assertTrue(is_array($inputFilter));
         $this->assertArrayHasKey('file', $inputFilter);
     }

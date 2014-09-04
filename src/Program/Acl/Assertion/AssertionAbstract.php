@@ -18,6 +18,9 @@ use Admin\Service\AdminServiceAwareInterface;
 use Contact\Service\ContactService;
 use Contact\Service\ContactServiceAwareInterface;
 use Doctrine\ORM\PersistentCollection;
+use Organisation\Acl\Assertion\Organisation as OrganisationAssertion;
+use Organisation\Service\OrganisationService;
+use Organisation\Service\OrganisationServiceAwareInterface;
 use Program\Service\CallService;
 use Program\Service\CallServiceAwareInterface;
 use Program\Service\ProgramService;
@@ -40,6 +43,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 abstract class AssertionAbstract implements
     AssertionInterface,
+    OrganisationServiceAwareInterface,
     AdminServiceAwareInterface,
     ServiceLocatorAwareInterface,
     ProgramServiceAwareInterface,
@@ -54,6 +58,10 @@ abstract class AssertionAbstract implements
      * @var ContactService
      */
     protected $contactService;
+    /**
+     * @var OrganisationService
+     */
+    protected $organisationService;
     /**
      * @var AdminService
      */
@@ -197,6 +205,42 @@ abstract class AssertionAbstract implements
         $this->adminService = $adminService;
 
         return $this;
+    }
+
+    /**
+     * @return OrganisationService
+     */
+    public function getOrganisationService()
+    {
+        return $this->organisationService;
+    }
+
+    /**
+     * @param OrganisationService $organisationService
+     *
+     * @return AssertionAbstract
+     */
+    public function setOrganisationService(OrganisationService $organisationService)
+    {
+        $this->organisationService = $organisationService;
+
+        return $this;
+    }
+
+    /**
+     * @return AffiliationAssertion
+     */
+    public function getAffiliationAssert()
+    {
+        return $this->getServiceLocator()->get(AffiliationAssertion::class);
+    }
+
+    /**
+     * @return OrganisationAssertion
+     */
+    public function getOrganisationAssert()
+    {
+        return $this->getServiceLocator()->get(OrganisationAssertion::class);
     }
 
     /**
