@@ -126,7 +126,6 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
-
         return $this;
     }
 
