@@ -65,8 +65,12 @@ class DoaController extends ProgramAbstractController
         );
         $form = new UploadDoa();
         $form->setData($data);
-        if ($this->getRequest()->isPost() && $form->isValid()) {
-            if (!isset($data['cancel'])) {
+        if ($this->getRequest()->isPost()) {
+            if (isset($data['cancel'])) {
+                return $this->redirect()->toRoute('community');
+            }
+
+            if ($form->isValid()) {
                 $fileData = $this->params()->fromFiles();
                 //Create a article object element
                 $doaObject = new Entity\DoaObject();
@@ -93,7 +97,7 @@ class DoaController extends ProgramAbstractController
 
                 return $this->redirect()->toRoute(
                     'community/program/doa/view',
-                    ['id' => $doaObject->getId()]
+                    ['id' => $doaObject->getDoa()->getId()]
                 );
             }
         }
@@ -132,7 +136,14 @@ class DoaController extends ProgramAbstractController
         $form = new UploadDoa();
         $form->setData($data);
         if ($this->getRequest()->isPost()) {
-            if (!isset($data['cancel']) && $form->isValid()) {
+            if (isset($data['cancel'])) {
+                return $this->redirect()->toRoute(
+                    'program/doa/view',
+                    ['id' => $doa->getId()]
+                );
+            }
+
+            if ($form->isValid()) {
                 $fileData = $this->params()->fromFiles();
                 /**
                  * Remove the current entity
@@ -159,12 +170,12 @@ class DoaController extends ProgramAbstractController
                         $doa->getProgram()
                     )
                 );
-            }
 
-            return $this->redirect()->toRoute(
-                'program/doa/view',
-                ['id' => $doa->getId()]
-            );
+                return $this->redirect()->toRoute(
+                    'program/doa/view',
+                    ['id' => $doa->getId()]
+                );
+            }
         }
 
         return new ViewModel(
