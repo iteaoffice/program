@@ -34,7 +34,7 @@ class Nda extends EntityRepository
         $qb->select('n');
         $qb->from("Program\Entity\Nda", 'n');
         $qb->join('n.call', 'call');
-        $qb->andWhere($qb->expr()->in('call', array($call->getId())));
+        $qb->andWhere($qb->expr()->in('call', [$call->getId()]));
         $qb->andWhere('n.contact = ?2');
         $qb->setParameter(2, $contact);
         $qb->addOrderBy('n.dateCreated', 'DESC');
