@@ -42,6 +42,12 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
     protected $doaTemplate = '';
 
     /**
+     * Wether Calls to be displayed
+     * @var String
+     */
+    protected $displayName = 'name';
+
+    /**
      * @return string
      */
     public function getNdaTemplate()
@@ -59,6 +65,23 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
         $this->ndaTemplate = $ndaTemplate;
 
         return $this;
+    }
+
+    /**
+     * @param $displayName
+     * @return $this
+     */
+    public function setDisplayName($displayName){
+        $this->displayName = $displayName;
+        return $this;
+    }
+
+    /**
+     * @return String
+     */
+    public function getDisplayName(){
+        return $this->displayName;
+
     }
 
     /**

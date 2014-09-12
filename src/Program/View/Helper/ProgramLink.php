@@ -51,6 +51,7 @@ class ProgramLink extends LinkAbstract
         $this->setShowOptions(
             array(
                 'name' => $this->getProgram(),
+
             )
         );
         $this->addRouterParam('entity', 'program');

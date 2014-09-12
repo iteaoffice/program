@@ -218,6 +218,14 @@ class CallService extends ServiceAbstract
     }
 
     /**
+     * Returns the Call
+     * @return string
+     */
+    public function parseCall(){
+        return $this->getCall()->getCall();
+    }
+
+    /**
      * Upload a NDA to the system and store it for the user
      *
      * @param array   $file

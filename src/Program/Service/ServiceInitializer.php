@@ -40,6 +40,7 @@ class ServiceInitializer implements InitializerInterface
         $arrayCheck = [
             ProgramServiceAwareInterface::class => ProgramService::class,
             CallServiceAwareInterface::class    => CallService::class,
+            ModuleOptionAwareInterface::class   => 'program_module_options',
         ];
         /**
          * Go over each interface to see if we should add an interface

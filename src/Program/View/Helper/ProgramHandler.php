@@ -193,9 +193,13 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
      */
     public function parseCallSelector(Call $call = null, Program $program = null)
     {
+        //$this->getProgramService()->getOptions()->getDisplayName();
+        $displayName = (DEBRANOVA_HOST == 'artemisia'?'name-without-program':'name');
+
         return $this->getZfcTwigRenderer()->render(
             'program/partial/call-selector',
             [
+                'displayNameCall'   => $displayName,
                 'calls'             => $this->getCallService()->findNonEmptyCalls(),
                 'callId'            => !is_null($call) ? $call->getId() : null,
                 'selectedProgramId' => !is_null($program) ? $program->getId() : null

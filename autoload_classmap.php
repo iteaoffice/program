@@ -35,6 +35,7 @@ return array(
   'CallService'                                            => __DIR__ . '/src/Program/Controller/ControllerInitializer.php',
   'class_implements'                                       => __DIR__ . '/src/Program/Service/ServiceInitializer.php',
   'Program\Service\ProgramServiceAwareInterface'           => __DIR__ . '/src/Program/Service/ProgramServiceAwareInterface.php',
+  'Program\Service\ModuleOptionAwareInterface'             => __DIR__ . '/src/Program/Service/ModuleOptionAwareInterface.php',
   'Program\Service\ServiceInterface'                       => __DIR__ . '/src/Program/Service/ServiceInterface.php',
   'Program\Service\CallServiceAwareInterface'              => __DIR__ . '/src/Program/Service/CallServiceAwareInterface.php',
   'Program\Service\FormService'                            => __DIR__ . '/src/Program/Service/FormService.php',

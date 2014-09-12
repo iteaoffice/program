@@ -13,6 +13,8 @@ use General\Service\GeneralService;
 use Program\Entity;
 use Program\Entity\EntityAbstract;
 use Project\Service\VersionService;
+use Program\Options\ModuleOptions;
+use Program\Options\ProjectOptionsInterface;
 use Zend\Authentication\AuthenticationService;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -34,6 +36,11 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
      * @var ServiceLocatorInterface
      */
     protected $serviceLocator;
+
+    /**
+     * @return ProgramOptionsInterface
+     */
+    protected $options;
 
     /**
      * @param      $entity
@@ -95,6 +102,27 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
 
         return true;
     }
+
+
+    /**
+     * @param ModuleOptions $options
+     *
+     * @return ServiceAbstract
+     */
+    public function setOptions(ModuleOptions $options)
+    {
+        $this->options = $options;
+        return $this;
+    }
+
+    /**
+     * @return ModuleOptionsInterface
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
 
     /**
      * Build dynamically a entity based on the full entity name

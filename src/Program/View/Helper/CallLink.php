@@ -45,12 +45,15 @@ class CallLink extends LinkAbstract
         $this->setCall($call);
         $this->setAction($action);
         $this->setShow($show);
+
+
         /**
          * Set the non-standard options needed to give an other link value
          */
         $this->setShowOptions(
             array(
-                'name' => $this->getCall(),
+                'name' =>  $this->getCall(),
+                'name-without-program' => $this->getCall()->getCall(),
             )
         );
         $this->addRouterParam('entity', 'Call\Call');

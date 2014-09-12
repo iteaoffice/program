@@ -203,8 +203,7 @@ class Call extends EntityAbstract implements ResourceInterface
      */
     public function __toString()
     {
-        //return $this->getProgram()->getProgram() . ' Call ' . $this->call;
-        return $this->call;
+        return $this->getProgram()->getProgram() . ' Call ' . $this->call;
     }
 
     /**
