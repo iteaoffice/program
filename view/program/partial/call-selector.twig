@@ -7,6 +7,7 @@
         {% if call.program.id != programId %}
             <li {% if selectedProgramId == call.program.id %}class="active"{% endif %}>{{ programLink(call.program, 'view-list','name') }}</li>
         {% endif %}
+
         <li {% if callId == call.id %}class="active"{% endif %}>{{ callLink(call, 'view-list', 'name') }}</li>
         {% if call.program.id != programId %}
         {% endif %}
