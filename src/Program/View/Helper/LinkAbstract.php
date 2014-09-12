@@ -93,6 +93,7 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
          * @var $url Url
          */
         $url = $this->serviceLocator->get('url');
+
         /**
          * @var $serverUrl ServerUrl
          */
@@ -109,7 +110,7 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
 
         return sprintf(
             $uri,
-            $serverUrl->__invoke() . $url($this->router, $this->routerParams),
+            $url($this->router, $this->routerParams),
             $this->text,
             implode(' ', $this->classes),
             implode('', $this->linkContent)

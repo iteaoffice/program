@@ -56,22 +56,23 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
         $this->extractContentParam($content);
         switch ($content->getHandler()->getHandler()) {
             case 'programcall_selector':
+
                 return $this->parseCallSelector(
                     !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null,
                     !$this->getProgramService()->isEmpty() ? $this->getProgramService()->getProgram() : null
                 );
+
             case 'programcall_info':
                 return $this->parseProgramcallInfo(
                     !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null,
                     !$this->getProgramService()->isEmpty() ? $this->getProgramService()->getProgram() : null
                 );
+
             case 'programcall_session':
                 return $this->parseSessionOverview($this->getSession());
+
             case 'programcall_map':
-                return $this->parseProgramcallMap(
-                    !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null,
-                    !$this->getProgramService()->isEmpty() ? $this->getProgramService()->getProgram() : null
-                );
+                return $this->parseProgramcallMap();
             default:
                 return sprintf(
                     "No handler available for <code>%s</code> in class <code>%s</code>",
@@ -148,6 +149,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
+
         return $this;
     }
 
@@ -201,6 +203,21 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
         );
     }
 
+
+    /**
+     * @return string
+     */
+    public function parseProgramcallMap(){
+
+        return $this->getZfcTwigRenderer()->render(
+            'program/partial/map',
+            [
+                'call'             => $this->getCallService(),
+            ]
+        );
+    }
+
+
     /**
      * @param Call    $call
      * @param Program $program
@@ -212,9 +229,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
         return $this->getZfcTwigRenderer()->render(
             'program/partial/entity/programcall-info',
             [
-                'calls'             => $this->getCallService()->findNonEmptyCalls(),
-                'callId'            => !is_null($call) ? $call->getId() : null,
-                'selectedProgramId' => !is_null($program) ? $program->getId() : null
+                'call'             => $call,
             ]
         );
     }

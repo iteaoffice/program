@@ -45,7 +45,6 @@ class CallLink extends LinkAbstract
         $this->setCall($call);
         $this->setAction($action);
         $this->setShow($show);
-
         /**
          * Set the non-standard options needed to give an other link value
          */
@@ -56,7 +55,6 @@ class CallLink extends LinkAbstract
         );
         $this->addRouterParam('entity', 'Call\Call');
         $this->addRouterParam('id', $this->getCall()->getId());
-
         return $this->createLink();
     }
 
