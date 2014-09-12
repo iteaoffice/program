@@ -71,8 +71,11 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
             case 'programcall_session':
                 return $this->parseSessionOverview($this->getSession());
 
+
             case 'programcall_map':
                 return $this->parseProgramcallMap();
+
+
             default:
                 return sprintf(
                     "No handler available for <code>%s</code> in class <code>%s</code>",
