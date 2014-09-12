@@ -29,54 +29,7 @@ $config = [
         ],
     ],
     'view_manager'    => [
-        'template_map' => include __DIR__ . '/../template_map.php',
-    ],
-    'view_helpers'    => [
-        'invokables' => [
-            'callSessionLink'     => CallSessionLink::class,
-            'programHandler'      => 'Program\View\Helper\ProgramHandler',
-            'callServiceProxy'    => 'Program\View\Helper\CallServiceProxy',
-            'programServiceProxy' => 'Program\View\Helper\ProgramServiceProxy',
-            'callInformationBox'  => 'Program\View\Helper\CallInformationBox',
-            'programLink'         => 'Program\View\Helper\ProgramLink',
-            'programDoaLink'      => 'Program\View\Helper\DoaLink',
-            'callLink'            => 'Program\View\Helper\CallLink',
-            'ndaLink'             => 'Program\View\Helper\NdaLink',
-        ]
-    ],
-    'service_manager' => [
-        'initializers' => [ServiceInitializer::class],
-        'factories'    => [
-            'program_module_options'         => 'Program\Service\OptionServiceFactory',
-            'program_nda_navigation_service' => 'Program\Navigation\Factory\NdaNavigationServiceFactory',
-        ],
-        'invokables'   => [
-            NdaAssertion::class           => NdaAssertion::class,
-            DoaAssertion::class           => DoaAssertion::class,
-            ProgramService::class         => ProgramService::class,
-            CallService::class            => CallService::class,
-            FormService::class            => FormService::class,
-            'program_program_form_filter' => 'Program\Form\FilterCreateObject'
-        ]
-    ],
-    'doctrine'        => [
-        'driver'       => [
-            'program_annotation_driver' => [
-                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'paths' => [__DIR__ . '/../src/Program/Entity/']
-            ],
-            'orm_default'               => ['drivers' => ['Program\Entity' => 'program_annotation_driver',]]
-        ],
-        'eventmanager' => [
-            'orm_default' => [
-                'subscribers' => [
-                    'Gedmo\Timestampable\TimestampableListener',
-                    'Gedmo\Sluggable\SluggableListener',
-                ]
-            ],
-        ],
-    ]
-];
+        'template_map' => include __DIR__ . '/../template_map.php', ], 'view_helpers' => [ 'invokables' => [ 'callSessionLink' => CallSessionLink::class, 'programHandler' => 'Program\View\Helper\ProgramHandler', 'callServiceProxy' => 'Program\View\Helper\CallServiceProxy', 'programServiceProxy' => 'Program\View\Helper\ProgramServiceProxy', 'callInformationBox' => 'Program\View\Helper\CallInformationBox', 'programLink' => 'Program\View\Helper\ProgramLink', 'programDoaLink' => 'Program\View\Helper\DoaLink', 'callLink' => 'Program\View\Helper\CallLink', 'ndaLink' => 'Program\View\Helper\NdaLink', ] ], 'service_manager' => [ 'initializers' => [ServiceInitializer::class], 'factories' => [ 'program_module_options' => 'Program\Service\OptionServiceFactory', 'program_nda_navigation_service' => 'Program\Navigation\Factory\NdaNavigationServiceFactory', ], 'invokables' => [ NdaAssertion::class => NdaAssertion::class, DoaAssertion::class => DoaAssertion::class, ProgramService::class => ProgramService::class, CallService::class => CallService::class, FormService::class => FormService::class, 'program_program_form_filter' => 'Program\Form\FilterCreateObject' ] ], 'doctrine' => [ 'driver' => [ 'program_annotation_driver' => [ 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver', 'paths' => [__DIR__ . '/../src/Program/Entity/'] ], 'orm_default' => ['drivers' => ['Program\Entity' => 'program_annotation_driver',]] ], 'eventmanager' => [ 'orm_default' => [ 'subscribers' => [ 'Gedmo\Timestampable\TimestampableListener', 'Gedmo\Sluggable\SluggableListener', ] ], ], ] ];
 $configFiles = [
     __DIR__ . '/module.config.routes.php',
     __DIR__ . '/module.config.navigation.php',
