@@ -16,4 +16,5 @@ return array(
     'program/partial/entity/programcall-info' => __DIR__ . '//view/program/partial/entity/programcall-info.twig',
     'program/partial/entity/session'          => __DIR__ . '//view/program/partial/entity/session.twig',
     'program/partial/call-selector'           => __DIR__ . '//view/program/partial/call-selector.twig',
+    'program/partial/map'                     => __DIR__ . '//view/program/partial/map.twig',
 );
