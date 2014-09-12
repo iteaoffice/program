@@ -56,7 +56,6 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
         $this->extractContentParam($content);
         switch ($content->getHandler()->getHandler()) {
             case 'programcall_selector':
-
                 return $this->parseCallSelector(
                     !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null,
                     !$this->getProgramService()->isEmpty() ? $this->getProgramService()->getProgram() : null
@@ -71,10 +70,8 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
             case 'programcall_session':
                 return $this->parseSessionOverview($this->getSession());
 
-
             case 'programcall_map':
                 return $this->parseProgramcallMap();
-
 
             default:
                 return sprintf(
@@ -206,12 +203,11 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
         );
     }
 
-
     /**
      * @return string
      */
-    public function parseProgramcallMap(){
-
+    public function parseProgramcallMap()
+    {
         return $this->getZfcTwigRenderer()->render(
             'program/partial/map',
             [
@@ -219,7 +215,6 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
             ]
         );
     }
-
 
     /**
      * @param Call    $call
