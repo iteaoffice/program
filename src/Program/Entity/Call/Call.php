@@ -35,12 +35,12 @@ class Call extends EntityAbstract implements ResourceInterface
     /**
      * Produce a list of different statuses in a call, which are required for representation and access control
      */
-    const FPP_CLOSED   = 'FPP_CLOSED';
+    const FPP_CLOSED = 'FPP_CLOSED';
     const FPP_NOT_OPEN = 'FPP_NOT_OPEN';
-    const FPP_OPEN     = 'FPP_OPEN';
-    const PO_CLOSED    = 'PO_CLOSED';
-    const PO_NOT_OPEN  = 'PO_NOT_OPEN';
-    const PO_OPEN      = 'PO_OPEN';
+    const FPP_OPEN = 'FPP_OPEN';
+    const PO_CLOSED = 'PO_CLOSED';
+    const PO_NOT_OPEN = 'PO_NOT_OPEN';
+    const PO_OPEN = 'PO_OPEN';
     /**
      * @ORM\Column(name="programcall_id", type="integer", nullable=false)
      * @ORM\Id
@@ -162,13 +162,13 @@ class Call extends EntityAbstract implements ResourceInterface
     public function __construct()
     {
         $this->publication = new Collections\ArrayCollection();
-        $this->meeting     = new Collections\ArrayCollection();
-        $this->nda         = new Collections\ArrayCollection();
-        $this->calendar    = new Collections\ArrayCollection();
-        $this->doa         = new Collections\ArrayCollection();
-        $this->image       = new Collections\ArrayCollection();
-        $this->idea        = new Collections\ArrayCollection();
-        $this->session     = new Collections\ArrayCollection();
+        $this->meeting = new Collections\ArrayCollection();
+        $this->nda = new Collections\ArrayCollection();
+        $this->calendar = new Collections\ArrayCollection();
+        $this->doa = new Collections\ArrayCollection();
+        $this->image = new Collections\ArrayCollection();
+        $this->idea = new Collections\ArrayCollection();
+        $this->session = new Collections\ArrayCollection();
     }
 
     /**
@@ -203,7 +203,7 @@ class Call extends EntityAbstract implements ResourceInterface
      */
     public function __toString()
     {
-        return $this->getProgram()->getProgram() . ' Call ' . $this->call;
+        return sprintf("%s Call %s", $this->getProgram()->getProgram(), $this->call);
     }
 
     /**
@@ -252,103 +252,103 @@ class Call extends EntityAbstract implements ResourceInterface
     {
         if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
-            $factory     = new InputFactory();
+            $factory = new InputFactory();
             $inputFilter->add(
                 $factory->createInput(
-                    array(
+                    [
                         'name'       => 'call',
                         'required'   => true,
-                        'filters'    => array(
-                            array('name' => 'StripTags'),
-                            array('name' => 'StringTrim'),
-                        ),
-                        'validators' => array(
-                            array(
+                        'filters'    => [
+                            ['name' => 'StripTags'],
+                            ['name' => 'StringTrim'],
+                        ],
+                        'validators' => [
+                            [
                                 'name'    => 'StringLength',
-                                'options' => array(
+                                'options' => [
                                     'encoding' => 'UTF-8',
                                     'min'      => 1,
                                     'max'      => 100,
-                                ),
-                            ),
-                        ),
-                    )
+                                ],
+                            ],
+                        ],
+                    ]
                 )
             );
             $inputFilter->add(
                 $factory->createInput(
-                    array(
+                    [
                         'name'       => 'poOpenDate',
                         'required'   => true,
-                        'filters'    => array(
-                            array('name' => 'StripTags'),
-                            array('name' => 'StringTrim'),
-                        ),
-                        'validators' => array(
-                            array(
+                        'filters'    => [
+                            ['name' => 'StripTags'],
+                            ['name' => 'StringTrim'],
+                        ],
+                        'validators' => [
+                            [
                                 'name' => 'Date',
-                            ),
-                        ),
-                    )
+                            ],
+                        ],
+                    ]
                 )
             );
             $inputFilter->add(
                 $factory->createInput(
-                    array(
+                    [
                         'name'       => 'poCloseDate',
                         'required'   => true,
-                        'filters'    => array(
-                            array('name' => 'StripTags'),
-                            array('name' => 'StringTrim'),
-                        ),
-                        'validators' => array(
-                            array(
+                        'filters'    => [
+                            ['name' => 'StripTags'],
+                            ['name' => 'StringTrim'],
+                        ],
+                        'validators' => [
+                            [
                                 'name' => 'Date',
-                            ),
-                        ),
-                    )
+                            ],
+                        ],
+                    ]
                 )
             );
             $inputFilter->add(
                 $factory->createInput(
-                    array(
+                    [
                         'name'       => 'fppOpenDate',
                         'required'   => true,
-                        'filters'    => array(
-                            array('name' => 'StripTags'),
-                            array('name' => 'StringTrim'),
-                        ),
-                        'validators' => array(
-                            array(
+                        'filters'    => [
+                            ['name' => 'StripTags'],
+                            ['name' => 'StringTrim'],
+                        ],
+                        'validators' => [
+                            [
                                 'name' => 'Date',
-                            ),
-                        ),
-                    )
+                            ],
+                        ],
+                    ]
                 )
             );
             $inputFilter->add(
                 $factory->createInput(
-                    array(
+                    [
                         'name'       => 'fppCloseDate',
                         'required'   => true,
-                        'filters'    => array(
-                            array('name' => 'StripTags'),
-                            array('name' => 'StringTrim'),
-                        ),
-                        'validators' => array(
-                            array(
+                        'filters'    => [
+                            ['name' => 'StripTags'],
+                            ['name' => 'StringTrim'],
+                        ],
+                        'validators' => [
+                            [
                                 'name' => 'Date',
-                            ),
-                        ),
-                    )
+                            ],
+                        ],
+                    ]
                 )
             );
             $inputFilter->add(
                 $factory->createInput(
-                    array(
+                    [
                         'name'     => 'call',
                         'required' => true,
-                    )
+                    ]
                 )
             );
             $this->inputFilter = $inputFilter;
@@ -369,7 +369,7 @@ class Call extends EntityAbstract implements ResourceInterface
      */
     public function getArrayCopy()
     {
-        return array(
+        return [
             'call'         => $this->call,
             'project'      => $this->project,
             'poOpenDate'   => $this->poOpenDate,
@@ -377,7 +377,7 @@ class Call extends EntityAbstract implements ResourceInterface
             'fppOpenDate'  => $this->fppOpenDate,
             'fppCloseDate' => $this->fppCloseDate,
             'nda'          => $this->nda,
-        );
+        ];
     }
 
     /**

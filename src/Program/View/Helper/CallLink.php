@@ -46,7 +46,6 @@ class CallLink extends LinkAbstract
         $this->setAction($action);
         $this->setShow($show);
 
-
         /**
          * Set the non-standard options needed to give an other link value
          */
