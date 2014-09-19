@@ -23,7 +23,17 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes'  => [
-                    'nda' => [
+                    'view' => [
+                        'type'         => 'Literal',
+                        'priority'     => 1000,
+                        'options'      => [
+                            'route'    => '/view',
+                            'defaults' => [
+                                'controller' => 'program',
+                                'action'     => 'view',
+                            ],
+                        ]],
+                        'nda' => [
                         'type'         => 'Literal',
                         'priority'     => 1000,
                         'options'      => [

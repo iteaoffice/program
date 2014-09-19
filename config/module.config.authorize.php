@@ -27,6 +27,10 @@ return [
              */
             'BjyAuthorize\Guard\Route' => [
                 [
+                    'route'     => 'program/view',
+                    'roles'     => [],
+                ],
+                [
                     'route'     => 'program/nda/upload',
                     'roles'     => [],
                     'assertion' => ndaAssertion::class
