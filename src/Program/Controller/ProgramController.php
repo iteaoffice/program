@@ -22,4 +22,24 @@ namespace Program\Controller;
  */
 class ProgramController extends ProgramAbstractController
 {
+
+    /**
+     * @return ViewModel
+     */
+    public function indexAction()
+    {
+        return new ViewModel();
+    }
+
+
+    /**
+     * @return ViewModel
+     */
+    public function viewAction()
+    {
+        return new ViewModel();
+    }
+
+
+
 }

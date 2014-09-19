@@ -54,6 +54,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     public function __invoke(Content $content)
     {
         $this->extractContentParam($content);
+
         switch ($content->getHandler()->getHandler()) {
             case 'programcall_selector':
                 return $this->parseCallSelector(
