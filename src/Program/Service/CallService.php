@@ -221,7 +221,8 @@ class CallService extends ServiceAbstract
      * Returns the Call
      * @return string
      */
-    public function parseCall(){
+    public function parseCall()
+    {
         return $this->getCall()->getCall();
     }
 

@@ -12,10 +12,10 @@ return array(
     'program/nda/upload'                      => __DIR__ . '//view/program/nda/upload.twig',
     'program/partial/list/program'            => __DIR__ . '//view/program/partial/list/program.twig',
     'program/partial/list/funder'             => __DIR__ . '//view/program/partial/list/funder.twig',
+    'program/partial/map'                     => __DIR__ . '//view/program/partial/map.twig',
     'program/partial/form/project'            => __DIR__ . '//view/program/partial/form/project.twig',
     'program/partial/entity/programcall-map'  => __DIR__ . '//view/program/partial/entity/programcall-map.twig',
     'program/partial/entity/programcall-info' => __DIR__ . '//view/program/partial/entity/programcall-info.twig',
     'program/partial/entity/session'          => __DIR__ . '//view/program/partial/entity/session.twig',
     'program/partial/call-selector'           => __DIR__ . '//view/program/partial/call-selector.twig',
-    'program/partial/map'                     => __DIR__ . '//view/program/partial/map.twig',
 );

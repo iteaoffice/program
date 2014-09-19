@@ -86,6 +86,10 @@ class Nda extends AssertionAbstract
                 return true;
             case 'download':
             case 'view':
+                if (!$this->hasContact()) {
+                    return false;
+                }
+
                 return $resource->getContact()->getId() === $this->getContactService()->getContact()->getId();
         }
 

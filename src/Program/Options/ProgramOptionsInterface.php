@@ -47,14 +47,13 @@ interface ProgramOptionsInterface
     public function getDoaTemplate();
 
     /**
-     * @return string
-     */
-    public function getDisplayName();
-
-    /**
      * @param $displayName
      * @return ProgramOptionsInterface
      */
     public function setDisplayName($displayName);
 
+    /**
+     * @return string
+     */
+    public function getDisplayName();
 }

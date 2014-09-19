@@ -42,7 +42,7 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
     protected $doaTemplate = '';
 
     /**
-     * Wether Calls to be displayed
+     * How program calls to be displayed
      * @var String
      */
     protected $displayName = 'name';
@@ -71,15 +71,18 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
      * @param $displayName
      * @return $this
      */
-    public function setDisplayName($displayName){
+    public function setDisplayName($displayName)
+    {
         $this->displayName = $displayName;
+
         return $this;
     }
 
     /**
      * @return String
      */
-    public function getDisplayName(){
+    public function getDisplayName()
+    {
         return $this->displayName;
 
     }
