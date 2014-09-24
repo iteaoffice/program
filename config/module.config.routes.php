@@ -37,7 +37,7 @@ return [
                             'type'     => 'Segment',
                             'priority' => -1000,
                             'options'  => [
-                                'route'       => '/programcall[/call-:id].html',
+                                'route'       => '/programcall/[:id].html',
                                 'constraints' => [
                                     'id' => '\d+',
                                 ],
