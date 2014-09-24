@@ -39,7 +39,6 @@ class ProgramService extends ServiceAbstract
     public function setProgramId($id)
     {
         $this->setProgram($this->findEntityById('Program', $id));
-
         return $this;
     }
 
@@ -95,7 +94,16 @@ class ProgramService extends ServiceAbstract
     public function setProgram($program)
     {
         $this->program = $program;
-
         return $this;
+    }
+
+    /**
+     * @param $which
+     *
+     * @return AffiliationService[]
+     */
+    public function getAffiliation($which = AffiliationService::WHICH_ONLY_ACTIVE)
+    {
+        return $this->getAffiliationService()->findAffiliationByProjectAndWhich($this->project, $which);
     }
 }

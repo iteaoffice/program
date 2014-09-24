@@ -62,6 +62,25 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
                     !$this->getProgramService()->isEmpty() ? $this->getProgramService()->getProgram() : null
                 );
 
+            /**
+             * Shows the title , not included in the "programcall_info"
+             * to allow some separation of content from the title
+             */
+            case 'programcall_title':
+                return $this->parseProgramcallTitle(
+                    !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null
+                );
+
+
+            case 'programcall_project':
+                return $this->parseProgramcallProjectList(
+                    !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null
+                );
+                break;
+
+            /**
+             * Info sheet with statistics
+             */
             case 'programcall_info':
                 return $this->parseProgramcallInfo(
                     !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null,
@@ -71,8 +90,11 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
             case 'programcall_session':
                 return $this->parseSessionOverview($this->getSession());
 
+            /**
+             * Map of the countries in which projects of the current call are being highlighted
+             */
             case 'programcall_map':
-                return $this->parseProgramcallMap();
+                return $this->parseProgramcallMap(!$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null);
 
             default:
                 return sprintf(
@@ -101,18 +123,24 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
              * When the parameterId is 0 (so we want to get the article from the URL
              */
             switch ($param->getParameter()->getParam()) {
+
                 case 'session':
+
                     if (!is_null($sessionId = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
                         $this->setSessionId($sessionId);
                     } else {
                         $this->setSessionId($param->getParameterId());
                     }
                     break;
+
                 case 'call':
+                    //var_dump($this->getRouteMatch()->getParam($param->getParameter()->getParam())); die();
                     if (!is_null($callId = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
                         $this->setCallId($callId);
                     }
+                    $this->setCallId(3);
                     break;
+
                 case 'program':
                     if (!is_null($programId = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
                         $this->setProgramId($programId);
@@ -187,6 +215,20 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     }
 
     /**
+     * @param Call $call
+     * @return string
+     */
+    public function parseCallTitle(Call $call){
+        return $this->getZfcTwigRenderer()->render(
+            'program/partial/entity/programcall-title',
+            [
+                'call'             => $call,
+            ]
+        );
+    }
+
+
+    /**
      * @param Call    $call
      * @param Program $program
      *
@@ -195,6 +237,9 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     public function parseCallSelector(Call $call = null, Program $program = null)
     {
         //$this->getProgramService()->getOptions()->getDisplayName();
+        /**
+         * @todo set it into the options
+         */
         $displayName = (DEBRANOVA_HOST == 'artemisia'?'name-without-program':'name');
 
         return $this->getZfcTwigRenderer()->render(
@@ -211,15 +256,44 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     /**
      * @return string
      */
-    public function parseProgramcallMap()
+    public function parseProgramcallMap($call)
     {
         return $this->getZfcTwigRenderer()->render(
-            'program/partial/map',
+            'program/partial/entity/programcall-map',
             [
                 'call'             => $this->getCallService(),
+                'countries'        => $this->getCallService()->findCountryByCall($call)
             ]
         );
     }
+
+    /**
+     * @return string
+     */
+    public function parseProgramcallProjectList($call){
+
+        return $this->getZfcTwigRenderer()->render(
+            'program/partial/list/project',
+            [
+                'call'             => $this->getCallService(),
+                'projects'  =>$this->getCallService()->getProjectService()->findProjectsByCall($call)->getQuery()->getResult()
+            ]
+        );
+    }
+
+
+    /**
+    * @return string
+    */
+    public function parseProgramcallTitle(){
+        return $this->getZfcTwigRenderer()->render(
+            'program/partial/entity/programcall-title',
+            [
+                'call'             => $this->getCallService()
+            ]
+        );
+    }
+
 
     /**
      * @param Call    $call
@@ -229,10 +303,16 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
      */
     public function parseProgramcallInfo(Call $call = null, Program $program = null)
     {
+
+        $arr = $this->getCallService()->findProjectAndPartners();
         return $this->getZfcTwigRenderer()->render(
             'program/partial/entity/programcall-info',
             [
                 'call'             => $call,
+                'projects' => $arr['0']['projects'],
+                'partners' => $arr['0']['partners'],
+                'funding_eu' => $arr['0']['funding_eu'],
+                'funding_national' => $arr['0']['funding_national']
             ]
         );
     }

@@ -13,6 +13,8 @@ use Contact\Entity\Contact;
 use Program\Entity\Call\Call;
 use Program\Entity\Nda;
 use Program\Entity\NdaObject;
+use Project\Service\ProjectService;
+use Affiliation\Service\AffiliationService;
 
 /**
  * CallService
@@ -71,6 +73,22 @@ class CallService extends ServiceAbstract
     }
 
     /**
+     * @return ProjectService
+     */
+    public function getProjectService()
+    {
+        return $this->getServiceLocator()->get(ProjectService::class);
+    }
+
+    /**
+     * @return AffiliationService
+     */
+    public function getAffiliationService()
+    {
+        return $this->getServiceLocator()->get(AffiliationService::class);
+    }
+
+    /**
      * Find the last open call and check which versionType is active
      *
      * @return \stdClass
@@ -125,6 +143,14 @@ class CallService extends ServiceAbstract
             $this->getFullEntityName('Call\Call')
         )->findNonEmptyCalls();
     }
+
+
+    public function findProjectAndPartners(){
+        return $this->getEntityManager()->getRepository(
+            $this->getFullEntityName('Call\Call')
+        )->findProjectAndPartners($this->getCall());
+    }
+
 
     /**
      * Return the current status of the given all with given the current date
@@ -227,6 +253,31 @@ class CallService extends ServiceAbstract
     }
 
     /**
+     * @param Call $call
+     * @return mixed
+     */
+    public function findCountryByCall(Call $call){
+
+        return $this->getGeneralService()->findCountryByCall(
+            $call
+        );
+    }
+
+
+     /**
+     * @param Call $call
+     * @return mixed
+     */
+     public function findProjectByCall(Call $call){
+         $which = ProjectService::WHICH_ALL;
+        return $this->getProjectService()->findProjectsByCall(
+            $call, $which
+        );
+     }
+
+
+
+    /**
      * Upload a NDA to the system and store it for the user
      *
      * @param array   $file
@@ -252,7 +303,9 @@ class CallService extends ServiceAbstract
         $nda->setContentType($contentType);
         $ndaObject->setNda($nda);
         $this->newEntity($ndaObject);
-
         return $ndaObject->getNda();
     }
+
+
+
 }
