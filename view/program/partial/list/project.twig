@@ -1,0 +1,23 @@
+<h3>{{ translate("txt-call-%s-project-list")|format(call.call) }}</h3>
+
+<div class="row">
+    {% for project in projects %}
+    {% set projectService = projectServiceProxy(project) %}
+    <div class="col-md-2">
+        <div class="thumbnail information-box">
+            <div class="information-box-image">
+                <div class="center-block">
+                    {{ projectLogo(projectService, 'img-responsive') }}
+                </div>
+            </div>
+            <h3 class="information-box-title">
+                {{ projectLink(projectService,'view','name-without-number') }}
+            </h3>
+        </div>
+    </div>
+    {% if loop.index is divisibleby(6) %}
+</div>
+<div class="row">
+    {% endif %}
+    {% endfor %}
+</div>

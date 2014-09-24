@@ -1,13 +1,11 @@
-<h2>Program Call {{ call.call }} </h2>
-<dl>
-    <dt>Program Call</dt>
-    <dd>{{ call.poOpenDate|date("d-m-Y") }}</dd>
-    <dt>Total number of project</dt>
-    <dd>{{ call.project.count }}</dd>
+<h3>Call Information</h3>
+<dl class="project">
+    <dt>Total number of projects</dt>
+    <dd>{{ projects }}</dd>
     <dt>Total number of partners</dt>
-    <dd>23</dd>
-    <dt>Total National Funding</dt>
-    <dd>4352523 M €</dd>
-    <dt>Total EU Funding</dt>
-    <dd>1245252 M €</dd>
+    <dd>{{ partners }}</dd>
+    <dt>National Funding</dt>
+    <dd>{{ funding_national|round(2, 'floor') }} &euro;</dd>
+    <dt>EU Funding</dt>
+    <dd>{{ funding_eu|round(2, 'floor') }} &euro;</dd>
 </dl>
