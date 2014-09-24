@@ -118,11 +118,21 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
      */
     public function extractContentParam(Content $content)
     {
+        if(!is_null($this->getRouteMatch()->getParam('docRef'))){
+            $this->getCallService()->setCall(
+                $this->getCallService()->findEntityByDocRef('call\call', $this->getRouteMatch()->getParam('docRef'))
+            );
+            $this->setCallId($this->getCallService()->getCall()->getId());
+        }
+
         foreach ($content->getContentParam() as $param) {
             /**
              * When the parameterId is 0 (so we want to get the article from the URL
              */
             switch ($param->getParameter()->getParam()) {
+
+
+
 
                 case 'session':
 
@@ -134,11 +144,9 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
                     break;
 
                 case 'call':
-                    //var_dump($this->getRouteMatch()->getParam($param->getParameter()->getParam())); die();
                     if (!is_null($callId = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
                         $this->setCallId($callId);
                     }
-                    $this->setCallId(3);
                     break;
 
                 case 'program':
@@ -148,6 +156,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
                     break;
             }
         }
+
     }
 
     /**

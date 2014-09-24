@@ -264,6 +264,27 @@ class CallService extends ServiceAbstract
     }
 
 
+    /**
+     * @param string $entity
+     * @param        $docRef
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function findEntityByDocRef($entity, $docRef)
+    {
+        if (is_null($entity)) {
+            throw new \InvalidArgumentException("An entity is required to find an entity");
+        }
+        if (is_null($docRef)) {
+            throw new \InvalidArgumentException("A docRef is required to find an entity");
+        }
+        $entity = $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->findOneBy(
+            array('docRef' => $docRef)
+        );
+
+        return $entity;
+    }
+
      /**
      * @param Call $call
      * @return mixed
