@@ -274,7 +274,7 @@ class CallService extends ServiceAbstract
     {
         if (is_null($entity)) {
             throw new \InvalidArgumentException("An entity is required to find an entity");
-        } 
+        }
         if (is_null($docRef)) {
             throw new \InvalidArgumentException("A docRef is required to find an entity");
         }
