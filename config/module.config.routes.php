@@ -23,7 +23,7 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes'  => [
-                    'view' => [
+                        'view' => [
                         'type'         => 'Literal',
                         'priority'     => 1000,
                         'options'      => [
@@ -33,6 +33,20 @@ return [
                                 'action'     => 'view',
                             ],
                         ]],
+                        'programcall' => [
+                            'type'     => 'Segment',
+                            'priority' => -1000,
+                            'options'  => [
+                                'route'       => '/programcall[/call-:id].html',
+                                'constraints' => [
+                                    'id' => '\d+',
+                                ],
+                                'defaults'    => [
+                                    'controller' => 'programcall',
+                                    'action'     => 'view',
+                                ],
+                            ],
+                        ],
                         'nda' => [
                         'type'         => 'Literal',
                         'priority'     => 1000,
