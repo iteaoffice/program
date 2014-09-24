@@ -62,7 +62,7 @@ class Call extends EntityAbstract implements ResourceInterface
      * @Gedmo\Slug(fields={"call"})
      * @Annotation\Exclude()
      * @var string
-     */ 
+     */
     private $docRef;
     /**
      * @ORM\Column(name="po_open_date", type="datetime", nullable=true)
