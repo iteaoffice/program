@@ -122,7 +122,9 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
             $this->getCallService()->setCall(
                 $this->getCallService()->findEntityByDocRef('call\call', $this->getRouteMatch()->getParam('docRef'))
             );
-            $this->setCallId($this->getCallService()->getCall()->getId());
+            if($this->getCallService()->getCall()!==null){
+                $this->setCallId($this->getCallService()->getCall()->getId());
+            }
         }
 
         foreach ($content->getContentParam() as $param) {
