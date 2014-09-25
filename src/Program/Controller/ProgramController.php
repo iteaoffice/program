@@ -30,7 +30,6 @@ class ProgramController extends ProgramAbstractController
      */
     public function indexAction()
     {
-
         return new ViewModel();
     }
 

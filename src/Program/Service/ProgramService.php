@@ -39,6 +39,7 @@ class ProgramService extends ServiceAbstract
     public function setProgramId($id)
     {
         $this->setProgram($this->findEntityById('Program', $id));
+
         return $this;
     }
 
@@ -94,6 +95,7 @@ class ProgramService extends ServiceAbstract
     public function setProgram($program)
     {
         $this->program = $program;
+
         return $this;
     }
 

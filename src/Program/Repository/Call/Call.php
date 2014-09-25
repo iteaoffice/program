@@ -126,7 +126,6 @@ class Call extends EntityRepository
         );
     }
 
-
     /**
      * This function returns an array with three elements
      *
@@ -154,9 +153,7 @@ class Call extends EntityRepository
 
         $queryBuilder->setParameter(1, $call->getCall());
 
-
         return $queryBuilder->getQuery()->getResult();
     }
-
 
 }

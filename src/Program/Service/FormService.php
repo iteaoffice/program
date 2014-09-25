@@ -53,6 +53,7 @@ class FormService implements ServiceLocatorAwareInterface
         if ($bind) {
             $form->bind($entity);
         }
+
         return $form;
     }
 

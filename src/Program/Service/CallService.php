@@ -144,13 +144,12 @@ class CallService extends ServiceAbstract
         )->findNonEmptyCalls();
     }
 
-
-    public function findProjectAndPartners(){
+    public function findProjectAndPartners()
+    {
         return $this->getEntityManager()->getRepository(
             $this->getFullEntityName('Call\Call')
         )->findProjectAndPartners($this->getCall());
     }
-
 
     /**
      * Return the current status of the given all with given the current date
@@ -253,16 +252,15 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * @param Call $call
+     * @param  Call  $call
      * @return mixed
      */
-    public function findCountryByCall(Call $call){
-
+    public function findCountryByCall(Call $call)
+    {
         return $this->getGeneralService()->findCountryByCall(
             $call
         );
     }
-
 
     /**
      * @param string $entity
@@ -286,17 +284,17 @@ class CallService extends ServiceAbstract
     }
 
      /**
-     * @param Call $call
+     * @param  Call  $call
      * @return mixed
      */
-     public function findProjectByCall(Call $call){
+     public function findProjectByCall(Call $call)
+     {
          $which = ProjectService::WHICH_ALL;
+
         return $this->getProjectService()->findProjectsByCall(
             $call, $which
         );
      }
-
-
 
     /**
      * Upload a NDA to the system and store it for the user
@@ -324,9 +322,8 @@ class CallService extends ServiceAbstract
         $nda->setContentType($contentType);
         $ndaObject->setNda($nda);
         $this->newEntity($ndaObject);
+
         return $ndaObject->getNda();
     }
-
-
 
 }
