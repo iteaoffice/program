@@ -18,6 +18,7 @@ use Program\Entity\Call\Session;
 use Program\Entity\Program;
 use Program\Service\CallService;
 use Program\Service\ProgramService;
+use Project\Service\ProjectService;
 use Zend\Mvc\Router\Http\RouteMatch;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -121,7 +122,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
             $this->getCallService()->setCall(
                 $this->getCallService()->findEntityByDocRef('call\call', $this->getRouteMatch()->getParam('docRef'))
             );
-            if ($this->getCallService()->getCall()!==null) {
+            if (!$this->getCallService()->isEmpty()) {
                 $this->setCallId($this->getCallService()->getCall()->getId());
             }
         }
@@ -279,11 +280,15 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
      */
     public function parseProgramcallProjectList($call)
     {
+        $whichProjects =
+            $this->getCallService()->getProjectService()->getOptions()->getProjectHasVersions(
+            ) ? ProjectService::WHICH_ONLY_ACTIVE : ProjectService::WHICH_ALL;
+
         return $this->getZfcTwigRenderer()->render(
             'program/partial/list/project',
             [
                 'call'             => $this->getCallService(),
-                'projects'  =>$this->getCallService()->getProjectService()->findProjectsByCall($call)->getQuery()->getResult()
+                'projects'  =>$this->getCallService()->getProjectService()->findProjectsByCall($call, $whichProjects)->getQuery()->getResult()
             ]
         );
     }

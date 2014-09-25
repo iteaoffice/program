@@ -287,10 +287,8 @@ class CallService extends ServiceAbstract
      * @param  Call  $call
      * @return mixed
      */
-     public function findProjectByCall(Call $call)
+     public function findProjectByCall(Call $call, $which)
      {
-         $which = ProjectService::WHICH_ALL;
-
         return $this->getProjectService()->findProjectsByCall(
             $call, $which
         );

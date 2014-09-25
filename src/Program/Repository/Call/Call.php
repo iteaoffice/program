@@ -145,12 +145,10 @@ class Call extends EntityRepository
         $queryBuilder->join('c.affiliation', 'a');
         $queryBuilder->join('a.organisation', 'o');
         $queryBuilder->join('a.project', 'p');
-
         $queryBuilder->join('p.call', 'pc');
         $queryBuilder->where('pc.call = ?1');
         $queryBuilder->addGroupBy('pc.call');
         $queryBuilder->addOrderBy('pc.call');
-
         $queryBuilder->setParameter(1, $call->getCall());
 
         return $queryBuilder->getQuery()->getResult();
