@@ -26,13 +26,13 @@ use Program\Entity\NdaObject;
  */
 class CallService extends ServiceAbstract
 {
-    const FPP_CLOSED   = 'FPP_CLOSED';
+    const FPP_CLOSED = 'FPP_CLOSED';
     const FPP_NOT_OPEN = 'FPP_NOT_OPEN';
-    const FPP_OPEN     = 'FPP_OPEN';
-    const PO_CLOSED    = 'PO_CLOSED';
-    const PO_NOT_OPEN  = 'PO_NOT_OPEN';
-    const PO_OPEN      = 'PO_OPEN';
-    const UNDEFINED    = 'UNDEFINED';
+    const FPP_OPEN = 'FPP_OPEN';
+    const PO_CLOSED = 'PO_CLOSED';
+    const PO_NOT_OPEN = 'PO_NOT_OPEN';
+    const PO_OPEN = 'PO_OPEN';
+    const UNDEFINED = 'UNDEFINED';
     /**
      * @var Call
      */
@@ -77,11 +77,11 @@ class CallService extends ServiceAbstract
      */
     public function findLastCallAndActiveVersionType()
     {
-        $result                                    = $this->getEntityManager()->getRepository(
+        $result = $this->getEntityManager()->getRepository(
             $this->getFullEntityName('Call\Call')
         )->findLastCallAndActiveVersionType();
-        $lastCallAndActiveVersionType              = new \stdClass();
-        $lastCallAndActiveVersionType->call        = $result['call'];
+        $lastCallAndActiveVersionType = new \stdClass();
+        $lastCallAndActiveVersionType->call = $result['call'];
         $lastCallAndActiveVersionType->versionType = $this->getVersionService()->findEntityById(
             'Version\Type',
             $result['versionType']
@@ -97,19 +97,19 @@ class CallService extends ServiceAbstract
      */
     public function findFirstAndLastCall()
     {
-        $firstCall           = $this->getEntityManager()->getRepository($this->getFullEntityName('Call\Call'))
-                                    ->findOneBy(
-                                        [],
-                                        array('id' => 'ASC')
-                                    );
-        $lastCall            = $this->getEntityManager()->getRepository($this->getFullEntityName('Call\Call'))
-                                    ->findOneBy(
-                                        [],
-                                        array('id' => 'DESC')
-                                    );
-        $callSpan            = new \stdClass();
+        $firstCall = $this->getEntityManager()->getRepository($this->getFullEntityName('Call\Call'))
+            ->findOneBy(
+                [],
+                ['id' => 'ASC']
+            );
+        $lastCall = $this->getEntityManager()->getRepository($this->getFullEntityName('Call\Call'))
+            ->findOneBy(
+                [],
+                ['id' => 'DESC']
+            );
+        $callSpan = new \stdClass();
         $callSpan->firstCall = $firstCall;
-        $callSpan->lastCall  = $lastCall;
+        $callSpan->lastCall = $lastCall;
 
         return $callSpan;
     }
@@ -140,32 +140,33 @@ class CallService extends ServiceAbstract
         /**
          * Go over the dates and find the most suited date.
          */
-        $today                = $dateTime = new \DateTime();
+        $today = new \DateTime();
+        $dateTime = new \DateTime();
         $notificationDeadline = $dateTime->sub(new \DateInterval("P1W"));
         if ($this->getCall()->getPoOpenDate() > $today) {
             $referenceDate = $this->getCall()->getPoOpenDate();
-            $result        = self::PO_NOT_OPEN;
+            $result = self::PO_NOT_OPEN;
         } elseif ($this->getCall()->getPoCloseDate() > $today) {
             $referenceDate = $this->getCall()->getPoCloseDate();
-            $result        = self::PO_OPEN;
+            $result = self::PO_OPEN;
         } elseif ($this->getCall()->getPoCloseDate() > $notificationDeadline) {
             $referenceDate = $this->getCall()->getPoCloseDate();
-            $result        = self::PO_CLOSED;
+            $result = self::PO_CLOSED;
         } elseif ($this->getCall()->getFppOpenDate() > $today) {
             $referenceDate = $this->getCall()->getFppOpenDate();
-            $result        = self::FPP_NOT_OPEN;
+            $result = self::FPP_NOT_OPEN;
         } elseif ($this->getCall()->getFppCloseDate() > $today) {
             $referenceDate = $this->getCall()->getFppCloseDate();
-            $result        = self::FPP_OPEN;
+            $result = self::FPP_OPEN;
         } elseif ($this->getCall()->getFppCloseDate() > $notificationDeadline) {
             $referenceDate = $this->getCall()->getFppCloseDate();
-            $result        = self::FPP_CLOSED;
+            $result = self::FPP_CLOSED;
         } else {
             $referenceDate = null;
-            $result        = self::UNDEFINED;
+            $result = self::UNDEFINED;
         }
-        $callStatus                = new \stdClass();
-        $callStatus->result        = $result;
+        $callStatus = new \stdClass();
+        $callStatus->result = $result;
         $callStatus->referenceDate = $referenceDate;
 
         return $callStatus;
@@ -242,7 +243,7 @@ class CallService extends ServiceAbstract
         $nda = new Nda();
         $nda->setContact($contact);
         if (!is_null($call)) {
-            $nda->setCall(array($call));
+            $nda->setCall([$call]);
         }
         $nda->setSize($file['size']);
         $contentType = $this->getGeneralService()->findContentTypeByContentTypeName($file['type']);

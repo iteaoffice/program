@@ -29,7 +29,23 @@
         <tr>
             <td>{{ ideaSession.schedule }}</td>
             <td>{{ ideaService.idea.number }}</td>
-            <td>{{ ideaLink(ideaService,'view','name') }}</td>
+            <td>{{ ideaLink(ideaService,'view','name') }}
+                {% if session.id in [13,14] %}
+                    {% for document in ideaService.idea.document if 'pitch' in document.document and document.contentType.id == 1 %}
+                        {{ ideaDocumentLink(document,'download','icon') }}
+                    {% endfor %}
+                {% endif %}
+                {% if session.id in [15] %}
+                    {% for document in ideaService.idea.document if 'day1' in document.document and document.contentType.id == 1 %}
+                        {{ ideaDocumentLink(document,'download','icon') }}
+                    {% endfor %}
+                {% endif %}
+                {% if session.id in [16] %}
+                    {% for document in ideaService.idea.document if 'day2' in document.document and document.contentType.id == 1 %}
+                        {{ ideaDocumentLink(document,'download','icon') }}
+                    {% endfor %}
+                {% endif %}
+            </td>
             <td>{{ ideaService.idea.title }}</td>
             <td>{{ ideaService.idea.contact.displayName() }}</td>
         </tr>
