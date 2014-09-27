@@ -98,4 +98,14 @@ class ProgramService extends ServiceAbstract
 
         return $this;
     }
+
+    /**
+     * @param $which
+     *
+     * @return AffiliationService[]
+     */
+    public function getAffiliation($which = AffiliationService::WHICH_ONLY_ACTIVE)
+    {
+        return $this->getAffiliationService()->findAffiliationByProjectAndWhich($this->project, $which);
+    }
 }

@@ -13,6 +13,8 @@ use Contact\Entity\Contact;
 use Program\Entity\Call\Call;
 use Program\Entity\Nda;
 use Program\Entity\NdaObject;
+use Project\Service\ProjectService;
+use Affiliation\Service\AffiliationService;
 
 /**
  * CallService
@@ -71,6 +73,22 @@ class CallService extends ServiceAbstract
     }
 
     /**
+     * @return ProjectService
+     */
+    public function getProjectService()
+    {
+        return $this->getServiceLocator()->get(ProjectService::class);
+    }
+
+    /**
+     * @return AffiliationService
+     */
+    public function getAffiliationService()
+    {
+        return $this->getServiceLocator()->get(AffiliationService::class);
+    }
+
+    /**
      * Find the last open call and check which versionType is active
      *
      * @return \stdClass
@@ -124,6 +142,13 @@ class CallService extends ServiceAbstract
         return $this->getEntityManager()->getRepository(
             $this->getFullEntityName('Call\Call')
         )->findNonEmptyCalls();
+    }
+
+    public function findProjectAndPartners()
+    {
+        return $this->getEntityManager()->getRepository(
+            $this->getFullEntityName('Call\Call')
+        )->findProjectAndPartners($this->getCall());
     }
 
     /**
@@ -228,6 +253,49 @@ class CallService extends ServiceAbstract
     }
 
     /**
+     * @param  Call  $call
+     * @return mixed
+     */
+    public function findCountryByCall(Call $call)
+    {
+        return $this->getGeneralService()->findCountryByCall(
+            $call
+        );
+    }
+
+    /**
+     * @param string $entity
+     * @param        $docRef
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function findEntityByDocRef($entity, $docRef)
+    {
+        if (is_null($entity)) {
+            throw new \InvalidArgumentException("An entity is required to find an entity");
+        }
+        if (is_null($docRef)) {
+            throw new \InvalidArgumentException("A docRef is required to find an entity");
+        }
+        $entity = $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->findOneBy(
+            array('docRef' => $docRef)
+        );
+
+        return $entity;
+    }
+
+     /**
+     * @param  Call  $call
+     * @return mixed
+     */
+     public function findProjectByCall(Call $call, $which)
+     {
+        return $this->getProjectService()->findProjectsByCall(
+            $call, $which
+        );
+     }
+
+    /**
      * Upload a NDA to the system and store it for the user
      *
      * @param array   $file
@@ -256,4 +324,5 @@ class CallService extends ServiceAbstract
 
         return $ndaObject->getNda();
     }
+
 }

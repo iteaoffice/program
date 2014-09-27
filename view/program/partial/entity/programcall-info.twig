@@ -1,11 +1,11 @@
-<h1>Program Call</h1>
-<dl>
-    <dt>Total number of Projects</dt>
-    <dd>{{ call.poOpenDate|date("d-m-Y") }}</dd>
+<h3>Call Information</h3>
+<dl class="project">
+    <dt>Total number of projects</dt>
+    <dd>{{ projects }}</dd>
     <dt>Total number of partners</dt>
-    <dd>{{ call.poOpenDate|date("d-m-Y") }}</dd>
-    <dt>Total National Funding</dt>
-    <dd>{{ call.poOpenDate|date("d-m-Y") }}</dd>
-    <dt>Total EU Funding</dt>
-    <dd>{{ call.poOpenDate|date("d-m-Y") }}</dd>
+    <dd>{{ partners }}</dd>
+    <dt>National Funding</dt>
+    <dd>{{ funding_national|round(2, 'floor') }} &euro;</dd>
+    <dt>EU Funding</dt>
+    <dd>{{ funding_eu|round(2, 'floor') }} &euro;</dd>
 </dl>

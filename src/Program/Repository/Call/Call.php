@@ -125,4 +125,33 @@ class Call extends EntityRepository
             'versionType' => Type::TYPE_FPP
         );
     }
+
+    /**
+     * This function returns an array with three elements
+     *
+     * 'partners' which contains the amount of partners
+     * 'projects' which contains the amount of projects
+     *
+     * @return array
+     */
+    public function findProjectAndPartners(\Program\Entity\Call\Call $call)
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('COUNT(DISTINCT a.organisation) partners');
+        $queryBuilder->addSelect('COUNT(DISTINCT a.project) projects');
+        $queryBuilder->addSelect('SUM(c.fundingEu) funding_eu');
+        $queryBuilder->addSelect('SUM(c.fundingNational) funding_national');
+        $queryBuilder->from('Project\Entity\Cost\Cost', 'c');
+        $queryBuilder->join('c.affiliation', 'a');
+        $queryBuilder->join('a.organisation', 'o');
+        $queryBuilder->join('a.project', 'p');
+        $queryBuilder->join('p.call', 'pc');
+        $queryBuilder->where('pc.call = ?1');
+        $queryBuilder->addGroupBy('pc.call');
+        $queryBuilder->addOrderBy('pc.call');
+        $queryBuilder->setParameter(1, $call->getCall());
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
 }

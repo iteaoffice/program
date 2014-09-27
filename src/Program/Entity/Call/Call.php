@@ -15,6 +15,7 @@ namespace Program\Entity\Call;
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Program\Entity\EntityAbstract;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Zend\Form\Annotation;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
@@ -56,6 +57,13 @@ class Call extends EntityAbstract implements ResourceInterface
      * @var string
      */
     private $call;
+    /**
+     * @ORM\Column(name="docref", type="string", length=255, nullable=false, unique=true)
+     * @Gedmo\Slug(fields={"call"})
+     * @Annotation\Exclude()
+     * @var string
+     */
+    private $docRef;
     /**
      * @ORM\Column(name="po_open_date", type="datetime", nullable=true)
      * @Annotation\Type("\Zend\Form\Element\Date")
@@ -377,6 +385,7 @@ class Call extends EntityAbstract implements ResourceInterface
             'fppOpenDate'  => $this->fppOpenDate,
             'fppCloseDate' => $this->fppCloseDate,
             'nda'          => $this->nda,
+            'docRef'          => $this->docRef,
         ];
     }
 
