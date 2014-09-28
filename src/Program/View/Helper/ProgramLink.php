@@ -49,10 +49,10 @@ class ProgramLink extends LinkAbstract
          * Set the non-standard options needed to give an other link value
          */
         $this->setShowOptions(
-            array(
+            [
                 'name' => $this->getProgram(),
 
-            )
+            ]
         );
         $this->addRouterParam('entity', 'program');
         if (!is_null($program)) {

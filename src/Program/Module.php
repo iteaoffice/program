@@ -28,16 +28,16 @@ class Module implements
 {
     public function getAutoloaderConfig()
     {
-        return array(
-            'Zend\Loader\ClassMapAutoloader' => array(
+        return [
+            'Zend\Loader\ClassMapAutoloader' => [
                 __DIR__ . '/../../autoload_classmap.php',
-            ),
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
+            ],
+            'Zend\Loader\StandardAutoloader' => [
+                'namespaces' => [
                     __NAMESPACE__ => __DIR__ . '/../../src/' . __NAMESPACE__,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**
@@ -79,8 +79,8 @@ class Module implements
      */
     public function getControllerPluginConfig()
     {
-        return array(
-            'factories' => array(
+        return [
+            'factories' => [
                 'renderNda'        => function ($sm) {
                     $renderNda = new RenderNda();
                     $renderNda->setServiceLocator($sm->getServiceLocator());
@@ -93,8 +93,8 @@ class Module implements
 
                     return $renderDoa;
                 },
-            )
-        );
+            ]
+        ];
     }
 
     /**
@@ -107,7 +107,7 @@ class Module implements
     public function onBootstrap(EventInterface $e)
     {
         $app = $e->getParam('application');
-        $em  = $app->getEventManager();
+        $em = $app->getEventManager();
         $em->attach(
             MvcEvent::EVENT_DISPATCH,
             function ($event) {

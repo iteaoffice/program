@@ -38,11 +38,11 @@ class ProgramTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->serviceManager = Bootstrap::getServiceManager();
-        $this->entityManager  = $this->serviceManager->get('doctrine.entitymanager.orm_default');
-        $this->programData    = array(
+        $this->entityManager = $this->serviceManager->get('doctrine.entitymanager.orm_default');
+        $this->programData = [
             'program' => 'ITEA2',
-        );
-        $this->program        = new Program();
+        ];
+        $this->program = new Program();
     }
 
     public function testCanCreateEntity()
@@ -65,12 +65,12 @@ class ProgramTest extends \PHPUnit_Framework_TestCase
 
     public function testCanHydrateEntity()
     {
-        $hydrator      = new DoctrineObject(
+        $hydrator = new DoctrineObject(
             $this->entityManager,
             'Program\Entity\Program'
         );
         $this->program = $hydrator->hydrate($this->programData, new Program());
-        $dataArray     = $hydrator->extract($this->program);
+        $dataArray = $hydrator->extract($this->program);
         $this->assertSame($this->programData['program'], $dataArray['program']);
     }
 
@@ -81,7 +81,7 @@ class ProgramTest extends \PHPUnit_Framework_TestCase
 
     public function testCanSaveEntityInDatabase()
     {
-        $hydrator      = new DoctrineObject(
+        $hydrator = new DoctrineObject(
             $this->entityManager,
             'Program\Entity\Program'
         );

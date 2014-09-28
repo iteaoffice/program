@@ -34,8 +34,8 @@ class FormServiceTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->serviceManager = Bootstrap::getServiceManager();
-        $this->entityManager  = $this->serviceManager->get('doctrine.entitymanager.orm_default');
-        $this->formService    = new FormService();
+        $this->entityManager = $this->serviceManager->get('doctrine.entitymanager.orm_default');
+        $this->formService = new FormService();
         $this->formService->setServiceLocator($this->serviceManager);
     }
 
@@ -64,7 +64,7 @@ class FormServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testCanCreateFormAndBindEntity()
     {
-        $program  = $this->entityManager->find("Program\Entity\Program", 1);
+        $program = $this->entityManager->find("Program\Entity\Program", 1);
         $nodeForm = $this->formService->getForm(null, $program, true);
         $this->assertInstanceOf('Zend\Form\Form', $nodeForm);
     }
@@ -77,9 +77,9 @@ class FormServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testCanCreateEntityForms()
     {
-        $entities = array(
+        $entities = [
             'program',
-        );
+        ];
         foreach ($entities as $entity) {
             $this->assertInstanceOf('Zend\Form\Form', $this->formService->getForm($entity));
         }

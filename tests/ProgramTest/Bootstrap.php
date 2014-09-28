@@ -35,7 +35,7 @@ class Bootstrap
 
     public static function init()
     {
-        $zf2ModulePaths = array(dirname(dirname(__DIR__)));
+        $zf2ModulePaths = [dirname(dirname(__DIR__))];
         if (($path = static::findParentPath('vendor'))) {
             $zf2ModulePaths[] = $path;
         }
@@ -123,15 +123,15 @@ class Bootstrap
         }
         include $zf2Path . '/Zend/Loader/AutoloaderFactory.php';
         AutoloaderFactory::factory(
-            array(
-                'Zend\Loader\StandardAutoloader' => array(
+            [
+                'Zend\Loader\StandardAutoloader' => [
                     'autoregister_zf' => true,
-                    'namespaces'      => array(
+                    'namespaces'      => [
                         __NAMESPACE__ => __DIR__ . '/' . __NAMESPACE__,
                         'Admin'       => __DIR__ . '/../../../../module/Admin'
-                    ),
-                ),
-            )
+                    ],
+                ],
+            ]
         );
     }
 

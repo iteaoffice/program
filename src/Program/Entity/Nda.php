@@ -220,7 +220,7 @@ class Nda extends EntityAbstract implements ResourceInterface
      */
     public function getArrayCopy()
     {
-        return array(
+        return [
             'id'           => $this->id,
             'dateApproved' => $this->dateApproved,
             'dateSigned'   => $this->dateSigned,
@@ -231,7 +231,7 @@ class Nda extends EntityAbstract implements ResourceInterface
             'contact'      => $this->contact,
             'call'         => $this->call,
             'object'       => $this->object,
-        );
+        ];
     }
 
     /**
@@ -252,37 +252,37 @@ class Nda extends EntityAbstract implements ResourceInterface
     {
         if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
-            $factory     = new InputFactory();
+            $factory = new InputFactory();
             $inputFilter->add(
                 $factory->createInput(
-                    array(
+                    [
                         'name'     => 'dateApproved',
                         'required' => false,
-                    )
+                    ]
                 )
             );
             $inputFilter->add(
                 $factory->createInput(
-                    array(
+                    [
                         'name'     => 'contact',
                         'required' => true,
-                    )
+                    ]
                 )
             );
             $inputFilter->add(
                 $factory->createInput(
-                    array(
+                    [
                         'name'     => 'call',
                         'required' => true,
-                    )
+                    ]
                 )
             );
             $inputFilter->add(
                 $factory->createInput(
-                    array(
+                    [
                         'name'     => 'program',
                         'required' => true,
-                    )
+                    ]
                 )
             );
             $this->inputFilter = $inputFilter;

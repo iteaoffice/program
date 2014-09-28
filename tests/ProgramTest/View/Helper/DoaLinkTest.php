@@ -54,7 +54,7 @@ class DoaLinkTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->serviceManager = Bootstrap::getServiceManager();
-        $this->doa            = new Doa();
+        $this->doa = new Doa();
         $this->doa->setId(1);
         $program = new Program();
         $program->setId(1);

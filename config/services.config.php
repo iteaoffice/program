@@ -10,10 +10,10 @@
 use Program\Entity;
 use Program\Form;
 
-return array(
-    'factories' => array(
+return [
+    'factories' => [
         'program_program_form' => function ($sm) {
             return new Form\CreateObject($sm, new Entity\Program());
         },
-    ),
-);
+    ],
+];

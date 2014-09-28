@@ -9,12 +9,12 @@
  */
 namespace Program\Service;
 
+use Affiliation\Service\AffiliationService;
 use Contact\Entity\Contact;
 use Program\Entity\Call\Call;
 use Program\Entity\Nda;
 use Program\Entity\NdaObject;
 use Project\Service\ProjectService;
-use Affiliation\Service\AffiliationService;
 
 /**
  * CallService
@@ -278,22 +278,23 @@ class CallService extends ServiceAbstract
             throw new \InvalidArgumentException("A docRef is required to find an entity");
         }
         $entity = $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->findOneBy(
-            array('docRef' => $docRef)
+            ['docRef' => $docRef]
         );
 
         return $entity;
     }
 
-     /**
+    /**
      * @param  Call  $call
      * @return mixed
      */
-     public function findProjectByCall(Call $call, $which)
-     {
+    public function findProjectByCall(Call $call, $which)
+    {
         return $this->getProjectService()->findProjectsByCall(
-            $call, $which
+            $call,
+            $which
         );
-     }
+    }
 
     /**
      * Upload a NDA to the system and store it for the user
@@ -324,5 +325,4 @@ class CallService extends ServiceAbstract
 
         return $ndaObject->getNda();
     }
-
 }

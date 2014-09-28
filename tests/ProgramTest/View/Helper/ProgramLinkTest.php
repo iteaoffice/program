@@ -53,7 +53,7 @@ class ProgramLinkTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->serviceManager = Bootstrap::getServiceManager();
-        $this->program        = new Program();
+        $this->program = new Program();
         $this->program->setId(1);
         $this->program->setProgram('This is the program');
         $this->authorizeService = $this->serviceManager->get('BjyAuthorize\Service\Authorize');
@@ -69,10 +69,10 @@ class ProgramLinkTest extends \PHPUnit_Framework_TestCase
         }
         $this->authorizeService->getAcl()->allow([], new Program(), []);
         $this->programLink = $this->serviceManager->get('viewhelpermanager')->get('programlink');
-        $routeMatch        = new RouteMatch(
-            array(
+        $routeMatch = new RouteMatch(
+            [
                 'program' => 1,
-            )
+            ]
         );
         $routeMatch->setMatchedRouteName('route-program_entity_program');
         $this->programLink->setRouteMatch($routeMatch);

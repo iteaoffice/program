@@ -136,11 +136,11 @@ final class Version
         $url .= '?client_id=2b1088587b9820f33583&amp;client_secret=1738809f67b3fbf4198f2bc36ef54c52d6a3bb6c';
         if ($httpClient === null) {
             $context = stream_context_create(
-                array(
-                    'http' => array(
+                [
+                    'http' => [
                         'user_agent' => sprintf('debranova-version/%s', self::VERSION),
-                    ),
-                )
+                    ],
+                ]
             );
             $apiResponse = file_get_contents($url, false, $context);
         } else {

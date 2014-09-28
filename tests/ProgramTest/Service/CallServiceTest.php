@@ -43,8 +43,8 @@ class CallServiceTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->serviceManager = Bootstrap::getServiceManager();
-        $this->entityManager  = $this->serviceManager->get('doctrine.entitymanager.orm_default');
-        $this->callService    = new CallService();
+        $this->entityManager = $this->serviceManager->get('doctrine.entitymanager.orm_default');
+        $this->callService = new CallService();
         $this->callService->setServiceLocator($this->serviceManager);
         $this->programService = new ProgramService();
         $this->programService->setServiceLocator($this->serviceManager);
@@ -55,7 +55,7 @@ class CallServiceTest extends \PHPUnit_Framework_TestCase
     public function testCanFindFunderByCountry()
     {
         $country = $this->entityManager->find("General\Entity\Country", 1);
-        $funder  = $this->programService->findFunderByCountry($country);
+        $funder = $this->programService->findFunderByCountry($country);
         foreach ($funder as $funderResult) {
             $this->assertInstanceOf('Program\\Entity\\Funder', $funderResult);
             $this->assertEquals($funderResult->getCountry()->getId(), 1);
@@ -64,23 +64,23 @@ class CallServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testCanFindNdaByCallAndContact()
     {
-        $call    = $this->callService->findEntityById('Call\Call', 1);
+        $call = $this->callService->findEntityById('Call\Call', 1);
         $contact = $this->contactService->findEntityById('contact', 1);
-        $nda     = $this->callService->findNdaByCallAndContact($call, $contact);
+        $nda = $this->callService->findNdaByCallAndContact($call, $contact);
         $this->assertNull($nda);
     }
 
     public function testCanUploadNDA()
     {
-        $call        = $this->callService->setCallId(1)->getCall();
-        $contact     = $this->contactService->setContactId(1)->getContact();
-        $file        = array(
+        $call = $this->callService->setCallId(1)->getCall();
+        $contact = $this->contactService->setContactId(1)->getContact();
+        $file = [
             'name'     => 'This is an uploaded file',
             'type'     => 'application/pdf',
             'tmp_name' => __DIR__ . '/../../data/template_nda.pdf',
             'error'    => 0,
             'size'     => 145000,
-        );
+        ];
         $uploadedNda = $this->callService->uploadNda($file, $contact, $call);
         $this->assertInstanceOf("Program\\Entity\\NdaObject", $uploadedNda);
         $this->assertEquals($file['size'], $uploadedNda->getNda()->getSize());

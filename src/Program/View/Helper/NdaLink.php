@@ -79,7 +79,7 @@ class NdaLink extends LinkAbstract
         if (is_null($this->nda)) {
             $this->nda = new Nda();
             if (!is_null($this->getCall())) {
-                $arrayCollection = new ArrayCollection(array($this->getCall()));
+                $arrayCollection = new ArrayCollection([$this->getCall()]);
                 $this->nda->setCall($arrayCollection);
             }
         }

@@ -71,10 +71,10 @@ class RenderNda extends AbstractPlugin
         $pdf->Write(0, $nda->parseFileName());
         $ndaContent = $twig->render(
             'program/pdf/nda-call',
-            array(
+            [
                 'contact' => $nda->getContact(),
                 'call'    => $nda->getCall(),
-            )
+            ]
         );
         $pdf->writeHTMLCell(0, 0, 14, 70, $ndaContent);
         /**
@@ -170,9 +170,9 @@ class RenderNda extends AbstractPlugin
         $pdf->Write(0, $nda->parseFileName());
         $ndaContent = $twig->render(
             'program/pdf/nda-general',
-            array(
+            [
                 'contact' => $nda->getContact(),
-            )
+            ]
         );
         $pdf->writeHTMLCell(0, 0, 14, 70, $ndaContent);
         /**

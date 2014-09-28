@@ -1,7 +1,7 @@
 <?php
 
-return array(
-    'bjyauthorize' => array(
+return [
+    'bjyauthorize' => [
         // set the 'guest' role as default (must be defined in a role provider)
         'default_role'      => 'public',
         /* this module uses a meta-role that inherits from any roles that should
@@ -16,11 +16,11 @@ return array(
          * to specify roles in a config file and one to load roles using a
          * Zend\Db adapter.
          */
-        'role_providers'    => array(
-            'BjyAuthorize\Provider\Role\ObjectRepositoryProvider' => array(
+        'role_providers'    => [
+            'BjyAuthorize\Provider\Role\ObjectRepositoryProvider' => [
                 'object_manager'    => 'Doctrine\ORM\EntityManager',
                 'role_entity_class' => 'Admin\Entity\Access',
-            ),
-        ),
-    ),
-);
+            ],
+        ],
+    ],
+];

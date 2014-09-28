@@ -59,7 +59,7 @@ class ProgramService extends ServiceAbstract
     public function findFunderByCountry(Country $country)
     {
         return $this->getEntityManager()->getRepository($this->getFullEntityName('funder'))->findBy(
-            array('country' => $country)
+            ['country' => $country]
         );
     }
 
@@ -72,10 +72,10 @@ class ProgramService extends ServiceAbstract
     public function findProgramDoaByProgramAndOrganisation(Program $program, Organisation $organisation)
     {
         return $this->getEntityManager()->getRepository($this->getFullEntityName('Doa'))->findOneBy(
-            array(
+            [
                 'program'      => $program,
                 'organisation' => $organisation
-            )
+            ]
         );
     }
 

@@ -43,18 +43,18 @@ class NdaNavigationService extends NavigationServiceAbstract
                 if (!is_null($callId = $this->getRouteMatch()->getParam('id'))) {
                     $call = $this->getCallService()->setCallId($callId)->getCall();
                     $publicNavigation->addPage(
-                        array(
+                        [
                             'label'  => $this->translate("txt-home"),
                             'route'  => 'home',
                             'active' => true,
                             'router' => $this->getRouter(),
-                            'pages'  => array(
-                                array(
+                            'pages'  => [
+                                [
                                     'label'  => $this->translate("txt-account-information"),
                                     'route'  => 'contact/profile',
                                     'router' => $this->getRouter(),
-                                    'pages'  => array(
-                                        array(
+                                    'pages'  => [
+                                        [
                                             'label'  => sprintf(
                                                 $this->translate("txt-upload-nda-for-call-%s"),
                                                 $call
@@ -62,56 +62,56 @@ class NdaNavigationService extends NavigationServiceAbstract
                                             'route'  => 'program/nda/upload',
                                             'active' => true,
                                             'router' => $this->getRouter(),
-                                            'params' => array(
+                                            'params' => [
                                                 'id' => $this->routeMatch->getParam('call-id')
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
                     );
                 } else {
                     $publicNavigation->addPage(
-                        array(
+                        [
                             'label'  => $this->translate("txt-home"),
                             'route'  => 'home',
                             'active' => true,
                             'router' => $this->getRouter(),
-                            'pages'  => array(
-                                array(
+                            'pages'  => [
+                                [
                                     'label'  => $this->translate("txt-account-information"),
                                     'route'  => 'contact/profile',
                                     'router' => $this->getRouter(),
-                                    'pages'  => array(
-                                        array(
+                                    'pages'  => [
+                                        [
                                             'label'  => $this->translate("txt-upload-nda"),
                                             'route'  => $this->getRouteMatch()->getMatchedRouteName(),
                                             'active' => true,
                                             'router' => $this->getRouter(),
-                                        )
-                                    )
-                                )
-                            )
-                        )
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
                     );
                 }
                 break;
             case 'program/nda/replace':
                 $nda = $this->getProgramService()->findEntityById('Nda', $this->getRouteMatch()->getParam('id'));
                 $publicNavigation->addPage(
-                    array(
+                    [
                         'label'  => $this->translate("txt-home"),
                         'route'  => 'home',
                         'active' => true,
                         'router' => $this->getRouter(),
-                        'pages'  => array(
-                            array(
+                        'pages'  => [
+                            [
                                 'label'  => $this->translate("txt-account-information"),
                                 'route'  => 'contact/profile',
                                 'router' => $this->getRouter(),
-                                'pages'  => array(
-                                    array(
+                                'pages'  => [
+                                    [
                                         'label'  => sprintf(
                                             $this->translate("txt-replace-nda-%s"),
                                             $nda
@@ -119,31 +119,31 @@ class NdaNavigationService extends NavigationServiceAbstract
                                         'route'  => $this->getRouteMatch()->getMatchedRouteName(),
                                         'active' => true,
                                         'router' => $this->getRouter(),
-                                        'params' => array(
+                                        'params' => [
                                             'id' => $this->getRouteMatch()->getParam('id')
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
                 );
                 break;
             case 'program/nda/view':
                 $nda = $this->getProgramService()->findEntityById('Nda', $this->getRouteMatch()->getParam('id'));
                 $publicNavigation->addPage(
-                    array(
+                    [
                         'label'  => $this->translate("txt-home"),
                         'route'  => 'home',
                         'active' => true,
                         'router' => $this->getRouter(),
-                        'pages'  => array(
-                            array(
+                        'pages'  => [
+                            [
                                 'label'  => $this->translate("txt-account-information"),
                                 'route'  => 'contact/profile',
                                 'router' => $this->getRouter(),
-                                'pages'  => array(
-                                    array(
+                                'pages'  => [
+                                    [
                                         'label'  => sprintf(
                                             $this->translate("txt-view-nda-%s"),
                                             $nda
@@ -151,14 +151,14 @@ class NdaNavigationService extends NavigationServiceAbstract
                                         'route'  => $this->getRouteMatch()->getMatchedRouteName(),
                                         'active' => true,
                                         'router' => $this->getRouter(),
-                                        'params' => array(
+                                        'params' => [
                                             'id' => $this->getRouteMatch()->getParam('id')
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
                 );
                 break;
         }

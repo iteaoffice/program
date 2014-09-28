@@ -33,7 +33,7 @@ class GeneralServiceTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->serviceManager = Bootstrap::getServiceManager();
-        $this->entityManager  = $this->serviceManager->get('doctrine.entitymanager.orm_default');
+        $this->entityManager = $this->serviceManager->get('doctrine.entitymanager.orm_default');
         $this->programService = new ProgramService();
         $this->programService->setServiceLocator($this->serviceManager);
     }
@@ -45,7 +45,7 @@ class GeneralServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testCanFindAll()
     {
-        $entity   = 'program';
+        $entity = 'program';
         $programs = $this->programService->findAll($entity);
         $this->assertNotNull($programs);
         $this->assertTrue(is_array($programs));
@@ -56,7 +56,7 @@ class GeneralServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testCanCreateNewEntity()
     {
-        $program    = $this->entityManager->find("Program\Entity\Program", 1);
+        $program = $this->entityManager->find("Program\Entity\Program", 1);
         $newProgram = clone $program;
         $newProgram->setId(null);
         $newProgram->setProgram('This is a new entity');
@@ -68,7 +68,7 @@ class GeneralServiceTest extends \PHPUnit_Framework_TestCase
     public function testCanUpdateEntity()
     {
         $newProgramName = 'ITEA3';
-        $program        = $this->entityManager->find("Program\Entity\Program", 1);
+        $program = $this->entityManager->find("Program\Entity\Program", 1);
         $program->setProgram($newProgramName);
         $this->programService->updateEntity($program);
         $reloadProgram = $this->entityManager->find("Program\Entity\Program", 1);
@@ -86,7 +86,7 @@ class GeneralServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testCanGetEntity()
     {
-        $entity    = 'program';
+        $entity = 'program';
         $getEntity = $this->programService->getEntity($entity);
         $this->assertTrue(is_object($getEntity));
         $this->assertInstanceOf('Program\Entity\Program', $getEntity);
@@ -94,19 +94,19 @@ class GeneralServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testCanGetFullEntityName()
     {
-        $entity     = 'program';
+        $entity = 'program';
         $entityName = $this->programService->getFullEntityName($entity);
         $this->assertEquals('Program\Entity\Program', $entityName);
-        $entity     = 'test-program';
+        $entity = 'test-program';
         $entityName = $this->programService->getFullEntityName($entity);
         $this->assertEquals('Program\Entity\TestProgram', $entityName);
     }
 
     public function testCanFindEntity()
     {
-        $entity   = 'program';
+        $entity = 'program';
         $entityId = 1;
-        $program  = $this->programService->findEntityById($entity, $entityId);
+        $program = $this->programService->findEntityById($entity, $entityId);
         $this->assertNotNull($program);
         $this->assertInstanceOf('Program\Entity\Program', $program);
         $this->assertEquals($program->getId(), $entityId);
@@ -114,8 +114,8 @@ class GeneralServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetEntity()
     {
-        $entity         = 'program';
-        $fullEntity     = $this->programService->getEntity($entity);
+        $entity = 'program';
+        $fullEntity = $this->programService->getEntity($entity);
         $fullEntityName = $this->programService->getFullEntityName($entity);
         $this->assertInstanceOf($fullEntityName, $fullEntity);
     }

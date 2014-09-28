@@ -95,10 +95,10 @@ class Technology extends EntityAbstract
      */
     public function __construct()
     {
-        $this->contact      = new Collections\ArrayCollection();
+        $this->contact = new Collections\ArrayCollection();
         $this->organisation = new Collections\ArrayCollection();
-        $this->project      = new Collections\ArrayCollection();
-        $this->idea         = new Collections\ArrayCollection();
+        $this->project = new Collections\ArrayCollection();
+        $this->idea = new Collections\ArrayCollection();
     }
 
     /**
@@ -159,43 +159,43 @@ class Technology extends EntityAbstract
     {
         if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
-            $factory     = new InputFactory();
+            $factory = new InputFactory();
             $inputFilter->add(
                 $factory->createInput(
-                    array(
+                    [
                         'name'       => 'technology',
                         'required'   => true,
-                        'filters'    => array(
-                            array('name' => 'StripTags'),
-                            array('name' => 'StringTrim'),
-                        ),
-                        'validators' => array(
-                            array(
+                        'filters'    => [
+                            ['name' => 'StripTags'],
+                            ['name' => 'StringTrim'],
+                        ],
+                        'validators' => [
+                            [
                                 'name'    => 'StringLength',
-                                'options' => array(
+                                'options' => [
                                     'encoding' => 'UTF-8',
                                     'min'      => 1,
                                     'max'      => 255,
-                                ),
-                            ),
-                        ),
-                    )
+                                ],
+                            ],
+                        ],
+                    ]
                 )
             );
             $inputFilter->add(
                 $factory->createInput(
-                    array(
+                    [
                         'name'     => 'description',
                         'required' => true,
-                    )
+                    ]
                 )
             );
             $inputFilter->add(
                 $factory->createInput(
-                    array(
+                    [
                         'name'     => 'roadmap',
                         'required' => true,
-                    )
+                    ]
                 )
             );
             $this->inputFilter = $inputFilter;
@@ -218,11 +218,11 @@ class Technology extends EntityAbstract
      */
     public function getArrayCopy()
     {
-        return array(
+        return [
             'technology'  => $this->technology,
             'roadmap'     => $this->roadmap,
             'description' => $this->description,
-        );
+        ];
     }
 
     /**

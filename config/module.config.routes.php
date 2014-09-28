@@ -23,31 +23,32 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes'  => [
-                        'view' => [
-                        'type'         => 'Literal',
-                        'priority'     => 1000,
-                        'options'      => [
+                    'view'        => [
+                        'type'     => 'Literal',
+                        'priority' => 1000,
+                        'options'  => [
                             'route'    => '/view',
                             'defaults' => [
                                 'controller' => 'program',
                                 'action'     => 'view',
                             ],
-                        ]],
-                        'programcall' => [
-                            'type'     => 'Segment',
-                            'priority' => -1000,
-                            'options'  => [
-                                'route'       => '/programcall/[:id].html',
-                                'constraints' => [
-                                    'id' => '\d+',
-                                ],
-                                'defaults'    => [
-                                    'controller' => 'programcall',
-                                    'action'     => 'view',
-                                ],
+                        ]
+                    ],
+                    'programcall' => [
+                        'type'     => 'Segment',
+                        'priority' => -1000,
+                        'options'  => [
+                            'route'       => '/programcall/[:id].html',
+                            'constraints' => [
+                                'id' => '\d+',
+                            ],
+                            'defaults'    => [
+                                'controller' => 'programcall',
+                                'action'     => 'view',
                             ],
                         ],
-                        'nda' => [
+                    ],
+                    'nda'         => [
                         'type'         => 'Literal',
                         'priority'     => 1000,
                         'options'      => [
@@ -122,7 +123,7 @@ return [
                             ],
                         ],
                     ],
-                    'doa' => [
+                    'doa'         => [
                         'type'         => 'Segment',
                         'options'      => [
                             'route'    => '/doa',

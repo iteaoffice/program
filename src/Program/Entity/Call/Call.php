@@ -14,8 +14,8 @@ namespace Program\Entity\Call;
 
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
-use Program\Entity\EntityAbstract;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Program\Entity\EntityAbstract;
 use Zend\Form\Annotation;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
@@ -385,7 +385,7 @@ class Call extends EntityAbstract implements ResourceInterface
             'fppOpenDate'  => $this->fppOpenDate,
             'fppCloseDate' => $this->fppCloseDate,
             'nda'          => $this->nda,
-            'docRef'          => $this->docRef,
+            'docRef'       => $this->docRef,
         ];
     }
 

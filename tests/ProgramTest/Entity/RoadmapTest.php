@@ -38,13 +38,13 @@ class RoadmapTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->serviceManager = Bootstrap::getServiceManager();
-        $this->entityManager  = $this->serviceManager->get('doctrine.entitymanager.orm_default');
-        $this->roadmapData    = array(
+        $this->entityManager = $this->serviceManager->get('doctrine.entitymanager.orm_default');
+        $this->roadmapData = [
             'roadmap'      => 2,
             'dateReleased' => new \DateTime(),
             'description'  => 'This is the first roadmap'
-        );
-        $this->roadmap        = new Roadmap();
+        ];
+        $this->roadmap = new Roadmap();
     }
 
     public function testCanCreateEntity()
@@ -72,12 +72,12 @@ class RoadmapTest extends \PHPUnit_Framework_TestCase
 
     public function testCanHydrateEntity()
     {
-        $hydrator      = new DoctrineObject(
+        $hydrator = new DoctrineObject(
             $this->entityManager,
             'Program\Entity\Roadmap'
         );
         $this->roadmap = $hydrator->hydrate($this->roadmapData, new Roadmap());
-        $dataArray     = $hydrator->extract($this->roadmap);
+        $dataArray = $hydrator->extract($this->roadmap);
         $this->assertSame($this->roadmapData['roadmap'], $dataArray['roadmap']);
         $this->assertSame($this->roadmapData['description'], $dataArray['description']);
         $this->assertSame($this->roadmapData['dateReleased'], $dataArray['dateReleased']);
@@ -85,7 +85,7 @@ class RoadmapTest extends \PHPUnit_Framework_TestCase
 
     public function testCanSaveEntityInDatabase()
     {
-        $hydrator      = new DoctrineObject(
+        $hydrator = new DoctrineObject(
             $this->entityManager,
             'Program\Entity\Roadmap'
         );

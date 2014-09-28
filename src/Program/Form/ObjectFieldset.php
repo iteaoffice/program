@@ -47,9 +47,9 @@ class ObjectFieldset extends Fieldset
              */
             if ($element instanceof EntitySelect || $element instanceof EntityMultiCheckbox) {
                 $element->setOptions(
-                    array(
+                    [
                         'object_manager' => $entityManager
-                    )
+                    ]
                 );
             }
             //Add only when a type is provided

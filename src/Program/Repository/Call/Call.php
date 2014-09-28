@@ -36,13 +36,13 @@ class Call extends EntityRepository
         switch ($type) {
             case Type::TYPE_PO:
                 $queryBuilder->where('c.poOpenDate < :today')
-                             ->andWhere('c.poCloseDate > :today')
-                             ->setParameter('today', $today);
+                    ->andWhere('c.poCloseDate > :today')
+                    ->setParameter('today', $today);
                 break;
             case Type::TYPE_FPP:
                 $queryBuilder->where('c.fppOpenDate < :today')
-                             ->andWhere('c.fppCloseDate > :today')
-                             ->setParameter('today', $today);
+                    ->andWhere('c.fppCloseDate > :today')
+                    ->setParameter('today', $today);
                 break;
             default:
                 throw new \InvalidArgumentException(sprintf("This selected type %s is invalid", $type));
@@ -80,8 +80,8 @@ class Call extends EntityRepository
         $queryBuilder->from("Program\Entity\Call\Call", 'c');
         $today = new \DateTime();
         $queryBuilder->where('c.poOpenDate < :today')
-                     ->andWhere('c.poCloseDate > :today')
-                     ->setParameter('today', $today);
+            ->andWhere('c.poCloseDate > :today')
+            ->setParameter('today', $today);
         /**
          * Check first if we find an open PO
          */
@@ -90,14 +90,14 @@ class Call extends EntityRepository
              * We have found an open PO and call, return the result
              */
 
-            return array(
+            return [
                 'call'        => $queryBuilder->getQuery()->getOneOrNullResult(),
                 'versionType' => Type::TYPE_PO
-            );
+            ];
         }
         $queryBuilder->where('c.fppOpenDate < :today')
-                     ->andWhere('c.fppCloseDate > :today')
-                     ->setParameter('today', $today);
+            ->andWhere('c.fppCloseDate > :today')
+            ->setParameter('today', $today);
         /**
          * Check first if we find an open FPP
          */
@@ -106,10 +106,10 @@ class Call extends EntityRepository
              * We have found an open PO and call, return the result
              */
 
-            return array(
+            return [
                 'call'        => $queryBuilder->getQuery()->getOneOrNullResult(),
                 'versionType' => Type::TYPE_FPP
-            );
+            ];
         }
         /**
          * Still no result? Return the latest FPP (and reset the previous settings)
@@ -120,10 +120,10 @@ class Call extends EntityRepository
         $queryBuilder->orderBy('c.fppCloseDate', 'DESC');
         $queryBuilder->setMaxResults(1);
 
-        return array(
+        return [
             'call'        => $queryBuilder->getQuery()->getOneOrNullResult(),
             'versionType' => Type::TYPE_FPP
-        );
+        ];
     }
 
     /**
@@ -153,5 +153,4 @@ class Call extends EntityRepository
 
         return $queryBuilder->getQuery()->getResult();
     }
-
 }

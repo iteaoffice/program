@@ -94,7 +94,9 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
              * Map of the countries in which projects of the current call are being highlighted
              */
             case 'programcall_map':
-                return $this->parseProgramcallMap(!$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null);
+                return $this->parseProgramcallMap(
+                    !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null
+                );
 
             default:
                 return sprintf(
@@ -231,7 +233,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
         return $this->getZfcTwigRenderer()->render(
             'program/partial/entity/programcall-title',
             [
-                'call'             => $call,
+                'call' => $call,
             ]
         );
     }
@@ -269,8 +271,8 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
         return $this->getZfcTwigRenderer()->render(
             'program/partial/entity/programcall-map',
             [
-                'call'             => $this->getCallService(),
-                'countries'        => $this->getCallService()->findCountryByCall($call)
+                'call'      => $this->getCallService(),
+                'countries' => $this->getCallService()->findCountryByCall($call)
             ]
         );
     }
@@ -287,21 +289,24 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
         return $this->getZfcTwigRenderer()->render(
             'program/partial/list/project',
             [
-                'call'             => $this->getCallService(),
-                'projects'  =>$this->getCallService()->getProjectService()->findProjectsByCall($call, $whichProjects)->getQuery()->getResult()
+                'call'     => $this->getCallService(),
+                'projects' => $this->getCallService()->getProjectService()->findProjectsByCall(
+                    $call,
+                    $whichProjects
+                )->getQuery()->getResult()
             ]
         );
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function parseProgramcallTitle()
     {
         return $this->getZfcTwigRenderer()->render(
             'program/partial/entity/programcall-title',
             [
-                'call'             => $this->getCallService()
+                'call' => $this->getCallService()
             ]
         );
     }
@@ -321,9 +326,9 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
             'program/partial/entity/programcall-info',
             [
                 'call'             => $call,
-                'projects' => $arr['0']['projects'],
-                'partners' => $arr['0']['partners'],
-                'funding_eu' => $arr['0']['funding_eu'],
+                'projects'         => $arr['0']['projects'],
+                'partners'         => $arr['0']['partners'],
+                'funding_eu'       => $arr['0']['funding_eu'],
                 'funding_national' => $arr['0']['funding_national']
             ]
         );

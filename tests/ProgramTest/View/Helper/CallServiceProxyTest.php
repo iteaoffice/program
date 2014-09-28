@@ -58,7 +58,7 @@ class CallServiceProxyTest extends \PHPUnit_Framework_TestCase
     public function testCanInvokeMethod()
     {
         $callServiceProxy = $this->serviceManager->get('viewhelpermanager')->get('callServiceProxy');
-        $call             = new Call();
+        $call = new Call();
         $this->assertInstanceOf("Program\Service\CallService", $callServiceProxy->__invoke($call));
     }
 }

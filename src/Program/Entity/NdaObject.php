@@ -88,11 +88,11 @@ class NdaObject extends EntityAbstract
      */
     public function getArrayCopy()
     {
-        return array(
+        return [
             'id'     => $this->id,
             'object' => $this->object,
             'nda'    => $this->nda,
-        );
+        ];
     }
 
     /**
@@ -112,8 +112,8 @@ class NdaObject extends EntityAbstract
     public function getInputFilter()
     {
         if (!$this->inputFilter) {
-            $inputFilter       = new InputFilter();
-            $factory           = new InputFactory();
+            $inputFilter = new InputFilter();
+            $factory = new InputFactory();
             $this->inputFilter = $inputFilter;
         }
 

@@ -43,10 +43,10 @@ class Funder extends EntityAbstract
      *
      * @var array
      */
-    protected $showOnWebsiteTemplates = array(
+    protected $showOnWebsiteTemplates = [
         self::HIDE_ON_WEBSITE => 'txt-hide-on-website',
         self::SHOW_ON_WEBSITE => 'txt-show-on-website',
-    );
+    ];
     /**
      * @var integer
      *
@@ -155,27 +155,27 @@ class Funder extends EntityAbstract
     {
         if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
-            $factory     = new InputFactory();
+            $factory = new InputFactory();
             $inputFilter->add(
                 $factory->createInput(
-                    array(
+                    [
                         'name'       => 'name',
                         'required'   => true,
-                        'filters'    => array(
-                            array('name' => 'StripTags'),
-                            array('name' => 'StringTrim'),
-                        ),
-                        'validators' => array(
-                            array(
+                        'filters'    => [
+                            ['name' => 'StripTags'],
+                            ['name' => 'StringTrim'],
+                        ],
+                        'validators' => [
+                            [
                                 'name'    => 'StringLength',
-                                'options' => array(
+                                'options' => [
                                     'encoding' => 'UTF-8',
                                     'min'      => 1,
                                     'max'      => 100,
-                                ),
-                            ),
-                        ),
-                    )
+                                ],
+                            ],
+                        ],
+                    ]
                 )
             );
             $this->inputFilter = $inputFilter;

@@ -53,7 +53,7 @@ class CallLinkTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->serviceManager = Bootstrap::getServiceManager();
-        $this->call           = new Call();
+        $this->call = new Call();
         $this->call->setId(1);
         $this->call->setCall('This is the call');
         $program = new Program();
