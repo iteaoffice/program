@@ -122,7 +122,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     {
         if (!is_null($this->getRouteMatch()->getParam('docRef'))) {
             $this->getCallService()->setCall(
-                $this->getCallService()->findEntityByDocRef('call\call', $this->getRouteMatch()->getParam('docRef'))
+                $this->getCallService()->findEntityByDocRef('Call\Call', $this->getRouteMatch()->getParam('docRef'))
             );
             if (!$this->getCallService()->isEmpty()) {
                 $this->setCallId($this->getCallService()->getCall()->getId());
@@ -136,7 +136,6 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
             switch ($param->getParameter()->getParam()) {
 
                 case 'session':
-
                     if (!is_null($sessionId = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
                         $this->setSessionId($sessionId);
                     } else {
@@ -225,7 +224,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     }
 
     /**
-     * @param  Call   $call
+     * @param  Call $call
      * @return string
      */
     public function parseCallTitle(Call $call)
