@@ -11,12 +11,6 @@
  */
 namespace Program\Controller;
 
-use Program\Service\FormService;
-use Program\Service\FormServiceAwareInterface;
-use Program\Service\ProgramService;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -28,104 +22,30 @@ use Zend\View\Model\ViewModel;
  * @license    http://debranova.org/licence.txt proprietary
  * @link       http://debranova.org
  */
-class ProgramManagerController extends AbstractActionController implements
-    FormServiceAwareInterface,
-    ServiceLocatorAwareInterface
+class ProgramManagerController extends ProgramAbstractController
 {
-    /**
-     * @var ProgramService;
-     */
-    protected $programService;
-    /**
-     * @var FormService
-     */
-    protected $formService;
-    /**
-     * @var ServiceLocatorInterface
-     */
-    protected $serviceLocator;
 
     /**
-     * Trigger to switch layout
-     *
-     * @param $layout
+     * @return \Zend\View\Model\ViewModel
      */
-    public function layout($layout)
+    public function listAction()
     {
-        if (false === $layout) {
-            $this->getEvent()->getViewModel()->setTemplate('layout/nolayout');
+        /**
+         * workaround to find the call\call if that is asked
+         * @todo
+         */
+        if ($this->getEvent()->getRouteMatch()->getParam('entity') === 'call') {
+            $entityName = 'Call\Call';
         } else {
-            $this->getEvent()->getViewModel()->setTemplate('layout/' . $layout);
+            $entityName = $this->getEvent()->getRouteMatch()->getParam('entity');
         }
-    }
 
-    /**
-     * Give a list of messages
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
-    public function messagesAction()
-    {
-        $messages = $this->getProgramService()->findAll('message');
+        $entities = $this->getProgramService()->findAll($entityName);
 
-        return new ViewModel(['messages' => $messages]);
-    }
 
-    /**
-     * Gateway to the Program Service
-     *
-     * @return ProgramService
-     */
-    public function getProgramService()
-    {
-        return $this->getServiceLocator()->get('program_generic_service');
-    }
-
-    /**
-     * @param $programService
-     *
-     * @return ProgramManagerController
-     */
-    public function setProgramService($programService)
-    {
-        $this->programService = $programService;
-
-        return $this;
-    }
-
-    /**
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return ProgramManagerController|void
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-
-        return $this;
-    }
-
-    /**
-     * Show the details of 1 message
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
-    public function messageAction()
-    {
-        $message = $this->getProgramService()->findEntityById(
-            'message',
-            $this->getEvent()->getRouteMatch()->getParam('id')
+        return new ViewModel(
+            ['entities' => $entities, 'entity' => $this->getEvent()->getRouteMatch()->getParam('entity')]
         );
-
-        return new ViewModel(['message' => $message]);
     }
 
     /**
@@ -135,39 +55,31 @@ class ProgramManagerController extends AbstractActionController implements
      */
     public function newAction()
     {
-        $entity = $this->getEvent()->getRouteMatch()->getParam('entity');
-        $form = $this->getFormService()->prepare($this->params('entity'), null, $_POST);
+        /**
+         * workaround to find the call\call if that is asked
+         * @todo
+         */
+        if ($this->getEvent()->getRouteMatch()->getParam('entity') === 'call') {
+            $entityName = 'Call\Call';
+        } else {
+            $entityName = $this->getEvent()->getRouteMatch()->getParam('entity');
+        }
+
+        $form = $this->getFormService()->prepare($entityName, null, $_POST);
         $form->setAttribute('class', 'form-horizontal');
         if ($this->getRequest()->isPost() && $form->isValid()) {
             $result = $this->getProgramService()->newEntity($form->getData());
 
             return $this->redirect()->toRoute(
-                'zfcadmin/program-manager/' . strtolower($this->params('entity')),
-                ['id' => $result->getId()]
+                'zfcadmin/program-manager/list',
+                [
+                    'entity' => strtolower($this->getEvent()->getRouteMatch()->getParam('entity')),
+                    'id'     => $result->getId()
+                ]
             );
         }
 
-        return new ViewModel(['form' => $form, 'entity' => $entity, 'fullVersion' => true]);
-    }
-
-    /**
-     * @return \Program\Service\FormService
-     */
-    public function getFormService()
-    {
-        return $this->formService;
-    }
-
-    /**
-     * @param $formService
-     *
-     * @return ProgramManagerController
-     */
-    public function setFormService($formService)
-    {
-        $this->formService = $formService;
-
-        return $this;
+        return new ViewModel(['form' => $form, 'entity' => $entityName, 'fullVersion' => true]);
     }
 
     /**
@@ -177,19 +89,33 @@ class ProgramManagerController extends AbstractActionController implements
      */
     public function editAction()
     {
+        /**
+         * workaround to find the call\call if that is asked
+         * @todo
+         */
+        if ($this->getEvent()->getRouteMatch()->getParam('entity') === 'call') {
+            $entityName = 'Call\Call';
+        } else {
+            $entityName = $this->getEvent()->getRouteMatch()->getParam('entity');
+        }
+
         $entity = $this->getProgramService()->findEntityById(
-            $this->getEvent()->getRouteMatch()->getParam('entity'),
+            $entityName,
             $this->getEvent()->getRouteMatch()->getParam('id')
         );
+
         $form = $this->getFormService()->prepare($entity->get('entity_name'), $entity, $_POST);
-        $form->setAttribute('class', 'form-horizontal live-form');
+        $form->setAttribute('class', 'form-horizontal');
         $form->setAttribute('id', 'program-program-' . $entity->getId());
         if ($this->getRequest()->isPost() && $form->isValid()) {
             $result = $this->getProgramService()->updateEntity($form->getData());
 
             return $this->redirect()->toRoute(
-                'zfcadmin/program/' . strtolower($entity->get('dashed_entity_name')),
-                ['id' => $result->getId()]
+                'zfcadmin/program-manager/list',
+                [
+                    'entity' => strtolower($entity->get('dashed_entity_name')),
+                    'id'     => $result->getId()
+                ]
             );
         }
 
@@ -203,8 +129,19 @@ class ProgramManagerController extends AbstractActionController implements
      */
     public function deleteAction()
     {
+
+        /**
+         * workaround to find the call\call if that is asked
+         * @todo
+         */
+        if ($this->getEvent()->getRouteMatch()->getParam('entity') === 'call') {
+            $entityName = 'call';
+        } else {
+            $entityName = $this->getEvent()->getRouteMatch()->getParam('entity');
+        }
+
         $entity = $this->getProgramService()->findEntityById(
-            $this->getEvent()->getRouteMatch()->getParam('entity'),
+            $entityName,
             $this->getEvent()->getRouteMatch()->getParam('id')
         );
         $this->getProgramService()->removeEntity($entity);

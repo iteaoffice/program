@@ -1,0 +1,4 @@
+<h1>{{ translate("txt-%s-new-title")|format(entity) }}</h1>
+<p class="lead">{{ translate("txt-%s-new-explanation")|format(entity) }}</p>
+
+{% include 'program/partial/form/' ~ entity  with [{'entity': entity}, {'form': form}] %}

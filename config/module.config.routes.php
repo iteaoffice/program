@@ -201,6 +201,15 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes'  => [
+                            'list'   => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/list/[:entity].html',
+                                    'defaults' => [
+                                        'action' => 'list',
+                                    ],
+                                ],
+                            ],
                             'new'    => [
                                 'type'    => 'Segment',
                                 'options' => [

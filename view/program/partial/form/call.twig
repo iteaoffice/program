@@ -1,0 +1,40 @@
+{% do headScript().appendFile('assets/js/jquery.timepicker.js', 'text/javascript') %}
+{% do headScript().appendFile('assets/js/jquery.slideraccess.js', 'text/javascript') %}
+{% do headLink().appendStylesheet('assets/css/jquery.timepicker.css') %}
+{% do headLink().appendStylesheet(
+'//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css'
+) %}
+
+
+{% do form.prepare() %}
+
+{{ form().openTag(form)|raw }}
+
+{% set call = form.get('call') %}
+
+{{ ztbformelement(call.get('program')) }}
+{{ ztbformelement(call.get('call')) }}
+{{ ztbformelement(call.get('poOpenDate')) }}
+{{ ztbformelement(call.get('poCloseDate')) }}
+{{ ztbformelement(call.get('poGraceDate')) }}
+{{ ztbformelement(call.get('fppOpenDate')) }}
+{{ ztbformelement(call.get('fppCloseDate')) }}
+{{ ztbformelement(call.get('fppGraceDate')) }}
+{{ ztbformelement(call.get('doaRequirement')) }}
+
+<div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+        {{ formelement(form.get('submit')) }}
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('input[type=datetime]').datetimepicker({
+        addSliderAccess: true,
+        sliderAccessArgs: {touchonly: false},
+        timeFormat: 'HH:mm:ss',
+        dateFormat: 'yy-mm-dd'
+    });
+</script>
+
+

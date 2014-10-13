@@ -1,0 +1,4 @@
+<h1>{{ translate("txt-edit-%s")|format(entity.get('entity_name')) }}</h1>
+
+{% include 'program/partial/form/' ~ entity.get('underscore_entity_name')
+with [{'entity': entity}, {'form': form}] %}

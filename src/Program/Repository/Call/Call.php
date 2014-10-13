@@ -11,7 +11,7 @@
 namespace Program\Repository\Call;
 
 use Doctrine\ORM\EntityRepository;
-use Program\Repository\Call\Call as CallEntity;
+use Program\Entity\Call\Call as CallEntity;
 use Project\Entity\Version\Type;
 
 /**
@@ -36,12 +36,12 @@ class Call extends EntityRepository
         switch ($type) {
             case Type::TYPE_PO:
                 $queryBuilder->where('c.poOpenDate < :today')
-                    ->andWhere('c.poCloseDate > :today')
+                    ->andWhere('c.poCloseDate > :today OR c.poGraceDate > :today')
                     ->setParameter('today', $today);
                 break;
             case Type::TYPE_FPP:
                 $queryBuilder->where('c.fppOpenDate < :today')
-                    ->andWhere('c.fppCloseDate > :today')
+                    ->andWhere('c.fppCloseDate > :today OR c.fppGraceDate > :today')
                     ->setParameter('today', $today);
                 break;
             default:
@@ -80,7 +80,7 @@ class Call extends EntityRepository
         $queryBuilder->from("Program\Entity\Call\Call", 'c');
         $today = new \DateTime();
         $queryBuilder->where('c.poOpenDate < :today')
-            ->andWhere('c.poCloseDate > :today')
+            ->andWhere('c.poCloseDate > :today OR c.poGraceDate > :today')
             ->setParameter('today', $today);
         /**
          * Check first if we find an open PO
@@ -96,7 +96,7 @@ class Call extends EntityRepository
             ];
         }
         $queryBuilder->where('c.fppOpenDate < :today')
-            ->andWhere('c.fppCloseDate > :today')
+            ->andWhere('c.fppCloseDate > :today OR c.fppGraceDate > :today')
             ->setParameter('today', $today);
         /**
          * Check first if we find an open FPP
@@ -132,9 +132,10 @@ class Call extends EntityRepository
      * 'partners' which contains the amount of partners
      * 'projects' which contains the amount of projects
      *
+     * @param CallEntity $call
      * @return array
      */
-    public function findProjectAndPartners(\Program\Entity\Call\Call $call)
+    public function findProjectAndPartners(CallEntity $call)
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('COUNT(DISTINCT a.organisation) partners');

@@ -15,6 +15,7 @@ use DoctrineORMModule\Form\Element\EntityMultiCheckbox;
 use DoctrineORMModule\Form\Element\EntitySelect;
 use Program\Entity;
 use Zend\Form\Annotation\AnnotationBuilder;
+use Zend\Form\Element\Radio;
 use Zend\Form\Fieldset;
 
 /**
@@ -49,6 +50,15 @@ class ObjectFieldset extends Fieldset
                 $element->setOptions(
                     [
                         'object_manager' => $entityManager
+                    ]
+                );
+            }
+            if ($element instanceof Radio) {
+                $attributes = $element->getAttributes();
+                $valueOptionsArray = 'get' . ucfirst($attributes['array']);
+                $element->setOptions(
+                    [
+                        'value_options' => $object->$valueOptionsArray()
                     ]
                 );
             }

@@ -38,10 +38,26 @@ class Call extends EntityAbstract implements ResourceInterface
      */
     const FPP_CLOSED = 'FPP_CLOSED';
     const FPP_NOT_OPEN = 'FPP_NOT_OPEN';
+    const FPP_GRACE_PERIOD = 'FPP_GRACE_PERIOD';
     const FPP_OPEN = 'FPP_OPEN';
     const PO_CLOSED = 'PO_CLOSED';
     const PO_NOT_OPEN = 'PO_NOT_OPEN';
+    const PO_GRACE_PERIOD = 'PO_GRACE_PERIOD';
     const PO_OPEN = 'PO_OPEN';
+
+    const DOA_REQUIREMENT_NOT_APPLICABLE = 1;
+    const DOA_REQUIREMENT_PER_PROGRAM = 2;
+    const DOA_REQUIREMENT_PER_PROJECT = 3;
+
+    /**
+     * @var array
+     */
+    protected $doaRequirementTemplates = [
+        self::DOA_REQUIREMENT_NOT_APPLICABLE => 'txt-no-doa-required',
+        self::DOA_REQUIREMENT_PER_PROGRAM    => 'txt-doa-per-program-required',
+        self::DOA_REQUIREMENT_PER_PROJECT    => 'txt-doa-per-project-required'
+    ];
+
     /**
      * @ORM\Column(name="programcall_id", type="integer", nullable=false)
      * @ORM\Id
@@ -66,32 +82,61 @@ class Call extends EntityAbstract implements ResourceInterface
     private $docRef;
     /**
      * @ORM\Column(name="po_open_date", type="datetime", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\Date")
-     * @Annotation\Options({"label":"txt-po-open-date"})
+     * @Annotation\Type("\Zend\Form\Element\DateTime")
+     * @Annotation\Attributes({"step":"any"})
+     * @Annotation\Options({"label":"txt-po-open-date", "format":"Y-m-d H:i:s"})
      * @var \DateTime
      */
     private $poOpenDate;
     /**
      * @ORM\Column(name="po_close_date", type="datetime", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\Date")
-     * @Annotation\Options({"label":"txt-po-close-date"})
+     * @Annotation\Type("\Zend\Form\Element\DateTime")
+     * @Annotation\Attributes({"step":"any"})
+     * @Annotation\Options({"label":"txt-po-close-date", "format":"Y-m-d H:i:s"})
      * @var \DateTime
      */
     private $poCloseDate;
     /**
+     * @ORM\Column(name="po_grace_date", type="datetime", nullable=true)
+     * @Annotation\Type("\Zend\Form\Element\DateTime")
+     * @Annotation\Attributes({"step":"any"})
+     * @Annotation\Options({"label":"txt-po-grace-date", "format":"Y-m-d H:i:s","help-block":"txt-po-grace-date-inline-help"})
+     * @var \DateTime
+     */
+    private $poGraceDate;
+    /**
      * @ORM\Column(name="fpp_open_date", type="datetime", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\Date")
-     * @Annotation\Options({"label":"txt-fpp-open-date"})
+     * @Annotation\Type("\Zend\Form\Element\DateTime")
+     * @Annotation\Attributes({"step":"any"})
+     * @Annotation\Options({"label":"txt-fpp-open-date", "format":"Y-m-d H:i:s"})
      * @var \DateTime
      */
     private $fppOpenDate;
     /**
      * @ORM\Column(name="fpp_close_date", type="datetime", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\Date")
-     * @Annotation\Options({"label":"txt-fpp-close-date"})
+     * @Annotation\Type("\Zend\Form\Element\DateTime")
+     * @Annotation\Attributes({"step":"any"})
+     * @Annotation\Options({"label":"txt-fpp-close-date", "format":"Y-m-d H:i:s"})
      * @var \DateTime
      */
     private $fppCloseDate;
+    /**
+     * @ORM\Column(name="fpp_grace_date", type="datetime", nullable=true)
+     * @Annotation\Type("\Zend\Form\Element\DateTime")
+     * @Annotation\Attributes({"step":"any"})
+     * @Annotation\Options({"label":"txt-fpp-grace-date", "format":"Y-m-d H:i:s","help-block":"txt-fpp-grace-date-inline-help"})
+     * @var \DateTime
+     */
+    private $fppGraceDate;
+    /**
+     * @ORM\Column(name="doa_requirement", type="smallint", nullable=false)
+     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Attributes({"array":"doaRequirementTemplates"})
+     * @Annotation\Options({"label":"txt-doa-requirements","help-block":"txt-doa-requirements-inline-help"})
+     * @Annotation\Required(true)
+     * @var int
+     */
+    private $doaRequirement;
     /**
      * @ORM\ManyToOne(targetEntity="Program\Entity\Program", cascade={"persist"}, inversedBy="call")
      * @ORM\JoinColumn(name="program_id", referencedColumnName="program_id", nullable=false)
@@ -254,6 +299,22 @@ class Call extends EntityAbstract implements ResourceInterface
     }
 
     /**
+     * @return array
+     */
+    public function getDoaRequirementTemplates()
+    {
+        return $this->doaRequirementTemplates;
+    }
+
+    /**
+     * @param array $doaRequirementTemplates
+     */
+    public function setDoaRequirementTemplates($doaRequirementTemplates)
+    {
+        $this->doaRequirementTemplates = $doaRequirementTemplates;
+    }
+
+    /**
      * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
      */
     public function getInputFilter()
@@ -294,7 +355,10 @@ class Call extends EntityAbstract implements ResourceInterface
                         ],
                         'validators' => [
                             [
-                                'name' => 'Date',
+                                'name'    => 'DateTime',
+                                'options' => [
+                                    'pattern' => 'yyyy-mm-dd H:mm:ss',
+                                ]
                             ],
                         ],
                     ]
@@ -311,7 +375,30 @@ class Call extends EntityAbstract implements ResourceInterface
                         ],
                         'validators' => [
                             [
-                                'name' => 'Date',
+                                'name'    => 'DateTime',
+                                'options' => [
+                                    'pattern' => 'yyyy-mm-dd H:mm:ss',
+                                ]
+                            ],
+                        ],
+                    ]
+                )
+            );
+            $inputFilter->add(
+                $factory->createInput(
+                    [
+                        'name'       => 'poGraceDate',
+                        'required'   => false,
+                        'filters'    => [
+                            ['name' => 'StripTags'],
+                            ['name' => 'StringTrim'],
+                        ],
+                        'validators' => [
+                            [
+                                'name'    => 'DateTime',
+                                'options' => [
+                                    'pattern' => 'yyyy-mm-dd H:mm:ss',
+                                ]
                             ],
                         ],
                     ]
@@ -328,7 +415,30 @@ class Call extends EntityAbstract implements ResourceInterface
                         ],
                         'validators' => [
                             [
-                                'name' => 'Date',
+                                'name'    => 'DateTime',
+                                'options' => [
+                                    'pattern' => 'yyyy-mm-dd H:mm:ss',
+                                ]
+                            ],
+                        ],
+                    ]
+                )
+            );
+            $inputFilter->add(
+                $factory->createInput(
+                    [
+                        'name'       => 'fppGraceDate',
+                        'required'   => false,
+                        'filters'    => [
+                            ['name' => 'StripTags'],
+                            ['name' => 'StringTrim'],
+                        ],
+                        'validators' => [
+                            [
+                                'name'    => 'DateTime',
+                                'options' => [
+                                    'pattern' => 'yyyy-mm-dd H:mm:ss',
+                                ]
                             ],
                         ],
                     ]
@@ -345,7 +455,10 @@ class Call extends EntityAbstract implements ResourceInterface
                         ],
                         'validators' => [
                             [
-                                'name' => 'Date',
+                                'name'    => 'DateTime',
+                                'options' => [
+                                    'pattern' => 'yyyy-mm-dd H:mm:ss',
+                                ]
                             ],
                         ],
                     ]
@@ -379,8 +492,7 @@ class Call extends EntityAbstract implements ResourceInterface
     {
         return [
             'call'         => $this->call,
-            'project'      => $this->project,
-            'poOpenDate'   => $this->poOpenDate,
+            'poOpenDate'   => $this->poOpenDate->format(DATE_ISO8601),
             'poCloseDate'  => $this->poCloseDate,
             'fppOpenDate'  => $this->fppOpenDate,
             'fppCloseDate' => $this->fppCloseDate,
@@ -643,5 +755,73 @@ class Call extends EntityAbstract implements ResourceInterface
     public function setSession($session)
     {
         $this->session = $session;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDocRef()
+    {
+        return $this->docRef;
+    }
+
+    /**
+     * @param string $docRef
+     */
+    public function setDocRef($docRef)
+    {
+        $this->docRef = $docRef;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getPoGraceDate()
+    {
+        return $this->poGraceDate;
+    }
+
+    /**
+     * @param \DateTime $poGraceDate
+     */
+    public function setPoGraceDate($poGraceDate)
+    {
+        $this->poGraceDate = $poGraceDate;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getFppGraceDate()
+    {
+        return $this->fppGraceDate;
+    }
+
+    /**
+     * @param \DateTime $fppGraceDate
+     */
+    public function setFppGraceDate($fppGraceDate)
+    {
+        $this->fppGraceDate = $fppGraceDate;
+    }
+
+    /**
+     * @param bool $textual
+     * @return int|string
+     */
+    public function getDoaRequirement($textual = false)
+    {
+        if ($textual) {
+            return $this->doaRequirementTemplates[$this->doaRequirement];
+        }
+        return $this->doaRequirement;
+    }
+
+    /**
+     * @param int $doaRequirement
+     */
+    public function setDoaRequirement($doaRequirement)
+    {
+        $this->doaRequirement = $doaRequirement;
     }
 }

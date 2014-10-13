@@ -7,6 +7,7 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c] 2004-2014 ITEA Office (http://itea3.org]
  */
+use Admin\Entity\Access;
 use Program\Acl\Assertion\Doa as DoaAssertion;
 use Program\Acl\Assertion\Nda as NdaAssertion;
 
@@ -26,6 +27,10 @@ return [
              * access to all routes unless they are specified here.
              */
             'BjyAuthorize\Guard\Route' => [
+                ['route' => 'zfcadmin/program-manager/edit', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
+                ['route' => 'zfcadmin/program-manager/new', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
+                ['route' => 'zfcadmin/program-manager/delete', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
+                ['route' => 'zfcadmin/program-manager/list', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
                 [
                     'route' => 'program/view',
                     'roles' => [],

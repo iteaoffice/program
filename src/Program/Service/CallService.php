@@ -12,6 +12,7 @@ namespace Program\Service;
 use Affiliation\Service\AffiliationService;
 use Contact\Entity\Contact;
 use Program\Entity\Call\Call;
+use Program\Entity\EntityAbstract;
 use Program\Entity\Nda;
 use Program\Entity\NdaObject;
 use Project\Service\ProjectService;
@@ -28,12 +29,14 @@ use Project\Service\ProjectService;
  */
 class CallService extends ServiceAbstract
 {
+    const PO_CLOSED = 'PO_CLOSED';
+    const PO_NOT_OPEN = 'PO_NOT_OPEN';
+    const PO_GRACE = 'PO_GRACE';
+    const PO_OPEN = 'PO_OPEN';
     const FPP_CLOSED = 'FPP_CLOSED';
     const FPP_NOT_OPEN = 'FPP_NOT_OPEN';
     const FPP_OPEN = 'FPP_OPEN';
-    const PO_CLOSED = 'PO_CLOSED';
-    const PO_NOT_OPEN = 'PO_NOT_OPEN';
-    const PO_OPEN = 'PO_OPEN';
+    const FPP_GRACE = 'FPP_GRACE';
     const UNDEFINED = 'UNDEFINED';
     /**
      * @var Call
@@ -109,6 +112,39 @@ class CallService extends ServiceAbstract
     }
 
     /**
+     * Return true when the call is open
+     *
+     * @return bool
+     */
+    public function isOpen()
+    {
+        return in_array(
+            $this->getCallStatus()->result,
+            [self::PO_GRACE, self::PO_OPEN, self::FPP_OPEN, self::FPP_GRACE]
+        );
+    }
+
+    /**
+     * Return true when the call is in grace mode
+     *
+     * @return bool
+     */
+    public function isGrace()
+    {
+        return in_array($this->getCallStatus()->result, [self::PO_GRACE, self::FPP_GRACE]);
+    }
+
+    /**
+     * Returns true when a DOA per partner is required
+     *
+     * @return bool
+     */
+    public function requireDoaPerProject()
+    {
+        return $this->call->getDoaRequirement() === Call::DOA_REQUIREMENT_PER_PROJECT;
+    }
+
+    /**
      * Return an object with the first and last call in the database
      *
      * @return \stdClass
@@ -144,6 +180,9 @@ class CallService extends ServiceAbstract
         )->findNonEmptyCalls();
     }
 
+    /**
+     * @return mixed
+     */
     public function findProjectAndPartners()
     {
         return $this->getEntityManager()->getRepository(
@@ -168,13 +207,17 @@ class CallService extends ServiceAbstract
         $today = new \DateTime();
         $dateTime = new \DateTime();
         $notificationDeadline = $dateTime->sub(new \DateInterval("P1W"));
+
         if ($this->getCall()->getPoOpenDate() > $today) {
             $referenceDate = $this->getCall()->getPoOpenDate();
             $result = self::PO_NOT_OPEN;
         } elseif ($this->getCall()->getPoCloseDate() > $today) {
             $referenceDate = $this->getCall()->getPoCloseDate();
             $result = self::PO_OPEN;
-        } elseif ($this->getCall()->getPoCloseDate() > $notificationDeadline) {
+        } elseif ($this->getCall()->getPoGraceDate() > $today) {
+            $referenceDate = $this->getCall()->getPoCloseDate();
+            $result = self::PO_GRACE;
+        } elseif ($this->getCall()->getPoCloseDate() > $notificationDeadline and $this->getCall()->getFppOpenDate() > $today) {
             $referenceDate = $this->getCall()->getPoCloseDate();
             $result = self::PO_CLOSED;
         } elseif ($this->getCall()->getFppOpenDate() > $today) {
@@ -183,6 +226,9 @@ class CallService extends ServiceAbstract
         } elseif ($this->getCall()->getFppCloseDate() > $today) {
             $referenceDate = $this->getCall()->getFppCloseDate();
             $result = self::FPP_OPEN;
+        } elseif ($this->getCall()->getPoGraceDate() > $today) {
+            $referenceDate = $this->getCall()->getFppCloseDate();
+            $result = self::FPP_GRACE;
         } elseif ($this->getCall()->getFppCloseDate() > $notificationDeadline) {
             $referenceDate = $this->getCall()->getFppCloseDate();
             $result = self::FPP_CLOSED;
@@ -253,7 +299,7 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * @param  Call  $call
+     * @param  Call $call
      * @return mixed
      */
     public function findCountryByCall(Call $call)
@@ -268,6 +314,7 @@ class CallService extends ServiceAbstract
      * @param        $docRef
      *
      * @throws \InvalidArgumentException
+     * @return EntityAbstract
      */
     public function findEntityByDocRef($entity, $docRef)
     {
@@ -285,7 +332,7 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * @param  Call  $call
+     * @param  Call $call
      * @return mixed
      */
     public function findProjectByCall(Call $call, $which)

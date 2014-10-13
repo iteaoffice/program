@@ -40,7 +40,7 @@ class CallLink extends LinkAbstract
      * @return string
      * @throws \Exception
      */
-    public function __invoke(Call $call, $action = 'view', $show = 'name')
+    public function __invoke(Call $call = null, $action = 'view', $show = 'name')
     {
         $this->setCall($call);
         $this->setAction($action);
@@ -49,14 +49,18 @@ class CallLink extends LinkAbstract
         /**
          * Set the non-standard options needed to give an other link value
          */
-        $this->setShowOptions(
-            [
-                'name'                 => $this->getCall(),
-                'name-without-program' => $this->getCall()->getCall(),
-            ]
-        );
-        $this->addRouterParam('entity', 'Call\Call');
-        $this->addRouterParam('id', $this->getCall()->getId());
+        if (!is_null($call)) {
+            $this->addRouterParam('id', $this->getCall()->getId());
+
+            $this->setShowOptions(
+                [
+                    'name'                 => $this->getCall(),
+                    'name-without-program' => $this->getCall()->getCall(),
+                ]
+            );
+        }
+        $this->addRouterParam('entity', 'call');
+
 
         return $this->createLink();
     }
@@ -83,6 +87,14 @@ class CallLink extends LinkAbstract
     public function parseAction()
     {
         switch ($this->getAction()) {
+            case 'new':
+                $this->setRouter('zfcadmin/program-manager/new');
+                $this->setText($this->translate("txt-new-program-call"));
+                break;
+            case 'edit':
+                $this->setRouter('zfcadmin/program-manager/edit');
+                $this->setText(sprintf($this->translate("txt-edit-call-%s"), $this->getCall()));
+                break;
             case 'view-list':
                 /**
                  * For a list in the front-end simply use the MatchedRouteName
@@ -92,6 +104,7 @@ class CallLink extends LinkAbstract
                 $this->addRouterParam('call', $this->getCall()->getId());
                 $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));
                 break;
+
             default:
                 throw new \InvalidArgumentException(
                     sprintf("%s is an incorrect action for %s", $this->getAction(), __CLASS__)
