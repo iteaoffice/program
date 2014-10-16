@@ -15,7 +15,9 @@ use Program\Entity\Call\Call;
 use Program\Entity\EntityAbstract;
 use Program\Entity\Nda;
 use Program\Entity\NdaObject;
+use Project\Entity\Version\Type;
 use Project\Service\ProjectService;
+use Zend\Stdlib\ArrayObject;
 
 /**
  * CallService
@@ -42,6 +44,10 @@ class CallService extends ServiceAbstract
      * @var Call
      */
     protected $call;
+    /**
+     * @var ArrayObject
+     */
+    protected $callStatus = null;
 
     /**
      * @param $id
@@ -112,16 +118,29 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * Return true when the call is open
+     * Return true when the call is open specified for the given type
+     *
+     * @param $type;
      *
      * @return bool
      */
-    public function isOpen()
+    public function isOpen(Type $type)
     {
-        return in_array(
-            $this->getCallStatus()->result,
-            [self::PO_GRACE, self::PO_OPEN, self::FPP_OPEN, self::FPP_GRACE]
-        );
+        switch ($type->getId()) {
+            case Type::TYPE_PO:
+                return in_array(
+                    $this->getCallStatus()->result,
+                    [self::PO_GRACE, self::PO_OPEN]
+                );
+            case Type::TYPE_FPP:
+                return in_array(
+                    $this->getCallStatus()->result,
+                    [self::FPP_OPEN, self::FPP_GRACE]
+                );
+            default:
+                return true;
+        }
+
     }
 
     /**
@@ -194,53 +213,71 @@ class CallService extends ServiceAbstract
      * Return the current status of the given all with given the current date
      * Return a status and the relevant date
      *
-     * @return \stdClass
+     * @return ArrayObject
      * @method \DateTime $result
      * @method \DateTime $referenceDate
      *
      */
     public function getCallStatus()
     {
-        /**
-         * Go over the dates and find the most suited date.
-         */
-        $today = new \DateTime();
-        $dateTime = new \DateTime();
-        $notificationDeadline = $dateTime->sub(new \DateInterval("P1W"));
+        if (is_null($this->callStatus)) {
 
-        if ($this->getCall()->getPoOpenDate() > $today) {
-            $referenceDate = $this->getCall()->getPoOpenDate();
-            $result = self::PO_NOT_OPEN;
-        } elseif ($this->getCall()->getPoCloseDate() > $today) {
-            $referenceDate = $this->getCall()->getPoCloseDate();
-            $result = self::PO_OPEN;
-        } elseif ($this->getCall()->getPoGraceDate() > $today) {
-            $referenceDate = $this->getCall()->getPoCloseDate();
-            $result = self::PO_GRACE;
-        } elseif ($this->getCall()->getPoCloseDate() > $notificationDeadline and $this->getCall()->getFppOpenDate() > $today) {
-            $referenceDate = $this->getCall()->getPoCloseDate();
-            $result = self::PO_CLOSED;
-        } elseif ($this->getCall()->getFppOpenDate() > $today) {
-            $referenceDate = $this->getCall()->getFppOpenDate();
-            $result = self::FPP_NOT_OPEN;
-        } elseif ($this->getCall()->getFppCloseDate() > $today) {
-            $referenceDate = $this->getCall()->getFppCloseDate();
-            $result = self::FPP_OPEN;
-        } elseif ($this->getCall()->getPoGraceDate() > $today) {
-            $referenceDate = $this->getCall()->getFppCloseDate();
-            $result = self::FPP_GRACE;
-        } elseif ($this->getCall()->getFppCloseDate() > $notificationDeadline) {
-            $referenceDate = $this->getCall()->getFppCloseDate();
-            $result = self::FPP_CLOSED;
-        } else {
-            $referenceDate = null;
-            $result = self::UNDEFINED;
+            $this->callStatus = new ArrayObject();
+            /**
+             * Go over the dates and find the most suited date.
+             */
+            $type = null;
+            $today = new \DateTime();
+            $dateTime = new \DateTime();
+            $notificationDeadline = $dateTime->sub(new \DateInterval("P1W"));
+
+            if ($this->getCall()->getPoOpenDate() > $today) {
+                $referenceDate = $this->getCall()->getPoOpenDate();
+                $result = self::PO_NOT_OPEN;
+                $type = Type::TYPE_PO;
+            } elseif ($this->getCall()->getPoCloseDate() > $today) {
+                $referenceDate = $this->getCall()->getPoCloseDate();
+                $result = self::PO_OPEN;
+                $type = Type::TYPE_PO;
+            } elseif ($this->getCall()->getPoGraceDate() > $today) {
+                $referenceDate = $this->getCall()->getPoCloseDate();
+                $result = self::PO_GRACE;
+                $type = Type::TYPE_PO;
+            } elseif ($this->getCall()->getPoCloseDate() > $notificationDeadline and $this->getCall()->getFppOpenDate(
+                ) > $today
+            ) {
+                $referenceDate = $this->getCall()->getPoCloseDate();
+                $result = self::PO_CLOSED;
+                $type = Type::TYPE_PO;
+            } elseif ($this->getCall()->getFppOpenDate() > $today) {
+                $referenceDate = $this->getCall()->getFppOpenDate();
+                $result = self::FPP_NOT_OPEN;
+                $type = Type::TYPE_FPP;
+            } elseif ($this->getCall()->getFppCloseDate() > $today) {
+                $referenceDate = $this->getCall()->getFppCloseDate();
+                $result = self::FPP_OPEN;
+                $type = Type::TYPE_FPP;
+            } elseif ($this->getCall()->getPoGraceDate() > $today) {
+                $referenceDate = $this->getCall()->getFppCloseDate();
+                $result = self::FPP_GRACE;
+                $type = Type::TYPE_FPP;
+            } elseif ($this->getCall()->getFppCloseDate() > $notificationDeadline) {
+                $referenceDate = $this->getCall()->getFppCloseDate();
+                $result = self::FPP_CLOSED;
+                $type = Type::TYPE_FPP;
+            } else {
+                $referenceDate = null;
+                $result = self::UNDEFINED;
+                $type = Type::TYPE_CR;
+            }
+
+            $this->callStatus->result = $result;
+            $this->callStatus->type = $this->getVersionService()->findEntityById('Version\Type', $type);
+            $this->callStatus->referenceDate = $referenceDate;
         }
-        $callStatus = new \stdClass();
-        $callStatus->result = $result;
-        $callStatus->referenceDate = $referenceDate;
 
-        return $callStatus;
+
+        return $this->callStatus;
     }
 
     /**
