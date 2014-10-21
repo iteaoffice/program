@@ -48,6 +48,13 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
     protected $displayName = 'name';
 
     /**
+     * Has Ndas for program calls
+     * @var Boolean
+     */
+    protected $hasNda = true;
+
+
+    /**
      * @return string
      */
     public function getNdaTemplate()
@@ -104,6 +111,24 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
     {
         $this->doaTemplate = $doaTemplate;
 
+        return $this;
+    }
+
+
+    /**
+     * return boolean
+     */
+    public function getHasNda(){
+        return $this->hasNda;
+    }
+
+    /**
+     *
+     * @param $hasNda
+     * return ModuleOptions
+     */
+    public function setHasNda($hasNda){
+        $this->hasNda = $hasNda;
         return $this;
     }
 }

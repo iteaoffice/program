@@ -56,4 +56,15 @@ interface ProgramOptionsInterface
      * @return string
      */
     public function getDisplayName();
+
+    /**
+     * @param $hasNda
+     * @return ProgramOptionsInterface
+     */
+    public function setHasNda($hasNda);
+
+    /**
+     * @return boolean
+     */
+    public function getHasNda();
 }
