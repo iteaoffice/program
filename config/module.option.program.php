@@ -11,6 +11,7 @@ $options = [
      */
     'nda_template' => __DIR__ . '/../../../../styles/itea/template/pdf/nda-template.pdf',
     'doa_template' => __DIR__ . '/../../../../styles/itea/template/pdf/nda-template.pdf',
+    'has_nda' => true,
 ];
 /**
  * You do not need to edit below this line
