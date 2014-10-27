@@ -132,7 +132,7 @@ class Call extends EntityRepository
      * 'partners' which contains the amount of partners
      * 'projects' which contains the amount of projects
      *
-     * @param CallEntity $call
+     * @param  CallEntity $call
      * @return array
      */
     public function findProjectAndPartners(CallEntity $call)

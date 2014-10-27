@@ -224,7 +224,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     }
 
     /**
-     * @param  Call $call
+     * @param  Call   $call
      * @return string
      */
     public function parseCallTitle(Call $call)

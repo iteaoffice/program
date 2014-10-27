@@ -806,7 +806,7 @@ class Call extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param bool $textual
+     * @param  bool       $textual
      * @return int|string
      */
     public function getDoaRequirement($textual = false)
@@ -814,6 +814,7 @@ class Call extends EntityAbstract implements ResourceInterface
         if ($textual) {
             return $this->doaRequirementTemplates[$this->doaRequirement];
         }
+
         return $this->doaRequirement;
     }
 

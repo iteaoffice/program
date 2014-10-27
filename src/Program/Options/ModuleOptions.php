@@ -53,7 +53,6 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
      */
     protected $hasNda = true;
 
-
     /**
      * @return string
      */
@@ -114,11 +113,11 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
         return $this;
     }
 
-
     /**
      * return boolean
      */
-    public function getHasNda(){
+    public function getHasNda()
+    {
         return $this->hasNda;
     }
 
@@ -127,8 +126,10 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
      * @param $hasNda
      * return ModuleOptions
      */
-    public function setHasNda($hasNda){
+    public function setHasNda($hasNda)
+    {
         $this->hasNda = $hasNda;
+
         return $this;
     }
 }

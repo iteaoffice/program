@@ -42,7 +42,6 @@ class ProgramManagerController extends ProgramAbstractController
 
         $entities = $this->getProgramService()->findAll($entityName);
 
-
         return new ViewModel(
             ['entities' => $entities, 'entity' => $this->getEvent()->getRouteMatch()->getParam('entity')]
         );

@@ -276,7 +276,6 @@ class CallService extends ServiceAbstract
             $this->callStatus->referenceDate = $referenceDate;
         }
 
-
         return $this->callStatus;
     }
 
@@ -336,7 +335,7 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * @param  Call $call
+     * @param  Call  $call
      * @return mixed
      */
     public function findCountryByCall(Call $call)
@@ -369,7 +368,7 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * @param  Call $call
+     * @param  Call  $call
      * @return mixed
      */
     public function findProjectByCall(Call $call, $which)

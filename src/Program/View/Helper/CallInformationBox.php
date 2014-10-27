@@ -101,7 +101,6 @@ class CallInformationBox extends AbstractHelper implements ServiceLocatorAwareIn
 
         }
 
-
         return sprintf(
             $alert,
             $type,

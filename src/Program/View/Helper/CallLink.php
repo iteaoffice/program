@@ -61,7 +61,6 @@ class CallLink extends LinkAbstract
         }
         $this->addRouterParam('entity', 'call');
 
-
         return $this->createLink();
     }
 
