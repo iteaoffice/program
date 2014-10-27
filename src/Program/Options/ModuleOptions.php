@@ -35,23 +35,22 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
      */
     protected $ndaTemplate = '';
     /**
+     * Boolean to turn the NDA functionality on or off
+     *
+     * @var bool
+     */
+    protected $hasNda = true;
+    /**
      * Location of the PDF having the DOA template
      *
      * @var string
      */
     protected $doaTemplate = '';
-
     /**
      * How program calls to be displayed
      * @var String
      */
     protected $displayName = 'name';
-
-    /**
-     * Has Ndas for program calls
-     * @var Boolean
-     */
-    protected $hasNda = true;
 
     /**
      * @return string
@@ -69,6 +68,26 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
     public function setNdaTemplate($ndaTemplate)
     {
         $this->ndaTemplate = $ndaTemplate;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHasNda()
+    {
+        return $this->hasNda;
+    }
+
+    /**
+     * @param $hasNda
+     *
+     * @return ModuleOptions
+     */
+    public function setHasNda($hasNda)
+    {
+        $this->hasNda = $hasNda;
 
         return $this;
     }
@@ -109,26 +128,6 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
     public function setDoaTemplate($doaTemplate)
     {
         $this->doaTemplate = $doaTemplate;
-
-        return $this;
-    }
-
-    /**
-     * return boolean
-     */
-    public function getHasNda()
-    {
-        return $this->hasNda;
-    }
-
-    /**
-     *
-     * @param $hasNda
-     * return ModuleOptions
-     */
-    public function setHasNda($hasNda)
-    {
-        $this->hasNda = $hasNda;
 
         return $this;
     }

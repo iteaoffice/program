@@ -11,7 +11,7 @@ $options = [
      */
     'nda_template' => __DIR__ . '/../../../../styles/itea/template/pdf/nda-template.pdf',
     'doa_template' => __DIR__ . '/../../../../styles/itea/template/pdf/nda-template.pdf',
-    'has_nda' => true,
+    'has_nda'      => !(defined("DEBRANOVA_HOST") && DEBRANOVA_HOST === 'artemisia'),
 ];
 /**
  * You do not need to edit below this line

@@ -35,6 +35,18 @@ interface ProgramOptionsInterface
     public function getNdaTemplate();
 
     /**
+     * @param $hasNda
+     *
+     * @return ProgramOptionsInterface
+     */
+    public function setHasNda($hasNda);
+
+    /**
+     * @return boolean
+     */
+    public function getHasNda();
+
+    /**
      * @param $doaTemplate
      *
      * @return ProgramOptionsInterface
@@ -56,15 +68,4 @@ interface ProgramOptionsInterface
      * @return string
      */
     public function getDisplayName();
-
-    /**
-     * @param $hasNda
-     * @return ProgramOptionsInterface
-     */
-    public function setHasNda($hasNda);
-
-    /**
-     * @return boolean
-     */
-    public function getHasNda();
 }
