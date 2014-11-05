@@ -85,6 +85,7 @@ class Call extends EntityRepository
         /**
          * Check first if we find an open PO
          */
+
         if (!is_null($queryBuilder->getQuery()->getOneOrNullResult())) {
             /**
              * We have found an open PO and call, return the result
@@ -95,6 +96,7 @@ class Call extends EntityRepository
                 'versionType' => Type::TYPE_PO
             ];
         }
+
         $queryBuilder->where('c.fppOpenDate < :today')
             ->andWhere('c.fppCloseDate > :today OR c.fppGraceDate > :today')
             ->setParameter('today', $today);
@@ -111,6 +113,27 @@ class Call extends EntityRepository
                 'versionType' => Type::TYPE_FPP
             ];
         }
+
+        /**
+         * Still no result? Then no period is active open, but we will no try to find if
+         * We are _between_ an PO and FPP
+         */
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('c');
+        $queryBuilder->from("Program\Entity\Call\Call", 'c');
+
+        $queryBuilder->where('c.fppOpenDate > :today')
+            ->setParameter('today', $today);
+        $queryBuilder->orderBy('c.fppOpenDate', 'DESC');
+        $queryBuilder->setMaxResults(1);
+
+        if (!is_null($queryBuilder->getQuery()->getOneOrNullResult())) {
+            return [
+                'call'        => $queryBuilder->getQuery()->getOneOrNullResult(),
+                'versionType' => Type::TYPE_PO
+            ];
+        }
+
         /**
          * Still no result? Return the latest FPP (and reset the previous settings)
          */

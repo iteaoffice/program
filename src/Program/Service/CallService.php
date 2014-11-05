@@ -120,7 +120,7 @@ class CallService extends ServiceAbstract
     /**
      * Return true when the call is open specified for the given type
      *
-     * @param $type;
+     * @param $type ;
      *
      * @return bool
      */
@@ -221,7 +221,6 @@ class CallService extends ServiceAbstract
     public function getCallStatus()
     {
         if (is_null($this->callStatus)) {
-
             $this->callStatus = new ArrayObject();
             /**
              * Go over the dates and find the most suited date.
@@ -243,8 +242,8 @@ class CallService extends ServiceAbstract
                 $referenceDate = $this->getCall()->getPoCloseDate();
                 $result = self::PO_GRACE;
                 $type = Type::TYPE_PO;
-            } elseif ($this->getCall()->getPoCloseDate() > $notificationDeadline and $this->getCall()->getFppOpenDate(
-                ) > $today
+            } elseif ($this->getCall()->getPoCloseDate() > $notificationDeadline and
+                $this->getCall()->getFppOpenDate() > $today
             ) {
                 $referenceDate = $this->getCall()->getPoCloseDate();
                 $result = self::PO_CLOSED;
