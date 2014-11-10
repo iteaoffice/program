@@ -1,0 +1,38 @@
+<h1>{{ translate("txt-declaration-of-acceptance") }}</h1>
+
+<dl class="dl-horizontal">
+    <dt>{{ translate("txt-doa-id") }}</dt>
+    <dd>{{ doa.id }}</dd>
+    <dt>{{ translate("txt-project") }}</dt>
+    {% set projectService = projectServiceProxy(doa.affiliation.project) %}
+    <dd>{{ projectLink(projectService, 'view-admin', 'name') }}</dd>
+    <dt>{{ translate("txt-project-partner") }}</dt>
+    <dd>{{ doa.affiliation.organisation }}</dd>
+    <dt>{{ translate("txt-partner") }}</dt>
+    <dd>{{ doa.affiliation.organisation }}</dd>
+    <dt>{{ translate("txt-date-uploaded") }}</dt>
+    <dd>{{ doa.affiliation.dateCreated|string_date }}</dd>
+    <dt>{{ translate("txt-signer") }}</dt>
+    <dd>{{ contactLink(doa.contact, 'view-admin', 'name') }}</dd>
+    <dt>{{ translate("txt-date-signed") }}</dt>
+    {% if doa.dateSigned %}
+        <dd>{{ doa.dateSigned|string_date }}</dd>
+    {% else %}
+        <dd>{{ translate("txt-this-doa-has-not-been-signed") }}</dd>
+    {% endif %}
+    <dt>{{ translate("txt-date-approved") }}</dt>
+    {% if doa.dateApproved %}
+        <dd>{{ doa.dateApproved|string_date }}</dd>
+    {% else %}
+        <dd>{{ translate("txt-this-doa-has-not-been-approved") }}</dd>
+    {% endif %}
+    {% if doa.contentType %}
+        <dt>{{ translate("txt-content-type") }}</dt>
+        <dd>{{ contentTypeIcon(doa.contentType) }} {{ doa.contentType.description }} ({{ doa.size|parse_size }})</dd>
+    {% endif %}
+    <dt>{{ translate("txt-download") }}</dt>
+    <dd>{{ doaLink(doa,'download','text') }}</dd>
+</dl>
+
+{{ doaLink(doa,'edit-admin','button') }}
+

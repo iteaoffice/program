@@ -193,7 +193,7 @@ return [
                         'type'          => 'Segment',
                         'priority'      => 1000,
                         'options'       => [
-                            'route'    => '/program-manager',
+                            'route'    => '/program',
                             'defaults' => [
                                 'controller' => 'program-manager',
                                 'action'     => 'index',
@@ -234,6 +234,69 @@ return [
                                     'route'    => '/delete/:entity/:id',
                                     'defaults' => [
                                         'action' => 'delete',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'nda-manager'     => [
+                        'type'          => 'Segment',
+                        'priority'      => 1000,
+                        'options'       => [
+                            'route'    => '/nda',
+                            'defaults' => [
+                                'controller' => 'nda-manager',
+                                'action'     => 'index',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes'  => [
+                            'approval' => [
+                                'type'     => 'Segment',
+                                'priority' => 1000,
+                                'options'  => [
+                                    'route'    => '/approval.html',
+                                    'defaults' => [
+                                        'action'    => 'approval',
+                                        'privilege' => 'approval-admin',
+                                    ],
+                                ],
+                            ],
+                            'view'     => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'priority'    => 100,
+                                    'route'       => '/[:id].html',
+                                    'constraints' => [
+                                        'id' => '[0-9_-]+',
+                                    ],
+                                    'defaults'    => [
+                                        'action'    => 'view',
+                                        'privilege' => 'view-admin',
+                                    ],
+                                ],
+                            ],
+                            'edit'     => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/edit/[:id].html',
+                                    'defaults' => [
+                                        'constraints' => [
+                                            'id' => '[0-9_-]+',
+                                        ],
+                                        'action'      => 'edit',
+                                        'privilege'   => 'edit-admin',
+                                    ],
+                                ],
+                            ],
+                            'approve'  => [
+                                'type'     => 'Segment',
+                                'priority' => 1000,
+                                'options'  => [
+                                    'route'    => '/approve.html',
+                                    'defaults' => [
+                                        'action'    => 'approve',
+                                        'privilege' => 'edit-admin',
                                     ],
                                 ],
                             ],

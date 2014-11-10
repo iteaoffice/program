@@ -12,6 +12,7 @@
 namespace Program\Controller;
 
 use BjyAuthorize\Controller\Plugin\IsAllowed;
+use Contact\Service\ContactService;
 use General\Service\GeneralService;
 use General\Service\GeneralServiceAwareInterface;
 use Organisation\Service\OrganisationService;
@@ -56,6 +57,10 @@ abstract class ProgramAbstractController extends AbstractActionController implem
      * @var CallService
      */
     protected $callService;
+    /**
+     * @var ContactService
+     */
+    protected $contactService;
     /**
      * @var FormService
      */
@@ -175,5 +180,25 @@ abstract class ProgramAbstractController extends AbstractActionController implem
     public function getModuleOptions()
     {
         return $this->getServiceLocator()->get('program_module_options');
+    }
+
+    /**
+     * @return ContactService
+     */
+    public function getContactService()
+    {
+        return $this->contactService;
+    }
+
+    /**
+     * @param ContactService $contactService
+     *
+     * @return $this;
+     */
+    public function setContactService(ContactService $contactService)
+    {
+        $this->contactService = $contactService;
+
+        return $this;
     }
 }

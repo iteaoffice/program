@@ -1,0 +1,71 @@
+{% do headLink().appendStylesheet(
+'//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css'
+) %}
+
+{% set projectService = projectServiceProxy(doa.affiliation.project) %}
+
+<h1>{{ translate("txt-edit-doa-%s-in-%s")|format(
+    doa.affiliation.organisation.organisation,
+    projectService.parseFullname
+    ) }}</h1>
+
+{% do form.prepare() %}
+
+{{ form().openTag(form)|raw }}
+
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-project-name") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ projectLink(projectService,'view-admin', 'name') }}</p>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-affiliation") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ affiliationLink(doa.affiliation,'view-community') }}</p>
+    </div>
+</div>
+
+{#{{ ztbformelement(form.get('contact')) }}#}
+
+{% set doaForm = form.get('doa') %}
+
+{{ ztbformelement(doaForm.get('dateSigned')) }}
+{{ ztbformelement(doaForm.get('dateApproved')) }}
+{{ contactformelement(doaForm.get('contact')) }}
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-download-current-doa") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ doaLink(doa,'download','text') }}</p>
+    </div>
+</div>
+
+{{ ztbformelement(doaForm.get('file')) }}
+
+<hr>
+
+
+<div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+        {{ ztbformelement(form.get('submit')) }}
+        {{ ztbformelement(form.get('cancel')) }}
+        {{ ztbformelement(form.get('delete')) }}
+    </div>
+</div>
+
+{{ form().closeTag()|raw }}
+
+
+<script type="text/javascript">
+    $('input[type=date]').datepicker({
+        sliderAccessArgs: {touchonly: false},
+        dateFormat: 'yy-mm-dd'
+    });
+</script>
+

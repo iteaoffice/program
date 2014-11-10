@@ -61,4 +61,19 @@ class Nda extends EntityRepository
 
         return $qb->getQuery()->getOneOrNullResult();
     }
+
+    /**
+     * @return NdaEntity[]
+     */
+    public function findNotApprovedNda()
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('n');
+        $qb->from("Program\Entity\Nda", 'n');
+        $qb->andWhere($qb->expr()->isNull('n.dateApproved'));
+
+        $qb->addOrderBy('n.dateCreated', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
 }

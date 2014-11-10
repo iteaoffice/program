@@ -32,6 +32,26 @@ return [
                 ['route' => 'zfcadmin/program-manager/delete', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
                 ['route' => 'zfcadmin/program-manager/list', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
                 [
+                    'route'     => 'zfcadmin/nda-manager/approval',
+                    'roles'     => [strtolower(Access::ACCESS_OFFICE)],
+                    'assertion' => NdaAssertion::class
+                ],
+                [
+                    'route'     => 'zfcadmin/nda-manager/view',
+                    'roles'     => [strtolower(Access::ACCESS_OFFICE)],
+                    'assertion' => NdaAssertion::class
+                ],
+                [
+                    'route'     => 'zfcadmin/nda-manager/edit',
+                    'roles'     => [strtolower(Access::ACCESS_OFFICE)],
+                    'assertion' => NdaAssertion::class
+                ],
+                [
+                    'route'     => 'zfcadmin/nda-manager/approve',
+                    'roles'     => [strtolower(Access::ACCESS_OFFICE)],
+                    'assertion' => NdaAssertion::class
+                ],
+                [
                     'route' => 'program/view',
                     'roles' => [],
                 ],

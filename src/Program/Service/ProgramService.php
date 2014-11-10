@@ -9,6 +9,7 @@
  */
 namespace Program\Service;
 
+use Affiliation\Service\AffiliationService;
 use General\Entity\Country;
 use Organisation\Entity\Organisation;
 use Program\Entity\Funder;

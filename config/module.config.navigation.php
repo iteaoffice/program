@@ -20,6 +20,10 @@ return [
                             'entity' => 'call'
                         ]
                     ],
+                    'nda-approval'      => [
+                        'label' => "txt-nda-approval",
+                        'route' => 'zfcadmin/nda-manager/approval',
+                    ],
                 ],
             ],
         ],

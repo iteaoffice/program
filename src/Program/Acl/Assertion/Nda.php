@@ -10,6 +10,7 @@
  */
 namespace Program\Acl\Assertion;
 
+use Admin\Entity\Access;
 use Program\Entity\Nda as NdaEntity;
 use Program\Service\CallService;
 use Zend\Permissions\Acl\Acl;
@@ -91,6 +92,10 @@ class Nda extends AssertionAbstract
                 }
 
                 return $resource->getContact()->getId() === $this->getContactService()->getContact()->getId();
+            case 'view-admin':
+            case 'edit-admin':
+            case 'approval-admin':
+                return $this->rolesHaveAccess([strtolower(Access::ACCESS_OFFICE)]);
         }
 
         return false;

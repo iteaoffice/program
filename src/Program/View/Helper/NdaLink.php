@@ -44,7 +44,7 @@ class NdaLink extends LinkAbstract
      * @param Nda    $nda
      * @param string $action
      * @param string $show
-     * @param Call   $call   program_acl_assertion_nda
+     * @param Call   $call program_acl_assertion_nda
      *
      * @return string
      * @throws \Exception
@@ -152,6 +152,30 @@ class NdaLink extends LinkAbstract
                     $this->setText(sprintf($this->translate("txt-render-nda-for-call-%s-title"), $this->getCall()));
                     $this->addRouterParam('id', $this->getCall()->getId());
                 }
+                break;
+            case 'approval-admin':
+                $this->setRouter('zfcadmin/nda-manager/approval');
+                $this->setText($this->translate("txt-approval-doa"));
+                break;
+            case 'view-admin':
+                $this->setRouter('zfcadmin/nda-manager/view');
+                $this->setText(
+                    sprintf(
+                        $this->translate("txt-view-nda-for-%s-for-%s-title"),
+                        !is_null($this->getNda()->getCall()) ? $this->getNda()->getCall() : 'LR',
+                        $this->getNda()->getContact()->getDisplayName()
+                    )
+                );
+                break;
+            case 'edit-admin':
+                $this->setRouter('zfcadmin/nda-manager/edit');
+                $this->setText(
+                    sprintf(
+                        $this->translate("txt-edit-nda-for-%s-for-%s-link-title"),
+                        !is_null($this->getNda()->getCall()) ? $this->getNda()->getCall() : 'LR',
+                        $this->getNda()->getContact()->getDisplayName()
+                    )
+                );
                 break;
             case 'download':
                 $this->setRouter('program/nda/download');

@@ -24,6 +24,7 @@ $config = [
         'invokables'   => [
             'program'         => 'Program\Controller\ProgramController',
             'program-manager' => 'Program\Controller\ProgramManagerController',
+            'nda-manager'     => 'Program\Controller\NdaManagerController',
             'program-nda'     => 'Program\Controller\NdaController',
             'program-doa'     => 'Program\Controller\DoaController',
         ],
