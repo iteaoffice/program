@@ -54,8 +54,6 @@ class Nda extends EntityAbstract implements ResourceInterface
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\ContentType", cascade={"persist"}, inversedBy="programNna")
      * @ORM\JoinColumn(name="contenttype_id", referencedColumnName="contenttype_id", nullable=false)
-     * @Annotation\Type("\Zend\Form\Element\File")
-     * @Annotation\Options({"label":"txt-nda-file"})
      * @var \General\Entity\ContentType
      */
     private $contentType;
@@ -90,16 +88,13 @@ class Nda extends EntityAbstract implements ResourceInterface
      *      joinColumns={@ORM\JoinColumn(name="nda_id", referencedColumnName="nda_id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="programcall_id", referencedColumnName="programcall_id")}
      * )
-     * @Annotation\Type("DoctrineORMModule\Form\Element\EntityMultiCheckbox")
-     * @Annotation\Options({"target_class":"Program\Entity\Call\Call"})
-     * @Annotation\Attributes({"label":"txt-program-call"})
      * @var \Program\Entity\Call\Call[]|ArrayCollection
      */
     private $call;
     /**
      * @ORM\OneToMany(targetEntity="\Program\Entity\NdaObject", cascade={"persist"}, mappedBy="nda")
      * @Annotation\Exclude()
-     * @var \Program\Entity\NdaObject[]
+     * @var \Program\Entity\NdaObject[]|ArrayCollection
      */
     private $object;
 
@@ -208,89 +203,6 @@ class Nda extends EntityAbstract implements ResourceInterface
         return sprintf("%s:%s", __CLASS__, $this->id);
     }
 
-    public function populate()
-    {
-        return $this->getArrayCopy();
-    }
-
-    /**
-     * Needed for the hydration of form elements
-     *
-     * @return array
-     */
-    public function getArrayCopy()
-    {
-        return [
-            'id'           => $this->id,
-            'dateApproved' => $this->dateApproved,
-            'dateSigned'   => $this->dateSigned,
-            'contentType'  => $this->contentType,
-            'size'         => $this->size,
-            'dateCreated'  => $this->dateCreated,
-            'dateUpdated'  => $this->dateUpdated,
-            'contact'      => $this->contact,
-            'call'         => $this->call,
-            'object'       => $this->object,
-        ];
-    }
-
-    /**
-     * @param InputFilterInterface $inputFilter
-     *
-     * @return void
-     * @throws \Exception
-     */
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
-        throw new \Exception(sprintf("This class %s is unused", __CLASS__));
-    }
-
-    /**
-     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
-     */
-    public function getInputFilter()
-    {
-        if (!$this->inputFilter) {
-            $inputFilter = new InputFilter();
-            $factory = new InputFactory();
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'dateApproved',
-                        'required' => false,
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'contact',
-                        'required' => true,
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'call',
-                        'required' => true,
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'program',
-                        'required' => true,
-                    ]
-                )
-            );
-            $this->inputFilter = $inputFilter;
-        }
-
-        return $this->inputFilter;
-    }
-
     /**
      * @return \General\Entity\ContentType
      */
@@ -388,7 +300,7 @@ class Nda extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return \Program\Entity\NdaObject[]
+     * @return \Program\Entity\NdaObject[]|ArrayCollection
      */
     public function getObject()
     {

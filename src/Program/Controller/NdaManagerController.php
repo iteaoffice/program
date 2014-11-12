@@ -60,14 +60,12 @@ class NdaManagerController extends ProgramAbstractController implements
      */
     public function viewAction()
     {
-        $nda = $this->getNdaService()->setNdaId(
-            $this->getEvent()->getRouteMatch()->getParam('id')
-        );
+        $nda = $this->callService->findEntityById('nda', $this->params('id'));
         if (is_null($nda)) {
             return $this->notFoundAction();
         }
 
-        return new ViewModel(['nda' => $nda->getNda()]);
+        return new ViewModel(['nda' => $nda]);
     }
 
     /**
@@ -91,6 +89,10 @@ class NdaManagerController extends ProgramAbstractController implements
         );
 
         $form = $this->getFormService()->prepare('nda', $nda, $data);
+        $form->get('nda')->get('contact')->setValueOptions(
+            [$nda->getContact()->getId() => $nda->getContact()->getFormName()]
+        );
+        $form->get('nda')->get('programCall')->setValue($nda->getCall());
 
         //Get contacts in an organisation
         if ($this->getRequest()->isPost() && $form->isValid()) {
@@ -98,9 +100,10 @@ class NdaManagerController extends ProgramAbstractController implements
              * @var $nda Nda
              */
             $nda = $form->getData();
+
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute(
-                    'zfcadmin/affiliation-manager/nda/view',
+                    'zfcadmin/nda-manager/nda/view',
                     ['id' => $nda->getId()]
                 );
             }
@@ -108,15 +111,14 @@ class NdaManagerController extends ProgramAbstractController implements
             if (isset($data['delete'])) {
                 $this->flashMessenger()->setNamespace('success')->addMessage(
                     sprintf(
-                        _("txt-project-nda-for-organisation-%s-in-project-%s-has-been-removed"),
-                        $nda->getAffiliation()->getOrganisation(),
-                        $nda->getAffiliation()->getProject()
+                        _("txt-nda-for-contact-%s-has-been-removed"),
+                        $nda->getContact()->getDisplayName()
                     )
                 );
 
-                $this->getNdaService()->removeEntity($nda);
+                $this->getCallService()->removeEntity($nda);
 
-                return $this->redirect()->toRoute('zfcadmin/affiliation-manager/nda/list');
+                return $this->redirect()->toRoute('zfcadmin/nda-manager/approval');
             }
 
             $fileData = $this->params()->fromFiles();
@@ -131,7 +133,7 @@ class NdaManagerController extends ProgramAbstractController implements
                     $ndaObject = new NdaObject();
                     $ndaObject->setObject(file_get_contents($fileData['nda']['file']['tmp_name']));
                     $ndaObject->setNda($nda);
-                    $this->getNdaService()->newEntity($ndaObject);
+                    $this->getCallService()->newEntity($ndaObject);
                 }
 
                 //Create a article object element
@@ -141,21 +143,28 @@ class NdaManagerController extends ProgramAbstractController implements
                 $nda->setContentType(
                     $this->getGeneralService()->findContentTypeByContentTypeName($fileData['nda']['file']['type'])
                 );
-
             }
 
-            $this->getNdaService()->updateEntity($nda);
+            /**
+             * The programme call needs to have a dedicated treatment
+             */
+            if (!empty($data['nda']['programCall'])) {
+                $nda->setCall([$this->getCallService()->setCallId($data['nda']['programCall'])->getCall()]);
+            } else {
+                $nda->setCall([]);
+            }
+
+            $this->getCallService()->updateEntity($nda);
 
             $this->flashMessenger()->setNamespace('success')->addMessage(
                 sprintf(
-                    _("txt-project-nda-for-organisation-%s-in-project-%s-has-been-updated"),
-                    $nda->getAffiliation()->getOrganisation(),
-                    $nda->getAffiliation()->getProject()
+                    _("txt-nda-for-contact-%s-has-been-updated"),
+                    $nda->getContact()->getDisplayName()
                 )
             );
 
             return $this->redirect()->toRoute(
-                'zfcadmin/affiliation-manager/nda/view',
+                'zfcadmin/nda-manager/view',
                 ['id' => $nda->getId()]
             );
 

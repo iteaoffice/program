@@ -11,17 +11,13 @@
  */
 namespace Program\Entity;
 
-use Zend\InputFilter\InputFilterAwareInterface;
-
 /**
  * Annotations class
  *
  * @author  Johan van der Heide <johan.van.der.heide@itea3.org>
  */
-abstract class EntityAbstract implements EntityInterface, InputFilterAwareInterface
+abstract class EntityAbstract implements EntityInterface
 {
-    protected $inputFilter;
-
     /**
      * @param $prop
      *

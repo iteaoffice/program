@@ -2,51 +2,29 @@
 '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css'
 ) %}
 
-{% set projectService = projectServiceProxy(doa.affiliation.project) %}
-
-<h1>{{ translate("txt-edit-doa-%s-in-%s")|format(
-    doa.affiliation.organisation.organisation,
-    projectService.parseFullname
-    ) }}</h1>
+<h1>{{ translate("txt-edit-nda") }}</h1>
 
 {% do form.prepare() %}
 
-{{ form().openTag(form)|raw }}
+    {{ form().openTag(form)|raw }}
+
+    {% set ndaForm = form.get('nda') %}
+
+    {{ contactformelement(ndaForm.get('contact')) }}
+    {{ ztbformelement(ndaForm.get('dateSigned')) }}
+    {{ ztbformelement(ndaForm.get('dateApproved')) }}
+    {{ ztbformelement(ndaForm.get('programCall')) }}
 
 
 <div class="form-group">
-    <label class="col-sm-3 control-label">{{ translate("txt-project-name") }}</label>
+    <label class="col-sm-3 control-label">{{ translate("txt-download-current-nda") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static">{{ projectLink(projectService,'view-admin', 'name') }}</p>
+        <p class="form-control-static">{{ ndaLink(nda,'download','text') }}</p>
     </div>
 </div>
 
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{ translate("txt-affiliation") }}</label>
-
-    <div class="col-sm-9">
-        <p class="form-control-static">{{ affiliationLink(doa.affiliation,'view-community') }}</p>
-    </div>
-</div>
-
-{#{{ ztbformelement(form.get('contact')) }}#}
-
-{% set doaForm = form.get('doa') %}
-
-{{ ztbformelement(doaForm.get('dateSigned')) }}
-{{ ztbformelement(doaForm.get('dateApproved')) }}
-{{ contactformelement(doaForm.get('contact')) }}
-
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{ translate("txt-download-current-doa") }}</label>
-
-    <div class="col-sm-9">
-        <p class="form-control-static">{{ doaLink(doa,'download','text') }}</p>
-    </div>
-</div>
-
-{{ ztbformelement(doaForm.get('file')) }}
+{{ ztbformelement(ndaForm.get('file')) }}
 
 <hr>
 

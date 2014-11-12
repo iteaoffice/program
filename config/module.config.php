@@ -61,7 +61,8 @@ $config = [
             CallService::class            => CallService::class,
             FormService::class            => FormService::class,
             'program_program_form_filter' => 'Program\Form\FilterCreateObject',
-            'program_call_form_filter'    => 'Program\Form\FilterCreateObject'
+            'program_call_form_filter'    => 'Program\Form\FilterCreateObject',
+            'program_nda_form_filter'     => 'Program\Form\FilterCreateObject'
         ]
     ],
     'doctrine'        => [

@@ -18,5 +18,8 @@ return [
         'program_call_form'    => function ($sm) {
             return new Form\CreateObject($sm, new Entity\Call\Call());
         },
+        'program_nda_form'     => function ($sm) {
+            return new Form\CreateObject($sm, new Entity\Nda());
+        },
     ],
 ];

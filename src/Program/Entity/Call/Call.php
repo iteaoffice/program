@@ -19,6 +19,7 @@ use Program\Entity\EntityAbstract;
 use Zend\Form\Annotation;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
@@ -31,7 +32,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * @category    Program
  * @package     Entity
  */
-class Call extends EntityAbstract implements ResourceInterface
+class Call extends EntityAbstract implements ResourceInterface, InputFilterAwareInterface
 {
     /**
      * Produce a list of different statuses in a call, which are required for representation and access control

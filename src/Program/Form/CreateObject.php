@@ -50,6 +50,7 @@ class CreateObject extends Form
         $objectFieldset->setUseAsBaseFieldset(true);
         $this->add($objectFieldset);
         $this->setAttribute('method', 'post');
+        $this->setAttribute('class', 'form-horizontal');
 
         $this->add(
             [
@@ -58,6 +59,26 @@ class CreateObject extends Form
                 'attributes' => [
                     'class' => "btn btn-primary",
                     'value' => _("txt-submit")
+                ]
+            ]
+        );
+        $this->add(
+            [
+                'type'       => 'Zend\Form\Element\Submit',
+                'name'       => 'cancel',
+                'attributes' => [
+                    'class' => "btn btn-warning",
+                    'value' => _("txt-cancel")
+                ]
+            ]
+        );
+        $this->add(
+            [
+                'type'       => 'Zend\Form\Element\Submit',
+                'name'       => 'delete',
+                'attributes' => [
+                    'class' => "btn btn-danger",
+                    'value' => _("txt-delete")
                 ]
             ]
         );

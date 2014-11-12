@@ -62,7 +62,7 @@ class FormService implements ServiceLocatorAwareInterface
      * @param null  $entity
      * @param array $data
      *
-     * @return array|object
+     * @return Form
      */
     public function prepare($className, $entity = null, $data = [])
     {
