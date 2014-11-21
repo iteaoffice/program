@@ -13,6 +13,13 @@ return [
             // And finally, here is where we define our page hierarchy
             'project' => [
                 'pages' => [
+                    'program-list'      => [
+                        'label'  => "txt-programs",
+                        'route'  => 'zfcadmin/program-manager/list',
+                        'params' => [
+                            'entity' => 'program'
+                        ]
+                    ],
                     'program-call-list' => [
                         'label'  => "txt-program-calls",
                         'route'  => 'zfcadmin/program-manager/list',

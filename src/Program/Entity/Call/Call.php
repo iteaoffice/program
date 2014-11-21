@@ -261,6 +261,22 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
+     * Create a short name
+     * @return string
+     */
+    public function shortName()
+    {
+        $words = explode(" ", $this->getProgram()->getProgram());
+        $acronym = "";
+
+        foreach ($words as $w) {
+            $acronym .= strtoupper($w[0]);
+        }
+
+        return sprintf("%sC%s", $acronym, $this->call);
+    }
+
+    /**
      * @return \Program\Entity\Program
      */
     public function getProgram()
@@ -807,7 +823,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @param  bool       $textual
+     * @param  bool $textual
      * @return int|string
      */
     public function getDoaRequirement($textual = false)

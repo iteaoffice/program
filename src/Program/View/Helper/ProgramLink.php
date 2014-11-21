@@ -84,6 +84,14 @@ class ProgramLink extends LinkAbstract
     public function parseAction()
     {
         switch ($this->getAction()) {
+            case 'new':
+                $this->setRouter('zfcadmin/program-manager/new');
+                $this->setText($this->translate("txt-new-program"));
+                break;
+            case 'edit':
+                $this->setRouter('zfcadmin/program-manager/edit');
+                $this->setText(sprintf($this->translate("txt-edit-program-%s"), $this->getProgram()));
+                break;
             case 'view-list':
                 /**
                  * For a list in the front-end simply use the MatchedRouteName

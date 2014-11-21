@@ -45,6 +45,13 @@ class Program extends EntityAbstract implements ResourceInterface
      */
     private $program;
     /**
+     * @ORM\Column(name="number", type="string", length=10, nullable=true)
+     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @Annotation\Options({"label":"txt-program-number"})
+     * @var string
+     */
+    private $number;
+    /**
      * @ORM\OneToMany(targetEntity="\Program\Entity\Call\Call", cascade={"persist"}, mappedBy="program")
      * @Annotation\Exclude()
      * @var \Program\Entity\Call\Call[]
@@ -160,6 +167,28 @@ class Program extends EntityAbstract implements ResourceInterface
                     ]
                 )
             );
+            $inputFilter->add(
+                $factory->createInput(
+                    [
+                        'name'       => 'number',
+                        'required'   => true,
+                        'filters'    => [
+                            ['name' => 'StripTags'],
+                            ['name' => 'StringTrim'],
+                        ],
+                        'validators' => [
+                            [
+                                'name'    => 'StringLength',
+                                'options' => [
+                                    'encoding' => 'UTF-8',
+                                    'min'      => 1,
+                                    'max'      => 100,
+                                ],
+                            ],
+                        ],
+                    ]
+                )
+            );
             $this->inputFilter = $inputFilter;
         }
 
@@ -221,6 +250,22 @@ class Program extends EntityAbstract implements ResourceInterface
     public function getProgram()
     {
         return $this->program;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNumber()
+    {
+        return $this->number;
+    }
+
+    /**
+     * @param string $number
+     */
+    public function setNumber($number)
+    {
+        $this->number = $number;
     }
 
     /**
