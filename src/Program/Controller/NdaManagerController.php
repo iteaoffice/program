@@ -54,7 +54,6 @@ class NdaManagerController extends ProgramAbstractController implements
         );
     }
 
-
     /**
      * @return \Zend\View\Model\ViewModel
      */
@@ -77,7 +76,6 @@ class NdaManagerController extends ProgramAbstractController implements
             'nda',
             $this->getEvent()->getRouteMatch()->getParam('id')
         );
-
 
         if (is_null($nda)) {
             return $this->notFoundAction();
@@ -177,7 +175,6 @@ class NdaManagerController extends ProgramAbstractController implements
             ]
         );
     }
-
 
     /**
      * Dedicated action to approve NDAs via an AJAX call

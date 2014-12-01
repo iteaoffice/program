@@ -228,14 +228,6 @@ abstract class AssertionAbstract implements
     }
 
     /**
-     * @return AffiliationAssertion
-     */
-    public function getAffiliationAssert()
-    {
-        return $this->getServiceLocator()->get(AffiliationAssertion::class);
-    }
-
-    /**
      * @return OrganisationAssertion
      */
     public function getOrganisationAssert()
@@ -261,19 +253,10 @@ abstract class AssertionAbstract implements
                 return true;
             }
             if ($this->hasContact()) {
-                /**
-                 * Do an access check on the article
-                 */
-                foreach ($this->getContactService()->getContact()->getRoles() as $contactAccess) {
-                    if (strtolower($accessRole->getAccess()) === $contactAccess) {
-                        return true;
-                    }
-                }
-                foreach ($accessRole->getSelection() as $selection) {
-                    if ($this->getContactService()->inSelection($selection)) {
-                        return true;
-                    }
-                }
+                return in_array(
+                    strtolower($accessRole->getAccess()),
+                    $this->getAdminService()->findAccessRolesByContactAsArray($this->getContactService()->getContact())
+                );
             }
         }
 
@@ -305,7 +288,9 @@ abstract class AssertionAbstract implements
     public function getAccessRoles()
     {
         if (empty($this->accessRoles) && !$this->getContactService()->isEmpty()) {
-            $this->accessRoles = $this->getContactService()->getContact()->getRoles();
+            $this->accessRoles = $this->getAdminService()->findAccessRolesByContactAsArray(
+                $this->getContactService()->getContact()
+            );
         }
 
         return $this->accessRoles;

@@ -51,7 +51,6 @@ class NdaApproval extends Form implements InputFilterProviderInterface
             $this->add($ndaFieldset);
         }
 
-
         $this->add(
             [
                 'type'       => 'Zend\Form\Element\Submit',

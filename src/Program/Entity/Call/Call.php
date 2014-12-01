@@ -823,7 +823,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @param  bool $textual
+     * @param  bool       $textual
      * @return int|string
      */
     public function getDoaRequirement($textual = false)

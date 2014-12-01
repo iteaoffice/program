@@ -79,7 +79,6 @@ class CallService extends ServiceAbstract
         return $this->getEntityManager()->getRepository($this->getFullEntityName('nda'))->findNotApprovedNda();
     }
 
-
     /**
      * Find the open call based on the request type
      *
@@ -345,7 +344,7 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * @param  Call $call
+     * @param  Call  $call
      * @return mixed
      */
     public function findCountryByCall(Call $call)
@@ -378,7 +377,7 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * @param  Call $call
+     * @param  Call  $call
      * @return mixed
      */
     public function findProjectByCall(Call $call, $which)
