@@ -14,21 +14,21 @@ return [
             'project' => [
                 'pages' => [
                     'program-list'      => [
-                        'label'  => "txt-programs",
+                        'label'  => _("txt-programs"),
                         'route'  => 'zfcadmin/program-manager/list',
                         'params' => [
                             'entity' => 'program'
                         ]
                     ],
                     'program-call-list' => [
-                        'label'  => "txt-program-calls",
+                        'label'  => _("txt-program-calls"),
                         'route'  => 'zfcadmin/program-manager/list',
                         'params' => [
                             'entity' => 'call'
                         ]
                     ],
                     'nda-approval'      => [
-                        'label' => "txt-nda-approval",
+                        'label' => _("txt-nda-approval"),
                         'route' => 'zfcadmin/nda-manager/approval',
                     ],
                 ],

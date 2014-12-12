@@ -231,6 +231,11 @@ class CallService extends ServiceAbstract
     public function getCallStatus()
     {
         if (is_null($this->callStatus)) {
+
+            if ($this->isEmpty()) {
+                throw new \InvalidArgumentException("The call cannot be empty to determine the status");
+            }
+
             $this->callStatus = new ArrayObject();
             /**
              * Go over the dates and find the most suited date.
@@ -344,7 +349,7 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * @param  Call  $call
+     * @param  Call $call
      * @return mixed
      */
     public function findCountryByCall(Call $call)
@@ -377,7 +382,7 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * @param  Call  $call
+     * @param  Call $call
      * @return mixed
      */
     public function findProjectByCall(Call $call, $which)
