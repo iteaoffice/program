@@ -40,7 +40,7 @@ class NdaFieldset extends Fieldset implements InputFilterProviderInterface
                 'name'    => 'dateApproved',
                 'options' => [
                     "label" => "txt-date-approved",
-                ]
+                ],
             ]
         );
 
@@ -50,7 +50,7 @@ class NdaFieldset extends Fieldset implements InputFilterProviderInterface
                 'name'    => 'dateSigned',
                 'options' => [
                     "label" => "txt-date-signed",
-                ]
+                ],
             ]
         );
 
@@ -60,7 +60,7 @@ class NdaFieldset extends Fieldset implements InputFilterProviderInterface
                 'name'    => 'contact',
                 'options' => [
                     "label" => "txt-contact",
-                ]
+                ],
             ]
         );
 
@@ -75,15 +75,15 @@ class NdaFieldset extends Fieldset implements InputFilterProviderInterface
                     'object_manager'     => $entityManager,
                     'target_class'       => Call::class,
                     'display_empty_item' => true,
-                    'empty_item_label'   => "-- " . _("txt-not-connected-to-a-call"),
+                    'empty_item_label'   => "-- "._("txt-not-connected-to-a-call"),
                     'find_method'        => [
                         'name'   => 'findBy',
                         'params' => [
                             'criteria' => [],
                             'orderBy'  => [
-                                'id' => 'DESC'
-                            ]
-                        ]
+                                'id' => 'DESC',
+                            ],
+                        ],
                     ],
                 ],
             ]
@@ -95,8 +95,8 @@ class NdaFieldset extends Fieldset implements InputFilterProviderInterface
                 'name'    => 'file',
                 'options' => [
                     "label"      => "txt-source-file",
-                    "help-block" => _("txt-attachment-requirements")
-                ]
+                    "help-block" => _("txt-attachment-requirements"),
+                ],
             ]
         );
     }
@@ -126,9 +126,9 @@ class NdaFieldset extends Fieldset implements InputFilterProviderInterface
                         'name'    => 'Date',
                         'options' => [
                             'pattern' => 'yyyy-mm-dd',
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ],
             'dateApproved' => [
                 'required'   => false,
@@ -137,9 +137,9 @@ class NdaFieldset extends Fieldset implements InputFilterProviderInterface
                         'name'    => 'Date',
                         'options' => [
                             'pattern' => 'yyyy-mm-dd',
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ],
             'file'         => [
                 'required'   => false,
@@ -150,7 +150,7 @@ class NdaFieldset extends Fieldset implements InputFilterProviderInterface
                             'max' => '8MB',
                         ]
                     ),
-                ]
+                ],
             ]
         ];
     }

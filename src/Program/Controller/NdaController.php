@@ -87,7 +87,7 @@ class NdaController extends ProgramAbstractController
             [
                 'call' => $call,
                 'nda'  => $nda,
-                'form' => $form
+                'form' => $form,
             ]
         );
     }
@@ -160,7 +160,7 @@ class NdaController extends ProgramAbstractController
         return new ViewModel(
             [
                 'nda'  => $nda,
-                'form' => $form
+                'form' => $form,
             ]
         );
     }
@@ -191,10 +191,10 @@ class NdaController extends ProgramAbstractController
         }
         $response = $this->getResponse();
         $response->getHeaders()
-            ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
+            ->addHeaderLine('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
             ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
             ->addHeaderLine("Pragma: public")
-            ->addHeaderLine('Content-Disposition', 'attachment; filename="' . $nda->parseFileName() . '.pdf"')
+            ->addHeaderLine('Content-Disposition', 'attachment; filename="'.$nda->parseFileName().'.pdf"')
             ->addHeaderLine('Content-Type: application/pdf')
             ->addHeaderLine('Content-Length', strlen($renderNda->getPDFData()));
         $response->setContent($renderNda->getPDFData());
@@ -219,16 +219,16 @@ class NdaController extends ProgramAbstractController
         $response = $this->getResponse();
         $response->setContent(stream_get_contents($object));
         $response->getHeaders()
-            ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
+            ->addHeaderLine('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
             ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
             ->addHeaderLine(
                 'Content-Disposition',
-                'attachment; filename="' . $nda->parseFileName() . '.' .
-                $nda->getContentType()->getExtension() . '"'
+                'attachment; filename="'.$nda->parseFileName().'.'.
+                $nda->getContentType()->getExtension().'"'
             )
             ->addHeaderLine("Pragma: public")
-            ->addHeaderLine('Content-Type: ' . $nda->getContentType()->getContentType())
-            ->addHeaderLine('Content-Length: ' . $nda->getSize());
+            ->addHeaderLine('Content-Type: '.$nda->getContentType()->getContentType())
+            ->addHeaderLine('Content-Length: '.$nda->getSize());
 
         return $this->response;
     }

@@ -49,7 +49,7 @@ class NdaManagerController extends ProgramAbstractController implements
         return new ViewModel(
             [
                 'nda'  => $nda,
-                'form' => $form
+                'form' => $form,
             ]
         );
     }
@@ -165,13 +165,12 @@ class NdaManagerController extends ProgramAbstractController implements
                 'zfcadmin/nda-manager/view',
                 ['id' => $nda->getId()]
             );
-
         }
 
         return new ViewModel(
             [
                 'nda'  => $nda,
-                'form' => $form
+                'form' => $form,
             ]
         );
     }
@@ -190,7 +189,7 @@ class NdaManagerController extends ProgramAbstractController implements
             return new JsonModel(
                 [
                     'result' => 'error',
-                    'error'  => _("txt-date-signed-is-empty")
+                    'error'  => _("txt-date-signed-is-empty"),
                 ]
             );
         }
@@ -199,7 +198,7 @@ class NdaManagerController extends ProgramAbstractController implements
             return new JsonModel(
                 [
                     'result' => 'error',
-                    'error'  => _("txt-incorrect-date-format-should-be-yyyy-mm-dd")
+                    'error'  => _("txt-incorrect-date-format-should-be-yyyy-mm-dd"),
                 ]
             );
         }
@@ -216,6 +215,5 @@ class NdaManagerController extends ProgramAbstractController implements
                 'result' => 'success',
             ]
         );
-
     }
 }

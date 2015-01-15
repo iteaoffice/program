@@ -22,7 +22,6 @@ namespace Program\Controller;
  */
 class ProgramController extends ProgramAbstractController
 {
-
     /**
      *
      *

@@ -63,12 +63,12 @@ class NdaNavigationService extends NavigationServiceAbstract
                                             'active' => true,
                                             'router' => $this->getRouter(),
                                             'params' => [
-                                                'id' => $this->routeMatch->getParam('call-id')
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
+                                                'id' => $this->routeMatch->getParam('call-id'),
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
                         ]
                     );
                 } else {
@@ -89,10 +89,10 @@ class NdaNavigationService extends NavigationServiceAbstract
                                             'route'  => $this->getRouteMatch()->getMatchedRouteName(),
                                             'active' => true,
                                             'router' => $this->getRouter(),
-                                        ]
-                                    ]
-                                ]
-                            ]
+                                        ],
+                                    ],
+                                ],
+                            ],
                         ]
                     );
                 }
@@ -120,12 +120,12 @@ class NdaNavigationService extends NavigationServiceAbstract
                                         'active' => true,
                                         'router' => $this->getRouter(),
                                         'params' => [
-                                            'id' => $this->getRouteMatch()->getParam('id')
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
+                                            'id' => $this->getRouteMatch()->getParam('id'),
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
                     ]
                 );
                 break;
@@ -152,12 +152,12 @@ class NdaNavigationService extends NavigationServiceAbstract
                                         'active' => true,
                                         'router' => $this->getRouter(),
                                         'params' => [
-                                            'id' => $this->getRouteMatch()->getParam('id')
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
+                                            'id' => $this->getRouteMatch()->getParam('id'),
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
                     ]
                 );
                 break;

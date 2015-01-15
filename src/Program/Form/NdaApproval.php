@@ -34,7 +34,7 @@ class NdaApproval extends Form implements InputFilterProviderInterface
          * Create a fieldSet per NDA (and program)
          */
         foreach ($ndas as $nda) {
-            $ndaFieldset = new Fieldset('nda_' . $nda->getId());
+            $ndaFieldset = new Fieldset('nda_'.$nda->getId());
 
             $ndaFieldset->add(
                 [
@@ -42,9 +42,9 @@ class NdaApproval extends Form implements InputFilterProviderInterface
                     'name'       => 'dateSigned',
                     'attributes' => [
                         'class'    => 'form-control',
-                        'id'       => 'dateSigned-' . $nda->getId(),
+                        'id'       => 'dateSigned-'.$nda->getId(),
                         'required' => true,
-                    ]
+                    ],
                 ]
             );
 
@@ -57,8 +57,8 @@ class NdaApproval extends Form implements InputFilterProviderInterface
                 'name'       => 'submit',
                 'attributes' => [
                     'class' => "btn btn-primary",
-                    'value' => _("txt-update")
-                ]
+                    'value' => _("txt-update"),
+                ],
             ]
         );
         $this->add(
@@ -67,8 +67,8 @@ class NdaApproval extends Form implements InputFilterProviderInterface
                 'name'       => 'cancel',
                 'attributes' => [
                     'class' => "btn btn-warning",
-                    'value' => _("txt-cancel")
-                ]
+                    'value' => _("txt-cancel"),
+                ],
             ]
         );
     }

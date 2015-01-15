@@ -156,7 +156,6 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
                     break;
             }
         }
-
     }
 
     /**
@@ -318,7 +317,6 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
      */
     public function parseProgramcallInfo(Call $call = null, Program $program = null)
     {
-
         $arr = $this->getCallService()->findProjectAndPartners();
 
         return $this->getZfcTwigRenderer()->render(

@@ -93,7 +93,7 @@ class CallSessionLink extends LinkAbstract
             case 'view':
                 $this->addRouterParam('session', $this->getSession()->getId());
                 $this->setRouter(
-                    'route-' . str_replace(
+                    'route-'.str_replace(
                         'doctrineormmodule_proxy___cg___',
                         '',
                         $this->getSession()->get("underscore_full_entity_name")

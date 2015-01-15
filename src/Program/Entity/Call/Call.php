@@ -56,7 +56,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     protected $doaRequirementTemplates = [
         self::DOA_REQUIREMENT_NOT_APPLICABLE => 'txt-no-doa-required',
         self::DOA_REQUIREMENT_PER_PROGRAM    => 'txt-doa-per-program-required',
-        self::DOA_REQUIREMENT_PER_PROJECT    => 'txt-doa-per-project-required'
+        self::DOA_REQUIREMENT_PER_PROJECT    => 'txt-doa-per-project-required',
     ];
 
     /**
@@ -375,7 +375,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
                                 'name'    => 'DateTime',
                                 'options' => [
                                     'pattern' => 'yyyy-mm-dd H:mm:ss',
-                                ]
+                                ],
                             ],
                         ],
                     ]
@@ -395,7 +395,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
                                 'name'    => 'DateTime',
                                 'options' => [
                                     'pattern' => 'yyyy-mm-dd H:mm:ss',
-                                ]
+                                ],
                             ],
                         ],
                     ]
@@ -415,7 +415,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
                                 'name'    => 'DateTime',
                                 'options' => [
                                     'pattern' => 'yyyy-mm-dd H:mm:ss',
-                                ]
+                                ],
                             ],
                         ],
                     ]
@@ -435,7 +435,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
                                 'name'    => 'DateTime',
                                 'options' => [
                                     'pattern' => 'yyyy-mm-dd H:mm:ss',
-                                ]
+                                ],
                             ],
                         ],
                     ]
@@ -455,7 +455,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
                                 'name'    => 'DateTime',
                                 'options' => [
                                     'pattern' => 'yyyy-mm-dd H:mm:ss',
-                                ]
+                                ],
                             ],
                         ],
                     ]
@@ -475,7 +475,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
                                 'name'    => 'DateTime',
                                 'options' => [
                                     'pattern' => 'yyyy-mm-dd H:mm:ss',
-                                ]
+                                ],
                             ],
                         ],
                     ]

@@ -24,7 +24,6 @@ use Zend\View\Model\ViewModel;
  */
 class ProgramManagerController extends ProgramAbstractController
 {
-
     /**
      * @return \Zend\View\Model\ViewModel
      */
@@ -105,7 +104,7 @@ class ProgramManagerController extends ProgramAbstractController
 
         $form = $this->getFormService()->prepare($entity->get('entity_name'), $entity, $_POST);
         $form->setAttribute('class', 'form-horizontal');
-        $form->setAttribute('id', 'program-program-' . $entity->getId());
+        $form->setAttribute('id', 'program-program-'.$entity->getId());
         if ($this->getRequest()->isPost() && $form->isValid()) {
             $result = $this->getProgramService()->updateEntity($form->getData());
 
@@ -128,7 +127,6 @@ class ProgramManagerController extends ProgramAbstractController
      */
     public function deleteAction()
     {
-
         /**
          * workaround to find the call\call if that is asked
          * @todo
@@ -146,7 +144,7 @@ class ProgramManagerController extends ProgramAbstractController
         $this->getProgramService()->removeEntity($entity);
 
         return $this->redirect()->toRoute(
-            'zfcadmin/program-manager/' . $entity->get('dashed_entity_name') . 's'
+            'zfcadmin/program-manager/'.$entity->get('dashed_entity_name').'s'
         );
     }
 }

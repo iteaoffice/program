@@ -109,7 +109,6 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
     public function getDisplayName()
     {
         return $this->displayName;
-
     }
 
     /**

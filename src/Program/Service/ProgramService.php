@@ -75,7 +75,7 @@ class ProgramService extends ServiceAbstract
         return $this->getEntityManager()->getRepository($this->getFullEntityName('Doa'))->findOneBy(
             [
                 'program'      => $program,
-                'organisation' => $organisation
+                'organisation' => $organisation,
             ]
         );
     }

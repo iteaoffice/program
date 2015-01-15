@@ -150,7 +150,6 @@ class CallService extends ServiceAbstract
             default:
                 return true;
         }
-
     }
 
     /**
@@ -231,7 +230,6 @@ class CallService extends ServiceAbstract
     public function getCallStatus()
     {
         if (is_null($this->callStatus)) {
-
             if ($this->isEmpty()) {
                 throw new \InvalidArgumentException("The call cannot be empty to determine the status");
             }
@@ -349,7 +347,7 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * @param  Call $call
+     * @param  Call  $call
      * @return mixed
      */
     public function findCountryByCall(Call $call)
@@ -382,7 +380,7 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * @param  Call $call
+     * @param  Call  $call
      * @return mixed
      */
     public function findProjectByCall(Call $call, $which)

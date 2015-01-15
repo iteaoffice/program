@@ -150,10 +150,10 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
          */
         if (strpos($entity, '-') !== false) {
             $entity = explode('-', $entity);
-            $entity = $entity[0] . ucfirst($entity[1]);
+            $entity = $entity[0].ucfirst($entity[1]);
         }
 
-        return ucfirst(join('', array_slice(explode('\\', __NAMESPACE__), 0, 1))) . '\\' . 'Entity' . '\\' . ucfirst(
+        return ucfirst(implode('', array_slice(explode('\\', __NAMESPACE__), 0, 1))).'\\'.'Entity'.'\\'.ucfirst(
             $entity
         );
     }

@@ -126,7 +126,7 @@ class Roadmap extends EntityAbstract
      */
     public function getResourceId()
     {
-        return __NAMESPACE__ . ':' . __CLASS__ . ':' . $this->id;
+        return __NAMESPACE__.':'.__CLASS__.':'.$this->id;
     }
 
     /**

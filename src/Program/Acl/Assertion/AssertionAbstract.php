@@ -278,7 +278,7 @@ abstract class AssertionAbstract implements
              * We only have a string, so we need to lookup the role
              */
             $access = [
-                $this->getAdminService()->findAccessByName($access)
+                $this->getAdminService()->findAccessByName($access),
             ];
         }
 

@@ -15,7 +15,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Zend\Form\Annotation;
-use Zend\InputFilter\InputFilter;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
@@ -161,7 +160,7 @@ class Nda extends EntityAbstract implements ResourceInterface
     public function getCall()
     {
         if (is_null($this->call)) {
-            return null;
+            return;
         }
 
         return $this->call->first();

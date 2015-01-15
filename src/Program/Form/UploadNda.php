@@ -40,8 +40,8 @@ class UploadNda extends Form implements InputFilterProviderInterface
                 'name'    => 'file',
                 'options' => [
                     "label"      => "txt-file",
-                    "help-block" => _("txt-a-signed-nda-in-pdf-format-or-image-is-required")
-                ]
+                    "help-block" => _("txt-a-signed-nda-in-pdf-format-or-image-is-required"),
+                ],
             ]
         );
         $this->add(
@@ -50,8 +50,8 @@ class UploadNda extends Form implements InputFilterProviderInterface
                 'name'       => 'submit',
                 'attributes' => [
                     'class' => "btn btn-primary",
-                    'value' => _("txt-upload-nda-title")
-                ]
+                    'value' => _("txt-upload-nda-title"),
+                ],
             ]
         );
         $this->add(
@@ -60,8 +60,8 @@ class UploadNda extends Form implements InputFilterProviderInterface
                 'name'       => 'cancel',
                 'attributes' => [
                     'class' => "btn btn-warning",
-                    'value' => _("txt-cancel")
-                ]
+                    'value' => _("txt-cancel"),
+                ],
             ]
         );
     }
@@ -86,10 +86,10 @@ class UploadNda extends Form implements InputFilterProviderInterface
                     ),
                     new Extension(
                         [
-                            'extension' => ['pdf', 'jpg', 'jpeg', 'png']
+                            'extension' => ['pdf', 'jpg', 'jpeg', 'png'],
                         ]
                     ),
-                ]
+                ],
             ]
         ];
     }
