@@ -85,12 +85,10 @@ class Call extends EntityRepository
         /**
          * Check first if we find an open PO
          */
-
         if (!is_null($queryBuilder->getQuery()->getOneOrNullResult())) {
             /**
              * We have found an open PO and call, return the result
              */
-
             return [
                 'call'        => $queryBuilder->getQuery()->getOneOrNullResult(),
                 'versionType' => Type::TYPE_PO
@@ -107,7 +105,6 @@ class Call extends EntityRepository
             /**
              * We have found an open PO and call, return the result
              */
-
             return [
                 'call'        => $queryBuilder->getQuery()->getOneOrNullResult(),
                 'versionType' => Type::TYPE_FPP

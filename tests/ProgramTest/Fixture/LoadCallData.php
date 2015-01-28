@@ -12,6 +12,7 @@ namespace ProgramTest\Fixture;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Program\Entity\Call\Call;
 
 class LoadCallData extends AbstractFixture implements DependentFixtureInterface
 {
@@ -30,6 +31,7 @@ class LoadCallData extends AbstractFixture implements DependentFixtureInterface
         $call->setPoCloseDate(new \DateTime());
         $call->setFppOpenDate(new \DateTime());
         $call->setFppCloseDate(new \DateTime());
+        $call->setDoaRequirement(Call::DOA_REQUIREMENT_PER_PROGRAM);
         $manager->persist($call);
         $manager->flush();
     }

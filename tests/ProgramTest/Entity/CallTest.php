@@ -9,7 +9,6 @@
  */
 namespace ProgramTest\Entity;
 
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use Program\Entity\Call\Call;
 use ProgramTest\Bootstrap;
 
@@ -39,59 +38,58 @@ class CallTest extends \PHPUnit_Framework_TestCase
     {
         $this->serviceManager = Bootstrap::getServiceManager();
         $this->entityManager = $this->serviceManager->get('doctrine.entitymanager.orm_default');
-        $program = $this->entityManager->find("Program\Entity\Program", 1);
-        $this->callData = [
-            'call'    => 'ITEA2',
-            'program' => $program
+    }
+
+    public function provider()
+    {
+        $programTest = new ProgramTest();
+
+        $call = new Call();
+        $call->setCall('TEST1');
+        $call->setDoaRequirement(Call::DOA_REQUIREMENT_PER_PROGRAM);
+        $call->setProgram($programTest->provider()[0][0]);
+
+        return [
+            [$call]
         ];
-        $this->call = new Call();
     }
 
     public function testCanCreateEntity()
     {
-        $this->assertInstanceOf("Program\Entity\Call\Call", $this->call);
-        $this->assertInstanceOf("Program\Entity\EntityInterface", $this->call);
-        $this->assertNull($this->call->getCall(), 'The "Call" should be null');
+        $call = new Call();
+        $this->assertInstanceOf("Program\Entity\Call\Call", $call);
+        $this->assertInstanceOf("Program\Entity\EntityInterface", $call);
+        $this->assertNull($call->getCall(), 'The "Call" should be null');
         $id = 1;
-        $this->call->setId($id);
-        $this->assertEquals($id, $this->call->getId(), 'The "Id" should be the same as the setter');
-        $this->assertTrue(is_array($this->call->getArrayCopy()));
-        $this->assertTrue(is_array($this->call->populate()));
+        $call->setId($id);
+        $this->assertEquals($id, $call->getId(), 'The "Id" should be the same as the setter');
+        $this->assertTrue(is_array($call->getArrayCopy()));
+        $this->assertTrue(is_array($call->populate()));
     }
 
     public function testHasInputFilter()
     {
-        $this->assertInstanceOf('Zend\InputFilter\InputFilter', $this->call->getInputFilter());
+        $call = new Call();
+        $this->assertInstanceOf('Zend\InputFilter\InputFilter', $call->getInputFilter());
     }
 
     public function testMagicGettersAndSetters()
     {
-        $this->call->call = 'test';
-        $this->assertEquals('test', $this->call->call);
+        $call = new Call();
+        $call->call = 'test';
+        $this->assertEquals('test', $call->call);
     }
 
-    public function testCanHydrateEntity()
+    /**
+     * @param Call $call
+     *
+     * @dataProvider provider
+     */
+    public function testCanSaveEntityInDatabase(Call $call)
     {
-        $hydrator = new DoctrineObject(
-            $this->entityManager,
-            'Program\Entity\Call\Call'
-        );
-        $this->call = $hydrator->hydrate($this->callData, new Call());
-        $dataArray = $hydrator->extract($this->call);
-        $this->assertSame($this->callData['call'], $dataArray['call']);
-    }
-
-    public function testCanSaveEntityInDatabase()
-    {
-        $hydrator = new DoctrineObject(
-            $this->entityManager,
-            'Program\Entity\Call\Call'
-        );
-        $this->call = $hydrator->hydrate($this->callData, new Call());
-        $this->entityManager->persist($this->call);
+        $this->entityManager->persist($call);
         $this->entityManager->flush();
-        $this->assertInstanceOf('Program\Entity\Call\Call', $this->call);
-        $this->assertNotNull($this->call->getId());
-        $this->assertSame($this->callData['call'], $this->call->getCall());
+        $this->assertInstanceOf('Program\Entity\Call\Call', $call);
+        $this->assertNotNull($call->getId());
     }
 }

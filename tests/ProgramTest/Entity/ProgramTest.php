@@ -9,7 +9,6 @@
  */
 namespace ProgramTest\Entity;
 
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use Program\Entity\Program;
 use ProgramTest\Bootstrap;
 
@@ -23,14 +22,20 @@ class ProgramTest extends \PHPUnit_Framework_TestCase
      * @var \Doctrine\ORM\EntityManager;
      */
     protected $entityManager;
+
+
     /**
-     * @var Program;
+     * @return array
      */
-    protected $program;
-    /**
-     * @var array
-     */
-    protected $programData;
+    public function provider()
+    {
+        $program = new Program();
+        $program->setProgram('PROGRAM1');
+
+        return [
+            [$program]
+        ];
+    }
 
     /**
      * {@inheritDoc}
@@ -39,57 +44,45 @@ class ProgramTest extends \PHPUnit_Framework_TestCase
     {
         $this->serviceManager = Bootstrap::getServiceManager();
         $this->entityManager = $this->serviceManager->get('doctrine.entitymanager.orm_default');
-        $this->programData = [
-            'program' => 'ITEA2',
-        ];
-        $this->program = new Program();
+
     }
 
     public function testCanCreateEntity()
     {
-        $this->assertInstanceOf("Program\Entity\Program", $this->program);
-        $this->assertInstanceOf("Program\Entity\EntityInterface", $this->program);
-        $this->assertNull($this->program->getProgram(), 'The "Program" should be null');
+        $program = new Program();
+        $this->assertInstanceOf("Program\Entity\Program", $program);
+        $this->assertInstanceOf("Program\Entity\EntityInterface", $program);
+        $this->assertNull($program->getProgram(), 'The "Program" should be null');
         $id = 1;
-        $this->program->setId($id);
-        $this->assertEquals($id, $this->program->getId(), 'The "Id" should be the same as the setter');
-        $this->assertTrue(is_array($this->program->getArrayCopy()));
-        $this->assertTrue(is_array($this->program->populate()));
+        $program->setId($id);
+        $this->assertEquals($id, $program->getId(), 'The "Id" should be the same as the setter');
+        $this->assertTrue(is_array($program->getArrayCopy()));
+        $this->assertTrue(is_array($program->populate()));
     }
 
     public function testMagicGettersAndSetters()
     {
-        $this->program->program = 'test';
-        $this->assertEquals('test', $this->program->program);
-    }
-
-    public function testCanHydrateEntity()
-    {
-        $hydrator = new DoctrineObject(
-            $this->entityManager,
-            'Program\Entity\Program'
-        );
-        $this->program = $hydrator->hydrate($this->programData, new Program());
-        $dataArray = $hydrator->extract($this->program);
-        $this->assertSame($this->programData['program'], $dataArray['program']);
+        $program = new Program();
+        $program->program = 'test';
+        $this->assertEquals('test', $program->program);
     }
 
     public function testHasInputFilter()
     {
-        $this->assertInstanceOf('Zend\InputFilter\InputFilter', $this->program->getInputFilter());
+        $program = new Program();
+        $this->assertInstanceOf('Zend\InputFilter\InputFilter', $program->getInputFilter());
     }
 
-    public function testCanSaveEntityInDatabase()
+    /**
+     * @param Program $program
+     *
+     * @dataProvider provider
+     */
+    public function testCanSaveEntityInDatabase(Program $program)
     {
-        $hydrator = new DoctrineObject(
-            $this->entityManager,
-            'Program\Entity\Program'
-        );
-        $this->program = $hydrator->hydrate($this->programData, new Program());
-        $this->entityManager->persist($this->program);
+        $this->entityManager->persist($program);
         $this->entityManager->flush();
-        $this->assertInstanceOf('Program\Entity\Program', $this->program);
-        $this->assertNotNull($this->program->getId());
-        $this->assertSame($this->programData['program'], $this->program->getProgram());
+        $this->assertInstanceOf('Program\Entity\Program', $program);
+        $this->assertNotNull($program->getId());
     }
 }
