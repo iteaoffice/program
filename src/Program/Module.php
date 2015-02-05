@@ -93,7 +93,7 @@ class Module implements
 
                     return $renderDoa;
                 },
-            ]
+            ],
         ];
     }
 

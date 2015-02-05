@@ -151,7 +151,7 @@ class NdaFieldset extends Fieldset implements InputFilterProviderInterface
                         ]
                     ),
                 ],
-            ]
+            ],
         ];
     }
 }

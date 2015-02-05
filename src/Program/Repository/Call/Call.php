@@ -91,7 +91,7 @@ class Call extends EntityRepository
              */
             return [
                 'call'        => $queryBuilder->getQuery()->getOneOrNullResult(),
-                'versionType' => Type::TYPE_PO
+                'versionType' => Type::TYPE_PO,
             ];
         }
 
@@ -107,7 +107,7 @@ class Call extends EntityRepository
              */
             return [
                 'call'        => $queryBuilder->getQuery()->getOneOrNullResult(),
-                'versionType' => Type::TYPE_FPP
+                'versionType' => Type::TYPE_FPP,
             ];
         }
 
@@ -127,7 +127,7 @@ class Call extends EntityRepository
         if (!is_null($queryBuilder->getQuery()->getOneOrNullResult())) {
             return [
                 'call'        => $queryBuilder->getQuery()->getOneOrNullResult(),
-                'versionType' => Type::TYPE_PO
+                'versionType' => Type::TYPE_PO,
             ];
         }
 
@@ -142,7 +142,7 @@ class Call extends EntityRepository
 
         return [
             'call'        => $queryBuilder->getQuery()->getOneOrNullResult(),
-            'versionType' => Type::TYPE_FPP
+            'versionType' => Type::TYPE_FPP,
         ];
     }
 

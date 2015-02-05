@@ -90,7 +90,7 @@ class UploadDoa extends Form implements InputFilterProviderInterface
                         ]
                     ),
                 ],
-            ]
+            ],
         ];
     }
 }

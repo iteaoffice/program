@@ -208,7 +208,7 @@ class Program extends EntityAbstract implements ResourceInterface
     public function getArrayCopy()
     {
         return [
-            'call' => $this->call
+            'call' => $this->call,
         ];
     }
 
