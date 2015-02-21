@@ -84,7 +84,7 @@ class CallInformationBox extends AbstractHelper implements ServiceLocatorAwareIn
             [
                 $call,
                 $dateDifference->format($format),
-                $referenceDate->format('l, d F Y H:i:s T')
+                $referenceDate->format('l, d F Y H:i:s T'),
             ],
             $contents[$result]
         );

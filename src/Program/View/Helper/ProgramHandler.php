@@ -256,7 +256,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
                 'displayNameCall'   => $displayName,
                 'calls'             => $this->getCallService()->findNonEmptyCalls(),
                 'callId'            => !is_null($call) ? $call->getId() : null,
-                'selectedProgramId' => !is_null($program) ? $program->getId() : null
+                'selectedProgramId' => !is_null($program) ? $program->getId() : null,
             ]
         );
     }
@@ -270,7 +270,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
             'program/partial/entity/programcall-map',
             [
                 'call'      => $this->getCallService(),
-                'countries' => $this->getCallService()->findCountryByCall($call)
+                'countries' => $this->getCallService()->findCountryByCall($call),
             ]
         );
     }
@@ -291,7 +291,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
                 'projects' => $this->getCallService()->getProjectService()->findProjectsByCall(
                     $call,
                     $whichProjects
-                )->getQuery()->getResult()
+                )->getQuery()->getResult(),
             ]
         );
     }
@@ -304,7 +304,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
         return $this->getZfcTwigRenderer()->render(
             'program/partial/entity/programcall-title',
             [
-                'call' => $this->getCallService()
+                'call' => $this->getCallService(),
             ]
         );
     }
@@ -326,7 +326,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
                 'projects'         => $arr['0']['projects'],
                 'partners'         => $arr['0']['partners'],
                 'funding_eu'       => $arr['0']['funding_eu'],
-                'funding_national' => $arr['0']['funding_national']
+                'funding_national' => $arr['0']['funding_national'],
             ]
         );
     }

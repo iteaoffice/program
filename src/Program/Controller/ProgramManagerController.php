@@ -72,7 +72,7 @@ class ProgramManagerController extends ProgramAbstractController
                 'zfcadmin/program-manager/list',
                 [
                     'entity' => strtolower($this->getEvent()->getRouteMatch()->getParam('entity')),
-                    'id'     => $result->getId()
+                    'id'     => $result->getId(),
                 ]
             );
         }
@@ -112,7 +112,7 @@ class ProgramManagerController extends ProgramAbstractController
                 'zfcadmin/program-manager/list',
                 [
                     'entity' => strtolower($entity->get('dashed_entity_name')),
-                    'id'     => $result->getId()
+                    'id'     => $result->getId(),
                 ]
             );
         }
