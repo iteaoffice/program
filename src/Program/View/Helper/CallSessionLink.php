@@ -1,30 +1,31 @@
 <?php
 
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * PHP version 5
  *
  * @category   Program
- * @package    View
- * @subpackage Helper
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
+
 namespace Program\View\Helper;
 
 use Program\Entity\Call\Session;
 
 /**
- * Create a link to an project
+ * Create a link to an project.
  *
  * @category   Project
- * @package    View
- * @subpackage Helper
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @license    http://debranova.org/licence.txt proprietary
+ *
  * @link       http://debranova.org
  */
 class CallSessionLink extends LinkAbstract
@@ -40,6 +41,7 @@ class CallSessionLink extends LinkAbstract
      * @param string  $show
      *
      * @return string
+     *
      * @throws \InvalidArgumentException
      */
     public function __invoke(
@@ -50,7 +52,7 @@ class CallSessionLink extends LinkAbstract
         $this->setSession($session);
         $this->setAction($action);
         $this->setShow($show);
-        /**
+        /*
          * Set the non-standard options needed to give an other link value
          */
         $this->setShowOptions(
@@ -83,9 +85,7 @@ class CallSessionLink extends LinkAbstract
     }
 
     /**
-     * Extract the relevant parameters based on the action
-     *
-     * @return void;
+     * Extract the relevant parameters based on the action.
      */
     public function parseAction()
     {

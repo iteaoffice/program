@@ -1,15 +1,16 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Project
- * @package    Entity
- * @subpackage Call
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
+
 namespace Program\Entity\Call;
 
 use Doctrine\Common\Collections;
@@ -30,12 +31,11 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * @Annotation\Name("program_call")
  *
  * @category    Program
- * @package     Entity
  */
 class Call extends EntityAbstract implements ResourceInterface, InputFilterAwareInterface
 {
     /**
-     * Produce a list of different statuses in a call, which are required for representation and access control
+     * Produce a list of different statuses in a call, which are required for representation and access control.
      */
     const FPP_CLOSED = 'FPP_CLOSED';
     const FPP_NOT_OPEN = 'FPP_NOT_OPEN';
@@ -64,6 +64,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Exclude()
+     *
      * @var integer
      */
     private $id;
@@ -71,6 +72,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
      * @ORM\Column(name="programcall", type="string", length=5, nullable=true)
      * @Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-program-call"})
+     *
      * @var string
      */
     private $call;
@@ -78,6 +80,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
      * @ORM\Column(name="docref", type="string", length=255, nullable=false, unique=true)
      * @Gedmo\Slug(fields={"call"})
      * @Annotation\Exclude()
+     *
      * @var string
      */
     private $docRef;
@@ -86,6 +89,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
      * @Annotation\Type("\Zend\Form\Element\DateTime")
      * @Annotation\Attributes({"step":"any"})
      * @Annotation\Options({"label":"txt-po-open-date", "format":"Y-m-d H:i:s"})
+     *
      * @var \DateTime
      */
     private $poOpenDate;
@@ -94,6 +98,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
      * @Annotation\Type("\Zend\Form\Element\DateTime")
      * @Annotation\Attributes({"step":"any"})
      * @Annotation\Options({"label":"txt-po-close-date", "format":"Y-m-d H:i:s"})
+     *
      * @var \DateTime
      */
     private $poCloseDate;
@@ -102,6 +107,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
      * @Annotation\Type("\Zend\Form\Element\DateTime")
      * @Annotation\Attributes({"step":"any"})
      * @Annotation\Options({"label":"txt-po-grace-date", "format":"Y-m-d H:i:s","help-block":"txt-po-grace-date-inline-help"})
+     *
      * @var \DateTime
      */
     private $poGraceDate;
@@ -110,6 +116,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
      * @Annotation\Type("\Zend\Form\Element\DateTime")
      * @Annotation\Attributes({"step":"any"})
      * @Annotation\Options({"label":"txt-fpp-open-date", "format":"Y-m-d H:i:s"})
+     *
      * @var \DateTime
      */
     private $fppOpenDate;
@@ -118,6 +125,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
      * @Annotation\Type("\Zend\Form\Element\DateTime")
      * @Annotation\Attributes({"step":"any"})
      * @Annotation\Options({"label":"txt-fpp-close-date", "format":"Y-m-d H:i:s"})
+     *
      * @var \DateTime
      */
     private $fppCloseDate;
@@ -126,6 +134,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
      * @Annotation\Type("\Zend\Form\Element\DateTime")
      * @Annotation\Attributes({"step":"any"})
      * @Annotation\Options({"label":"txt-fpp-grace-date", "format":"Y-m-d H:i:s","help-block":"txt-fpp-grace-date-inline-help"})
+     *
      * @var \DateTime
      */
     private $fppGraceDate;
@@ -135,6 +144,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
      * @Annotation\Attributes({"array":"doaRequirementTemplates"})
      * @Annotation\Options({"label":"txt-doa-requirements","help-block":"txt-doa-requirements-inline-help"})
      * @Annotation\Required(true)
+     *
      * @var int
      */
     private $doaRequirement;
@@ -144,12 +154,14 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
      * @Annotation\Options({"target_class":"Program\Entity\Program"})
      * @Annotation\Attributes({"label":"txt-program", "required":"true","class":"span3"})
+     *
      * @var \Program\Entity\Program
      */
     private $program;
     /**
      * @ORM\OneToMany(targetEntity="\Project\Entity\Project", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
+     *
      * @var \Project\Entity\Project[]
      */
     private $project;
@@ -158,60 +170,69 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="roadmap_id", referencedColumnName="roadmap_id")
      * })
+     *
      * @var \Program\Entity\Roadmap
      */
     private $roadmap;
     /**
      * @ORM\ManyToMany(targetEntity="Program\Entity\Nda", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
+     *
      * @var \Program\Entity\Nda[]
      */
     private $nda;
     /**
      * @ORM\ManyToMany(targetEntity="\Publication\Entity\Publication", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
+     *
      * @var \Publication\Entity\Publication[]
      */
     private $publication;
     /**
      * @ORM\ManyToMany(targetEntity="Event\Entity\Meeting\Meeting", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
+     *
      * @var \Event\Entity\Meeting\Meeting[]
      */
     private $meeting;
     /**
      * @ORM\ManyToMany(targetEntity="Calendar\Entity\Calendar", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
+     *
      * @var \Calendar\Entity\Calendar[]
      */
     private $calendar;
     /**
      * @ORM\OneToMany(targetEntity="Program\Entity\Call\Doa", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
+     *
      * @var \Program\Entity\Call\Doa[]
      */
     private $doa;
     /**
      * @ORM\OneToMany(targetEntity="Program\Entity\Call\Image", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
+     *
      * @var \Program\Entity\Call\Image[]
      */
     private $image;
     /**
      * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Idea", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
+     *
      * @var \Project\Entity\Idea\Idea[]
      */
     private $idea;
     /**
      * @ORM\OneToMany(targetEntity="Program\Entity\Call\Session", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
+     *
      * @var \Program\Entity\Call\Session[]
      */
     private $session;
 
     /**
-     * Class constructor
+     * Class constructor.
      */
     public function __construct()
     {
@@ -226,7 +247,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * Magic Getter
+     * Magic Getter.
      *
      * @param $property
      *
@@ -238,12 +259,10 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * Magic Setter
+     * Magic Setter.
      *
      * @param $property
      * @param $value
-     *
-     * @return void
      */
     public function __set($property, $value)
     {
@@ -251,7 +270,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * toString returns the name
+     * toString returns the name.
      *
      * @return string
      */
@@ -261,7 +280,8 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * Create a short name
+     * Create a short name.
+     *
      * @return string
      */
     public function shortName()
@@ -293,7 +313,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * Returns the string identifier of the Resource
+     * Returns the string identifier of the Resource.
      *
      * @return string
      */
@@ -303,11 +323,10 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * Set input filter
+     * Set input filter.
      *
      * @param InputFilterInterface $inputFilter
      *
-     * @return void
      * @throws \Exception
      */
     public function setInputFilter(InputFilterInterface $inputFilter)
@@ -501,7 +520,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * Needed for the hydration of form elements
+     * Needed for the hydration of form elements.
      *
      * @return array
      */
@@ -823,7 +842,8 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @param  bool       $textual
+     * @param bool $textual
+     *
      * @return int|string
      */
     public function getDoaRequirement($textual = false)

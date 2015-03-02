@@ -1,21 +1,23 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Project
- * @package    Entity
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
+
 namespace Program\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
 
 /**
- * RoadmapLog
+ * RoadmapLog.
  *
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("roadmap_log")
@@ -28,6 +30,7 @@ class RoadmapLog
      * @ORM\Column(name="log_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
      * @var integer
      */
     private $id;
@@ -36,21 +39,25 @@ class RoadmapLog
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id")
      * })
+     *
      * @var \Contact\Entity\Contact
      */
     private $contact;
     /**
      * @ORM\Column(name="date_created", type="datetime", nullable=false)
+     *
      * @var \DateTime
      */
     private $dateCreated;
     /**
      * @ORM\Column(name="uri", type="string", length=255, nullable=true)
+     *
      * @var string
      */
     private $uri;
     /**
      * @ORM\Column(name="log", type="string", length=255, nullable=true)
+     *
      * @var string
      */
     private $log;

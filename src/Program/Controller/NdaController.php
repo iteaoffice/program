@@ -1,14 +1,16 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Program
- * @package    Controller
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
+
 namespace Program\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -19,12 +21,13 @@ use Zend\Validator\File\FilesSize;
 use Zend\View\Model\ViewModel;
 
 /**
- * Create a link to an project
+ * Create a link to an project.
  *
  * @category   Program
- * @package    Controller
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @license    http://debranova.org/licence.txt proprietary
+ *
  * @link       http://debranova.org
  */
 class NdaController extends ProgramAbstractController
@@ -93,9 +96,10 @@ class NdaController extends ProgramAbstractController
     }
 
     /**
-     * Action to replace an mis-uploaded DoA
+     * Action to replace an mis-uploaded DoA.
      *
      * @return ViewModel
+     *
      * @throws \Zend\Form\Exception\InvalidArgumentException
      * @throws \InvalidArgumentException
      * @throws \Zend\Mvc\Exception\DomainException
@@ -119,7 +123,7 @@ class NdaController extends ProgramAbstractController
         if ($this->getRequest()->isPost()) {
             if (!isset($data['cancel']) && $form->isValid()) {
                 $fileData = $this->params()->fromFiles();
-                /**
+                /*
                  * Remove the current entity
                  */
                 foreach ($nda->getObject() as $object) {
@@ -173,7 +177,7 @@ class NdaController extends ProgramAbstractController
         //Create an empty NDA object
         $nda = new Nda();
         $nda->setContact($this->zfcUserAuthentication()->getIdentity());
-        /**
+        /*
          * Add the call when a id is given
          */
         if (!is_null($this->getEvent()->getRouteMatch()->getParam('id'))) {
@@ -212,7 +216,7 @@ class NdaController extends ProgramAbstractController
         if (is_null($nda) || sizeof($nda->getObject()) === 0) {
             return $this->notFoundAction();
         }
-        /**
+        /*
          * Due to the BLOB issue, we treat this as an array and we need to capture the first element
          */
         $object = $nda->getObject()->first()->getObject();

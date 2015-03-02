@@ -1,27 +1,30 @@
 <?php
 /**
- * Japaveh Webdesign copyright message placeholder
+ * Japaveh Webdesign copyright message placeholder.
  *
  * @category    Program
- * @package     Service
+ *
  * @author      Johan van der Heide <info@japaveh.nl>
  * @copyright   2004-2014 Japaveh Webdesign
  * @license     http://solodb.net/license.txt proprietary
+ *
  * @link        http://solodb.net
  */
+
 namespace Program\Service;
 
 use Zend\ServiceManager\InitializerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Japaveh Webdesign copyright message placeholder
+ * Japaveh Webdesign copyright message placeholder.
  *
  * @category    Program
- * @package     Service
+ *
  * @author      Johan van der Heide <info@japaveh.nl>
  * @copyright   2004-2014 Japaveh Webdesign
  * @license     http://solodb.net/license.txt proprietary
+ *
  * @link        http://solodb.net
  */
 class ServiceInitializer implements InitializerInterface
@@ -42,7 +45,7 @@ class ServiceInitializer implements InitializerInterface
             CallServiceAwareInterface::class    => CallService::class,
             ModuleOptionAwareInterface::class   => 'program_module_options',
         ];
-        /**
+        /*
          * Go over each interface to see if we should add an interface
          */
         foreach (class_implements($instance) as $interface) {

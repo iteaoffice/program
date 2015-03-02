@@ -1,53 +1,57 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Program
- * @package    Options
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
+
 namespace Program\Options;
 
 use Zend\Stdlib\AbstractOptions;
 
 /**
- * Create a link to an project
+ * Create a link to an project.
  *
  * @category   Program
- * @package    Options
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @license    http://debranova.org/licence.txt proprietary
+ *
  * @link       http://debranova.org
  */
 class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
 {
     /**
-     * Turn off strict options mode
+     * Turn off strict options mode.
      */
     protected $__strictMode__ = false;
     /**
-     * Location of the PDF having the NDA template
+     * Location of the PDF having the NDA template.
      *
      * @var string
      */
     protected $ndaTemplate = '';
     /**
-     * Boolean to turn the NDA functionality on or off
+     * Boolean to turn the NDA functionality on or off.
      *
      * @var bool
      */
     protected $hasNda = true;
     /**
-     * Location of the PDF having the DOA template
+     * Location of the PDF having the DOA template.
      *
      * @var string
      */
     protected $doaTemplate = '';
     /**
-     * How program calls to be displayed
+     * How program calls to be displayed.
+     *
      * @var String
      */
     protected $displayName = 'name';
@@ -94,6 +98,7 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
 
     /**
      * @param $displayName
+     *
      * @return $this
      */
     public function setDisplayName($displayName)

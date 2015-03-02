@@ -1,14 +1,16 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Project
- * @package    Entity
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
+
 namespace Program\Entity;
 
 use Doctrine\Common\Collections;
@@ -19,7 +21,7 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 
 /**
- * Technology
+ * Technology.
  *
  * @ORM\Table(name="technology")
  * @ORM\Entity
@@ -27,7 +29,6 @@ use Zend\InputFilter\InputFilterInterface;
  * @Annotation\Name("technology")
  *
  * @category    Program
- * @package     Entity
  */
 class Technology extends EntityAbstract
 {
@@ -35,6 +36,7 @@ class Technology extends EntityAbstract
      * @ORM\Column(name="technology_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
      * @var integer
      */
     private $id;
@@ -43,6 +45,7 @@ class Technology extends EntityAbstract
      * Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-technology"})
      * @Annotation\Required(true)
+     *
      * @var string
      */
     private $technology;
@@ -51,6 +54,7 @@ class Technology extends EntityAbstract
      * Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-description"})
      * @Annotation\Required(true)
+     *
      * @var string
      */
     private $description;
@@ -62,36 +66,41 @@ class Technology extends EntityAbstract
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
      * @Annotation\Options({"target_class":"Program\Entity\Roadmap"})
      * @Annotation\Attributes({"label":"txt-roadmap", "required":"true","class":"span3"})
+     *
      * @var \Program\Entity\Roadmap
      */
     private $roadmap;
     /**
      * @ORM\ManyToMany(targetEntity="Contact\Entity\Contact", cascade={"persist"}, mappedBy="technology")
      * @Annotation\Exclude()
+     *
      * @var \Contact\Entity\Contact[]
      */
     private $contact;
     /**
      * @ORM\ManyToMany(targetEntity="Organisation\Entity\Organisation", cascade={"persist"}, mappedBy="technology")
      * @Annotation\Exclude()
+     *
      * @var \Organisation\Entity\Organisation[]
      */
     private $organisation;
     /**
      * @ORM\ManyToMany(targetEntity="Project\Entity\Project", cascade={"persist"}, mappedBy="technology")
      * @Annotation\Exclude()
+     *
      * @var \Project\Entity\Project[]
      */
     private $project;
     /**
      * @ORM\ManyToMany(targetEntity="Project\Entity\Idea\Idea", cascade={"persist"}, mappedBy="technology")
      * @Annotation\Exclude()
+     *
      * @var \Project\Entity\Idea\Idea[]
      */
     private $idea;
 
     /**
-     * Class constructor
+     * Class constructor.
      */
     public function __construct()
     {
@@ -114,8 +123,6 @@ class Technology extends EntityAbstract
     /**
      * @param $property
      * @param $value
-     *
-     * @return void
      */
     public function __set($property, $value)
     {
@@ -123,7 +130,7 @@ class Technology extends EntityAbstract
     }
 
     /**
-     * Returns the string identifier of the Resource
+     * Returns the string identifier of the Resource.
      *
      * @return string
      */
@@ -133,7 +140,8 @@ class Technology extends EntityAbstract
     }
 
     /**
-     * ToString
+     * ToString.
+     *
      * @return string
      */
     public function __toString()
@@ -144,7 +152,6 @@ class Technology extends EntityAbstract
     /**
      * @param InputFilterInterface $inputFilter
      *
-     * @return void
      * @throws \Exception
      */
     public function setInputFilter(InputFilterInterface $inputFilter)
@@ -213,7 +220,8 @@ class Technology extends EntityAbstract
     }
 
     /**
-     * Needed for the hydration of form elements
+     * Needed for the hydration of form elements.
+     *
      * @return array
      */
     public function getArrayCopy()

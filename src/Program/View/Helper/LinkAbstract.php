@@ -1,16 +1,17 @@
 <?php
 
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category    Program
- * @package     View
- * @subpackage  Helper
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   2004-2014 ITEA Office
  * @license     http://debranova.org/license.txt proprietary
+ *
  * @link        http://debranova.org
  */
+
 namespace Program\View\Helper;
 
 use BjyAuthorize\Service\Authorize;
@@ -25,14 +26,14 @@ use Zend\View\Helper\Url;
 use Zend\View\HelperPluginManager;
 
 /**
- * Create a link to an document
+ * Create a link to an document.
  *
  * @category   Program
- * @package    View
- * @subpackage Helper
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
 abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwareInterface
@@ -83,19 +84,19 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
     protected $showOptions = [];
 
     /**
-     * This function produces the link in the end
+     * This function produces the link in the end.
      *
      * @return string
      */
     public function createLink()
     {
-        /**
-         * @var $url Url
+        /*
+         * @var Url
          */
         $url = $this->serviceLocator->get('url');
 
-        /**
-         * @var $serverUrl ServerUrl
+        /*
+         * @var ServerUrl
          */
         $serverUrl = $this->serviceLocator->get('serverUrl');
         $this->linkContent = [];
@@ -118,7 +119,7 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
     }
 
     /**
-     * Default version of the action
+     * Default version of the action.
      */
     public function parseAction()
     {
@@ -164,7 +165,7 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
                 $this->addLinkContent($this->getAlternativeShow());
                 break;
             case 'social':
-                /**
+                /*
                  * Social is treated in the createLink function, no content needs to be created
                  */
                 return;
@@ -357,8 +358,8 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
      */
     public function isAllowed($resource, $privilege = null)
     {
-        /**
-         * @var $isAllowed IsAllowed
+        /*
+         * @var IsAllowed
          */
         $isAllowed = $this->serviceLocator->get('isAllowed');
 
@@ -366,7 +367,7 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
     }
 
     /**
-     * Add a parameter to the list of parameters for the router
+     * Add a parameter to the list of parameters for the router.
      *
      * @param string $key
      * @param        $value
@@ -408,7 +409,7 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
 
     /**
      * RouteInterface match returned by the router.
-     * Use a test on is_null to have the possibility to overrule the serviceLocator lookup for unit tets reasons
+     * Use a test on is_null to have the possibility to overrule the serviceLocator lookup for unit tets reasons.
      *
      * @return RouteMatch.
      */

@@ -1,14 +1,15 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category    SoloDB
- * @package     Program
- * @subpackage  Module
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ *
  * @version     4.0
  */
+
 namespace Program;
 
 use Program\Controller\Plugin\RenderDoa;
@@ -49,7 +50,7 @@ class Module implements
     }
 
     /**
-     * Go to the service configuration
+     * Go to the service configuration.
      *
      * @return array
      */
@@ -74,7 +75,8 @@ class Module implements
     }
 
     /**
-     * Move this to here to have config cache working
+     * Move this to here to have config cache working.
+     *
      * @return array
      */
     public function getControllerPluginConfig()
@@ -98,7 +100,7 @@ class Module implements
     }
 
     /**
-     * Listen to the bootstrap event
+     * Listen to the bootstrap event.
      *
      * @param EventInterface $e
      *

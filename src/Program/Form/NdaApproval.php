@@ -1,12 +1,13 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category    Project
- * @package     Form
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
+
 namespace Program\Form;
 
 use Contact\Service\ContactService;
@@ -30,7 +31,7 @@ class NdaApproval extends Form implements InputFilterProviderInterface
         $this->setAttribute('method', 'post');
         $this->setAttribute('class', 'form-horizontal');
 
-        /**
+        /*
          * Create a fieldSet per NDA (and program)
          */
         foreach ($ndas as $nda) {

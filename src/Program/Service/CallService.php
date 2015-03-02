@@ -1,12 +1,13 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category    Program
- * @package     Service
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
+
 namespace Program\Service;
 
 use Affiliation\Service\AffiliationService;
@@ -20,14 +21,13 @@ use Project\Service\ProjectService;
 use Zend\Stdlib\ArrayObject;
 
 /**
- * CallService
+ * CallService.
  *
  * this is a generic wrapper service for all the other services
  *
  * First parameter of all methods (lowercase, underscore_separated)
  * will be used to fetch the correct model service, one exception is the 'linkModel'
  * method.
- *
  */
 class CallService extends ServiceAbstract
 {
@@ -70,7 +70,7 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * Get a list of not approved lois
+     * Get a list of not approved lois.
      *
      * @return Nda[]
      */
@@ -80,7 +80,7 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * Find the open call based on the request type
+     * Find the open call based on the request type.
      *
      * @param int $type ;
      *
@@ -108,7 +108,7 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * Find the last open call and check which versionType is active
+     * Find the last open call and check which versionType is active.
      *
      * @return \stdClass
      */
@@ -128,7 +128,7 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * Return true when the call is open specified for the given type
+     * Return true when the call is open specified for the given type.
      *
      * @param $type ;
      *
@@ -153,7 +153,7 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * Return true when the call is in grace mode
+     * Return true when the call is in grace mode.
      *
      * @return bool
      */
@@ -163,7 +163,7 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * Returns true when a DOA per partner is required
+     * Returns true when a DOA per partner is required.
      *
      * @return bool
      */
@@ -173,7 +173,7 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * Return an object with the first and last call in the database
+     * Return an object with the first and last call in the database.
      *
      * @return \stdClass
      */
@@ -197,7 +197,7 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * Return all calls which have at least one project
+     * Return all calls which have at least one project.
      *
      * @return Call[]
      */
@@ -220,12 +220,12 @@ class CallService extends ServiceAbstract
 
     /**
      * Return the current status of the given all with given the current date
-     * Return a status and the relevant date
+     * Return a status and the relevant date.
      *
      * @return ArrayObject
+     *
      * @method \DateTime $result
      * @method \DateTime $referenceDate
-     *
      */
     public function getCallStatus()
     {
@@ -235,7 +235,7 @@ class CallService extends ServiceAbstract
             }
 
             $this->callStatus = new ArrayObject();
-            /**
+            /*
              * Go over the dates and find the most suited date.
              */
             $type = null;
@@ -338,7 +338,8 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * Returns the Call
+     * Returns the Call.
+     *
      * @return string
      */
     public function parseCall()
@@ -347,7 +348,8 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * @param  Call  $call
+     * @param Call $call
+     *
      * @return mixed
      */
     public function findCountryByCall(Call $call)
@@ -362,6 +364,7 @@ class CallService extends ServiceAbstract
      * @param        $docRef
      *
      * @throws \InvalidArgumentException
+     *
      * @return EntityAbstract
      */
     public function findEntityByDocRef($entity, $docRef)
@@ -380,7 +383,8 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * @param  Call  $call
+     * @param Call $call
+     *
      * @return mixed
      */
     public function findProjectByCall(Call $call, $which)
@@ -392,7 +396,7 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * Upload a NDA to the system and store it for the user
+     * Upload a NDA to the system and store it for the user.
      *
      * @param array   $file
      * @param Contact $contact

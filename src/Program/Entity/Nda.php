@@ -1,14 +1,16 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Project
- * @package    Entity
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
+
 namespace Program\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,7 +20,7 @@ use Zend\Form\Annotation;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
- * Entity for a nda
+ * Entity for a nda.
  *
  * @ORM\Table(name="nda")
  * @ORM\Entity(repositoryClass="Program\Repository\Nda")
@@ -26,7 +28,6 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * @Annotation\Name("nda")
  *
  * @category    Contact
- * @package     Entity
  */
 class Nda extends EntityAbstract implements ResourceInterface
 {
@@ -34,40 +35,47 @@ class Nda extends EntityAbstract implements ResourceInterface
      * @ORM\Column(name="nda_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
      * @var integer
      */
     private $id;
     /**
      * @ORM\Column(name="date_approved", type="datetime", nullable=true)
+     *
      * @var \DateTime
      */
     private $dateApproved;
     /**
      * @ORM\Column(name="date_signed", type="date", nullable=true)
      * @Gedmo\Timestampable(on="create")
+     *
      * @var \DateTime
      */
     private $dateSigned;
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\ContentType", cascade={"persist"}, inversedBy="programNna")
      * @ORM\JoinColumn(name="contenttype_id", referencedColumnName="contenttype_id", nullable=false)
+     *
      * @var \General\Entity\ContentType
      */
     private $contentType;
     /**
      * @ORM\Column(name="size", type="integer", nullable=false)
+     *
      * @var integer
      */
     private $size;
     /**
      * @ORM\Column(name="date_created", type="datetime", nullable=false)
      * @Gedmo\Timestampable(on="create")
+     *
      * @var \DateTime
      */
     private $dateCreated;
     /**
      * @ORM\Column(name="date_updated", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="update")
+     *
      * @var \DateTime
      */
     private $dateUpdated;
@@ -76,6 +84,7 @@ class Nda extends EntityAbstract implements ResourceInterface
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id")
      * })
+     *
      * @var \Contact\Entity\Contact
      */
     private $contact;
@@ -85,18 +94,20 @@ class Nda extends EntityAbstract implements ResourceInterface
      *      joinColumns={@ORM\JoinColumn(name="nda_id", referencedColumnName="nda_id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="programcall_id", referencedColumnName="programcall_id")}
      * )
+     *
      * @var \Program\Entity\Call\Call[]|ArrayCollection
      */
     private $call;
     /**
      * @ORM\OneToMany(targetEntity="\Program\Entity\NdaObject", cascade={"persist"}, mappedBy="nda")
      * @Annotation\Exclude()
+     *
      * @var \Program\Entity\NdaObject[]|ArrayCollection
      */
     private $object;
 
     /**
-     * Class constructor
+     * Class constructor.
      */
     public function __construct()
     {
@@ -116,8 +127,6 @@ class Nda extends EntityAbstract implements ResourceInterface
     /**
      * @param $property
      * @param $value
-     *
-     * @return void
      */
     public function __set($property, $value)
     {
@@ -125,12 +134,13 @@ class Nda extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * ToString
+     * ToString.
+     *
      * @return string
      */
     public function __toString()
     {
-        /**
+        /*
          * Return an empty value when no id is known
          */
         if (is_null($this->id)) {
@@ -141,7 +151,7 @@ class Nda extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * Parse a filename
+     * Parse a filename.
      *
      * @return string
      */
@@ -191,7 +201,7 @@ class Nda extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * Returns the string identifier of the Resource
+     * Returns the string identifier of the Resource.
      *
      * @return string
      */

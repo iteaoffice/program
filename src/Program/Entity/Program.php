@@ -1,14 +1,16 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Project
- * @package    Entity
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
+
 namespace Program\Entity;
 
 use Doctrine\Common\Collections;
@@ -26,7 +28,6 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * @Annotation\Name("contact_contact")
  *
  * @category    Contact
- * @package     Entity
  */
 class Program extends EntityAbstract implements ResourceInterface
 {
@@ -34,6 +35,7 @@ class Program extends EntityAbstract implements ResourceInterface
      * @ORM\Column(name="program_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
      * @var int
      */
     private $id;
@@ -41,6 +43,7 @@ class Program extends EntityAbstract implements ResourceInterface
      * @ORM\Column(name="program", type="string", length=10, nullable=false)
      * @Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-program-name"})
+     *
      * @var string
      */
     private $program;
@@ -48,30 +51,34 @@ class Program extends EntityAbstract implements ResourceInterface
      * @ORM\Column(name="number", type="string", length=10, nullable=true)
      * @Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-program-number"})
+     *
      * @var string
      */
     private $number;
     /**
      * @ORM\OneToMany(targetEntity="\Program\Entity\Call\Call", cascade={"persist"}, mappedBy="program")
      * @Annotation\Exclude()
+     *
      * @var \Program\Entity\Call\Call[]
      */
     private $call;
     /**
      * @ORM\OneToMany(targetEntity="\Program\Entity\Doa", cascade={"persist"}, mappedBy="program")
      * @Annotation\Exclude()
+     *
      * @var \Program\Entity\Doa[]
      */
     private $doa;
     /**
      * @ORM\OneToMany(targetEntity="\Contact\Entity\Dnd", cascade={"persist"}, mappedBy="program")
      * @Annotation\Exclude()
+     *
      * @var \Contact\Entity\Dnd[]
      */
     private $contactDnd;
 
     /**
-     * Class constructor
+     * Class constructor.
      */
     public function __construct()
     {
@@ -80,7 +87,7 @@ class Program extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * Returns the string identifier of the Resource
+     * Returns the string identifier of the Resource.
      *
      * @return string
      */
@@ -90,7 +97,7 @@ class Program extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * Magic Getter
+     * Magic Getter.
      *
      * @param $property
      *
@@ -102,12 +109,10 @@ class Program extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * Magic Setter
+     * Magic Setter.
      *
      * @param $property
      * @param $value
-     *
-     * @return void
      */
     public function __set($property, $value)
     {
@@ -115,7 +120,7 @@ class Program extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * toString returns the name
+     * toString returns the name.
      *
      * @return string
      */
@@ -125,11 +130,10 @@ class Program extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * Set input filter
+     * Set input filter.
      *
      * @param InputFilterInterface $inputFilter
      *
-     * @return void
      * @throws \Exception
      */
     public function setInputFilter(InputFilterInterface $inputFilter)
@@ -201,7 +205,7 @@ class Program extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * Needed for the hydration of form elements
+     * Needed for the hydration of form elements.
      *
      * @return array
      */

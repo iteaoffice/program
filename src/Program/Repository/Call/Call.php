@@ -1,13 +1,13 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category    Program
- * @package     Repository
- * @subpackage  Call
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
+
 namespace Program\Repository\Call;
 
 use Doctrine\ORM\EntityRepository;
@@ -16,7 +16,6 @@ use Project\Entity\Version\Type;
 
 /**
  * @category    Program
- * @package     Repository
  */
 class Call extends EntityRepository
 {
@@ -82,11 +81,11 @@ class Call extends EntityRepository
         $queryBuilder->where('c.poOpenDate < :today')
             ->andWhere('c.poCloseDate > :today OR c.poGraceDate > :today')
             ->setParameter('today', $today);
-        /**
+        /*
          * Check first if we find an open PO
          */
         if (!is_null($queryBuilder->getQuery()->getOneOrNullResult())) {
-            /**
+            /*
              * We have found an open PO and call, return the result
              */
             return [
@@ -98,11 +97,11 @@ class Call extends EntityRepository
         $queryBuilder->where('c.fppOpenDate < :today')
             ->andWhere('c.fppCloseDate > :today OR c.fppGraceDate > :today')
             ->setParameter('today', $today);
-        /**
+        /*
          * Check first if we find an open FPP
          */
         if (!is_null($queryBuilder->getQuery()->getOneOrNullResult())) {
-            /**
+            /*
              * We have found an open PO and call, return the result
              */
             return [
@@ -111,7 +110,7 @@ class Call extends EntityRepository
             ];
         }
 
-        /**
+        /*
          * Still no result? Then no period is active open, but we will no try to find if
          * We are _between_ an PO and FPP
          */
@@ -131,7 +130,7 @@ class Call extends EntityRepository
             ];
         }
 
-        /**
+        /*
          * Still no result? Return the latest FPP (and reset the previous settings)
          */
         $queryBuilder = $this->_em->createQueryBuilder();
@@ -147,12 +146,13 @@ class Call extends EntityRepository
     }
 
     /**
-     * This function returns an array with three elements
+     * This function returns an array with three elements.
      *
      * 'partners' which contains the amount of partners
      * 'projects' which contains the amount of projects
      *
-     * @param  CallEntity $call
+     * @param CallEntity $call
+     *
      * @return array
      */
     public function findProjectAndPartners(CallEntity $call)

@@ -1,15 +1,16 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Project
- * @package    Entity
- * @subpackage Call
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
+
 namespace Program\Entity\Call;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -19,7 +20,6 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  *
  * @category    Contact
- * @package     Entity
  */
 class Image
 {
@@ -27,16 +27,19 @@ class Image
      * @ORM\Column(name="programcall_image_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
      * @var integer
      */
     private $id;
     /**
      * @ORM\Column(name="image", type="blob", nullable=true)
+     *
      * @var resource
      */
     private $image;
     /**
      * @ORM\Column(name="image_extension", type="string", length=45, nullable=true)
+     *
      * @var string
      */
     private $imageExtension;
@@ -45,6 +48,7 @@ class Image
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="programcall_id", referencedColumnName="programcall_id", nullable=false)
      * })
+     *
      * @var \Program\Entity\Call\Call
      */
     private $call;

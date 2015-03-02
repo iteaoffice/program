@@ -1,13 +1,13 @@
 <?php
 /**
- * Debranova copyright message placeholder
+ * Debranova copyright message placeholder.
  *
  * @category    Program
- * @package     Acl
- * @subpackage  Assertion
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 Debranova
  */
+
 namespace Program\Acl\Assertion;
 
 use Admin\Entity\Access;
@@ -18,13 +18,12 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
 use Zend\Permissions\Acl\Role\RoleInterface;
 
 /**
- * Class Program
- * @package Program\Acl\Assertion
+ * Class Program.
  */
 class Nda extends AssertionAbstract
 {
     /**
-     * Returns true if and only if the assertion conditions are met
+     * Returns true if and only if the assertion conditions are met.
      *
      * This method is passed the ACL, Role, Resource, and privilege to which the authorization query applies. If the
      * $role, $resource, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
@@ -41,13 +40,13 @@ class Nda extends AssertionAbstract
     {
         $id = $this->getRouteMatch()->getParam('id');
 
-        /**
+        /*
          * When the privilege is_null (not given by the isAllowed helper), get it from the routeMatch
          */
         if (is_null($privilege)) {
             $privilege = $this->getRouteMatch()->getParam('privilege');
         }
-        /**
+        /*
          * @var $resource NdaEntity
          */
         if (!$resource instanceof NdaEntity && !is_null($id)) {
@@ -57,7 +56,7 @@ class Nda extends AssertionAbstract
             case 'upload':
                 return $this->hasContact();
             case 'replace':
-                /**
+                /*
                  * For the replace we need to see if the user has access on the editing of the program
                  * and the acl should not be approved
                  */
@@ -67,7 +66,7 @@ class Nda extends AssertionAbstract
                 if (!$this->hasContact()) {
                     return false;
                 }
-                /**
+                /*
                  * When a call is set, check if that call has the right status
                  * The call can be found in 1 ways, or via the $id, or via the resource.
                  * The resource has goes first

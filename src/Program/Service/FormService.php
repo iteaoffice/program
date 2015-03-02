@@ -1,13 +1,14 @@
 <?php
 
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category    Program
- * @package     Service
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
+
 namespace Program\Service;
 
 use Zend\Form\Form;
@@ -35,6 +36,7 @@ class FormService implements ServiceLocatorAwareInterface
      * @param bool $bind
      *
      * @return array|object
+     *
      * @throws \InvalidArgumentException
      */
     public function getForm($className = null, $entity = null, $bind = true)
@@ -95,7 +97,7 @@ class FormService implements ServiceLocatorAwareInterface
     }
 
     /**
-     * Set the service locator
+     * Set the service locator.
      *
      * @param ServiceLocatorInterface $serviceLocator
      */
@@ -105,7 +107,7 @@ class FormService implements ServiceLocatorAwareInterface
     }
 
     /**
-     * Get the service locator
+     * Get the service locator.
      *
      * @return ServiceLocatorInterface
      */

@@ -1,16 +1,18 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * PHP Version 5
  *
  * @category    Affiliation
- * @package     Controller
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   2004-2014 ITEA Office
  * @license     http://debranova.org/license.txt proprietary
+ *
  * @link        http://debranova.org
  */
+
 namespace Program\Controller;
 
 use Contact\Service\ContactServiceAwareInterface;
@@ -24,13 +26,14 @@ use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 /**
- * Affiliation controller
+ * Affiliation controller.
  *
  * @category   Affiliation
- * @package    Controller
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
 class NdaManagerController extends ProgramAbstractController implements
@@ -94,8 +97,8 @@ class NdaManagerController extends ProgramAbstractController implements
 
         //Get contacts in an organisation
         if ($this->getRequest()->isPost() && $form->isValid()) {
-            /**
-             * @var $nda Nda
+            /*
+             * @var Nda
              */
             $nda = $form->getData();
 
@@ -122,7 +125,7 @@ class NdaManagerController extends ProgramAbstractController implements
             $fileData = $this->params()->fromFiles();
 
             if ($fileData['nda']['file']['error'] === 0) {
-                /**
+                /*
                  * Replace the content of the object
                  */
                 if (!$nda->getObject()->isEmpty()) {
@@ -143,7 +146,7 @@ class NdaManagerController extends ProgramAbstractController implements
                 );
             }
 
-            /**
+            /*
              * The programme call needs to have a dedicated treatment
              */
             if (!empty($data['nda']['programCall'])) {
@@ -176,7 +179,7 @@ class NdaManagerController extends ProgramAbstractController implements
     }
 
     /**
-     * Dedicated action to approve NDAs via an AJAX call
+     * Dedicated action to approve NDAs via an AJAX call.
      *
      * @return JsonModel
      */
@@ -203,8 +206,8 @@ class NdaManagerController extends ProgramAbstractController implements
             );
         }
 
-        /**
-         * @var $nda Nda
+        /*
+         * @var Nda
          */
         $nda = $this->getCallService()->findEntityById('Nda', $nda);
         $nda->setDateSigned(\DateTime::createFromFormat('Y-h-d', $dateSigned));

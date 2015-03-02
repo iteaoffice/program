@@ -1,14 +1,16 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Project
- * @package    Entity
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
+
 namespace Program\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -18,7 +20,7 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 
 /**
- * Program
+ * Program.
  *
  * @ORM\Table(name="funder")
  * @ORM\Entity
@@ -26,20 +28,19 @@ use Zend\InputFilter\InputFilterInterface;
  * @Annotation\Name("funder")
  *
  * @category    Program
- * @package     Entity
  */
 class Funder extends EntityAbstract
 {
     /**
-     * Constant for hideOnWebsite = 0
+     * Constant for hideOnWebsite = 0.
      */
     const HIDE_ON_WEBSITE = 0;
     /**
-     * Constant for hideOnWebsite = 1
+     * Constant for hideOnWebsite = 1.
      */
     const SHOW_ON_WEBSITE = 1;
     /**
-     * Textual versions of the showOnWebsite
+     * Textual versions of the showOnWebsite.
      *
      * @var array
      */
@@ -63,6 +64,7 @@ class Funder extends EntityAbstract
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
      * @Annotation\Options({"target_class":"Contact\Entity\Contact"})
      * @Annotation\Attributes({"label":"txt-contact", "required":"true","class":"span3"})
+     *
      * @var \Program\Entity\Program
      */
     private $contact;
@@ -74,6 +76,7 @@ class Funder extends EntityAbstract
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
      * @Annotation\Options({"target_class":"General\Entity\Country"})
      * @Annotation\Attributes({"label":"txt-country", "required":"true","class":"span3"})
+     *
      * @var \General\Entity\Country
      */
     private $country;
@@ -81,6 +84,7 @@ class Funder extends EntityAbstract
      * @ORM\Column(name="info_office", type="text", nullable=true)
      * @Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-info-office"})
+     *
      * @var string
      */
     private $infoOffice;
@@ -88,6 +92,7 @@ class Funder extends EntityAbstract
      * @ORM\Column(name="info_public", type="text", nullable=true)
      * @Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-info-public"})
+     *
      * @var string
      */
     private $infoPublic;
@@ -96,12 +101,13 @@ class Funder extends EntityAbstract
      * @Annotation\Type("Zend\Form\Element\Radio")
      * @Annotation\Attributes({"array":"showOnWebsiteTemplates"})
      * @Annotation\Attributes({"label":"txt-show-on-website"})
+     *
      * @var \int
      */
     private $showOnWebsite;
 
     /**
-     * Magic Getter
+     * Magic Getter.
      *
      * @param $property
      *
@@ -113,12 +119,10 @@ class Funder extends EntityAbstract
     }
 
     /**
-     * Magic Setter
+     * Magic Setter.
      *
      * @param $property
      * @param $value
-     *
-     * @return void
      */
     public function __set($property, $value)
     {
@@ -126,7 +130,7 @@ class Funder extends EntityAbstract
     }
 
     /**
-     * toString returns the name
+     * toString returns the name.
      *
      * @return string
      */
@@ -136,11 +140,10 @@ class Funder extends EntityAbstract
     }
 
     /**
-     * Set input filter
+     * Set input filter.
      *
      * @param InputFilterInterface $inputFilter
      *
-     * @return void
      * @throws \Exception
      */
     public function setInputFilter(InputFilterInterface $inputFilter)

@@ -1,14 +1,16 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Program
- * @package    Controller
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
+
 namespace Program\Controller;
 
 use BjyAuthorize\Controller\Plugin\IsAllowed;
@@ -28,13 +30,15 @@ use Zend\Mvc\Controller\Plugin\FlashMessenger;
 use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
 
 /**
- * Create a link to an project
+ * Create a link to an project.
  *
  * @category   Program
- * @package    Controller
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @license    http://debranova.org/licence.txt proprietary
+ *
  * @link       http://debranova.org
+ *
  * @method      ZfcUserAuthentication zfcUserAuthentication()
  * @method      FlashMessenger flashMessenger()
  * @method      IsAllowed isAllowed($resource, $action)
@@ -91,7 +95,7 @@ abstract class ProgramAbstractController extends AbstractActionController implem
     }
 
     /**
-     * Gateway to the Program Service
+     * Gateway to the Program Service.
      *
      * @return ProgramService
      */
@@ -113,7 +117,7 @@ abstract class ProgramAbstractController extends AbstractActionController implem
     }
 
     /**
-     * Gateway to the Call Service
+     * Gateway to the Call Service.
      *
      * @return CallService
      */
@@ -135,7 +139,7 @@ abstract class ProgramAbstractController extends AbstractActionController implem
     }
 
     /**
-     * Gateway to the General Service
+     * Gateway to the General Service.
      *
      * @return GeneralService
      */
@@ -157,7 +161,7 @@ abstract class ProgramAbstractController extends AbstractActionController implem
     }
 
     /**
-     * Gateway to the Organisation Service
+     * Gateway to the Organisation Service.
      *
      * @return OrganisationService
      */

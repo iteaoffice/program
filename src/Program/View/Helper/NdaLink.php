@@ -1,16 +1,17 @@
 <?php
 
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Program
- * @package    View
- * @subpackage Helper
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
+
 namespace Program\View\Helper;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -20,13 +21,13 @@ use Program\Entity\Call\Call;
 use Program\Entity\Nda;
 
 /**
- * Create a link to an project
+ * Create a link to an project.
  *
  * @category   Program
- * @package    View
- * @subpackage Helper
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @license    http://debranova.org/licence.txt proprietary
+ *
  * @link       http://debranova.org
  */
 class NdaLink extends LinkAbstract
@@ -47,6 +48,7 @@ class NdaLink extends LinkAbstract
      * @param Call   $call   program_acl_assertion_nda
      *
      * @return string
+     *
      * @throws \Exception
      */
     public function __invoke(Nda $nda = null, $action = 'upload', $show = 'text', Call $call = null)
@@ -112,9 +114,7 @@ class NdaLink extends LinkAbstract
     }
 
     /**
-     * Extract the relevant parameters based on the action
-     *
-     * @return void;
+     * Extract the relevant parameters based on the action.
      */
     public function parseAction()
     {
@@ -140,7 +140,7 @@ class NdaLink extends LinkAbstract
             case 'render':
                 $this->setRouter('program/nda/render');
                 $this->setText(sprintf($this->translate("txt-render-general-nda-title")));
-                /**
+                /*
                  * Produce special texts for call-dedicated NDA's
                  */
                 if ($call = $this->getNda()->getCall()) {
