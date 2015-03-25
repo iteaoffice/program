@@ -36,6 +36,7 @@ class UploadNda extends Form implements InputFilterProviderInterface
         $this->setAttribute('method', 'post');
         $this->setAttribute('class', 'form-horizontal');
         $this->setAttribute('enctype', 'multipart/form-data');
+        $this->setAttribute('action', '');
         $this->add(
             [
                 'type'    => '\Zend\Form\Element\File',

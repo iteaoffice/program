@@ -25,6 +25,8 @@ use Program\Service\FormService;
 use Program\Service\FormServiceAwareInterface;
 use Program\Service\ProgramService;
 use Program\Service\ProgramServiceAwareInterface;
+use Project\Service\ProjectService;
+use Zend\I18n\View\Helper\Translate;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
 use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
@@ -204,5 +206,22 @@ abstract class ProgramAbstractController extends AbstractActionController implem
         $this->contactService = $contactService;
 
         return $this;
+    }
+
+    /**
+     * Proxy for the flash messenger helper to have the string translated earlier.
+     *
+     * @param $string
+     *
+     * @return string
+     */
+    protected function translate($string)
+    {
+        /*
+         * @var Translate
+         */
+        $translate = $this->getServiceLocator()->get('ViewHelperManager')->get('translate');
+
+        return $translate($string);
     }
 }

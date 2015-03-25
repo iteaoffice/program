@@ -35,6 +35,7 @@ class UploadDoa extends Form implements InputFilterProviderInterface
         parent::__construct();
         $this->setAttribute('method', 'post');
         $this->setAttribute('class', 'form-horizontal');
+        $this->setAttribute('action', '');
         $this->setAttribute('enctype', 'multipart/form-data');
         $this->add(
             [

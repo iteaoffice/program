@@ -53,6 +53,7 @@ class CreateObject extends Form
         $this->add($objectFieldset);
         $this->setAttribute('method', 'post');
         $this->setAttribute('class', 'form-horizontal');
+        $this->setAttribute('action', '');
 
         $this->add(
             [

@@ -24,6 +24,9 @@ use Zend\InputFilter\InputFilter;
  */
 class FilterCreateObject extends InputFilter
 {
+    /**
+     * Class constructor.
+     */
     public function __construct()
     {
     }
