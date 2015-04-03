@@ -90,6 +90,10 @@ class ProgramLink extends LinkAbstract
                 $this->setRouter('zfcadmin/program-manager/new');
                 $this->setText($this->translate("txt-new-program"));
                 break;
+            case 'view':
+                $this->setRouter('zfcadmin/program-manager/view');
+                $this->setText(sprintf($this->translate("txt-view-program-%s"), $this->getProgram()));
+                break;
             case 'edit':
                 $this->setRouter('zfcadmin/program-manager/edit');
                 $this->setText(sprintf($this->translate("txt-edit-program-%s"), $this->getProgram()));
