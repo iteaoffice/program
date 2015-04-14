@@ -12,6 +12,7 @@ namespace Program\Repository\Call;
 
 use Doctrine\ORM\EntityRepository;
 use Program\Entity\Call\Call as CallEntity;
+use Program\Entity\Program as ProgramEntity;
 use Project\Entity\Version\Type;
 
 /**
@@ -54,7 +55,7 @@ class Call extends EntityRepository
     /**
      * @return CallEntity[]
      */
-    public function findNonEmptyCalls()
+    public function findNonEmptyCalls(ProgramEntity $program = null)
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('c');
@@ -66,6 +67,10 @@ class Call extends EntityRepository
         $subSelect->join('project.call', 'call');
         $queryBuilder->andWhere($queryBuilder->expr()->in('c.id', $subSelect->getDQL()));
 
+        if ($program !== null ) {
+            $queryBuilder->andWhere('c.program = :program')
+                ->setParameter('program', $program);
+        }
         return $queryBuilder->getQuery()->getResult();
     }
 

@@ -58,12 +58,13 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
         $this->extractContentParam($content);
 
         switch ($content->getHandler()->getHandler()) {
+
             case 'programcall_selector':
                 return $this->parseCallSelector(
                     !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null,
                     !$this->getProgramService()->isEmpty() ? $this->getProgramService()->getProgram() : null
                 );
-
+                break;
             /*
              * Shows the title , not included in the "programcall_info"
              * to allow some separation of content from the title
@@ -72,6 +73,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
                 return $this->parseProgramcallTitle(
                     !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null
                 );
+                break;
 
             case 'programcall_project':
                 return $this->parseProgramcallProjectList(
@@ -256,7 +258,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
             'program/partial/call-selector',
             [
                 'displayNameCall'   => $displayName,
-                'calls'             => $this->getCallService()->findNonEmptyCalls(),
+                'calls'             => $this->getCallService()->findNonEmptyCalls($program),
                 'callId'            => !is_null($call) ? $call->getId() : null,
                 'selectedProgramId' => !is_null($program) ? $program->getId() : null,
             ]
