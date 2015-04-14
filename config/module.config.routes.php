@@ -228,6 +228,15 @@ return [
                                     ],
                                 ],
                             ],
+                            'view'   => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/view/:entity/:id',
+                                    'defaults' => [
+                                        'action' => 'view',
+                                    ],
+                                ],
+                            ],
                             'delete' => [
                                 'type'    => 'Segment',
                                 'options' => [

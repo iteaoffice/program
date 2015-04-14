@@ -27,7 +27,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("contact_contact")
  *
- * @category    Contact
+ * @category    Program
  */
 class Program extends EntityAbstract implements ResourceInterface
 {
@@ -76,6 +76,13 @@ class Program extends EntityAbstract implements ResourceInterface
      * @var \Contact\Entity\Dnd[]
      */
     private $contactDnd;
+    /**
+     * @ORM\ManyToMany(targetEntity="Invoice\Entity\Method", cascade={"persist"}, mappedBy="program")
+     * @Annotation\Exclude()
+     *
+     * @var \Invoice\Entity\Method[]|Collections\ArrayCollection
+     */
+    private $invoiceMethod;
 
     /**
      * Class constructor.
@@ -84,6 +91,7 @@ class Program extends EntityAbstract implements ResourceInterface
     {
         $this->call = new Collections\ArrayCollection();
         $this->doa = new Collections\ArrayCollection();
+        $this->invoiceMethod = new Collections\ArrayCollection();
     }
 
     /**
@@ -310,5 +318,21 @@ class Program extends EntityAbstract implements ResourceInterface
     public function setDoa($doa)
     {
         $this->doa = $doa;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Invoice\Entity\Method[]
+     */
+    public function getInvoiceMethod()
+    {
+        return $this->invoiceMethod;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Invoice\Entity\Method[] $invoiceMethod
+     */
+    public function setInvoiceMethod($invoiceMethod)
+    {
+        $this->invoiceMethod = $invoiceMethod;
     }
 }
