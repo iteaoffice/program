@@ -19,6 +19,7 @@ use Program\Entity\Call\Session;
 use Program\Entity\Program;
 use Program\Service\CallService;
 use Program\Service\ProgramService;
+use Program\Options\ModuleOptions;
 use Project\Service\ProjectService;
 use Zend\Mvc\Router\Http\RouteMatch;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -64,7 +65,6 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
                     !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null,
                     !$this->getProgramService()->isEmpty() ? $this->getProgramService()->getProgram() : null
                 );
-                break;
             /*
              * Shows the title , not included in the "programcall_info"
              * to allow some separation of content from the title
@@ -73,13 +73,11 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
                 return $this->parseProgramcallTitle(
                     !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null
                 );
-                break;
 
             case 'programcall_project':
                 return $this->parseProgramcallProjectList(
                     !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null
                 );
-                break;
 
             /*
              * Info sheet with statistics
@@ -224,6 +222,14 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     {
         return $this->getServiceLocator()->get(ProgramService::class);
     }
+    
+    /**
+     * @return ModuleOptions
+     */
+    public function getModuleOptions()
+    {
+        return $this->getServiceLocator()->get('program_module_options');
+    }
 
     /**
      * @param Call $call
@@ -270,13 +276,19 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
      */
     public function parseProgramcallMap($call)
     {
-        return $this->getZfcTwigRenderer()->render(
-            'program/partial/entity/programcall-map',
-            [
-                'call'      => $this->getCallService(),
-                'countries' => $this->getCallService()->findCountryByCall($call),
-            ]
-        );
+        $options = $this->getModuleOptions();
+        $mapOptions = [
+            'clickable' => false,
+            'colorMin' => $options->getCountryColorFaded(),
+            'colorMax' => $options->getCountryColor(),
+            'focusOn' => ['x' => 0.5, 'y' => 0.5, 'scale' => 1.1], // Slight zoom
+            'height' => '340px'
+        ];
+        /**
+         * @var CountryMap
+         */
+        $countryMap = $this->serviceLocator->get('countryMap');;
+        return $countryMap($this->getCallService()->findCountryByCall($call), null, $mapOptions);
     }
 
     /**
