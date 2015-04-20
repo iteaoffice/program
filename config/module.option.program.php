@@ -19,5 +19,5 @@ $options = [
  * You do not need to edit below this line
  */
 return [
-    'program-option' => $options,
+    'program_option' => $options,
 ];
