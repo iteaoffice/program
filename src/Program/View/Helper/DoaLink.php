@@ -14,8 +14,9 @@
 
 namespace Program\View\Helper;
 
-use Organisation\Entity\Organisation;
+
 use Program\Acl\Assertion\Doa as DoaAssertion;
+use Organisation\Entity\Organisation;
 use Program\Entity\Doa;
 use Program\Entity\Program;
 
@@ -31,19 +32,6 @@ use Program\Entity\Program;
  */
 class DoaLink extends LinkAbstract
 {
-    /**
-     * @var Doa
-     */
-    protected $doa;
-    /**
-     * @var Organisation
-     */
-    protected $organisation;
-    /**
-     * @var Program
-     */
-    protected $program;
-
     /**
      * @param Doa          $doa
      * @param string       $action
@@ -73,7 +61,7 @@ class DoaLink extends LinkAbstract
             $this->getAction()
         )
         ) {
-            return '';
+            return 'Access denied';
         }
         $this->addRouterParam('entity', 'Doa');
         if (!is_null($this->getDoa())) {

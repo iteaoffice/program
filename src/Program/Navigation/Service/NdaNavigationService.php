@@ -49,7 +49,7 @@ class NdaNavigationService extends NavigationServiceAbstract
                             'pages'  => [
                                 [
                                     'label'  => $this->translate("txt-account-information"),
-                                    'route'  => 'contact/profile',
+                                    'route'  => 'community/contact/profile/view',
                                     'router' => $this->getRouter(),
                                     'pages'  => [
                                         [
@@ -79,7 +79,7 @@ class NdaNavigationService extends NavigationServiceAbstract
                             'pages'  => [
                                 [
                                     'label'  => $this->translate("txt-account-information"),
-                                    'route'  => 'contact/profile',
+                                    'route'  => 'community/contact/profile/view',
                                     'router' => $this->getRouter(),
                                     'pages'  => [
                                         [
@@ -106,7 +106,7 @@ class NdaNavigationService extends NavigationServiceAbstract
                         'pages'  => [
                             [
                                 'label'  => $this->translate("txt-account-information"),
-                                'route'  => 'contact/profile',
+                                'route'  => 'community/contact/profile/view',
                                 'router' => $this->getRouter(),
                                 'pages'  => [
                                     [
@@ -138,7 +138,7 @@ class NdaNavigationService extends NavigationServiceAbstract
                         'pages'  => [
                             [
                                 'label'  => $this->translate("txt-account-information"),
-                                'route'  => 'contact/profile',
+                                'route'  => 'community/contact/profile/view',
                                 'router' => $this->getRouter(),
                                 'pages'  => [
                                     [

@@ -224,6 +224,13 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
      */
     private $idea;
     /**
+     * @ORM\OneToMany(targetEntity="Project\Entity\Idea\MessageBoard", cascade={"persist"}, mappedBy="call")
+     * @Annotation\Exclude()
+     *
+     * @var \Project\Entity\Idea\MessageBoard[]
+     */
+    private $ideaMessageBoard;
+    /**
      * @ORM\OneToMany(targetEntity="Program\Entity\Call\Session", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
@@ -243,6 +250,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
         $this->doa = new Collections\ArrayCollection();
         $this->image = new Collections\ArrayCollection();
         $this->idea = new Collections\ArrayCollection();
+        $this->ideaMessageBoard = new Collections\ArrayCollection();
         $this->session = new Collections\ArrayCollection();
     }
 
@@ -861,5 +869,24 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     public function setDoaRequirement($doaRequirement)
     {
         $this->doaRequirement = $doaRequirement;
+    }
+
+    /**
+     * @return \Project\Entity\Idea\MessageBoard[]
+     */
+    public function getIdeaMessageBoard()
+    {
+        return $this->ideaMessageBoard;
+    }
+
+    /**
+     * @param \Project\Entity\Idea\MessageBoard[] $ideaMessageBoard
+     * @return Call
+     */
+    public function setIdeaMessageBoard($ideaMessageBoard)
+    {
+        $this->ideaMessageBoard = $ideaMessageBoard;
+
+        return $this;
     }
 }

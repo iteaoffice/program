@@ -46,6 +46,9 @@ class Doa extends AssertionAbstract
         if (!$resource instanceof DoaEntity && !is_null($id)) {
             $resource = $this->getProgramService()->findEntityById('Doa', $id);
         }
+
+        return true;
+
         switch ($privilege) {
             case 'upload':
                 /*
@@ -82,6 +85,7 @@ class Doa extends AssertionAbstract
                 return $this->hasContact();
             case 'download':
             case 'view':
+                return true;
                 return $resource->getContact()->getId() === $this->contactService->getContact()->getId();
         }
 

@@ -111,6 +111,8 @@ class CallService extends ServiceAbstract
      * Find the last open call and check which versionType is active.
      *
      * @return \stdClass
+     * @property Call call
+     * @property VersionType versionType
      */
     public function findLastCallAndActiveVersionType()
     {
@@ -170,6 +172,11 @@ class CallService extends ServiceAbstract
     public function requireDoaPerProject()
     {
         return $this->call->getDoaRequirement() === Call::DOA_REQUIREMENT_PER_PROJECT;
+    }
+
+    public function requireDoaPerProgram()
+    {
+        return $this->call->getDoaRequirement() === Call::DOA_REQUIREMENT_PER_PROGRAM;
     }
 
     /**
@@ -312,7 +319,7 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * @param Call    $call
+     * @param Call $call
      * @param Contact $contact
      *
      * @return null|\Program\Entity\Nda
@@ -398,9 +405,9 @@ class CallService extends ServiceAbstract
     /**
      * Upload a NDA to the system and store it for the user.
      *
-     * @param array   $file
+     * @param array $file
      * @param Contact $contact
-     * @param Call    $call
+     * @param Call $call
      *
      * @return NdaObject
      */

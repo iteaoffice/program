@@ -16,7 +16,10 @@ namespace Program\View\Helper;
 
 use BjyAuthorize\Service\Authorize;
 use BjyAuthorize\View\Helper\IsAllowed;
+use Organisation\Entity\Organisation;
+use Program\Entity\Doa;
 use Program\Entity\EntityAbstract;
+use Program\Entity\Program;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -82,6 +85,18 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
      * @var array
      */
     protected $showOptions = [];
+    /**
+     * @var Doa
+     */
+    protected $doa;
+    /**
+     * @var Organisation
+     */
+    protected $organisation;
+    /**
+     * @var Program
+     */
+    protected $program;
 
     /**
      * This function produces the link in the end.
@@ -90,13 +105,13 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
      */
     public function createLink()
     {
-        /*
-         * @var Url
+        /**
+         * @var $url Url
          */
         $url = $this->serviceLocator->get('url');
 
-        /*
-         * @var ServerUrl
+        /**
+         * @var $serverUrl ServerUrl
          */
         $serverUrl = $this->serviceLocator->get('serverUrl');
         $this->linkContent = [];
@@ -105,7 +120,7 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
         $this->parseShow();
 
         if ('social' === $this->getShow()) {
-            return $serverUrl().$url($this->router, $this->routerParams);
+            return $serverUrl() . $url($this->router, $this->routerParams);
         }
         $uri = '<a href="%s" title="%s" class="%s">%s</a>';
 
@@ -150,7 +165,7 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
                 }
                 break;
             case 'button':
-                $this->addLinkContent('<span class="glyphicon glyphicon-info"></span> '.$this->getText());
+                $this->addLinkContent('<span class="glyphicon glyphicon-info"></span> ' . $this->getText());
                 $this->addClasses("btn btn-primary");
                 break;
             case 'text':
@@ -289,8 +304,8 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
 
     /**
      * @param EntityAbstract $entity
-     * @param string         $assertion
-     * @param string         $action
+     * @param string $assertion
+     * @param string $action
      *
      * @return bool
      */
@@ -352,14 +367,14 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
 
     /**
      * @param null|EntityAbstract $resource
-     * @param string              $privilege
+     * @param string $privilege
      *
      * @return bool
      */
     public function isAllowed($resource, $privilege = null)
     {
-        /*
-         * @var IsAllowed
+        /**
+         * @var $isAllowed IsAllowed
          */
         $isAllowed = $this->serviceLocator->get('isAllowed');
 
@@ -371,7 +386,7 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
      *
      * @param string $key
      * @param        $value
-     * @param bool   $allowNull
+     * @param bool $allowNull
      */
     public function addRouterParam($key, $value, $allowNull = true)
     {
@@ -438,5 +453,62 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
     public function translate($string)
     {
         return $this->serviceLocator->get('translate')->__invoke($string);
+    }
+
+    /**
+     * @return Doa
+     */
+    public function getDoa()
+    {
+        return $this->doa;
+    }
+
+    /**
+     * @param Doa $doa
+     * @return LinkAbstract
+     */
+    public function setDoa($doa)
+    {
+        $this->doa = $doa;
+
+        return $this;
+    }
+
+    /**
+     * @return Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
+     * @param Organisation $organisation
+     * @return LinkAbstract
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * @return Program
+     */
+    public function getProgram()
+    {
+        return $this->program;
+    }
+
+    /**
+     * @param Program $program
+     * @return LinkAbstract
+     */
+    public function setProgram($program)
+    {
+        $this->program = $program;
+
+        return $this;
     }
 }

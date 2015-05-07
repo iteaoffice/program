@@ -18,6 +18,7 @@ use Contact\Service\ContactService;
 use General\Service\GeneralService;
 use General\Service\GeneralServiceAwareInterface;
 use Organisation\Service\OrganisationService;
+use Organisation\Service\OrganisationServiceAwareInterface;
 use Program\Options\ModuleOptions;
 use Program\Service\CallService;
 use Program\Service\CallServiceAwareInterface;
@@ -30,6 +31,7 @@ use Zend\I18n\View\Helper\Translate;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
 use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
+
 
 /**
  * Create a link to an project.
@@ -48,6 +50,7 @@ use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
 abstract class ProgramAbstractController extends AbstractActionController implements
     FormServiceAwareInterface,
     CallServiceAwareInterface,
+    OrganisationServiceAwareInterface,
     ProgramServiceAwareInterface,
     GeneralServiceAwareInterface
 {
@@ -67,6 +70,14 @@ abstract class ProgramAbstractController extends AbstractActionController implem
      * @var ContactService
      */
     protected $contactService;
+    /**
+     * @var ProjectService
+     */
+    protected $projectService;
+    /**
+     * @var OrganisationService
+     */
+    protected $organisationService;
     /**
      * @var FormService
      */
@@ -162,23 +173,6 @@ abstract class ProgramAbstractController extends AbstractActionController implem
         return $this;
     }
 
-    /**
-     * Gateway to the Organisation Service.
-     *
-     * @return OrganisationService
-     */
-    public function getOrganisationService()
-    {
-        return $this->getServiceLocator()->get('organisation_organisation_service');
-    }
-
-    /**
-     * @return \Project\Service\ProjectService
-     */
-    public function getProjectService()
-    {
-        return $this->getServiceLocator()->get(ProjectService::class);
-    }
 
     /**
      * @return \Program\Options\ModuleOptions
@@ -217,11 +211,51 @@ abstract class ProgramAbstractController extends AbstractActionController implem
      */
     protected function translate($string)
     {
-        /*
-         * @var Translate
+        /**
+         * @var $translate Translate
          */
         $translate = $this->getServiceLocator()->get('ViewHelperManager')->get('translate');
 
         return $translate($string);
     }
+
+    /**
+     * @return ProjectService
+     */
+    public function getProjectService()
+    {
+        return $this->projectService;
+    }
+
+    /**
+     * @param ProjectService $projectService
+     * @return ProgramAbstractController
+     */
+    public function setProjectService($projectService)
+    {
+        $this->projectService = $projectService;
+
+        return $this;
+    }
+
+    /**
+     * @return OrganisationService
+     */
+    public function getOrganisationService()
+    {
+        return $this->organisationService;
+    }
+
+    /**
+     * @param OrganisationService $organisationService
+     * @return ProgramAbstractController
+     */
+    public function setOrganisationService(OrganisationService $organisationService)
+    {
+        $this->organisationService = $organisationService;
+
+        return $this;
+    }
+
+
 }

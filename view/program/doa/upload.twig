@@ -25,13 +25,13 @@
     </div>
 </div>
 
-{#<div class="form-group">#}
-    {#<label class="col-sm-3 control-label">{{ translate("txt-render-program-doa") }}</label>#}
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-download-doa") }}</label>
 
-    {#<div class="col-sm-9">#}
-        {#<p class="form-control-static">{{ programDoaLink(null,'render','text', organisationService.organisation, program) }}</p>#}
-    {#</div>#}
-{#</div>#}
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ translate("txt-download-program-doa-link-text") }}</p>
+    </div>
+</div>
 
 {{ ztbformelement(form.get('file')) }}
 
