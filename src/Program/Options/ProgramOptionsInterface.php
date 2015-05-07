@@ -72,4 +72,31 @@ interface ProgramOptionsInterface
      * @return string
      */
     public function getDisplayName();
+    
+    /**
+     * @param $countryColor
+     *
+     * @return ModuleOptions
+     */
+    public function setCountryColor($countryColor);
+
+    /**
+     * @return string
+     */
+    public function getCountryColor();
+
+    /**
+     * Returns the assigned hex color of the country map.
+     *
+     * @param string $countryColorFaded
+     * @return ModuleOptions
+     */
+    public function setCountryColorFaded($countryColorFaded);
+
+    /**
+     * Returns the assigned hex color of the country map.
+     *
+     * @return string
+     */
+    public function getCountryColorFaded();
 }

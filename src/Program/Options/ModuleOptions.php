@@ -31,30 +31,48 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
      * Turn off strict options mode.
      */
     protected $__strictMode__ = false;
+    
     /**
      * Location of the PDF having the NDA template.
      *
      * @var string
      */
     protected $ndaTemplate = '';
+    
     /**
      * Boolean to turn the NDA functionality on or off.
      *
      * @var bool
      */
     protected $hasNda = true;
+    
     /**
      * Location of the PDF having the DOA template.
      *
      * @var string
      */
     protected $doaTemplate = '';
+    
     /**
      * How program calls to be displayed.
      *
      * @var String
      */
     protected $displayName = 'name';
+    
+    /**
+     * Color to use on country map.
+     *
+     * @var string
+     */
+    protected $countryColor = '#00a651';
+    
+    /**
+     * Color to use on country map for faded countries.
+     *
+     * @var string
+     */
+    protected $countryColorFaded = '#005C00';
 
     /**
      * @return string
@@ -134,5 +152,49 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
         $this->doaTemplate = $doaTemplate;
 
         return $this;
+    }
+    
+    /**
+     * @param $countryColor
+     *
+     * @return ModuleOptions
+     */
+    public function setCountryColor($countryColor)
+    {
+        $this->countryColor = $countryColor;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCountryColor()
+    {
+        return $this->countryColor;
+    }
+
+    /**
+     * Returns the assigned hex color of the country map.
+     *
+     * @param string $countryColorFaded
+     *
+     * @return ModuleOptions
+     */
+    public function setCountryColorFaded($countryColorFaded)
+    {
+        $this->countryColorFaded = $countryColorFaded;
+
+        return $this;
+    }
+
+    /**
+     * Returns the assigned hex color of the country map.
+     *
+     * @return string
+     */
+    public function getCountryColorFaded()
+    {
+        return $this->countryColorFaded;
     }
 }

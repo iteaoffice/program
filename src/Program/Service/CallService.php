@@ -16,6 +16,7 @@ use Program\Entity\Call\Call;
 use Program\Entity\EntityAbstract;
 use Program\Entity\Nda;
 use Program\Entity\NdaObject;
+use Program\Entity\Program;
 use Project\Entity\Version\Type;
 use Project\Service\ProjectService;
 use Zend\Stdlib\ArrayObject;
@@ -208,11 +209,11 @@ class CallService extends ServiceAbstract
      *
      * @return Call[]
      */
-    public function findNonEmptyCalls()
+    public function findNonEmptyCalls(Program $program = null)
     {
         return $this->getEntityManager()->getRepository(
             $this->getFullEntityName('Call\Call')
-        )->findNonEmptyCalls();
+        )->findNonEmptyCalls($program);
     }
 
     /**

@@ -32,6 +32,6 @@ class OptionServiceFactory implements FactoryInterface
     {
         $config = $serviceLocator->get('Config');
 
-        return new ModuleOptions($config['program-option']);
+        return new ModuleOptions($config['program_option']);
     }
 }
