@@ -8,7 +8,6 @@ return array(
     'program/partial/form/call'                => __DIR__ . '//view/program/partial/form/call.twig',
     'program/partial/form/program'             => __DIR__ . '//view/program/partial/form/program.twig',
     'program/partial/entity/session'           => __DIR__ . '//view/program/partial/entity/session.twig',
-    'program/partial/entity/programcall-map'   => __DIR__ . '//view/program/partial/entity/programcall-map.twig',
     'program/partial/entity/programcall-title' => __DIR__ . '//view/program/partial/entity/programcall-title.twig',
     'program/partial/entity/programcall-info'  => __DIR__ . '//view/program/partial/entity/programcall-info.twig',
     'program/partial/list/project'             => __DIR__ . '//view/program/partial/list/project.twig',
