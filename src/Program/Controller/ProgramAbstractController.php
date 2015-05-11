@@ -13,6 +13,7 @@
 
 namespace Program\Controller;
 
+use Admin\Service\AdminService;
 use BjyAuthorize\Controller\Plugin\IsAllowed;
 use Contact\Service\ContactService;
 use General\Service\GeneralService;
@@ -58,6 +59,10 @@ abstract class ProgramAbstractController extends AbstractActionController implem
      * @var ProgramService
      */
     protected $programService;
+    /**
+     * @var AdminService
+     */
+    protected $adminService;
     /**
      * @var GeneralService
      */
@@ -257,5 +262,22 @@ abstract class ProgramAbstractController extends AbstractActionController implem
         return $this;
     }
 
+    /**
+     * @return AdminService
+     */
+    public function getAdminService()
+    {
+        return $this->adminService;
+    }
 
+    /**
+     * @param AdminService $adminService
+     * @return ProgramAbstractController
+     */
+    public function setAdminService(AdminService $adminService)
+    {
+        $this->adminService = $adminService;
+
+        return $this;
+    }
 }

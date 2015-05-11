@@ -15,9 +15,9 @@
 
 namespace Program\Controller;
 
+use Admin\Service\AdminServiceAwareInterface;
 use Contact\Service\ContactServiceAwareInterface;
 use General\Service\GeneralServiceAwareInterface;
-use Program\Entity\Nda;
 use Program\Entity\NdaObject;
 use Program\Form\NdaApproval;
 use Program\Service\CallServiceAwareInterface;
@@ -39,7 +39,8 @@ use Zend\View\Model\ViewModel;
 class NdaManagerController extends ProgramAbstractController implements
     CallServiceAwareInterface,
     GeneralServiceAwareInterface,
-    ContactServiceAwareInterface
+    ContactServiceAwareInterface,
+    AdminServiceAwareInterface
 {
     /**
      * @return ViewModel
@@ -112,7 +113,7 @@ class NdaManagerController extends ProgramAbstractController implements
             if (isset($data['delete'])) {
                 $this->flashMessenger()->setNamespace('success')->addMessage(
                     sprintf(
-                        _("txt-nda-for-contact-%s-has-been-removed"),
+                        $this->translate("txt-nda-for-contact-%s-has-been-removed"),
                         $nda->getContact()->getDisplayName()
                     )
                 );
@@ -192,7 +193,7 @@ class NdaManagerController extends ProgramAbstractController implements
             return new JsonModel(
                 [
                     'result' => 'error',
-                    'error'  => _("txt-date-signed-is-empty"),
+                    'error'  => $this->translate("txt-date-signed-is-empty"),
                 ]
             );
         }
@@ -201,7 +202,7 @@ class NdaManagerController extends ProgramAbstractController implements
             return new JsonModel(
                 [
                     'result' => 'error',
-                    'error'  => _("txt-incorrect-date-format-should-be-yyyy-mm-dd"),
+                    'error'  => $this->translate("txt-incorrect-date-format-should-be-yyyy-mm-dd"),
                 ]
             );
         }
@@ -211,7 +212,13 @@ class NdaManagerController extends ProgramAbstractController implements
          */
         $nda = $this->getCallService()->findEntityById('Nda', $nda);
         $nda->setDateSigned(\DateTime::createFromFormat('Y-h-d', $dateSigned));
+        $nda->setDateApproved(new \DateTime());
         $this->getCallService()->updateEntity($nda);
+
+        //Flush the rights of the NDA guy
+        $this->getAdminService()->flushPermitsByContact($nda->getContact());
+
+        //Update the
 
         return new JsonModel(
             [

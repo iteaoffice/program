@@ -53,12 +53,17 @@ class NdaController extends ProgramAbstractController
      */
     public function uploadAction()
     {
-        $call = null;
+        $call = $this->getCallService()->findLastCallAndActiveVersionType()->call;
         if (!is_null($callId = $this->getEvent()->getRouteMatch()->getParam('id'))) {
             $call = $this->getCallService()->setCallId($callId)->getCall();
             if ($this->getCallService()->isEmpty()) {
                 return $this->notFoundAction();
             }
+            $nda = $this->getCallService()->findNdaByCallAndContact(
+                $call,
+                $this->zfcUserAuthentication()->getIdentity()
+            );
+        } elseif (!is_null($call)) {
             $nda = $this->getCallService()->findNdaByCallAndContact(
                 $call,
                 $this->zfcUserAuthentication()->getIdentity()
@@ -80,10 +85,11 @@ class NdaController extends ProgramAbstractController
                 $call
             );
 
-            return $this->redirect()->toRoute(
-                'program/nda/view',
-                ['id' => $nda->getId()]
+            $this->flashMessenger()->setNamespace('success')->addMessage(
+                sprintf(_("txt-nda-has-been-uploaded-successfully"))
             );
+
+            return $this->redirect()->toRoute('community');
         }
 
         return new ViewModel(
@@ -195,10 +201,10 @@ class NdaController extends ProgramAbstractController
         }
         $response = $this->getResponse();
         $response->getHeaders()
-            ->addHeaderLine('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
+            ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
             ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
             ->addHeaderLine("Pragma: public")
-            ->addHeaderLine('Content-Disposition', 'attachment; filename="'.$nda->parseFileName().'.pdf"')
+            ->addHeaderLine('Content-Disposition', 'attachment; filename="' . $nda->parseFileName() . '.pdf"')
             ->addHeaderLine('Content-Type: application/pdf')
             ->addHeaderLine('Content-Length', strlen($renderNda->getPDFData()));
         $response->setContent($renderNda->getPDFData());
@@ -223,16 +229,16 @@ class NdaController extends ProgramAbstractController
         $response = $this->getResponse();
         $response->setContent(stream_get_contents($object));
         $response->getHeaders()
-            ->addHeaderLine('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
+            ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
             ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
             ->addHeaderLine(
                 'Content-Disposition',
-                'attachment; filename="'.$nda->parseFileName().'.'.
-                $nda->getContentType()->getExtension().'"'
+                'attachment; filename="' . $nda->parseFileName() . '.' .
+                $nda->getContentType()->getExtension() . '"'
             )
             ->addHeaderLine("Pragma: public")
-            ->addHeaderLine('Content-Type: '.$nda->getContentType()->getContentType())
-            ->addHeaderLine('Content-Length: '.$nda->getSize());
+            ->addHeaderLine('Content-Type: ' . $nda->getContentType()->getContentType())
+            ->addHeaderLine('Content-Length: ' . $nda->getSize());
 
         return $this->response;
     }
