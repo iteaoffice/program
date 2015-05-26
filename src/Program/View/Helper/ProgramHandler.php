@@ -13,6 +13,7 @@
 
 namespace Program\View\Helper;
 
+use Affiliation\Service\AffiliationService;
 use Content\Entity\Content;
 use Program\Entity\Call\Call;
 use Program\Entity\Call\Session;
@@ -206,6 +207,14 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     {
         return $this->getServiceLocator()->get(CallService::class);
     }
+    
+    /**
+     * @return AffiliationService
+     */
+    public function getAffiliationService()
+    {
+        return $this->getServiceLocator()->get(AffiliationService::class);
+    }
 
     /**
      * @param $programId
@@ -276,19 +285,32 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
      */
     public function parseProgramcallMap($call)
     {
+        $countries = $this->getCallService()->findCountryByCall($call);
         $options = $this->getModuleOptions();
         $mapOptions = [
-            'clickable' => false,
+            'clickable' => true,
             'colorMin' => $options->getCountryColorFaded(),
             'colorMax' => $options->getCountryColor(),
             'focusOn' => ['x' => 0.5, 'y' => 0.5, 'scale' => 1.1], // Slight zoom
-            'height' => '340px'
+            'height' => '400px'
         ];
+        
+        foreach($countries as $country){
+            $affiliations = $this->getAffiliationService()
+                ->findAmountOfAffiliationByCountryAndCall($country, $call);
+            $mapOptions['tipData'][$country->getCd()] = [
+                'title' => $country->getCountry(),
+                'data' => [
+                    [$this->translate('txt-partners') => $affiliations]
+                ]
+            ];
+        }
+        
         /**
          * @var CountryMap
          */
         $countryMap = $this->serviceLocator->get('countryMap');;
-        return $countryMap($this->getCallService()->findCountryByCall($call), null, $mapOptions);
+        return $countryMap($countries, null, $mapOptions);
     }
 
     /**
@@ -386,5 +408,15 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
         $this->session = $session;
 
         return $this;
+    }
+    
+    /**
+     * @param $string
+     *
+     * @return string
+     */
+    public function translate($string)
+    {
+        return $this->serviceLocator->get('translate')->__invoke($string);
     }
 }
