@@ -105,7 +105,12 @@ class CallLink extends LinkAbstract
                 $this->addRouterParam('call', $this->getCall()->getId());
                 $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));
                 break;
-
+            case 'external':
+                $this->addRouterParam('docRef', $this->getCall()->getDocRef());
+                $this->setRouter('route-program_entity_call_call');
+                $this->addRouterParam('call', $this->getCall()->getId());
+                $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));
+                break;
             default:
                 throw new \InvalidArgumentException(
                     sprintf("%s is an incorrect action for %s", $this->getAction(), __CLASS__)
