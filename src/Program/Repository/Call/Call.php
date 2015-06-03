@@ -67,7 +67,7 @@ class Call extends EntityRepository
         $subSelect->join('project.call', 'call');
         $queryBuilder->andWhere($queryBuilder->expr()->in('c.id', $subSelect->getDQL()));
 
-        if ($program !== null ) {
+        if ($program !== null) {
             $queryBuilder->andWhere('c.program = :program')
                 ->setParameter('program', $program);
         }

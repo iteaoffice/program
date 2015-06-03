@@ -51,7 +51,7 @@ class ObjectFieldsetTest extends \PHPUnit_Framework_TestCase
     public function testCanCreateObjectFieldsetFormProgram()
     {
         $objectFieldset = new ObjectFieldset(
-            $this->serviceManager->get('doctrine.entitymanager.orm_default'),
+            $this->serviceManager->get('Doctrine\ORM\EntityManager'),
             new Program()
         );
         $this->assertInstanceOf("Zend\Form\Fieldset", $objectFieldset);
@@ -60,7 +60,7 @@ class ObjectFieldsetTest extends \PHPUnit_Framework_TestCase
     public function testCanCreateObjectFieldsetFormFunder()
     {
         $objectFieldset = new ObjectFieldset(
-            $this->serviceManager->get('doctrine.entitymanager.orm_default'),
+            $this->serviceManager->get('Doctrine\ORM\EntityManager'),
             new Funder()
         );
         $this->assertInstanceOf("Zend\Form\Fieldset", $objectFieldset);

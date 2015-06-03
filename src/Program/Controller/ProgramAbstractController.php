@@ -33,7 +33,6 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
 use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
 
-
 /**
  * Create a link to an project.
  *

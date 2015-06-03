@@ -4,33 +4,41 @@
 
 <h1>{{ translate("txt-unapproved-nda") }}</h1>
 
-<table class="table table-hover table-consended table-striped">
-    <thead>
-    <tr>
-        <th>{{ translate("txt-contact") }}</th>
-        <th>{{ translate("txt-type") }}</th>
-        <th>{{ translate("txt-operations") }}</th>
-        <th>{{ translate("txt-date-signed") }}</th>
-        <th>{{ translate("txt-approve") }}</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for nda in nda %}
-        <tr id="nda-{{ nda.id }}">
-            <td>{{ nda.contact.displayName }}</td>
-            <td>{{ nda.call }}</td>
-            <td>{{ ndaLink(nda,'view-admin','icon') }} {{ ndaLink(nda,'download','icon') }}</td>
-            <td>{{ formElement(form.get('nda_' ~ nda.id).get('dateSigned')) }}</td>
-            <td>
-                <button type="button" rel="{{ nda.id }}" data-complete-text="Approved"
-                        class="btn btn-info approveButton"
-                        autocomplete="off"><i class="fa fa-check"></i>
-                    {{ translate("txt-approve") }}</button>
-            </td>
+{% if nda|length > 0 %}
+    <table class="table table-hover table-consended table-striped">
+        <thead>
+        <tr>
+            <th>{{ translate("txt-contact") }}</th>
+            <th>{{ translate("txt-type") }}</th>
+            <th>{{ translate("txt-content-type") }}</th>
+            <th>{{ translate("txt-date-signed") }}</th>
+            <th>{{ translate("txt-approve") }}</th>
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        {% for nda in nda %}
+            <tr id="nda-{{ nda.id }}">
+                <td>{{ nda.contact.displayName }}
+                    <div class="pull-right">
+                        {{ ndaLink(nda,'view-admin','icon') }} {{ ndaLink(nda,'edit-admin','icon') }} {{ ndaLink(nda,'download','icon') }}
+                    </div>
+                </td>
+                <td>{{ nda.call }}</td>
+                <td>{{ contentTypeIcon(nda.contentType) }} {{ nda.contentType.description }} ({{ nda.size|parse_size }})</td>
+                <td>{{ formElement(form.get('nda_' ~ nda.id).get('dateSigned')) }}</td>
+                <td>
+                    <button type="button" rel="{{ nda.id }}" data-complete-text="Approved"
+                            class="btn btn-info approveButton"
+                            autocomplete="off"><i class="fa fa-check"></i>
+                        {{ translate("txt-approve") }}</button>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    {{ ztbalert().info(translate("txt-no-nda-are-waiting-for-approval")) }}
+{% endif %}
 
 <script type="text/javascript">
 

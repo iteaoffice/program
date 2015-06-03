@@ -99,7 +99,7 @@ class Nda extends EntityAbstract implements ResourceInterface
      */
     private $call;
     /**
-     * @ORM\OneToMany(targetEntity="\Program\Entity\NdaObject", cascade={"persist"}, mappedBy="nda")
+     * @ORM\OneToMany(targetEntity="\Program\Entity\NdaObject", cascade={"persist","remove"}, mappedBy="nda")
      * @Annotation\Exclude()
      *
      * @var \Program\Entity\NdaObject[]|ArrayCollection

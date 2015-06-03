@@ -22,7 +22,7 @@ use Zend\Form\Annotation;
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("programcall_doa")
  *
- * @category    Contact
+ * @category    Program
  */
 class Doa
 {

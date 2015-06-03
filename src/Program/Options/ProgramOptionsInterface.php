@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office copyright message placeholder.
  *
@@ -33,7 +34,7 @@ interface ProgramOptionsInterface
     public function setNdaTemplate($ndaTemplate);
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getNdaTemplate();
 
@@ -45,7 +46,7 @@ interface ProgramOptionsInterface
     public function setHasNda($hasNda);
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getHasNda();
 
@@ -72,7 +73,7 @@ interface ProgramOptionsInterface
      * @return string
      */
     public function getDisplayName();
-    
+
     /**
      * @param $countryColor
      *
@@ -89,6 +90,7 @@ interface ProgramOptionsInterface
      * Returns the assigned hex color of the country map.
      *
      * @param string $countryColorFaded
+     *
      * @return ModuleOptions
      */
     public function setCountryColorFaded($countryColorFaded);

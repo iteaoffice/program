@@ -29,10 +29,10 @@ class Nda extends AssertionAbstract
      * $role, $resource, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
      * privileges, respectively.
      *
-     * @param Acl               $acl
-     * @param RoleInterface     $role
+     * @param Acl $acl
+     * @param RoleInterface $role
      * @param ResourceInterface $resource
-     * @param string            $privilege
+     * @param string $privilege
      *
      * @return bool
      */
@@ -89,7 +89,11 @@ class Nda extends AssertionAbstract
                     return false;
                 }
 
-                return $resource->getContact()->getId() === $this->getContactService()->getContact()->getId();
+                if ($resource->getContact()->getId() === $this->getContactService()->getContact()->getId()) {
+                    return true;
+                }
+
+                return $this->rolesHaveAccess([strtolower(Access::ACCESS_OFFICE)]);
             case 'view-admin':
             case 'edit-admin':
             case 'approval-admin':

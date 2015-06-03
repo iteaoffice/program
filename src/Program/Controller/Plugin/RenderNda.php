@@ -47,7 +47,7 @@ class RenderNda extends AbstractPlugin
         $pdf = new ProgramPdf();
         $pdf->setTemplate($this->getModuleOptions()->getNdaTemplate());
         $pdf->addPage();
-        $pdf->SetFontSize(9);
+        $pdf->SetFontSize(8);
         $twig = $this->getServiceLocator()->get('ZfcTwigRenderer');
         /*
          * Write the contact details
@@ -61,7 +61,7 @@ class RenderNda extends AbstractPlugin
          * Write the current date
          */
         $pdf->SetXY(77, 55);
-        $pdf->Write(0, date("Y-m-d"));
+        $pdf->Write(0, date("d-m-Y"));
         /*
          * Write the Reference
          */

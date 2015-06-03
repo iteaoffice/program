@@ -54,7 +54,7 @@ class Bootstrap
 
         if (defined("TEST_SUITE") && constant("TEST_SUITE") == 'full') {
 
-            $entityManager = $serviceManager->get('doctrine.entitymanager.orm_default');
+            $entityManager = $serviceManager->get('Doctrine\ORM\EntityManager');
             //Validate the schema;
             $validator = new SchemaValidator($entityManager);
             $errors = $validator->validateMapping();

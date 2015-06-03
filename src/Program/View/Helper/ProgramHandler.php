@@ -287,7 +287,8 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
         /**
          * @var CountryMap
          */
-        $countryMap = $this->serviceLocator->get('countryMap');;
+        $countryMap = $this->serviceLocator->get('countryMap');
+        ;
         return $countryMap($this->getCallService()->findCountryByCall($call), null, $mapOptions);
     }
 

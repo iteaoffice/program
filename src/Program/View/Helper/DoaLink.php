@@ -14,7 +14,6 @@
 
 namespace Program\View\Helper;
 
-
 use Program\Acl\Assertion\Doa as DoaAssertion;
 use Organisation\Entity\Organisation;
 use Program\Entity\Doa;

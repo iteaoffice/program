@@ -11,7 +11,7 @@
 namespace Program\Form;
 
 use Contact\Service\ContactService;
-use Program\Entity\Nda;
+use Doctrine\Common\Collections\ArrayCollection;
 use Zend\Form\Fieldset;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilterProviderInterface;
@@ -22,10 +22,10 @@ use Zend\InputFilter\InputFilterProviderInterface;
 class NdaApproval extends Form implements InputFilterProviderInterface
 {
     /**
-     * @param Nda[]          $ndas
+     * @param ArrayCollection $ndas
      * @param ContactService $contactService
      */
-    public function __construct(array $ndas, ContactService $contactService)
+    public function __construct(ArrayCollection $ndas, ContactService $contactService)
     {
         parent::__construct();
         $this->setAttribute('method', 'post');
@@ -36,7 +36,7 @@ class NdaApproval extends Form implements InputFilterProviderInterface
          * Create a fieldSet per NDA (and program)
          */
         foreach ($ndas as $nda) {
-            $ndaFieldset = new Fieldset('nda_'.$nda->getId());
+            $ndaFieldset = new Fieldset('nda_' . $nda->getId());
 
             $ndaFieldset->add(
                 [
@@ -44,7 +44,7 @@ class NdaApproval extends Form implements InputFilterProviderInterface
                     'name'       => 'dateSigned',
                     'attributes' => [
                         'class'    => 'form-control',
-                        'id'       => 'dateSigned-'.$nda->getId(),
+                        'id'       => 'dateSigned-' . $nda->getId(),
                         'required' => true,
                     ],
                 ]

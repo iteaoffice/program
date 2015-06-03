@@ -12,6 +12,7 @@ namespace Program\Service;
 
 use Affiliation\Service\AffiliationService;
 use Contact\Entity\Contact;
+use Doctrine\Common\Collections\ArrayCollection;
 use Program\Entity\Call\Call;
 use Program\Entity\EntityAbstract;
 use Program\Entity\Nda;
@@ -77,7 +78,7 @@ class CallService extends ServiceAbstract
      */
     public function findNotApprovedNda()
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName('nda'))->findNotApprovedNda();
+        return new ArrayCollection($this->getEntityManager()->getRepository($this->getFullEntityName('nda'))->findNotApprovedNda());
     }
 
     /**
