@@ -13,6 +13,7 @@ namespace Program\Service;
 use Affiliation\Service\AffiliationService;
 use Contact\Entity\Contact;
 use Doctrine\Common\Collections\ArrayCollection;
+use General\Entity\Country;
 use Program\Entity\Call\Call;
 use Program\Entity\EntityAbstract;
 use Program\Entity\Nda;
@@ -359,13 +360,11 @@ class CallService extends ServiceAbstract
     /**
      * @param Call $call
      *
-     * @return mixed
+     * @return Country[]
      */
     public function findCountryByCall(Call $call)
     {
-        return $this->getGeneralService()->findCountryByCall(
-            $call
-        );
+        return $this->getGeneralService()->findCountryByCall($call);
     }
 
     /**

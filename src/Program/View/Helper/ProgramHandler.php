@@ -13,13 +13,15 @@
 
 namespace Program\View\Helper;
 
+use Affiliation\Service\AffiliationService;
 use Content\Entity\Content;
+use General\View\Helper\CountryMap;
 use Program\Entity\Call\Call;
 use Program\Entity\Call\Session;
 use Program\Entity\Program;
+use Program\Options\ModuleOptions;
 use Program\Service\CallService;
 use Program\Service\ProgramService;
-use Program\Options\ModuleOptions;
 use Project\Service\ProjectService;
 use Zend\Mvc\Router\Http\RouteMatch;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -208,6 +210,14 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     }
 
     /**
+     * @return AffiliationService
+     */
+    public function getAffiliationService()
+    {
+        return $this->getServiceLocator()->get(AffiliationService::class);
+    }
+
+    /**
      * @param $programId
      */
     public function setProgramId($programId)
@@ -222,7 +232,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     {
         return $this->getServiceLocator()->get(ProgramService::class);
     }
-    
+
     /**
      * @return ModuleOptions
      */
@@ -247,7 +257,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     }
 
     /**
-     * @param Call    $call
+     * @param Call $call
      * @param Program $program
      *
      * @return string
@@ -276,20 +286,34 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
      */
     public function parseProgramcallMap($call)
     {
+        $countries = $this->getCallService()->findCountryByCall($call);
         $options = $this->getModuleOptions();
         $mapOptions = [
-            'clickable' => false,
-            'colorMin' => $options->getCountryColorFaded(),
-            'colorMax' => $options->getCountryColor(),
-            'focusOn' => ['x' => 0.5, 'y' => 0.5, 'scale' => 1.1], // Slight zoom
-            'height' => '340px'
+            'clickable' => true,
+            'colorMin'  => $options->getCountryColorFaded(),
+            'colorMax'  => $options->getCountryColor(),
+            'focusOn'   => ['x' => 0.5, 'y' => 0.5, 'scale' => 1.1], // Slight zoom
+            'height'    => '400px'
         ];
+
+        foreach ($countries as $country) {
+            $affiliations = $this->getAffiliationService()
+                ->findAmountOfAffiliationByCountryAndCall($country, $call);
+            $mapOptions['tipData'][$country->getCd()] = [
+                'title' => $country->getCountry(),
+                'data'  => [
+                    [$this->translate('txt-partners') => $affiliations]
+                ]
+            ];
+        }
+
         /**
-         * @var CountryMap
+         * @var $countryMap CountryMap
          */
         $countryMap = $this->serviceLocator->get('countryMap');
         ;
-        return $countryMap($this->getCallService()->findCountryByCall($call), null, $mapOptions);
+
+        return $countryMap($countries, null, $mapOptions);
     }
 
     /**
@@ -298,8 +322,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     public function parseProgramcallProjectList($call)
     {
         $whichProjects =
-            $this->getCallService()->getProjectService()->getOptions()->getProjectHasVersions(
-            ) ? ProjectService::WHICH_ONLY_ACTIVE : ProjectService::WHICH_ALL;
+            $this->getCallService()->getProjectService()->getOptions()->getProjectHasVersions() ? ProjectService::WHICH_ONLY_ACTIVE : ProjectService::WHICH_ALL;
 
         return $this->getZfcTwigRenderer()->render(
             'program/partial/list/project',
@@ -327,7 +350,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     }
 
     /**
-     * @param Call    $call
+     * @param Call $call
      * @param Program $program
      *
      * @return string
@@ -387,5 +410,15 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
         $this->session = $session;
 
         return $this;
+    }
+
+    /**
+     * @param $string
+     *
+     * @return string
+     */
+    public function translate($string)
+    {
+        return $this->serviceLocator->get('translate')->__invoke($string);
     }
 }
