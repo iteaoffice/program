@@ -3,7 +3,9 @@
   "type": "library",
   "license": "proprietary",
   "description": "General code for Debranova Program",
-  "keywords": ["program"],
+  "keywords": [
+    "program"
+  ],
   "homepage": "http://debranova.org",
   "support": {
     "email": "ticket@itea2.org"
@@ -20,8 +22,8 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "php":">5.5",
-    "zendframework/zendframework": "~2.4.0",
+    "php": ">5.5",
+    "zendframework/zendframework": "~2.5",
     "doctrine/doctrine-orm-module": "0.9.*@dev"
   },
   "require-dev": {
