@@ -880,7 +880,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @param \Project\Entity\Idea\MessageBoard[] $ideaMessageBoard
+     * @param  \Project\Entity\Idea\MessageBoard[] $ideaMessageBoard
      * @return Call
      */
     public function setIdeaMessageBoard($ideaMessageBoard)

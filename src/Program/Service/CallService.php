@@ -12,8 +12,6 @@ namespace Program\Service;
 
 use Affiliation\Service\AffiliationService;
 use Contact\Entity\Contact;
-use Doctrine\Common\Collections\ArrayCollection;
-use General\Entity\Country;
 use Program\Entity\Call\Call;
 use Program\Entity\EntityAbstract;
 use Program\Entity\Nda;
@@ -79,7 +77,7 @@ class CallService extends ServiceAbstract
      */
     public function findNotApprovedNda()
     {
-        return new ArrayCollection($this->getEntityManager()->getRepository($this->getFullEntityName('nda'))->findNotApprovedNda());
+        return $this->getEntityManager()->getRepository($this->getFullEntityName('nda'))->findNotApprovedNda();
     }
 
     /**
@@ -322,7 +320,7 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * @param Call $call
+     * @param Call    $call
      * @param Contact $contact
      *
      * @return null|\Program\Entity\Nda
@@ -360,11 +358,13 @@ class CallService extends ServiceAbstract
     /**
      * @param Call $call
      *
-     * @return Country[]
+     * @return mixed
      */
     public function findCountryByCall(Call $call)
     {
-        return $this->getGeneralService()->findCountryByCall($call);
+        return $this->getGeneralService()->findCountryByCall(
+            $call
+        );
     }
 
     /**
@@ -406,9 +406,9 @@ class CallService extends ServiceAbstract
     /**
      * Upload a NDA to the system and store it for the user.
      *
-     * @param array $file
+     * @param array   $file
      * @param Contact $contact
-     * @param Call $call
+     * @param Call    $call
      *
      * @return NdaObject
      */

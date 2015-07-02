@@ -219,7 +219,6 @@ class NdaManagerController extends ProgramAbstractController implements
         $this->getAdminService()->flushPermitsByContact($nda->getContact());
 
         //Update the
-
         return new JsonModel(
             [
                 'result' => 'success',

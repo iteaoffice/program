@@ -257,7 +257,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     }
 
     /**
-     * @param Call $call
+     * @param Call    $call
      * @param Program $program
      *
      * @return string
@@ -350,7 +350,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     }
 
     /**
-     * @param Call $call
+     * @param Call    $call
      * @param Program $program
      *
      * @return string

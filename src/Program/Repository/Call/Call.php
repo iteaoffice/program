@@ -71,6 +71,7 @@ class Call extends EntityRepository
             $queryBuilder->andWhere('c.program = :program')
                 ->setParameter('program', $program);
         }
+
         return $queryBuilder->getQuery()->getResult();
     }
 
@@ -93,6 +94,7 @@ class Call extends EntityRepository
             /*
              * We have found an open PO and call, return the result
              */
+
             return [
                 'call'        => $queryBuilder->getQuery()->getOneOrNullResult(),
                 'versionType' => Type::TYPE_PO,
@@ -109,6 +111,7 @@ class Call extends EntityRepository
             /*
              * We have found an open PO and call, return the result
              */
+
             return [
                 'call'        => $queryBuilder->getQuery()->getOneOrNullResult(),
                 'versionType' => Type::TYPE_FPP,

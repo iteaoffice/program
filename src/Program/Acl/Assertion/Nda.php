@@ -29,10 +29,10 @@ class Nda extends AssertionAbstract
      * $role, $resource, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
      * privileges, respectively.
      *
-     * @param Acl $acl
-     * @param RoleInterface $role
+     * @param Acl               $acl
+     * @param RoleInterface     $role
      * @param ResourceInterface $resource
-     * @param string $privilege
+     * @param string            $privilege
      *
      * @return bool
      */
@@ -60,6 +60,7 @@ class Nda extends AssertionAbstract
                  * For the replace we need to see if the user has access on the editing of the program
                  * and the acl should not be approved
                  */
+
                 return is_null($resource->getDateApproved()) &&
                 $resource->getContact()->getId() === $this->getContactService()->getContact()->getId();
             case 'render':

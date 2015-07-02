@@ -23,7 +23,6 @@ class ProgramTest extends \PHPUnit_Framework_TestCase
      */
     protected $entityManager;
 
-
     /**
      * @return array
      */
