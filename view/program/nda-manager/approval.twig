@@ -37,7 +37,7 @@
         </tbody>
     </table>
 {% else %}
-    {{ ztbalert().info(translate("txt-no-nda-are-waiting-for-approval")) }}
+    {{ ztbalert().info(translate("txt-no-nda-are-waiting-for-approval"))|raw }}
 {% endif %}
 
 <script type="text/javascript">
