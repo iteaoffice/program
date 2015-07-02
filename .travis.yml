@@ -8,7 +8,7 @@ php:
 
 before_script:
   - composer self-update
-  - composer install --dev --prefer-source;
+  - composer install --prefer-dist;
 
 script:
   - ./vendor/bin/parallel-lint ./src/
