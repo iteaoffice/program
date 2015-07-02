@@ -61,7 +61,6 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
         $this->extractContentParam($content);
 
         switch ($content->getHandler()->getHandler()) {
-
             case 'programcall_selector':
                 return $this->parseCallSelector(
                     !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null,
@@ -137,7 +136,6 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
              * When the parameterId is 0 (so we want to get the article from the URL
              */
             switch ($param->getParameter()->getParam()) {
-
                 case 'session':
                     if (!is_null($sessionId = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
                         $this->setSessionId($sessionId);
@@ -257,7 +255,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     }
 
     /**
-     * @param Call $call
+     * @param Call    $call
      * @param Program $program
      *
      * @return string
@@ -350,7 +348,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     }
 
     /**
-     * @param Call $call
+     * @param Call    $call
      * @param Program $program
      *
      * @return string

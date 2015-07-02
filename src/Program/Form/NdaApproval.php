@@ -23,7 +23,7 @@ class NdaApproval extends Form implements InputFilterProviderInterface
 {
     /**
      * @param ArrayCollection $ndas
-     * @param ContactService $contactService
+     * @param ContactService  $contactService
      */
     public function __construct(ArrayCollection $ndas, ContactService $contactService)
     {

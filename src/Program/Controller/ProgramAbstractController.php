@@ -177,7 +177,6 @@ abstract class ProgramAbstractController extends AbstractActionController implem
         return $this;
     }
 
-
     /**
      * @return \Program\Options\ModuleOptions
      */
@@ -232,7 +231,7 @@ abstract class ProgramAbstractController extends AbstractActionController implem
     }
 
     /**
-     * @param ProjectService $projectService
+     * @param  ProjectService            $projectService
      * @return ProgramAbstractController
      */
     public function setProjectService($projectService)
@@ -251,7 +250,7 @@ abstract class ProgramAbstractController extends AbstractActionController implem
     }
 
     /**
-     * @param OrganisationService $organisationService
+     * @param  OrganisationService       $organisationService
      * @return ProgramAbstractController
      */
     public function setOrganisationService(OrganisationService $organisationService)
@@ -270,7 +269,7 @@ abstract class ProgramAbstractController extends AbstractActionController implem
     }
 
     /**
-     * @param AdminService $adminService
+     * @param  AdminService              $adminService
      * @return ProgramAbstractController
      */
     public function setAdminService(AdminService $adminService)
