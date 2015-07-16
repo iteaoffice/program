@@ -34,7 +34,7 @@ class CallLink extends LinkAbstract
     protected $call;
 
     /**
-     * @param Call $call
+     * @param Call   $call
      * @param string $action
      * @param string $show
      *
@@ -96,6 +96,16 @@ class CallLink extends LinkAbstract
                 $this->setRouter('zfcadmin/program-manager/edit');
                 $this->setText(sprintf($this->translate("txt-edit-call-%s"), $this->getCall()));
                 break;
+            case 'external':
+                $this->addRouterParam('docRef', $this->getCall()->getDocRef());
+                $this->setRouter('route-program_entity_call_call');
+                $this->addRouterParam('call', $this->getCall()->getId());
+                $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));
+                break;
+            case 'view-admin':
+                $this->setRouter('zfcadmin/program-manager/view');
+                $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));
+            break;
             case 'view-list':
                 /*
                  * For a list in the front-end simply use the MatchedRouteName
@@ -103,10 +113,6 @@ class CallLink extends LinkAbstract
                 $this->addRouterParam('docRef', $this->getRouteMatch()->getParam('docRef'));
                 $this->setRouter($this->getRouteMatch()->getMatchedRouteName());
                 $this->addRouterParam('call', $this->getCall()->getId());
-                $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));
-                break;
-            case 'view-admin':
-                $this->setRouter('zfcadmin/program-manager/view');
                 $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));
                 break;
 
