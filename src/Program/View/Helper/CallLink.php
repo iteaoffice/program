@@ -105,7 +105,7 @@ class CallLink extends LinkAbstract
             case 'view-admin':
                 $this->setRouter('zfcadmin/program-manager/view');
                 $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));
-            break;
+                break;
             case 'view-list':
                 /*
                  * For a list in the front-end simply use the MatchedRouteName

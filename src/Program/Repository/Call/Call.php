@@ -49,7 +49,7 @@ class Call extends EntityRepository
                 break;
         }
 
-        return $queryBuilder->getQuery()->getOneOrNullResult();
+        return $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult();
     }
 
     /**
@@ -71,8 +71,7 @@ class Call extends EntityRepository
             $queryBuilder->andWhere('c.program = :program')
                 ->setParameter('program', $program);
         }
-
-        return $queryBuilder->getQuery()->getResult();
+        return $queryBuilder->getQuery()->useQueryCache(true)->getResult();
     }
 
     /**
@@ -90,13 +89,12 @@ class Call extends EntityRepository
         /*
          * Check first if we find an open PO
          */
-        if (!is_null($queryBuilder->getQuery()->getOneOrNullResult())) {
+        if (!is_null($queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult())) {
             /*
              * We have found an open PO and call, return the result
              */
-
             return [
-                'call'        => $queryBuilder->getQuery()->getOneOrNullResult(),
+                'call'        => $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult(),
                 'versionType' => Type::TYPE_PO,
             ];
         }
@@ -107,13 +105,12 @@ class Call extends EntityRepository
         /*
          * Check first if we find an open FPP
          */
-        if (!is_null($queryBuilder->getQuery()->getOneOrNullResult())) {
+        if (!is_null($queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult())) {
             /*
              * We have found an open PO and call, return the result
              */
-
             return [
-                'call'        => $queryBuilder->getQuery()->getOneOrNullResult(),
+                'call'        => $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult(),
                 'versionType' => Type::TYPE_FPP,
             ];
         }
@@ -131,9 +128,9 @@ class Call extends EntityRepository
         $queryBuilder->orderBy('c.fppOpenDate', 'DESC');
         $queryBuilder->setMaxResults(1);
 
-        if (!is_null($queryBuilder->getQuery()->getOneOrNullResult())) {
+        if (!is_null($queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult())) {
             return [
-                'call'        => $queryBuilder->getQuery()->getOneOrNullResult(),
+                'call'        => $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult(),
                 'versionType' => Type::TYPE_PO,
             ];
         }
@@ -148,7 +145,7 @@ class Call extends EntityRepository
         $queryBuilder->setMaxResults(1);
 
         return [
-            'call'        => $queryBuilder->getQuery()->getOneOrNullResult(),
+            'call'        => $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult(),
             'versionType' => Type::TYPE_FPP,
         ];
     }
@@ -180,6 +177,6 @@ class Call extends EntityRepository
         $queryBuilder->addOrderBy('pc.call');
         $queryBuilder->setParameter(1, $call->getCall());
 
-        return $queryBuilder->getQuery()->getResult();
+        return $queryBuilder->getQuery()->useQueryCache(true)->getResult();
     }
 }
