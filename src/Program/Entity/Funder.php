@@ -18,6 +18,7 @@ use Zend\Form\Annotation;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * Program.
@@ -29,7 +30,7 @@ use Zend\InputFilter\InputFilterInterface;
  *
  * @category    Program
  */
-class Funder extends EntityAbstract
+class Funder extends EntityAbstract implements ResourceInterface
 {
     /**
      * Constant for hideOnWebsite = 0.
@@ -44,7 +45,7 @@ class Funder extends EntityAbstract
      *
      * @var array
      */
-    protected $showOnWebsiteTemplates = [
+    protected static $showOnWebsiteTemplates = [
         self::HIDE_ON_WEBSITE => 'txt-hide-on-website',
         self::SHOW_ON_WEBSITE => 'txt-show-on-website',
     ];
@@ -61,11 +62,10 @@ class Funder extends EntityAbstract
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id", nullable=false)
      * })
-     * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
-     * @Annotation\Options({"target_class":"Contact\Entity\Contact"})
-     * @Annotation\Attributes({"label":"txt-contact", "required":"true","class":"span3"})
+     * @Annotation\Type("Zend\Form\Element\Select")
+     * @Annotation\Options({"label":"txt-contact"})
      *
-     * @var \Program\Entity\Program
+     * @var \Contact\Entity\Contact
      */
     private $contact;
     /**
@@ -82,16 +82,18 @@ class Funder extends EntityAbstract
     private $country;
     /**
      * @ORM\Column(name="info_office", type="text", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @Annotation\Type("\Zend\Form\Element\Textarea")
      * @Annotation\Options({"label":"txt-info-office"})
+     * @Annotation\Attributes({"rows":20})
      *
      * @var string
      */
     private $infoOffice;
     /**
      * @ORM\Column(name="info_public", type="text", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @Annotation\Type("\Zend\Form\Element\Textarea")
      * @Annotation\Options({"label":"txt-info-public"})
+     * @Annotation\Attributes({"rows":20})
      *
      * @var string
      */
@@ -136,8 +138,17 @@ class Funder extends EntityAbstract
      */
     public function __toString()
     {
-        return $this->program;
+        return (string)$this->contact->getDisplayName();
     }
+
+    /**
+     * @return string
+     */
+    public function getResourceId()
+    {
+        return sprintf("%s:%s", __CLASS__, $this->id);
+    }
+
 
     /**
      * Set input filter.
@@ -190,13 +201,13 @@ class Funder extends EntityAbstract
     /**
      * @return array
      */
-    public function getShowOnWebsiteTemplates()
+    public static function getShowOnWebsiteTemplates()
     {
-        return $this->showOnWebsiteTemplates;
+        return self::$showOnWebsiteTemplates;
     }
 
     /**
-     * @return \Program\Entity\Program
+     * @return \Contact\Entity\Contact
      */
     public function getContact()
     {
@@ -204,7 +215,7 @@ class Funder extends EntityAbstract
     }
 
     /**
-     * @param \Program\Entity\Program $contact
+     * @param \Contact\Entity\Contact $contact
      */
     public function setContact($contact)
     {
@@ -276,10 +287,15 @@ class Funder extends EntityAbstract
     }
 
     /**
+     * @param bool $textual
      * @return int
      */
-    public function getShowOnWebsite()
+    public function getShowOnWebsite($textual = false)
     {
+        if ($textual) {
+            return self::$showOnWebsiteTemplates[$this->showOnWebsite];
+        }
+
         return $this->showOnWebsite;
     }
 

@@ -97,6 +97,10 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
      * @var Program
      */
     protected $program;
+    /**
+     * @var int
+     */
+    protected $page;
 
     /**
      * This function produces the link in the end.
@@ -513,6 +517,25 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
     public function setProgram($program)
     {
         $this->program = $program;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPage()
+    {
+        return $this->page;
+    }
+
+    /**
+     * @param int $page
+     * @return LinkAbstract
+     */
+    public function setPage($page)
+    {
+        $this->page = $page;
 
         return $this;
     }

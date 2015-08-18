@@ -37,8 +37,8 @@ class CallSessionLink extends LinkAbstract
 
     /**
      * @param Session $session
-     * @param string  $action
-     * @param string  $show
+     * @param string $action
+     * @param string $show
      *
      * @return string
      *
@@ -93,13 +93,17 @@ class CallSessionLink extends LinkAbstract
             case 'view':
                 $this->addRouterParam('session', $this->getSession()->getId());
                 $this->setRouter(
-                    'route-'.str_replace(
+                    'route-' . str_replace(
                         'doctrineormmodule_proxy___cg___',
                         '',
                         $this->getSession()->get("underscore_full_entity_name")
                     )
                 );
                 $this->setText(sprintf($this->translate("txt-view-session-%s"), $this->getSession()->getSession()));
+                break;
+            case 'download':
+                $this->setRouter('program/session/download');
+                $this->setText(sprintf($this->translate("txt-download-session-%s"), $this->getSession()->getSession()));
                 break;
             default:
                 throw new \InvalidArgumentException(

@@ -31,6 +31,10 @@ return [
                         'label' => _("txt-nda-approval"),
                         'route' => 'zfcadmin/nda-manager/approval',
                     ],
+                    'funder'            => [
+                        'label' => _("txt-funder"),
+                        'route' => 'zfcadmin/funder-manager/list',
+                    ],
                 ],
             ],
         ],

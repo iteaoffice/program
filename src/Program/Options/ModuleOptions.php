@@ -55,6 +55,14 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
     protected $doaTemplate = '';
 
     /**
+     * Location of the PDF having the DOA template.
+     *
+     * @var string
+     */
+    protected $blankTemplate = '';
+
+
+    /**
      * How program calls to be displayed.
      *
      * @var String
@@ -151,6 +159,26 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
     public function setDoaTemplate($doaTemplate)
     {
         $this->doaTemplate = $doaTemplate;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBlankTemplate()
+    {
+        return $this->blankTemplate;
+    }
+
+    /**
+     * @param $blankTemplate
+     *
+     * @return ModuleOptions
+     */
+    public function setBlankTemplate($blankTemplate)
+    {
+        $this->blankTemplate = $blankTemplate;
 
         return $this;
     }

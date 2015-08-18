@@ -97,12 +97,7 @@ class NdaManagerController extends ProgramAbstractController implements
         $form->get('nda')->get('programCall')->setValue($nda->getCall());
 
         //Get contacts in an organisation
-        if ($this->getRequest()->isPost() && $form->isValid()) {
-            /*
-             * @var Nda
-             */
-            $nda = $form->getData();
-
+        if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute(
                     'zfcadmin/nda-manager/nda/view',
@@ -123,52 +118,60 @@ class NdaManagerController extends ProgramAbstractController implements
                 return $this->redirect()->toRoute('zfcadmin/nda-manager/approval');
             }
 
-            $fileData = $this->params()->fromFiles();
-
-            if ($fileData['nda']['file']['error'] === 0) {
+            if ($form->isValid()) {
                 /*
-                 * Replace the content of the object
+                 * @var Nda
                  */
-                if (!$nda->getObject()->isEmpty()) {
-                    $nda->getObject()->first()->setObject(file_get_contents($fileData['nda']['file']['tmp_name']));
-                } else {
-                    $ndaObject = new NdaObject();
-                    $ndaObject->setObject(file_get_contents($fileData['nda']['file']['tmp_name']));
-                    $ndaObject->setNda($nda);
-                    $this->getCallService()->newEntity($ndaObject);
+                $nda = $form->getData();
+
+
+                $fileData = $this->params()->fromFiles();
+
+                if ($fileData['nda']['file']['error'] === 0) {
+                    /*
+                     * Replace the content of the object
+                     */
+                    if (!$nda->getObject()->isEmpty()) {
+                        $nda->getObject()->first()->setObject(file_get_contents($fileData['nda']['file']['tmp_name']));
+                    } else {
+                        $ndaObject = new NdaObject();
+                        $ndaObject->setObject(file_get_contents($fileData['nda']['file']['tmp_name']));
+                        $ndaObject->setNda($nda);
+                        $this->getCallService()->newEntity($ndaObject);
+                    }
+
+                    //Create a article object element
+                    $fileSizeValidator = new FilesSize(PHP_INT_MAX);
+                    $fileSizeValidator->isValid($fileData['nda']['file']);
+                    $nda->setSize($fileSizeValidator->size);
+                    $nda->setContentType(
+                        $this->getGeneralService()->findContentTypeByContentTypeName($fileData['nda']['file']['type'])
+                    );
                 }
 
-                //Create a article object element
-                $fileSizeValidator = new FilesSize(PHP_INT_MAX);
-                $fileSizeValidator->isValid($fileData['nda']['file']);
-                $nda->setSize($fileSizeValidator->size);
-                $nda->setContentType(
-                    $this->getGeneralService()->findContentTypeByContentTypeName($fileData['nda']['file']['type'])
+                /*
+                 * The programme call needs to have a dedicated treatment
+                 */
+                if (!empty($data['nda']['programCall'])) {
+                    $nda->setCall([$this->getCallService()->setCallId($data['nda']['programCall'])->getCall()]);
+                } else {
+                    $nda->setCall([]);
+                }
+
+                $this->getCallService()->updateEntity($nda);
+
+                $this->flashMessenger()->setNamespace('success')->addMessage(
+                    sprintf(
+                        _("txt-nda-for-contact-%s-has-been-updated"),
+                        $nda->getContact()->getDisplayName()
+                    )
+                );
+
+                return $this->redirect()->toRoute(
+                    'zfcadmin/nda-manager/view',
+                    ['id' => $nda->getId()]
                 );
             }
-
-            /*
-             * The programme call needs to have a dedicated treatment
-             */
-            if (!empty($data['nda']['programCall'])) {
-                $nda->setCall([$this->getCallService()->setCallId($data['nda']['programCall'])->getCall()]);
-            } else {
-                $nda->setCall([]);
-            }
-
-            $this->getCallService()->updateEntity($nda);
-
-            $this->flashMessenger()->setNamespace('success')->addMessage(
-                sprintf(
-                    _("txt-nda-for-contact-%s-has-been-updated"),
-                    $nda->getContact()->getDisplayName()
-                )
-            );
-
-            return $this->redirect()->toRoute(
-                'zfcadmin/nda-manager/view',
-                ['id' => $nda->getId()]
-            );
         }
 
         return new ViewModel(

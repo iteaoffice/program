@@ -7,14 +7,14 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c] 2004-2014 ITEA Office (http://itea3.org]
  */
-use Program\Acl\Assertion\Doa as DoaAssertion;
-use Program\Acl\Assertion\Nda as NdaAssertion;
+use Program\Acl\Assertion;
+use Program\Controller;
 use Program\Controller\ControllerInitializer;
 use Program\Service\CallService;
 use Program\Service\FormService;
 use Program\Service\ProgramService;
 use Program\Service\ServiceInitializer;
-use Program\View\Helper\CallSessionLink;
+use Program\View\Helper;
 
 $config = [
     'controllers'     => [
@@ -22,11 +22,13 @@ $config = [
             ControllerInitializer::class
         ],
         'invokables'   => [
-            'program'         => 'Program\Controller\ProgramController',
-            'program-manager' => 'Program\Controller\ProgramManagerController',
-            'nda-manager'     => 'Program\Controller\NdaManagerController',
-            'program-nda'     => 'Program\Controller\NdaController',
-            'program-doa'     => 'Program\Controller\DoaController',
+            'program'                                 => Controller\ProgramController::class,
+            'program-manager'                         => Controller\ProgramManagerController::class,
+            'nda-manager'                             => Controller\NdaManagerController::class,
+            'program-nda'                             => Controller\NdaController::class,
+            'program-doa'                             => Controller\DoaController::class,
+            Controller\FunderManagerController::class => Controller\FunderManagerController::class,
+            Controller\SessionController::class       => Controller\SessionController::class
         ],
         'factories'    => [
             'program_module_options' => 'Program\Factory\OptionServiceFactory',
@@ -37,15 +39,16 @@ $config = [
     ],
     'view_helpers'    => [
         'invokables' => [
-            'callSessionLink'     => CallSessionLink::class,
-            'programHandler'      => 'Program\View\Helper\ProgramHandler',
-            'callServiceProxy'    => 'Program\View\Helper\CallServiceProxy',
-            'programServiceProxy' => 'Program\View\Helper\ProgramServiceProxy',
-            'callInformationBox'  => 'Program\View\Helper\CallInformationBox',
-            'programLink'         => 'Program\View\Helper\ProgramLink',
-            'programDoaLink'      => 'Program\View\Helper\DoaLink',
-            'callLink'            => 'Program\View\Helper\CallLink',
-            'ndaLink'             => 'Program\View\Helper\NdaLink',
+            'callSessionLink'     => Helper\CallSessionLink::class,
+            'programHandler'      => Helper\ProgramHandler::class,
+            'callServiceProxy'    => Helper\CallServiceProxy::class,
+            'programServiceProxy' => Helper\ProgramServiceProxy::class,
+            'callInformationBox'  => Helper\CallInformationBox::class,
+            'programLink'         => Helper\ProgramLink::class,
+            'programDoaLink'      => Helper\DoaLink::class,
+            'callLink'            => Helper\CallLink::class,
+            'ndaLink'             => Helper\NdaLink::class,
+            'funderLink'          => Helper\FunderLink::class,
         ]
     ],
     'service_manager' => [
@@ -55,14 +58,16 @@ $config = [
             'program_nda_navigation_service' => 'Program\Navigation\Factory\NdaNavigationServiceFactory',
         ],
         'invokables'   => [
-            NdaAssertion::class           => NdaAssertion::class,
-            DoaAssertion::class           => DoaAssertion::class,
+            Assertion\Nda::class          => Assertion\Nda::class,
+            Assertion\Doa::class          => Assertion\Doa::class,
+            Assertion\Funder::class       => Assertion\Funder::class,
             ProgramService::class         => ProgramService::class,
             CallService::class            => CallService::class,
             FormService::class            => FormService::class,
             'program_program_form_filter' => 'Program\Form\FilterCreateObject',
             'program_call_form_filter'    => 'Program\Form\FilterCreateObject',
-            'program_nda_form_filter'     => 'Program\Form\FilterCreateObject'
+            'program_nda_form_filter'     => 'Program\Form\FilterCreateObject',
+            'program_funder_form_filter'  => 'Program\Form\FilterCreateObject'
         ]
     ],
     'doctrine'        => [

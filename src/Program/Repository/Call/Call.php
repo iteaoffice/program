@@ -151,6 +151,27 @@ class Call extends EntityRepository
     }
 
     /**
+     * @param CallEntity $call
+     * @return mixed
+     */
+    public function findMinAndMaxYearInCall(CallEntity $call)
+    {
+        $emConfig = $this->getEntityManager()->getConfiguration();
+        $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
+
+        $dql = 'SELECT
+                        MIN(YEAR(p.dateStartActual)) AS minYear,
+                        MAX(YEAR(p.dateEndActual)) AS maxYear
+                   FROM Project\Entity\Project p
+                   JOIN p.call c
+                   WHERE c.id = ' . $call->getId();
+        $result = $this->_em->createQuery($dql)
+            ->getScalarResult();
+
+        return array_shift($result);
+    }
+
+    /**
      * This function returns an array with three elements.
      *
      * 'partners' which contains the amount of partners

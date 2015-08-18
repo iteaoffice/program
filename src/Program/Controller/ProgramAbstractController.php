@@ -32,6 +32,7 @@ use Zend\I18n\View\Helper\Translate;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
 use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
+use Program\Controller\Plugin\RenderSession;
 
 /**
  * Create a link to an project.
@@ -46,6 +47,7 @@ use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
  * @method      ZfcUserAuthentication zfcUserAuthentication()
  * @method      FlashMessenger flashMessenger()
  * @method      IsAllowed isAllowed($resource, $action)
+ * @method      RenderSession renderSession($session)
  */
 abstract class ProgramAbstractController extends AbstractActionController implements
     FormServiceAwareInterface,

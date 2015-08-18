@@ -1,0 +1,21 @@
+{% do form.prepare() %}
+
+{{ form().openTag(form)|raw }}
+
+{% set funder = form.get('funder') %}
+
+ {{ contactformelement(funder.get('contact')) }}
+{{ ztbformelement(funder.get('country')) }}
+{{ ztbformelement(funder.get('showOnWebsite')) }}
+{{ ztbformelement(funder.get('infoOffice')) }}
+{{ ztbformelement(funder.get('infoPublic')) }}
+
+<div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+        {{ formelement(form.get('submit')) }}
+        {% if form.has('delete') %}
+            {{ formelement(form.get('delete')) }}
+        {% endif %}
+        {{ formelement(form.get('cancel')) }}
+    </div>
+</div>

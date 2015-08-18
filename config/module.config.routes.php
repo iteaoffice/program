@@ -7,6 +7,8 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c] 2004-2014 ITEA Office (http://itea3.org]
  */
+use Program\Controller;
+
 return [
     'router' => [
         'routes' => [
@@ -47,6 +49,31 @@ return [
                                 'action'     => 'view',
                             ],
                         ],
+                    ],
+                    'session'     => [
+                        'type'         => 'Literal',
+                        'options'      => [
+                            'route'    => '/session',
+                            'defaults' => [
+                                'controller' => Controller\SessionController::class,
+                                'action'     => 'image',
+                            ],
+                        ],
+                        'child_routes' => [
+                            'download' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'       => '/download/[:id].pdf',
+                                    'constraints' => [
+                                        'id' => '\d+',
+                                    ],
+                                    'defaults'    => [
+                                        'action'    => 'download',
+                                        'privilege' => 'download-session',
+                                    ],
+                                ],
+                            ],
+                        ]
                     ],
                     'nda'         => [
                         'type'         => 'Literal',
@@ -306,6 +333,60 @@ return [
                                     'defaults' => [
                                         'action'    => 'approve',
                                         'privilege' => 'edit-admin',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'funder-manager'  => [
+                        'type'          => 'Segment',
+                        'options'       => [
+                            'route'    => '/funder',
+                            'defaults' => [
+                                'controller' => Controller\FunderManagerController::class,
+                                'action'     => 'list',
+                                'page'       => 1,
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes'  => [
+                            'list' => [
+                                'type'     => 'Segment',
+                                'priority' => 1000,
+                                'options'  => [
+                                    'route'    => '/list.html',
+                                    'defaults' => [
+                                        'action' => 'list',
+                                    ],
+                                ]
+                            ],
+                            'new'  => [
+                                'type'     => 'Literal',
+                                'priority' => 1000,
+                                'options'  => [
+                                    'route'    => '/new.html',
+                                    'defaults' => [
+                                        'action' => 'new',
+                                    ],
+                                ],
+                            ],
+                            'view' => [
+                                'type'     => 'Segment',
+                                'priority' => 1000,
+                                'options'  => [
+                                    'route'    => '/view/[:id].html',
+                                    'defaults' => [
+                                        'action' => 'view',
+                                    ],
+                                ],
+                            ],
+                            'edit' => [
+                                'type'     => 'Segment',
+                                'priority' => 1000,
+                                'options'  => [
+                                    'route'    => '/edit/[:id].html',
+                                    'defaults' => [
+                                        'action' => 'edit',
                                     ],
                                 ],
                             ],
