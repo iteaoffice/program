@@ -148,6 +148,17 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
      * @var int
      */
     private $doaRequirement;
+
+    /**
+     * @ORM\Column(name="nda_requirement", type="smallint", nullable=false)
+     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Attributes({"array":"ndaRequirement"})
+     * @Annotation\Options({"label":"txt-nda-requirements","help-block":"txt-nda-requirements-inline-help"})
+     * @Annotation\Required(true)
+     *
+     * @var int
+     */
+    private $ndaRequirement;
     /**
      * @ORM\ManyToOne(targetEntity="Program\Entity\Program", cascade={"persist"}, inversedBy="call")
      * @ORM\JoinColumn(name="program_id", referencedColumnName="program_id", nullable=false)
@@ -162,7 +173,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
      * @ORM\OneToMany(targetEntity="\Project\Entity\Project", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Project\Entity\Project[]|Collections\ArrayCollection
+     * @var \Project\Entity\Project[]
      */
     private $project;
     /**
@@ -178,63 +189,63 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
      * @ORM\ManyToMany(targetEntity="Program\Entity\Nda", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\Nda[]|Collections\ArrayCollection
+     * @var \Program\Entity\Nda[]
      */
     private $nda;
     /**
      * @ORM\ManyToMany(targetEntity="\Publication\Entity\Publication", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Publication\Entity\Publication[]|Collections\ArrayCollection
+     * @var \Publication\Entity\Publication[]
      */
     private $publication;
     /**
      * @ORM\ManyToMany(targetEntity="Event\Entity\Meeting\Meeting", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Event\Entity\Meeting\Meeting[]|Collections\ArrayCollection
+     * @var \Event\Entity\Meeting\Meeting[]
      */
     private $meeting;
     /**
      * @ORM\ManyToMany(targetEntity="Calendar\Entity\Calendar", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Calendar\Entity\Calendar[]|Collections\ArrayCollection
+     * @var \Calendar\Entity\Calendar[]
      */
     private $calendar;
     /**
      * @ORM\OneToMany(targetEntity="Program\Entity\Call\Doa", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\Call\Doa[]|Collections\ArrayCollection
+     * @var \Program\Entity\Call\Doa[]
      */
     private $doa;
     /**
      * @ORM\OneToMany(targetEntity="Program\Entity\Call\Image", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\Call\Image[]|Collections\ArrayCollection
+     * @var \Program\Entity\Call\Image[]
      */
     private $image;
     /**
      * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Idea", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Project\Entity\Idea\Idea[]|Collections\ArrayCollection
+     * @var \Project\Entity\Idea\Idea[]
      */
     private $idea;
     /**
      * @ORM\OneToMany(targetEntity="Project\Entity\Idea\MessageBoard", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Project\Entity\Idea\MessageBoard[]|Collections\ArrayCollection
+     * @var \Project\Entity\Idea\MessageBoard[]
      */
     private $ideaMessageBoard;
     /**
      * @ORM\OneToMany(targetEntity="Program\Entity\Call\Session", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\Call\Session[]|Collections\ArrayCollection
+     * @var \Program\Entity\Call\Session[]
      */
     private $session;
 
@@ -642,7 +653,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @return \Project\Entity\Project[]|Collections\ArrayCollection
+     * @return \Project\Entity\Project[]
      */
     public function getProject()
     {
@@ -650,7 +661,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @param \Project\Entity\Project[]|Collections\ArrayCollection $project
+     * @param \Project\Entity\Project[] $project
      */
     public function setProject($project)
     {
@@ -674,7 +685,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @return \Program\Entity\Nda[]|Collections\ArrayCollection
+     * @return \Program\Entity\Nda[]
      */
     public function getNda()
     {
@@ -682,7 +693,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @param \Program\Entity\Nda[]|Collections\ArrayCollection $nda
+     * @param \Program\Entity\Nda[] $nda
      */
     public function setNda($nda)
     {
@@ -690,7 +701,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @return \Event\Entity\Meeting\Meeting[]|Collections\ArrayCollection
+     * @return \Event\Entity\Meeting\Meeting[]
      */
     public function getMeeting()
     {
@@ -698,7 +709,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @param \Event\Entity\Meeting\Meeting[]|Collections\ArrayCollection $meeting
+     * @param \Event\Entity\Meeting\Meeting[] $meeting
      */
     public function setMeeting($meeting)
     {
@@ -706,7 +717,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @return \Publication\Entity\Publication[]|Collections\ArrayCollection
+     * @return \Publication\Entity\Publication[]
      */
     public function getPublication()
     {
@@ -714,7 +725,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @param \Publication\Entity\Publication[]|Collections\ArrayCollection $publication
+     * @param \Publication\Entity\Publication[] $publication
      */
     public function setPublication($publication)
     {
@@ -722,7 +733,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @return \Calendar\Entity\Calendar[]|Collections\ArrayCollection
+     * @return \Calendar\Entity\Calendar[]
      */
     public function getCalendar()
     {
@@ -730,7 +741,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @param \Calendar\Entity\Calendar[]|Collections\ArrayCollection $calendar
+     * @param \Calendar\Entity\Calendar[] $calendar
      */
     public function setCalendar($calendar)
     {
@@ -738,7 +749,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @return \Program\Entity\Call\Doa[]|Collections\ArrayCollection
+     * @return \Program\Entity\Call\Doa[]
      */
     public function getDoa()
     {
@@ -746,7 +757,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @param \Program\Entity\Call\Doa[]|Collections\ArrayCollection $doa
+     * @param \Program\Entity\Call\Doa[] $doa
      */
     public function setDoa($doa)
     {
@@ -754,7 +765,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @return \Program\Entity\Call\Image[]|Collections\ArrayCollection
+     * @return \Program\Entity\Call\Image[]
      */
     public function getImage()
     {
@@ -762,7 +773,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @param \Program\Entity\Call\Image[]|Collections\ArrayCollection $image
+     * @param \Program\Entity\Call\Image[] $image
      */
     public function setImage($image)
     {
@@ -770,7 +781,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @return \Project\Entity\Idea\Idea[]|Collections\ArrayCollection
+     * @return \Project\Entity\Idea\Idea[]
      */
     public function getIdea()
     {
@@ -778,7 +789,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @param \Project\Entity\Idea\Idea[]|Collections\ArrayCollection $idea
+     * @param \Project\Entity\Idea\Idea[] $idea
      */
     public function setIdea($idea)
     {
@@ -786,7 +797,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @return \Program\Entity\Call\Session[]|Collections\ArrayCollection
+     * @return \Program\Entity\Call\Session[]
      */
     public function getSession()
     {
@@ -794,7 +805,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @param \Program\Entity\Call\Session[]|Collections\ArrayCollection $session
+     * @param \Program\Entity\Call\Session[] $session
      */
     public function setSession($session)
     {
@@ -854,6 +865,25 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
      *
      * @return int|string
      */
+    public function getNdaRequirement($bool = false)
+    {
+
+        return $this->ndaRequirement;
+    }
+
+    /**
+     * @param int $doaRequirement
+     */
+    public function setNdaRequirement($ndaRequirement)
+    {
+        $this->ndaRequirement = $ndaRequirement;
+    }
+
+    /**
+     * @param bool $textual
+     *
+     * @return int|string
+     */
     public function getDoaRequirement($textual = false)
     {
         if ($textual) {
@@ -872,7 +902,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @return \Project\Entity\Idea\MessageBoard[]|Collections\ArrayCollection
+     * @return \Project\Entity\Idea\MessageBoard[]
      */
     public function getIdeaMessageBoard()
     {
@@ -880,7 +910,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @param \Project\Entity\Idea\MessageBoard[]|Collections\ArrayCollection $ideaMessageBoard
+     * @param \Project\Entity\Idea\MessageBoard[] $ideaMessageBoard
      * @return Call
      */
     public function setIdeaMessageBoard($ideaMessageBoard)
