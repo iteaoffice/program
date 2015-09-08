@@ -867,7 +867,6 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
      */
     public function getNdaRequirement($bool = false)
     {
-
         return $this->ndaRequirement;
     }
 

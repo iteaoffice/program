@@ -107,6 +107,22 @@ class Funder extends EntityAbstract implements ResourceInterface
      * @var \int
      */
     private $showOnWebsite;
+    /**
+     * @ORM\Column(name="position", type="smallint", nullable=false)
+     * @Annotation\Type("\Zend\Form\Element\Number")
+     * @Annotation\Options({"label":"txt-sorting-position"})
+     *
+     * @var int
+     */
+    private $position;
+
+    /**
+     * Class constructor
+     */
+    public function __construct()
+    {
+        $this->position = 1;
+    }
 
     /**
      * Magic Getter.
@@ -305,5 +321,24 @@ class Funder extends EntityAbstract implements ResourceInterface
     public function setShowOnWebsite($showOnWebsite)
     {
         $this->showOnWebsite = $showOnWebsite;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param int $position
+     * @return Funder
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+
+        return $this;
     }
 }

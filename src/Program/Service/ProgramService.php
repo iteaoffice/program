@@ -60,12 +60,13 @@ class ProgramService extends ServiceAbstract
     public function findFunderByCountry(Country $country)
     {
         return $this->getEntityManager()->getRepository($this->getFullEntityName('funder'))->findBy(
-            ['country' => $country]
+            ['country' => $country],
+            ['position' => 'ASC']
         );
     }
 
     /**
-     * @param Program      $program
+     * @param Program $program
      * @param Organisation $organisation
      *
      * @return null|\Program\Entity\Doa
