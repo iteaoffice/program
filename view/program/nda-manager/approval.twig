@@ -1,3 +1,7 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-unapproved-nda")) %}
+
+
 {% do headLink().appendStylesheet(
 '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css'
 ) %}
@@ -18,13 +22,15 @@
         <tbody>
         {% for nda in nda %}
             <tr id="nda-{{ nda.id }}">
-                <td>{{ nda.contact.displayName }}
+                <td>{{ contactLink(nda.contact,'view-admin','name') }}
                     <div class="pull-right">
                         {{ ndaLink(nda,'view-admin','icon') }} {{ ndaLink(nda,'edit-admin','icon') }} {{ ndaLink(nda,'download','icon') }}
                     </div>
                 </td>
                 <td>{{ nda.call }}</td>
-                <td>{{ contentTypeIcon(nda.contentType) }} {{ nda.contentType.description }} ({{ nda.size|parse_size }})</td>
+                <td>{{ contentTypeIcon(nda.contentType) }} {{ nda.contentType.description }} ({{ nda.size|parse_size }}
+                    )
+                </td>
                 <td>{{ formElement(form.get('nda_' ~ nda.id).get('dateSigned')) }}</td>
                 <td>
                     <button type="button" rel="{{ nda.id }}" data-complete-text="Approved"

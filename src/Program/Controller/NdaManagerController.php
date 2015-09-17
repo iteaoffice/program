@@ -100,7 +100,7 @@ class NdaManagerController extends ProgramAbstractController implements
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute(
-                    'zfcadmin/nda-manager/nda/view',
+                    'zfcadmin/nda-manager/view',
                     ['id' => $nda->getId()]
                 );
             }
