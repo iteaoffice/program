@@ -1,14 +1,16 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Program
- * @package    Controller
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
+
 namespace Program\Controller;
 
 use Program\Entity;
@@ -18,12 +20,13 @@ use Zend\Validator\File\FilesSize;
 use Zend\View\Model\ViewModel;
 
 /**
- * Create a link to an project
+ * Create a link to an project.
  *
  * @category   Program
- * @package    Controller
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @license    http://debranova.org/licence.txt proprietary
+ *
  * @link       http://debranova.org
  */
 class DoaController extends ProgramAbstractController
@@ -46,7 +49,7 @@ class DoaController extends ProgramAbstractController
 
     /**
      * Upload a DOA for a program (based on the affiliation, to be sure that the organisation is
-     * active in at least a project in the database)
+     * active in at least a project in the database).
      *
      * @return ViewModel
      */
@@ -112,9 +115,10 @@ class DoaController extends ProgramAbstractController
     }
 
     /**
-     * Action to replace an mis-uploaded DoA
+     * Action to replace an mis-uploaded DoA.
      *
      * @return ViewModel
+     *
      * @throws \Zend\Form\Exception\InvalidArgumentException
      * @throws \InvalidArgumentException
      * @throws \Zend\Mvc\Exception\DomainException
@@ -145,7 +149,7 @@ class DoaController extends ProgramAbstractController
 
             if ($form->isValid()) {
                 $fileData = $this->params()->fromFiles();
-                /**
+                /*
                  * Remove the current entity
                  */
                 foreach ($doa->getObject() as $object) {
@@ -230,7 +234,7 @@ class DoaController extends ProgramAbstractController
         if (is_null($doa) || sizeof($doa->getObject()) === 0) {
             return $this->notFoundAction();
         }
-        /**
+        /*
          * Due to the BLOB issue, we treat this as an array and we need to capture the first element
          */
         $object = $doa->getObject()->first()->getObject();

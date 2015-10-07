@@ -11,3 +11,5 @@ _("txt-fpp-grace-date");
 _("txt-doa-requirements");
 _("txt-po-grace-date-inline-help");
 _("txt-fpp-grace-date-inline-help");
+_("txt-doa-requirements-inline-help");
+_("txt-partners");

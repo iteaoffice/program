@@ -1,21 +1,25 @@
 <?php
 
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category    Program
- * @package     View
- * @subpackage  Helper
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   2004-2014 ITEA Office
  * @license     http://debranova.org/license.txt proprietary
+ *
  * @link        http://debranova.org
  */
+
 namespace Program\View\Helper;
 
 use BjyAuthorize\Service\Authorize;
 use BjyAuthorize\View\Helper\IsAllowed;
+use Organisation\Entity\Organisation;
+use Program\Entity\Doa;
 use Program\Entity\EntityAbstract;
+use Program\Entity\Program;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -25,14 +29,14 @@ use Zend\View\Helper\Url;
 use Zend\View\HelperPluginManager;
 
 /**
- * Create a link to an document
+ * Create a link to an document.
  *
  * @category   Program
- * @package    View
- * @subpackage Helper
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
 abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwareInterface
@@ -81,9 +85,25 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
      * @var array
      */
     protected $showOptions = [];
+    /**
+     * @var Doa
+     */
+    protected $doa;
+    /**
+     * @var Organisation
+     */
+    protected $organisation;
+    /**
+     * @var Program
+     */
+    protected $program;
+    /**
+     * @var int
+     */
+    protected $page;
 
     /**
-     * This function produces the link in the end
+     * This function produces the link in the end.
      *
      * @return string
      */
@@ -104,21 +124,24 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
         $this->parseShow();
 
         if ('social' === $this->getShow()) {
-            return $serverUrl().$url($this->router, $this->routerParams);
+            return $serverUrl() . $url($this->router, $this->routerParams);
         }
         $uri = '<a href="%s" title="%s" class="%s">%s</a>';
 
         return sprintf(
             $uri,
-            $url($this->router, $this->routerParams),
-            $this->text,
+            $serverUrl() . $url($this->router, $this->routerParams),
+            htmlentities($this->text),
             implode(' ', $this->classes),
-            implode('', $this->linkContent)
+            in_array($this->getShow(), ['icon', 'button', 'alternativeShow']) ? implode(
+                '',
+                $this->linkContent
+            ) : htmlentities(implode('', $this->linkContent))
         );
     }
 
     /**
-     * Default version of the action
+     * Default version of the action.
      */
     public function parseAction()
     {
@@ -134,6 +157,7 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
             case 'icon':
                 switch ($this->getAction()) {
                     case 'edit':
+                    case 'edit-admin':
                     case 'edit-community':
                         $this->addLinkContent('<i class="fa fa-pencil-square-o"></i>');
                         break;
@@ -149,7 +173,7 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
                 }
                 break;
             case 'button':
-                $this->addLinkContent('<span class="glyphicon glyphicon-info"></span> '.$this->getText());
+                $this->addLinkContent('<span class="glyphicon glyphicon-info"></span> ' . $this->getText());
                 $this->addClasses("btn btn-primary");
                 break;
             case 'text':
@@ -164,9 +188,10 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
                 $this->addLinkContent($this->getAlternativeShow());
                 break;
             case 'social':
-                /**
+                /*
                  * Social is treated in the createLink function, no content needs to be created
                  */
+
                 return;
             default:
                 if (!array_key_exists($this->getShow(), $this->showOptions)) {
@@ -366,7 +391,7 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
     }
 
     /**
-     * Add a parameter to the list of parameters for the router
+     * Add a parameter to the list of parameters for the router.
      *
      * @param string $key
      * @param        $value
@@ -408,7 +433,7 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
 
     /**
      * RouteInterface match returned by the router.
-     * Use a test on is_null to have the possibility to overrule the serviceLocator lookup for unit tets reasons
+     * Use a test on is_null to have the possibility to overrule the serviceLocator lookup for unit tets reasons.
      *
      * @return RouteMatch.
      */
@@ -437,5 +462,81 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
     public function translate($string)
     {
         return $this->serviceLocator->get('translate')->__invoke($string);
+    }
+
+    /**
+     * @return Doa
+     */
+    public function getDoa()
+    {
+        return $this->doa;
+    }
+
+    /**
+     * @param  Doa          $doa
+     * @return LinkAbstract
+     */
+    public function setDoa($doa)
+    {
+        $this->doa = $doa;
+
+        return $this;
+    }
+
+    /**
+     * @return Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
+     * @param  Organisation $organisation
+     * @return LinkAbstract
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * @return Program
+     */
+    public function getProgram()
+    {
+        return $this->program;
+    }
+
+    /**
+     * @param  Program      $program
+     * @return LinkAbstract
+     */
+    public function setProgram($program)
+    {
+        $this->program = $program;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPage()
+    {
+        return $this->page;
+    }
+
+    /**
+     * @param int $page
+     * @return LinkAbstract
+     */
+    public function setPage($page)
+    {
+        $this->page = $page;
+
+        return $this;
     }
 }

@@ -1,15 +1,16 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Project
- * @package    Entity
- * @subpackage Call
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
+
 namespace Program\Entity\Call;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -21,8 +22,7 @@ use Zend\Form\Annotation;
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("programcall_doa")
  *
- * @category    Contact
- * @package     Entity
+ * @category    Program
  */
 class Doa
 {
@@ -30,21 +30,25 @@ class Doa
      * @ORM\Column(name="doa_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
      * @var integer
      */
     private $id;
     /**
      * @ORM\Column(name="date_received", type="date", nullable=false)
+     *
      * @var \DateTime
      */
     private $dateReceived;
     /**
      * @ORM\Column(name="date_signed", type="date", nullable=true)
+     *
      * @var \DateTime
      */
     private $dateSigned;
     /**
      * @ORM\Column(name="branch", type="string", length=40, nullable=true)
+     *
      * @var string
      */
     private $branch;
@@ -53,6 +57,7 @@ class Doa
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")
      * })
+     *
      * @var \Organisation\Entity\Organisation
      */
     private $organisation;
@@ -61,6 +66,7 @@ class Doa
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="programcall_id", referencedColumnName="programcall_id", nullable=false)
      * })
+     *
      * @var \Program\Entity\Call\Call
      */
     private $call;

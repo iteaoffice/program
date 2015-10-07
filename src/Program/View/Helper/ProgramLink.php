@@ -1,27 +1,28 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Program
- * @package    View
- * @subpackage Helper
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
+
 namespace Program\View\Helper;
 
 use Program\Entity\Program;
 
 /**
- * Create a link to an project
+ * Create a link to an project.
  *
  * @category   Program
- * @package    View
- * @subpackage Helper
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @license    http://debranova.org/licence.txt proprietary
+ *
  * @link       http://debranova.org
  */
 class ProgramLink extends LinkAbstract
@@ -37,6 +38,7 @@ class ProgramLink extends LinkAbstract
      * @param                         $show
      *
      * @return string
+     *
      * @throws \RuntimeException
      * @throws \Exception
      */
@@ -45,7 +47,7 @@ class ProgramLink extends LinkAbstract
         $this->setProgram($program);
         $this->setAction($action);
         $this->setShow($show);
-        /**
+        /*
          * Set the non-standard options needed to give an other link value
          */
         $this->setShowOptions(
@@ -79,7 +81,7 @@ class ProgramLink extends LinkAbstract
     }
 
     /**
-     * Parse te action and fill the correct parameters
+     * Parse te action and fill the correct parameters.
      */
     public function parseAction()
     {
@@ -88,12 +90,16 @@ class ProgramLink extends LinkAbstract
                 $this->setRouter('zfcadmin/program-manager/new');
                 $this->setText($this->translate("txt-new-program"));
                 break;
+            case 'view':
+                $this->setRouter('zfcadmin/program-manager/view');
+                $this->setText(sprintf($this->translate("txt-view-program-%s"), $this->getProgram()));
+                break;
             case 'edit':
                 $this->setRouter('zfcadmin/program-manager/edit');
                 $this->setText(sprintf($this->translate("txt-edit-program-%s"), $this->getProgram()));
                 break;
             case 'view-list':
-                /**
+                /*
                  * For a list in the front-end simply use the MatchedRouteName
                  */
                 $this->setRouter($this->getRouteMatch()->getMatchedRouteName());

@@ -1,25 +1,28 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Program
- * @package    Controller
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
+
 namespace Program\Controller;
 
 use Zend\View\Model\ViewModel;
 
 /**
- * Create a link to an project
+ * Create a link to an project.
  *
  * @category   Program
- * @package    Controller
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @license    http://debranova.org/licence.txt proprietary
+ *
  * @link       http://debranova.org
  */
 class ProgramManagerController extends ProgramAbstractController
@@ -29,7 +32,7 @@ class ProgramManagerController extends ProgramAbstractController
      */
     public function listAction()
     {
-        /**
+        /*
          * workaround to find the call\call if that is asked
          * @todo
          */
@@ -47,13 +50,13 @@ class ProgramManagerController extends ProgramAbstractController
     }
 
     /**
-     * Create a new entity
+     * Create a new entity.
      *
      * @return \Zend\View\Model\ViewModel
      */
     public function newAction()
     {
-        /**
+        /*
          * workaround to find the call\call if that is asked
          * @todo
          */
@@ -81,13 +84,13 @@ class ProgramManagerController extends ProgramAbstractController
     }
 
     /**
-     * Edit an entity by finding it and call the corresponding form
+     * Edit an entity by finding it and call the corresponding form.
      *
      * @return \Zend\View\Model\ViewModel
      */
     public function editAction()
     {
-        /**
+        /*
          * workaround to find the call\call if that is asked
          * @todo
          */
@@ -121,13 +124,13 @@ class ProgramManagerController extends ProgramAbstractController
     }
 
     /**
-     * (soft-delete) an entity
+     * (soft-delete) an entity.
      *
      * @return \Zend\View\Model\ViewModel
      */
     public function deleteAction()
     {
-        /**
+        /*
          * workaround to find the call\call if that is asked
          * @todo
          */

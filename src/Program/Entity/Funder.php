@@ -1,14 +1,16 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Project
- * @package    Entity
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
+
 namespace Program\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -16,9 +18,10 @@ use Zend\Form\Annotation;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
- * Program
+ * Program.
  *
  * @ORM\Table(name="funder")
  * @ORM\Entity
@@ -26,24 +29,23 @@ use Zend\InputFilter\InputFilterInterface;
  * @Annotation\Name("funder")
  *
  * @category    Program
- * @package     Entity
  */
-class Funder extends EntityAbstract
+class Funder extends EntityAbstract implements ResourceInterface
 {
     /**
-     * Constant for hideOnWebsite = 0
+     * Constant for hideOnWebsite = 0.
      */
     const HIDE_ON_WEBSITE = 0;
     /**
-     * Constant for hideOnWebsite = 1
+     * Constant for hideOnWebsite = 1.
      */
     const SHOW_ON_WEBSITE = 1;
     /**
-     * Textual versions of the showOnWebsite
+     * Textual versions of the showOnWebsite.
      *
      * @var array
      */
-    protected $showOnWebsiteTemplates = [
+    protected static $showOnWebsiteTemplates = [
         self::HIDE_ON_WEBSITE => 'txt-hide-on-website',
         self::SHOW_ON_WEBSITE => 'txt-show-on-website',
     ];
@@ -60,10 +62,10 @@ class Funder extends EntityAbstract
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id", nullable=false)
      * })
-     * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
-     * @Annotation\Options({"target_class":"Contact\Entity\Contact"})
-     * @Annotation\Attributes({"label":"txt-contact", "required":"true","class":"span3"})
-     * @var \Program\Entity\Program
+     * @Annotation\Type("Zend\Form\Element\Select")
+     * @Annotation\Options({"label":"txt-contact"})
+     *
+     * @var \Contact\Entity\Contact
      */
     private $contact;
     /**
@@ -74,20 +76,25 @@ class Funder extends EntityAbstract
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
      * @Annotation\Options({"target_class":"General\Entity\Country"})
      * @Annotation\Attributes({"label":"txt-country", "required":"true","class":"span3"})
+     *
      * @var \General\Entity\Country
      */
     private $country;
     /**
      * @ORM\Column(name="info_office", type="text", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @Annotation\Type("\Zend\Form\Element\Textarea")
      * @Annotation\Options({"label":"txt-info-office"})
+     * @Annotation\Attributes({"rows":20})
+     *
      * @var string
      */
     private $infoOffice;
     /**
      * @ORM\Column(name="info_public", type="text", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @Annotation\Type("\Zend\Form\Element\Textarea")
      * @Annotation\Options({"label":"txt-info-public"})
+     * @Annotation\Attributes({"rows":20})
+     *
      * @var string
      */
     private $infoPublic;
@@ -96,12 +103,29 @@ class Funder extends EntityAbstract
      * @Annotation\Type("Zend\Form\Element\Radio")
      * @Annotation\Attributes({"array":"showOnWebsiteTemplates"})
      * @Annotation\Attributes({"label":"txt-show-on-website"})
+     *
      * @var \int
      */
     private $showOnWebsite;
+    /**
+     * @ORM\Column(name="position", type="smallint", nullable=false)
+     * @Annotation\Type("\Zend\Form\Element\Number")
+     * @Annotation\Options({"label":"txt-sorting-position"})
+     *
+     * @var int
+     */
+    private $position;
 
     /**
-     * Magic Getter
+     * Class constructor
+     */
+    public function __construct()
+    {
+        $this->position = 1;
+    }
+
+    /**
+     * Magic Getter.
      *
      * @param $property
      *
@@ -113,12 +137,10 @@ class Funder extends EntityAbstract
     }
 
     /**
-     * Magic Setter
+     * Magic Setter.
      *
      * @param $property
      * @param $value
-     *
-     * @return void
      */
     public function __set($property, $value)
     {
@@ -126,21 +148,29 @@ class Funder extends EntityAbstract
     }
 
     /**
-     * toString returns the name
+     * toString returns the name.
      *
      * @return string
      */
     public function __toString()
     {
-        return $this->program;
+        return (string)$this->contact->getDisplayName();
     }
 
     /**
-     * Set input filter
+     * @return string
+     */
+    public function getResourceId()
+    {
+        return sprintf("%s:%s", __CLASS__, $this->id);
+    }
+
+
+    /**
+     * Set input filter.
      *
      * @param InputFilterInterface $inputFilter
      *
-     * @return void
      * @throws \Exception
      */
     public function setInputFilter(InputFilterInterface $inputFilter)
@@ -187,13 +217,13 @@ class Funder extends EntityAbstract
     /**
      * @return array
      */
-    public function getShowOnWebsiteTemplates()
+    public static function getShowOnWebsiteTemplates()
     {
-        return $this->showOnWebsiteTemplates;
+        return self::$showOnWebsiteTemplates;
     }
 
     /**
-     * @return \Program\Entity\Program
+     * @return \Contact\Entity\Contact
      */
     public function getContact()
     {
@@ -201,7 +231,7 @@ class Funder extends EntityAbstract
     }
 
     /**
-     * @param \Program\Entity\Program $contact
+     * @param \Contact\Entity\Contact $contact
      */
     public function setContact($contact)
     {
@@ -273,10 +303,15 @@ class Funder extends EntityAbstract
     }
 
     /**
+     * @param bool $textual
      * @return int
      */
-    public function getShowOnWebsite()
+    public function getShowOnWebsite($textual = false)
     {
+        if ($textual) {
+            return self::$showOnWebsiteTemplates[$this->showOnWebsite];
+        }
+
         return $this->showOnWebsite;
     }
 
@@ -286,5 +321,24 @@ class Funder extends EntityAbstract
     public function setShowOnWebsite($showOnWebsite)
     {
         $this->showOnWebsite = $showOnWebsite;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param int $position
+     * @return Funder
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+
+        return $this;
     }
 }

@@ -1,28 +1,29 @@
 <?php
 
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Program
- * @package    View
- * @subpackage Helper
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
+
 namespace Program\View\Helper;
 
 use Program\Entity\Call\Call;
 
 /**
- * Create a link to an project
+ * Create a link to an project.
  *
  * @category   Program
- * @package    View
- * @subpackage Helper
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @license    http://debranova.org/licence.txt proprietary
+ *
  * @link       http://debranova.org
  */
 class CallLink extends LinkAbstract
@@ -38,6 +39,7 @@ class CallLink extends LinkAbstract
      * @param string $show
      *
      * @return string
+     *
      * @throws \Exception
      */
     public function __invoke(Call $call = null, $action = 'view', $show = 'name')
@@ -46,7 +48,7 @@ class CallLink extends LinkAbstract
         $this->setAction($action);
         $this->setShow($show);
 
-        /**
+        /*
          * Set the non-standard options needed to give an other link value
          */
         if (!is_null($call)) {
@@ -81,7 +83,7 @@ class CallLink extends LinkAbstract
     }
 
     /**
-     * Parse te action and fill the correct parameters
+     * Parse te action and fill the correct parameters.
      */
     public function parseAction()
     {
@@ -94,8 +96,18 @@ class CallLink extends LinkAbstract
                 $this->setRouter('zfcadmin/program-manager/edit');
                 $this->setText(sprintf($this->translate("txt-edit-call-%s"), $this->getCall()));
                 break;
+            case 'external':
+                $this->addRouterParam('docRef', $this->getCall()->getDocRef());
+                $this->setRouter('route-program_entity_call_call');
+                $this->addRouterParam('call', $this->getCall()->getId());
+                $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));
+                break;
+            case 'view-admin':
+                $this->setRouter('zfcadmin/program-manager/view');
+                $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));
+                break;
             case 'view-list':
-                /**
+                /*
                  * For a list in the front-end simply use the MatchedRouteName
                  */
                 $this->addRouterParam('docRef', $this->getRouteMatch()->getParam('docRef'));

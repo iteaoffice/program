@@ -1,18 +1,20 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category    SoloDB
- * @package     Program
- * @subpackage  Module
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ *
  * @version     4.0
  */
+
 namespace Program;
 
 use Program\Controller\Plugin\RenderDoa;
 use Program\Controller\Plugin\RenderNda;
+use Program\Controller\Plugin\RenderSession;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature;
 use Zend\Mvc\MvcEvent;
@@ -30,11 +32,11 @@ class Module implements
     {
         return [
             'Zend\Loader\ClassMapAutoloader' => [
-                __DIR__.'/../../autoload_classmap.php',
+                __DIR__ . '/../../autoload_classmap.php',
             ],
             'Zend\Loader\StandardAutoloader' => [
                 'namespaces' => [
-                    __NAMESPACE__ => __DIR__.'/../../src/'.__NAMESPACE__,
+                    __NAMESPACE__ => __DIR__ . '/../../src/' . __NAMESPACE__,
                 ],
             ],
         ];
@@ -45,17 +47,17 @@ class Module implements
      */
     public function getConfig()
     {
-        return include __DIR__.'/../../config/module.config.php';
+        return include __DIR__ . '/../../config/module.config.php';
     }
 
     /**
-     * Go to the service configuration
+     * Go to the service configuration.
      *
      * @return array
      */
     public function getServiceConfig()
     {
-        return include __DIR__.'/../../config/services.config.php';
+        return include __DIR__ . '/../../config/services.config.php';
     }
 
     /**
@@ -63,7 +65,7 @@ class Module implements
      */
     public function getViewHelperConfig()
     {
-        return include __DIR__.'/../../config/viewhelpers.config.php';
+        return include __DIR__ . '/../../config/viewhelpers.config.php';
     }
 
     /**
@@ -74,7 +76,8 @@ class Module implements
     }
 
     /**
-     * Move this to here to have config cache working
+     * Move this to here to have config cache working.
+     *
      * @return array
      */
     public function getControllerPluginConfig()
@@ -93,12 +96,18 @@ class Module implements
 
                     return $renderDoa;
                 },
+                'renderSession'    => function ($sm) {
+                    $renderSession = new RenderSession();
+                    $renderSession->setServiceLocator($sm->getServiceLocator());
+
+                    return $renderSession;
+                },
             ],
         ];
     }
 
     /**
-     * Listen to the bootstrap event
+     * Listen to the bootstrap event.
      *
      * @param EventInterface $e
      *

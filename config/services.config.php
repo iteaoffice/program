@@ -21,5 +21,8 @@ return [
         'program_nda_form'     => function ($sm) {
             return new Form\CreateObject($sm, new Entity\Nda());
         },
+        'program_funder_form'  => function ($sm) {
+            return new Form\CreateObject($sm, new Entity\Funder());
+        },
     ],
 ];

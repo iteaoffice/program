@@ -1,16 +1,17 @@
 <?php
 
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Program
- * @package    View
- * @subpackage Helper
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
+
 namespace Program\View\Helper;
 
 use Program\Entity\Call\Call;
@@ -21,13 +22,13 @@ use Zend\View\Helper\AbstractHelper;
 use Zend\View\HelperPluginManager;
 
 /**
- * Create a link to an project
+ * Create a link to an project.
  *
  * @category   Program
- * @package    View
- * @subpackage Helper
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @license    http://debranova.org/licence.txt proprietary
+ *
  * @link       http://debranova.org
  */
 class CallInformationBox extends AbstractHelper implements ServiceLocatorAwareInterface
@@ -41,6 +42,7 @@ class CallInformationBox extends AbstractHelper implements ServiceLocatorAwareIn
      * @param Call $call
      *
      * @return string
+     *
      * @throws \Exception
      */
     public function __invoke(Call $call)
@@ -56,7 +58,7 @@ class CallInformationBox extends AbstractHelper implements ServiceLocatorAwareIn
             CallService::FPP_CLOSED   => "%call% for Full Project Proposals closed %diff% ago (deadline: %time%)",
         ];
         $callStatus = $this->getCallService()->setCall($call)->getCallStatus();
-        /**
+        /*
          * Return null when we have an undefined status
          */
         if ($callStatus->result === CallService::UNDEFINED) {

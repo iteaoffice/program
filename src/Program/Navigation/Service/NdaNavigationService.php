@@ -1,24 +1,22 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category    Program
- * @package     Navigation
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
+
 namespace Program\Navigation\Service;
 
 /**
- * Factory for the Community admin navigation
- *
- * @package    Application
- * @subpackage Navigation\Service
+ * Factory for the Community admin navigation.
  */
 class NdaNavigationService extends NavigationServiceAbstract
 {
     /**
-     * Add the dedicated pages to the navigation
+     * Add the dedicated pages to the navigation.
      */
     public function update()
     {
@@ -51,7 +49,7 @@ class NdaNavigationService extends NavigationServiceAbstract
                             'pages'  => [
                                 [
                                     'label'  => $this->translate("txt-account-information"),
-                                    'route'  => 'contact/profile',
+                                    'route'  => 'community/contact/profile/view',
                                     'router' => $this->getRouter(),
                                     'pages'  => [
                                         [
@@ -81,7 +79,7 @@ class NdaNavigationService extends NavigationServiceAbstract
                             'pages'  => [
                                 [
                                     'label'  => $this->translate("txt-account-information"),
-                                    'route'  => 'contact/profile',
+                                    'route'  => 'community/contact/profile/view',
                                     'router' => $this->getRouter(),
                                     'pages'  => [
                                         [
@@ -108,7 +106,7 @@ class NdaNavigationService extends NavigationServiceAbstract
                         'pages'  => [
                             [
                                 'label'  => $this->translate("txt-account-information"),
-                                'route'  => 'contact/profile',
+                                'route'  => 'community/contact/profile/view',
                                 'router' => $this->getRouter(),
                                 'pages'  => [
                                     [
@@ -140,7 +138,7 @@ class NdaNavigationService extends NavigationServiceAbstract
                         'pages'  => [
                             [
                                 'label'  => $this->translate("txt-account-information"),
-                                'route'  => 'contact/profile',
+                                'route'  => 'community/contact/profile/view',
                                 'router' => $this->getRouter(),
                                 'pages'  => [
                                     [

@@ -1,13 +1,13 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category    Program
- * @package     Repository
- * @subpackage  Call
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
+
 namespace Program\Repository;
 
 use Contact\Entity\Contact;
@@ -17,7 +17,6 @@ use Program\Repository\Nda as NdaEntity;
 
 /**
  * @category    Program
- * @package     Repository
  */
 class Nda extends EntityRepository
 {
@@ -26,6 +25,7 @@ class Nda extends EntityRepository
      * @param Contact $contact
      *
      * @return null|NdaEntity
+     *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findNdaByCallAndContact(Call $call, Contact $contact)
@@ -47,6 +47,7 @@ class Nda extends EntityRepository
      * @param Contact $contact
      *
      * @return mixed
+     *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findNdaByContact(Contact $contact)

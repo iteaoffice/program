@@ -1,13 +1,13 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category    Program
- * @package     Navigation
- * @subpackage  Service
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
+
 namespace Program\Navigation\Service;
 
 use Program\Service\CallService;
@@ -18,10 +18,7 @@ use Zend\Mvc\Router\Http\TreeRouteStack;
 use Zend\Navigation\Navigation;
 
 /**
- * Factory for the Program admin navigation
- *
- * @package    Program
- * @subpackage Navigation\Service
+ * Factory for the Program admin navigation.
  */
 class NavigationServiceAbstract
 {

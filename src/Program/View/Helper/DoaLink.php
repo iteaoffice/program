@@ -1,48 +1,36 @@
 <?php
 
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Program
- * @package    View
- * @subpackage Helper
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright  2004-2014 ITEA Office
  * @license    http://debranova.org/license.txt proprietary
+ *
  * @link       http://debranova.org
  */
+
 namespace Program\View\Helper;
 
-use Organisation\Entity\Organisation;
 use Program\Acl\Assertion\Doa as DoaAssertion;
+use Organisation\Entity\Organisation;
 use Program\Entity\Doa;
 use Program\Entity\Program;
 
 /**
- * Create a link to an project
+ * Create a link to an project.
  *
  * @category   Program
- * @package    View
- * @subpackage Helper
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @license    http://debranova.org/licence.txt proprietary
+ *
  * @link       http://debranova.org
  */
 class DoaLink extends LinkAbstract
 {
-    /**
-     * @var Doa
-     */
-    protected $doa;
-    /**
-     * @var Organisation
-     */
-    protected $organisation;
-    /**
-     * @var Program
-     */
-    protected $program;
-
     /**
      * @param Doa          $doa
      * @param string       $action
@@ -51,6 +39,7 @@ class DoaLink extends LinkAbstract
      * @param Program      $program
      *
      * @return string
+     *
      * @throws \Exception
      */
     public function __invoke(
@@ -71,7 +60,7 @@ class DoaLink extends LinkAbstract
             $this->getAction()
         )
         ) {
-            return '';
+            return 'Access denied';
         }
         $this->addRouterParam('entity', 'Doa');
         if (!is_null($this->getDoa())) {
@@ -102,9 +91,7 @@ class DoaLink extends LinkAbstract
     }
 
     /**
-     * Extract the relevant parameters based on the action
-     *
-     * @return void;
+     * Extract the relevant parameters based on the action.
      */
     public function parseAction()
     {
@@ -123,7 +110,7 @@ class DoaLink extends LinkAbstract
                 break;
             case 'render':
                 $this->setRouter('program/doa/render');
-                /**
+                /*
                  * The $doa can be null, we then use the $organisation and $program to produce the link
                  */
                 $renderText = _("txt-render-doa-for-organisation-%s-in-program-%s-link-title");

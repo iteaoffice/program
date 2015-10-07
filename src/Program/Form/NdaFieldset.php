@@ -1,12 +1,13 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category  Content
- * @package   Form
+ *
  * @author    Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
+
 namespace Program\Form;
 
 use Doctrine\ORM\EntityManager;
@@ -19,8 +20,7 @@ use Zend\InputFilter\InputFilterProviderInterface;
 use Zend\Validator\File\Size;
 
 /**
- * Class NdaFieldset
- * @package Program\Form
+ * Class NdaFieldset.
  */
 class NdaFieldset extends Fieldset implements InputFilterProviderInterface
 {

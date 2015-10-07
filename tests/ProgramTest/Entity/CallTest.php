@@ -37,7 +37,7 @@ class CallTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->serviceManager = Bootstrap::getServiceManager();
-        $this->entityManager = $this->serviceManager->get('doctrine.entitymanager.orm_default');
+        $this->entityManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
     }
 
     public function provider()

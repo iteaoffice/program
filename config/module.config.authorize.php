@@ -29,7 +29,6 @@ return [
             'BjyAuthorize\Guard\Route' => [
                 ['route' => 'zfcadmin/program-manager/edit', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
                 ['route' => 'zfcadmin/program-manager/new', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
-                ['route' => 'zfcadmin/program-manager/delete', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
                 ['route' => 'zfcadmin/program-manager/list', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
                 [
                     'route'     => 'zfcadmin/nda-manager/approval',
@@ -51,9 +50,17 @@ return [
                     'roles'     => [strtolower(Access::ACCESS_OFFICE)],
                     'assertion' => NdaAssertion::class
                 ],
+                ['route' => 'zfcadmin/funder-manager/view', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
+                ['route' => 'zfcadmin/funder-manager/new', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
+                ['route' => 'zfcadmin/funder-manager/list', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
+                ['route' => 'zfcadmin/funder-manager/edit', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
                 [
                     'route' => 'program/view',
                     'roles' => [],
+                ],
+                [
+                    'route' => 'program/session/download',
+                    'roles' => [strtolower(Access::ACCESS_USER)],
                 ],
                 [
                     'route'     => 'program/nda/upload',
