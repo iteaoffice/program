@@ -1,27 +1,23 @@
 {
-  "name": "debranova/program",
+  "name": "iteaoffice/program",
   "type": "library",
   "license": "proprietary",
-  "description": "General code for Debranova Program",
+  "description": "General code for Program",
   "keywords": ["program"],
-  "homepage": "http://debranova.org",
+  "homepage": "https://itea3.org",
   "support": {
-    "email": "ticket@itea2.org"
+    "email": "ticket@itea3.org"
   },
   "authors": [
     {
       "name": "Johan van der Heide",
       "email": "johan.van.der.heide@itea3.org"
-    },
-    {
-      "name": "Andre Hebben",
-      "email": "andre.hebben@artemis-ia.eu"
     }
   ],
   "minimum-stability": "dev",
   "require": {
     "php": ">=5.5",
-    "zendframework/zendframework": "2.3.*@dev",
+    "zendframework/zendframework": "~2.5",
     "doctrine/doctrine-orm-module": "0.9.*@dev",
     "gedmo/doctrine-extensions": "2.3.*@dev"
   },
