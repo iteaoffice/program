@@ -70,25 +70,7 @@ class DoaLink extends LinkAbstract
         return $this->createLink();
     }
 
-    /**
-     * @return Doa
-     */
-    public function getDoa()
-    {
-        if (is_null($this->doa)) {
-            $this->doa = new Doa();
-        }
 
-        return $this->doa;
-    }
-
-    /**
-     * @param Doa $doa
-     */
-    public function setDoa($doa)
-    {
-        $this->doa = $doa;
-    }
 
     /**
      * Extract the relevant parameters based on the action.

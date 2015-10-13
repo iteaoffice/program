@@ -275,7 +275,7 @@ class CallService extends ServiceAbstract
                 $referenceDate = $this->getCall()->getPoCloseDate();
                 $result = self::PO_GRACE;
                 $type = Type::TYPE_PO;
-            } elseif ($this->getCall()->getPoCloseDate() > $notificationDeadline and
+            } elseif ($this->getCall()->getPoCloseDate() > $notificationDeadline &&
                 $this->getCall()->getFppOpenDate() > $today
             ) {
                 $referenceDate = $this->getCall()->getPoCloseDate();

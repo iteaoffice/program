@@ -14,7 +14,6 @@
 namespace Program\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 
@@ -115,7 +114,6 @@ class NdaObject extends EntityAbstract
     {
         if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
-            $factory = new InputFactory();
             $this->inputFilter = $inputFilter;
         }
 

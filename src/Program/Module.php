@@ -17,6 +17,7 @@ use Program\Controller\Plugin\RenderNda;
 use Program\Controller\Plugin\RenderSession;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature;
+use Zend\Mvc\Controller\PluginManager;
 use Zend\Mvc\MvcEvent;
 
 /**
@@ -84,19 +85,19 @@ class Module implements
     {
         return [
             'factories' => [
-                'renderNda'        => function ($sm) {
+                'renderNda'        => function (PluginManager $sm) {
                     $renderNda = new RenderNda();
                     $renderNda->setServiceLocator($sm->getServiceLocator());
 
                     return $renderNda;
                 },
-                'renderProgramDoa' => function ($sm) {
+                'renderProgramDoa' => function (PluginManager $sm) {
                     $renderDoa = new RenderDoa();
                     $renderDoa->setServiceLocator($sm->getServiceLocator());
 
                     return $renderDoa;
                 },
-                'renderSession'    => function ($sm) {
+                'renderSession'    => function (PluginManager $sm) {
                     $renderSession = new RenderSession();
                     $renderSession->setServiceLocator($sm->getServiceLocator());
 
@@ -117,11 +118,9 @@ class Module implements
     {
         $app = $e->getParam('application');
         $em = $app->getEventManager();
-        $em->attach(
-            MvcEvent::EVENT_DISPATCH,
-            function ($event) {
-                $event->getApplication()->getServiceManager()->get('program_nda_navigation_service')->update();
-            }
-        );
+        $em->attach(MvcEvent::EVENT_DISPATCH, function (MvcEvent $event) {
+            $event->getApplication()->getServiceManager()
+                ->get('program_nda_navigation_service')->update();
+        });
     }
 }
