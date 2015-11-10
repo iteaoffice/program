@@ -5,10 +5,10 @@
  * @category   Program
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2014 ITEA Office
- * @license    http://debranova.org/license.txt proprietary
+ * @copyright  2004-2015 ITEA Office
+ * @license    https://itea3.org/license.txt proprietary
  *
- * @link       http://debranova.org
+ * @link       https://itea3.org
  */
 
 namespace Program\Controller\Plugin;
@@ -26,9 +26,9 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @category   Program
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    http://debranova.org/licence.txt proprietary
+ * @license    https://itea3.org/licence.txt proprietary
  *
- * @link       http://debranova.org
+ * @link       https://itea3.org
  */
 class RenderNda extends AbstractPlugin
 {
@@ -149,7 +149,7 @@ class RenderNda extends AbstractPlugin
         $pdf = new ProgramPdf();
         $pdf->setTemplate($this->getModuleOptions()->getNdaTemplate());
         $pdf->addPage();
-        $pdf->SetFontSize(10);
+        $pdf->SetFontSize(7.5);
         $twig = $this->getServiceLocator()->get('ZfcTwigRenderer');
         /*
          * Write the contact details

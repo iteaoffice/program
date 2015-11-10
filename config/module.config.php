@@ -5,11 +5,10 @@
  * @category    Program
  * @package     Config
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c] 2004-2014 ITEA Office (http://itea3.org]
+ * @copyright   Copyright (c] 2004-2015 ITEA Office (https://itea3.org]
  */
 use Program\Acl\Assertion;
 use Program\Controller;
-use Program\Controller\ControllerInitializer;
 use Program\Service\CallService;
 use Program\Service\FormService;
 use Program\Service\ProgramService;
@@ -19,14 +18,13 @@ use Program\View\Helper;
 $config = [
     'controllers'     => [
         'initializers' => [
-            ControllerInitializer::class
+            Controller\ControllerInitializer::class
         ],
         'invokables'   => [
-            'program'                                 => Controller\ProgramController::class,
-            'program-manager'                         => Controller\ProgramManagerController::class,
-            'nda-manager'                             => Controller\NdaManagerController::class,
-            'program-nda'                             => Controller\NdaController::class,
-            'program-doa'                             => Controller\DoaController::class,
+            Controller\ProgramManagerController::class                         => Controller\ProgramManagerController::class,
+            Controller\NdaManagerController::class                             => Controller\NdaManagerController::class,
+            Controller\NdaController::class                             => Controller\NdaController::class,
+            Controller\DoaController::class                             => Controller\DoaController::class,
             Controller\FunderManagerController::class => Controller\FunderManagerController::class,
             Controller\SessionController::class       => Controller\SessionController::class
         ],

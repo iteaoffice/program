@@ -3,7 +3,9 @@
   "type": "library",
   "license": "proprietary",
   "description": "General code for Program",
-  "keywords": ["program"],
+  "keywords": [
+    "program"
+  ],
   "homepage": "https://itea3.org",
   "support": {
     "email": "ticket@itea3.org"
@@ -18,18 +20,16 @@
   "require": {
     "php": ">=5.5",
     "zendframework/zendframework": "~2.5",
-    "doctrine/doctrine-orm-module": "0.9.*@dev",
-    "gedmo/doctrine-extensions": "2.3.*@dev"
   },
   "require-dev": {
-    "phpunit/phpunit": "4.2.*",
-    "pdepend/pdepend": "2.0.*",
-    "phpmd/phpmd": "2.0.*",
-    "sebastian/phpcpd": "*",
-    "squizlabs/php_codesniffer": "2.*",
-    "fabpot/php-cs-fixer": "0.5.7.",
-    "jakub-onderka/php-parallel-lint": "0.*",
-    "jakub-onderka/php-console-highlighter": "0.*"
+    "phpunit/phpunit": "@stable",
+    "pdepend/pdepend": "@stable",
+    "phpmd/phpmd": "@stable",
+    "sebastian/phpcpd": "@stable",
+    "squizlabs/php_codesniffer": "@stable",
+    "fabpot/php-cs-fixer": "@stable",
+    "jakub-onderka/php-parallel-lint": "@stable",
+    "jakub-onderka/php-console-highlighter": "@stable"
   },
   "autoload": {
     "psr-4": {

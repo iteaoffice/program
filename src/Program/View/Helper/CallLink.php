@@ -6,10 +6,10 @@
  * @category   Program
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2014 ITEA Office
- * @license    http://debranova.org/license.txt proprietary
+ * @copyright  2004-2015 ITEA Office
+ * @license    https://itea3.org/license.txt proprietary
  *
- * @link       http://debranova.org
+ * @link       https://itea3.org
  */
 
 namespace Program\View\Helper;
@@ -22,9 +22,9 @@ use Program\Entity\Call\Call;
  * @category   Program
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    http://debranova.org/licence.txt proprietary
+ * @license    https://itea3.org/licence.txt proprietary
  *
- * @link       http://debranova.org
+ * @link       https://itea3.org
  */
 class CallLink extends LinkAbstract
 {

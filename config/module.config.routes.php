@@ -5,7 +5,7 @@
  * @category    Program
  * @package     Config
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c] 2004-2014 ITEA Office (http://itea3.org]
+ * @copyright   Copyright (c] 2004-2015 ITEA Office (https://itea3.org]
  */
 use Program\Controller;
 
@@ -81,7 +81,7 @@ return [
                         'options'      => [
                             'route'    => '/nda',
                             'defaults' => [
-                                'controller' => 'program-nda',
+                                'controller' => Controller\NdaController::class,
                                 'action'     => 'index',
                             ],
                         ],
@@ -155,7 +155,7 @@ return [
                         'options'      => [
                             'route'    => '/doa',
                             'defaults' => [
-                                'controller' => 'program-doa',
+                                'controller' => Controller\DoaController::class,
                                 'action'     => 'index',
                             ],
                         ],
@@ -222,7 +222,7 @@ return [
                         'options'       => [
                             'route'    => '/program',
                             'defaults' => [
-                                'controller' => 'program-manager',
+                                'controller' => Controller\ProgramManagerController::class,
                                 'action'     => 'index',
                             ],
                         ],
@@ -281,7 +281,7 @@ return [
                         'options'       => [
                             'route'    => '/nda',
                             'defaults' => [
-                                'controller' => 'nda-manager',
+                                'controller' => Controller\NdaManagerController::class,
                                 'action'     => 'index',
                             ],
                         ],

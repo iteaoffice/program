@@ -6,9 +6,9 @@
  * @package    View
  * @subpackage Helper
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2014 ITEA Office
- * @license    http://debranova.org/license.txt proprietary
- * @link       http://debranova.org
+ * @copyright  2004-2015 ITEA Office
+ * @license    https://itea3.org/license.txt proprietary
+ * @link       https://itea3.org
  */
 namespace ProgramTest\View\Helper;
 
@@ -22,8 +22,8 @@ use ProgramTest\Bootstrap;
  * @package    View
  * @subpackage Helper
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    http://debranova.org/licence.txt proprietary
- * @link       http://debranova.org
+ * @license    https://itea3.org/licence.txt proprietary
+ * @link       https://itea3.org
  */
 class CallServiceProxyTest extends \PHPUnit_Framework_TestCase
 {

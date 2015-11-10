@@ -5,10 +5,10 @@
  * @category   Program
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2014 ITEA Office
- * @license    http://debranova.org/license.txt proprietary
+ * @copyright  2004-2015 ITEA Office
+ * @license    https://itea3.org/license.txt proprietary
  *
- * @link       http://debranova.org
+ * @link       https://itea3.org
  */
 
 namespace Program\Controller;
@@ -26,9 +26,9 @@ use Zend\View\Model\ViewModel;
  * @category   Program
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    http://debranova.org/licence.txt proprietary
+ * @license    https://itea3.org/licence.txt proprietary
  *
- * @link       http://debranova.org
+ * @link       https://itea3.org
  */
 class NdaController extends ProgramAbstractController
 {
@@ -54,6 +54,7 @@ class NdaController extends ProgramAbstractController
     public function uploadAction()
     {
         $call = $this->getCallService()->findLastCallAndActiveVersionType()->call;
+
         if (!is_null($callId = $this->getEvent()->getRouteMatch()->getParam('id'))) {
             $call = $this->getCallService()->setCallId($callId)->getCall();
             if ($this->getCallService()->isEmpty()) {
@@ -79,14 +80,14 @@ class NdaController extends ProgramAbstractController
         $form->setData($data);
         if ($this->getRequest()->isPost() && $form->isValid()) {
             $fileData = $form->getData('file');
-            $nda = $this->getCallService()->uploadNda(
+            $this->getCallService()->uploadNda(
                 $fileData['file'],
                 $this->zfcUserAuthentication()->getIdentity(),
                 $call
             );
 
             $this->flashMessenger()->setNamespace('success')->addMessage(
-                sprintf(_("txt-nda-has-been-uploaded-successfully"))
+                sprintf($this->translate("txt-nda-has-been-uploaded-successfully"))
             );
 
             return $this->redirect()->toRoute('community');

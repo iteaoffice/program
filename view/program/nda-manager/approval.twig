@@ -13,6 +13,7 @@
         <thead>
         <tr>
             <th>{{ translate("txt-contact") }}</th>
+            <th>{{ translate("txt-organisation") }}</th>
             <th>{{ translate("txt-type") }}</th>
             <th>{{ translate("txt-content-type") }}</th>
             <th>{{ translate("txt-date-signed") }}</th>
@@ -27,6 +28,7 @@
                         {{ ndaLink(nda,'view-admin','icon') }} {{ ndaLink(nda,'edit-admin','icon') }} {{ ndaLink(nda,'download','icon') }}
                     </div>
                 </td>
+                <td>{{ nda.contact.contactOrganisation.organisation }}</td>
                 <td>{{ nda.call }}</td>
                 <td>{{ contentTypeIcon(nda.contentType) }} {{ nda.contentType.description }} ({{ nda.size|parse_size }}
                     )
