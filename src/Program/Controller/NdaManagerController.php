@@ -50,12 +50,10 @@ class NdaManagerController extends ProgramAbstractController implements
         $nda = $this->getCallService()->findNotApprovedNda();
         $form = new NdaApproval($nda, $this->getContactService());
 
-        return new ViewModel(
-            [
-                'nda'  => $nda,
-                'form' => $form,
-            ]
-        );
+        return new ViewModel([
+            'nda'  => $nda,
+            'form' => $form,
+        ]);
     }
 
     /**
@@ -76,10 +74,7 @@ class NdaManagerController extends ProgramAbstractController implements
      */
     public function editAction()
     {
-        $nda = $this->getCallService()->findEntityById(
-            'nda',
-            $this->getEvent()->getRouteMatch()->getParam('id')
-        );
+        $nda = $this->getCallService()->findEntityById('nda', $this->getEvent()->getRouteMatch()->getParam('id'));
 
         if (is_null($nda)) {
             return $this->notFoundAction();
@@ -91,27 +86,23 @@ class NdaManagerController extends ProgramAbstractController implements
         );
 
         $form = $this->getFormService()->prepare('nda', $nda, $data);
-        $form->get('nda')->get('contact')->setValueOptions(
-            [$nda->getContact()->getId() => $nda->getContact()->getFormName()]
-        );
+        $form->get('nda')->get('contact')->setValueOptions([
+            $nda->getContact()->getId() => $nda->getContact()->getFormName()
+        ]);
         $form->get('nda')->get('programCall')->setValue($nda->getCall());
 
         //Get contacts in an organisation
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                return $this->redirect()->toRoute(
-                    'zfcadmin/nda-manager/view',
-                    ['id' => $nda->getId()]
-                );
+                return $this->redirect()->toRoute('zfcadmin/nda-manager/view', ['id' => $nda->getId()]);
             }
 
             if (isset($data['delete'])) {
-                $this->flashMessenger()->setNamespace('success')->addMessage(
-                    sprintf(
+                $this->flashMessenger()->setNamespace('success')
+                    ->addMessage(sprintf(
                         $this->translate("txt-nda-for-contact-%s-has-been-removed"),
                         $nda->getContact()->getDisplayName()
-                    )
-                );
+                    ));
 
                 $this->getCallService()->removeEntity($nda);
 
@@ -144,9 +135,8 @@ class NdaManagerController extends ProgramAbstractController implements
                     $fileSizeValidator = new FilesSize(PHP_INT_MAX);
                     $fileSizeValidator->isValid($fileData['nda']['file']);
                     $nda->setSize($fileSizeValidator->size);
-                    $nda->setContentType(
-                        $this->getGeneralService()->findContentTypeByContentTypeName($fileData['nda']['file']['type'])
-                    );
+                    $nda->setContentType($this->getGeneralService()
+                        ->findContentTypeByContentTypeName($fileData['nda']['file']['type']));
                 }
 
                 /*
@@ -160,26 +150,20 @@ class NdaManagerController extends ProgramAbstractController implements
 
                 $this->getCallService()->updateEntity($nda);
 
-                $this->flashMessenger()->setNamespace('success')->addMessage(
-                    sprintf(
+                $this->flashMessenger()->setNamespace('success')
+                    ->addMessage(sprintf(
                         _("txt-nda-for-contact-%s-has-been-updated"),
                         $nda->getContact()->getDisplayName()
-                    )
-                );
+                    ));
 
-                return $this->redirect()->toRoute(
-                    'zfcadmin/nda-manager/view',
-                    ['id' => $nda->getId()]
-                );
+                return $this->redirect()->toRoute('zfcadmin/nda-manager/view', ['id' => $nda->getId()]);
             }
         }
 
-        return new ViewModel(
-            [
-                'nda'  => $nda,
-                'form' => $form,
-            ]
-        );
+        return new ViewModel([
+            'nda'  => $nda,
+            'form' => $form,
+        ]);
     }
 
     /**
@@ -193,21 +177,17 @@ class NdaManagerController extends ProgramAbstractController implements
         $dateSigned = $this->getEvent()->getRequest()->getPost()->get('dateSigned');
 
         if (empty($dateSigned)) {
-            return new JsonModel(
-                [
-                    'result' => 'error',
-                    'error'  => $this->translate("txt-date-signed-is-empty"),
-                ]
-            );
+            return new JsonModel([
+                'result' => 'error',
+                'error'  => $this->translate("txt-date-signed-is-empty"),
+            ]);
         }
 
         if (!\DateTime::createFromFormat('Y-h-d', $dateSigned)) {
-            return new JsonModel(
-                [
-                    'result' => 'error',
-                    'error'  => $this->translate("txt-incorrect-date-format-should-be-yyyy-mm-dd"),
-                ]
-            );
+            return new JsonModel([
+                'result' => 'error',
+                'error'  => $this->translate("txt-incorrect-date-format-should-be-yyyy-mm-dd"),
+            ]);
         }
 
         /*
@@ -222,10 +202,8 @@ class NdaManagerController extends ProgramAbstractController implements
         $this->getAdminService()->flushPermitsByContact($nda->getContact());
 
         //Update the
-        return new JsonModel(
-            [
-                'result' => 'success',
-            ]
-        );
+        return new JsonModel([
+            'result' => 'success',
+        ]);
     }
 }

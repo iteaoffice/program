@@ -14,25 +14,25 @@ return [
             'project' => [
                 'pages' => [
                     'program-list'      => [
-                        'label'  => _("txt-programs"),
+                        'label'  => _("txt-nav-program-list"),
                         'route'  => 'zfcadmin/program-manager/list',
                         'params' => [
                             'entity' => 'program'
                         ]
                     ],
                     'program-call-list' => [
-                        'label'  => _("txt-program-calls"),
+                        'label'  => _("txt-nav-program-calls"),
                         'route'  => 'zfcadmin/program-manager/list',
                         'params' => [
                             'entity' => 'call'
                         ]
                     ],
                     'nda-approval'      => [
-                        'label' => _("txt-nda-approval"),
+                        'label' => _("txt-nav-nda-approval"),
                         'route' => 'zfcadmin/nda-manager/approval',
                     ],
                     'funder'            => [
-                        'label' => _("txt-funder"),
+                        'label' => _("txt-nav-funder-list"),
                         'route' => 'zfcadmin/funder-manager/list',
                     ],
                 ],

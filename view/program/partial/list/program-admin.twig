@@ -1,3 +1,6 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-program-list")) %}
+
 <h1>{{ translate("txt-program-list") }} {{ programLink(null,'new', 'button') }}</h1>
 
 <table class="table table-hover table-striped">

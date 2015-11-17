@@ -5,7 +5,7 @@
     <dt>{{ translate("txt-partners") }}</dt>
     <dd>{{ partners }}</dd>
     <dt>{{ translate("txt-national-funding") }}</dt>
-    <dd>{{ (funding_national/1000000)|number_format(2, '.', ',') }} M Euro</dd>
+    <dd>{{ (funding_national/1000000)|number_format(2, '.', ',') }}{{ translate("txt-meuro") }}</dd>
     <dt>{{ translate("txt-eu-funding") }}</dt>
-    <dd>{{ (funding_eu/1000000)|number_format(2, '.', ',') }} M Euro</dd>
+    <dd>{{ (funding_eu/1000000)|number_format(2, '.', ',') }} {{ translate("txt-meuro") }}</dd>
 </dl>

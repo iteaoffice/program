@@ -228,7 +228,7 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes'  => [
-                            'list'   => [
+                            'list' => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/list/[:entity].html',
@@ -237,7 +237,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'new'    => [
+                            'new'  => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/new/:entity',
@@ -246,7 +246,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'edit'   => [
+                            'edit' => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/edit/:entity/:id',
@@ -255,21 +255,12 @@ return [
                                     ],
                                 ],
                             ],
-                            'view'   => [
+                            'view' => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/view/:entity/:id',
                                     'defaults' => [
                                         'action' => 'view',
-                                    ],
-                                ],
-                            ],
-                            'delete' => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'    => '/delete/:entity/:id',
-                                    'defaults' => [
-                                        'action' => 'delete',
                                     ],
                                 ],
                             ],

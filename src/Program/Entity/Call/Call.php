@@ -53,11 +53,26 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     /**
      * @var array
      */
-    protected $doaRequirementTemplates = [
-        self::DOA_REQUIREMENT_NOT_APPLICABLE => 'txt-no-doa-required',
-        self::DOA_REQUIREMENT_PER_PROGRAM    => 'txt-doa-per-program-required',
-        self::DOA_REQUIREMENT_PER_PROJECT    => 'txt-doa-per-project-required',
-    ];
+    protected static $doaRequirementTemplates
+        = [
+            self::DOA_REQUIREMENT_NOT_APPLICABLE => 'txt-no-doa-required',
+            self::DOA_REQUIREMENT_PER_PROGRAM    => 'txt-doa-per-program-required',
+            self::DOA_REQUIREMENT_PER_PROJECT    => 'txt-doa-per-project-required',
+        ];
+
+    const NDA_REQUIREMENT_NOT_APPLICABLE = 1;
+    const NDA_REQUIREMENT_PER_CALL = 2;
+    const NDA_REQUIREMENT_PER_PROJECT = 3;
+
+    /**
+     * @var array
+     */
+    protected static $ndaRequirementTemplates
+        = [
+            self::NDA_REQUIREMENT_NOT_APPLICABLE => 'txt-no-dna-required',
+            self::NDA_REQUIREMENT_PER_CALL       => 'txt-nda-per-call-required',
+            self::NDA_REQUIREMENT_PER_PROJECT    => 'txt-nda-per-project-required',
+        ];
 
     /**
      * @ORM\Column(name="programcall_id", type="integer", nullable=false)
@@ -143,7 +158,6 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
      * @Annotation\Type("Zend\Form\Element\Radio")
      * @Annotation\Attributes({"array":"doaRequirementTemplates"})
      * @Annotation\Options({"label":"txt-doa-requirements","help-block":"txt-doa-requirements-inline-help"})
-     * @Annotation\Required(true)
      *
      * @var int
      */
@@ -152,9 +166,8 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     /**
      * @ORM\Column(name="nda_requirement", type="smallint", nullable=false)
      * @Annotation\Type("Zend\Form\Element\Radio")
-     * @Annotation\Attributes({"array":"ndaRequirement"})
+     * @Annotation\Attributes({"array":"ndaRequirementTemplates"})
      * @Annotation\Options({"label":"txt-nda-requirements","help-block":"txt-nda-requirements-inline-help"})
-     * @Annotation\Required(true)
      *
      * @var int
      */
@@ -342,6 +355,23 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
+     * @return array
+     */
+    public static function getDoaRequirementTemplates()
+    {
+        return self::$doaRequirementTemplates;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getNdaRequirementTemplates()
+    {
+        return self::$ndaRequirementTemplates;
+    }
+
+
+    /**
      * Set input filter.
      *
      * @param InputFilterInterface $inputFilter
@@ -353,21 +383,6 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
         throw new \Exception("Setting an inputFilter is currently not supported");
     }
 
-    /**
-     * @return array
-     */
-    public function getDoaRequirementTemplates()
-    {
-        return $this->doaRequirementTemplates;
-    }
-
-    /**
-     * @param array $doaRequirementTemplates
-     */
-    public function setDoaRequirementTemplates($doaRequirementTemplates)
-    {
-        $this->doaRequirementTemplates = $doaRequirementTemplates;
-    }
 
     /**
      * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
@@ -377,156 +392,124 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
         if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
             $factory = new InputFactory();
-            $inputFilter->add(
-                $factory->createInput(
+            $inputFilter->add($factory->createInput([
+                'name'       => 'call',
+                'required'   => true,
+                'filters'    => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+                'validators' => [
                     [
-                        'name'       => 'call',
-                        'required'   => true,
-                        'filters'    => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 100,
                         ],
-                        'validators' => [
-                            [
-                                'name'    => 'StringLength',
-                                'options' => [
-                                    'encoding' => 'UTF-8',
-                                    'min'      => 1,
-                                    'max'      => 100,
-                                ],
-                            ],
-                        ],
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
+                    ],
+                ],
+            ]));
+            $inputFilter->add($factory->createInput([
+                'name'       => 'poOpenDate',
+                'required'   => true,
+                'filters'    => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+                'validators' => [
                     [
-                        'name'       => 'poOpenDate',
-                        'required'   => true,
-                        'filters'    => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
+                        'name'    => 'DateTime',
+                        'options' => [
+                            'pattern' => 'yyyy-mm-dd H:mm:ss',
                         ],
-                        'validators' => [
-                            [
-                                'name'    => 'DateTime',
-                                'options' => [
-                                    'pattern' => 'yyyy-mm-dd H:mm:ss',
-                                ],
-                            ],
-                        ],
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
+                    ],
+                ],
+            ]));
+            $inputFilter->add($factory->createInput([
+                'name'       => 'poCloseDate',
+                'required'   => true,
+                'filters'    => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+                'validators' => [
                     [
-                        'name'       => 'poCloseDate',
-                        'required'   => true,
-                        'filters'    => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
+                        'name'    => 'DateTime',
+                        'options' => [
+                            'pattern' => 'yyyy-mm-dd H:mm:ss',
                         ],
-                        'validators' => [
-                            [
-                                'name'    => 'DateTime',
-                                'options' => [
-                                    'pattern' => 'yyyy-mm-dd H:mm:ss',
-                                ],
-                            ],
-                        ],
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
+                    ],
+                ],
+            ]));
+            $inputFilter->add($factory->createInput([
+                'name'       => 'poGraceDate',
+                'required'   => false,
+                'filters'    => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+                'validators' => [
                     [
-                        'name'       => 'poGraceDate',
-                        'required'   => false,
-                        'filters'    => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
+                        'name'    => 'DateTime',
+                        'options' => [
+                            'pattern' => 'yyyy-mm-dd H:mm:ss',
                         ],
-                        'validators' => [
-                            [
-                                'name'    => 'DateTime',
-                                'options' => [
-                                    'pattern' => 'yyyy-mm-dd H:mm:ss',
-                                ],
-                            ],
-                        ],
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
+                    ],
+                ],
+            ]));
+            $inputFilter->add($factory->createInput([
+                'name'       => 'fppOpenDate',
+                'required'   => true,
+                'filters'    => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+                'validators' => [
                     [
-                        'name'       => 'fppOpenDate',
-                        'required'   => true,
-                        'filters'    => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
+                        'name'    => 'DateTime',
+                        'options' => [
+                            'pattern' => 'yyyy-mm-dd H:mm:ss',
                         ],
-                        'validators' => [
-                            [
-                                'name'    => 'DateTime',
-                                'options' => [
-                                    'pattern' => 'yyyy-mm-dd H:mm:ss',
-                                ],
-                            ],
-                        ],
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
+                    ],
+                ],
+            ]));
+            $inputFilter->add($factory->createInput([
+                'name'       => 'fppGraceDate',
+                'required'   => false,
+                'filters'    => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+                'validators' => [
                     [
-                        'name'       => 'fppGraceDate',
-                        'required'   => false,
-                        'filters'    => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
+                        'name'    => 'DateTime',
+                        'options' => [
+                            'pattern' => 'yyyy-mm-dd H:mm:ss',
                         ],
-                        'validators' => [
-                            [
-                                'name'    => 'DateTime',
-                                'options' => [
-                                    'pattern' => 'yyyy-mm-dd H:mm:ss',
-                                ],
-                            ],
-                        ],
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
+                    ],
+                ],
+            ]));
+            $inputFilter->add($factory->createInput([
+                'name'       => 'fppCloseDate',
+                'required'   => true,
+                'filters'    => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+                'validators' => [
                     [
-                        'name'       => 'fppCloseDate',
-                        'required'   => true,
-                        'filters'    => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
+                        'name'    => 'DateTime',
+                        'options' => [
+                            'pattern' => 'yyyy-mm-dd H:mm:ss',
                         ],
-                        'validators' => [
-                            [
-                                'name'    => 'DateTime',
-                                'options' => [
-                                    'pattern' => 'yyyy-mm-dd H:mm:ss',
-                                ],
-                            ],
-                        ],
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'call',
-                        'required' => true,
-                    ]
-                )
-            );
+                    ],
+                ],
+            ]));
+            $inputFilter->add($factory->createInput([
+                'name'     => 'call',
+                'required' => true,
+            ]));
             $this->inputFilter = $inputFilter;
         }
 
@@ -865,8 +848,12 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
      *
      * @return int|string
      */
-    public function getNdaRequirement($bool = false)
+    public function getNdaRequirement($textual = false)
     {
+        if ($textual) {
+            return self::$ndaRequirementTemplates[$this->ndaRequirement];
+        }
+
         return $this->ndaRequirement;
     }
 
@@ -886,7 +873,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     public function getDoaRequirement($textual = false)
     {
         if ($textual) {
-            return $this->doaRequirementTemplates[$this->doaRequirement];
+            return self::$doaRequirementTemplates[$this->doaRequirement];
         }
 
         return $this->doaRequirement;
@@ -910,6 +897,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
 
     /**
      * @param \Project\Entity\Idea\MessageBoard[] $ideaMessageBoard
+     *
      * @return Call
      */
     public function setIdeaMessageBoard($ideaMessageBoard)
