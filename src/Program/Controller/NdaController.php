@@ -39,7 +39,7 @@ class NdaController extends ProgramAbstractController
     {
         $nda = $this->getProgramService()->findEntityById(
             'Nda',
-            $this->getEvent()->getRouteMatch()->getParam('id')
+            $this->params('id')
         );
         if (is_null($nda) || sizeof($nda->getObject()) === 0) {
             return $this->notFoundAction();
@@ -55,7 +55,7 @@ class NdaController extends ProgramAbstractController
     {
         $call = $this->getCallService()->findLastCallAndActiveVersionType()->call;
 
-        if (!is_null($callId = $this->getEvent()->getRouteMatch()->getParam('id'))) {
+        if (!is_null($callId = $this->params('id'))) {
             $call = $this->getCallService()->setCallId($callId)->getCall();
             if ($this->getCallService()->isEmpty()) {
                 return $this->notFoundAction();
@@ -116,7 +116,7 @@ class NdaController extends ProgramAbstractController
     {
         $nda = $this->getProgramService()->findEntityById(
             'Nda',
-            $this->getEvent()->getRouteMatch()->getParam('id')
+            $this->params('id')
         );
         if (is_null($nda) || sizeof($nda->getObject()) === 0) {
             return $this->notFoundAction();
@@ -187,9 +187,9 @@ class NdaController extends ProgramAbstractController
         /*
          * Add the call when a id is given
          */
-        if (!is_null($this->getEvent()->getRouteMatch()->getParam('id'))) {
+        if (!is_null($this->params('id'))) {
             $call = $this->getCallService()->setCallId(
-                $this->getEvent()->getRouteMatch()->getParam('id')
+                $this->params('id')
             )->getCall();
             if ($this->getCallService()->isEmpty()) {
                 return $this->notFoundAction();
@@ -219,7 +219,7 @@ class NdaController extends ProgramAbstractController
     public function downloadAction()
     {
         set_time_limit(0);
-        $nda = $this->getProgramService()->findEntityById('Nda', $this->getEvent()->getRouteMatch()->getParam('id'));
+        $nda = $this->getProgramService()->findEntityById('Nda', $this->params('id'));
         if (is_null($nda) || sizeof($nda->getObject()) === 0) {
             return $this->notFoundAction();
         }

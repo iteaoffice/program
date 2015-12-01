@@ -38,7 +38,7 @@ class DoaController extends ProgramAbstractController
     {
         $doa = $this->getProgramService()->findEntityById(
             'Doa',
-            $this->getEvent()->getRouteMatch()->getParam('id')
+            $this->params('id')
         );
         if (is_null($doa) || sizeof($doa->getObject()) === 0) {
             return $this->notFoundAction();
@@ -56,11 +56,11 @@ class DoaController extends ProgramAbstractController
     public function uploadAction()
     {
         $organisationService = $this->getOrganisationService()->setOrganisationId(
-            $this->getEvent()->getRouteMatch()->getParam('organisation-id')
+            $this->params('organisation-id')
         );
         $program = $this->getProgramService()->findEntityById(
             'Program',
-            $this->getEvent()->getRouteMatch()->getParam('program-id')
+            $this->params('program-id')
         );
         $data = array_merge_recursive(
             $this->getRequest()->getPost()->toArray(),
@@ -128,7 +128,7 @@ class DoaController extends ProgramAbstractController
     {
         $doa = $this->getProgramService()->findEntityById(
             'Doa',
-            $this->getEvent()->getRouteMatch()->getParam('id')
+            $this->params('id')
         );
         if (is_null($doa) || sizeof($doa->getObject()) === 0) {
             return $this->notFoundAction();
@@ -196,11 +196,11 @@ class DoaController extends ProgramAbstractController
     public function renderAction()
     {
         $organisationService = $this->getOrganisationService()->setOrganisationId(
-            $this->getEvent()->getRouteMatch()->getParam('organisation-id')
+            $this->params('organisation-id')
         );
         $program = $this->getProgramService()->findEntityById(
             'Program',
-            $this->getEvent()->getRouteMatch()->getParam('program-id')
+            $this->params('program-id')
         );
         //Create an empty Doa object
         $programDoa = new Doa();
@@ -230,7 +230,7 @@ class DoaController extends ProgramAbstractController
     public function downloadAction()
     {
         set_time_limit(0);
-        $doa = $this->getProgramService()->findEntityById('Doa', $this->getEvent()->getRouteMatch()->getParam('id'));
+        $doa = $this->getProgramService()->findEntityById('Doa', $this->params('id'));
         if (is_null($doa) || sizeof($doa->getObject()) === 0) {
             return $this->notFoundAction();
         }

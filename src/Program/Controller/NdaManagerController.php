@@ -74,7 +74,7 @@ class NdaManagerController extends ProgramAbstractController implements
      */
     public function editAction()
     {
-        $nda = $this->getCallService()->findEntityById('nda', $this->getEvent()->getRouteMatch()->getParam('id'));
+        $nda = $this->getCallService()->findEntityById('nda', $this->params('id'));
 
         if (is_null($nda)) {
             return $this->notFoundAction();
