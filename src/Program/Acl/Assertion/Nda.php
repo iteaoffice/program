@@ -61,8 +61,8 @@ class Nda extends AssertionAbstract
                  * and the acl should not be approved
                  */
 
-                return is_null($resource->getDateApproved()) &&
-                $resource->getContact()->getId() === $this->getContactService()->getContact()->getId();
+                return is_null($resource->getDateApproved())
+                && $resource->getContact()->getId() === $this->getContactService()->getContact()->getId();
             case 'render':
                 if (!$this->hasContact()) {
                     return false;
@@ -95,9 +95,9 @@ class Nda extends AssertionAbstract
                 }
 
                 return $this->rolesHaveAccess([strtolower(Access::ACCESS_OFFICE)]);
-                case 'view-admin':
-                case 'edit-admin':
-                case 'approval-admin':
+            case 'view-admin':
+            case 'edit-admin':
+            case 'approval-admin':
                 return $this->rolesHaveAccess([strtolower(Access::ACCESS_OFFICE)]);
         }
 
