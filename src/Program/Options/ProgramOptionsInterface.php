@@ -101,4 +101,19 @@ interface ProgramOptionsInterface
      * @return string
      */
     public function getCountryColorFaded();
+    /**
+     * Returns the assigned hex color of the country map.
+     *
+     * @param string $requireMembership
+     *
+     * @return ModuleOptions
+     */
+    public function setRequireMembership($requireMembership);
+
+    /**
+     * Returns the assigned hex color of the country map.
+     *
+     * @return string
+     */
+    public function getRequireMembership();
 }

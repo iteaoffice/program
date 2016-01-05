@@ -19,6 +19,7 @@ use Program\Entity\Nda;
 use Program\Options\ModuleOptions;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfcTwig\View\TwigRenderer;
 
 /**
  * Create a link to an project.
@@ -150,6 +151,9 @@ class RenderNda extends AbstractPlugin
         $pdf->setTemplate($this->getModuleOptions()->getNdaTemplate());
         $pdf->addPage();
         $pdf->SetFontSize(7.5);
+        /**
+         * @var $twig TwigRenderer
+         */
         $twig = $this->getServiceLocator()->get('ZfcTwigRenderer');
         /*
          * Write the contact details

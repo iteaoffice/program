@@ -82,6 +82,12 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
      * @var string
      */
     protected $countryColorFaded = '#005C00';
+    /**
+     * Trigger to see if you need to be member before applying for a project
+     *
+     * @var string
+     */
+    protected $requireMembership = false;
 
     /**
      * @return string
@@ -225,5 +231,25 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
     public function getCountryColorFaded()
     {
         return $this->countryColorFaded;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRequireMembership()
+    {
+        return $this->requireMembership;
+    }
+
+    /**
+     * @param string $requireMembership
+     *
+     * @return ModuleOptions
+     */
+    public function setRequireMembership($requireMembership)
+    {
+        $this->requireMembership = $requireMembership;
+
+        return $this;
     }
 }

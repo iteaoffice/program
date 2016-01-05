@@ -14,8 +14,8 @@
 
 namespace Program\View\Helper;
 
-use Program\Acl\Assertion\Doa as DoaAssertion;
 use Organisation\Entity\Organisation;
+use Program\Acl\Assertion\Doa as DoaAssertion;
 use Program\Entity\Doa;
 use Program\Entity\Program;
 
@@ -54,12 +54,7 @@ class DoaLink extends LinkAbstract
         $this->setProgram($program);
         $this->setAction($action);
         $this->setShow($show);
-        if (!$this->hasAccess(
-            $this->getDoa(),
-            DoaAssertion::class,
-            $this->getAction()
-        )
-        ) {
+        if (!$this->hasAccess($this->getDoa(), DoaAssertion::class, $this->getAction())) {
             return 'Access denied';
         }
         $this->addRouterParam('entity', 'Doa');
@@ -69,7 +64,6 @@ class DoaLink extends LinkAbstract
 
         return $this->createLink();
     }
-
 
 
     /**
@@ -82,13 +76,11 @@ class DoaLink extends LinkAbstract
                 $this->setRouter('program/doa/upload');
                 $this->addRouterParam('organisation-id', $this->getOrganisation()->getId());
                 $this->addRouterParam('program-id', $this->getProgram()->getId());
-                $this->setText(
-                    sprintf(
-                        $this->translate("txt-upload-doa-for-organisation-%s-in-program-%s-link-title"),
-                        $this->getOrganisation(),
-                        $this->getProgram()
-                    )
-                );
+                $this->setText(sprintf(
+                    $this->translate("txt-upload-doa-for-organisation-%s-in-program-%s-link-title"),
+                    $this->getOrganisation(),
+                    $this->getProgram()
+                ));
                 break;
             case 'render':
                 $this->setRouter('program/doa/render');
@@ -97,85 +89,41 @@ class DoaLink extends LinkAbstract
                  */
                 $renderText = _("txt-render-doa-for-organisation-%s-in-program-%s-link-title");
                 if (is_null($this->getDoa()->getId())) {
-                    $this->setText(
-                        sprintf(
-                            $renderText,
-                            $this->getOrganisation(),
-                            $this->getProgram()
-                        )
-                    );
+                    $this->setText(sprintf($renderText, $this->getOrganisation(), $this->getProgram()));
                     $this->addRouterParam('organisation-id', $this->getOrganisation()->getId());
                     $this->addRouterParam('program-id', $this->getProgram()->getId());
                 } else {
-                    $this->setText(
-                        sprintf(
-                            $renderText,
-                            $this->getDoa()->getOrganisation(),
-                            $this->getDoa()->getProgram()
-                        )
-                    );
+                    $this->setText(sprintf(
+                        $renderText,
+                        $this->getDoa()->getOrganisation(),
+                        $this->getDoa()->getProgram()
+                    ));
                     $this->addRouterParam('organisation-id', $this->getDoa()->getOrganisation()->getId());
                     $this->addRouterParam('program-id', $this->getDoa()->getProgram()->getId());
                 }
                 break;
             case 'replace':
                 $this->setRouter('program/doa/replace');
-                $this->setText(
-                    sprintf(
-                        _("txt-replace-doa-for-organisation-%s-in-program-%s-link-title"),
-                        $this->getDoa()->getOrganisation(),
-                        $this->getDoa()->getProgram()
-                    )
-                );
+                $this->setText(sprintf(
+                    _("txt-replace-doa-for-organisation-%s-in-program-%s-link-title"),
+                    $this->getDoa()->getOrganisation(),
+                    $this->getDoa()->getProgram()
+                ));
                 break;
             case 'download':
                 $this->setRouter('program/doa/download');
-                $this->setText(
-                    sprintf(
-                        _("txt-download-doa-for-organisation-%s-in-program-%s-link-title"),
-                        $this->getDoa()->getOrganisation(),
-                        $this->getDoa()->getProgram()
-                    )
-                );
+                $this->setText(sprintf(
+                    _("txt-download-doa-for-organisation-%s-in-program-%s-link-title"),
+                    $this->getDoa()->getOrganisation(),
+                    $this->getDoa()->getProgram()
+                ));
                 break;
             default:
-                throw new \InvalidArgumentException(
-                    sprintf("%s is an incorrect action for %s", $this->getAction(), __CLASS__)
-                );
+                throw new \InvalidArgumentException(sprintf(
+                    "%s is an incorrect action for %s",
+                    $this->getAction(),
+                    __CLASS__
+                ));
         }
-    }
-
-    /**
-     * @return Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
-    }
-
-    /**
-     * @param Organisation $organisation
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-
-        $this->getDoa()->setOrganisation($organisation);
-    }
-
-    /**
-     * @return Program
-     */
-    public function getProgram()
-    {
-        return $this->program;
-    }
-
-    /**
-     * @param Program $program
-     */
-    public function setProgram($program)
-    {
-        $this->program = $program;
     }
 }

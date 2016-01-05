@@ -25,7 +25,7 @@ use Program\Entity\Program;
  * will be used to fetch the correct model service, one exception is the 'linkModel'
  * method.
  */
-class ProgramService extends ServiceAbstract
+class ProgramService extends ServiceAbstract implements ModuleOptionAwareInterface
 {
     /**
      * @var Program
@@ -59,26 +59,22 @@ class ProgramService extends ServiceAbstract
      */
     public function findFunderByCountry(Country $country)
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName('funder'))->findBy(
-            ['country' => $country],
-            ['position' => 'ASC']
-        );
+        return $this->getEntityManager()->getRepository($this->getFullEntityName('funder'))
+            ->findBy(['country' => $country], ['position' => 'ASC']);
     }
 
     /**
-     * @param Program $program
+     * @param Program      $program
      * @param Organisation $organisation
      *
      * @return null|\Program\Entity\Doa
      */
     public function findProgramDoaByProgramAndOrganisation(Program $program, Organisation $organisation)
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName('Doa'))->findOneBy(
-            [
+        return $this->getEntityManager()->getRepository($this->getFullEntityName('Doa'))->findOneBy([
                 'program'      => $program,
                 'organisation' => $organisation,
-            ]
-        );
+            ]);
     }
 
     /**

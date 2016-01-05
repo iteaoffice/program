@@ -113,7 +113,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
     }
 
     /**
-     * @return ModuleOptionsInterface
+     * @return ModuleOptions
      */
     public function getOptions()
     {
