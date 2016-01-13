@@ -78,7 +78,8 @@ class CallService extends ServiceAbstract
      */
     public function findNotApprovedNda()
     {
-        return new ArrayCollection($this->getEntityManager()->getRepository($this->getFullEntityName('nda'))->findNotApprovedNda());
+        return new ArrayCollection($this->getEntityManager()->getRepository($this->getFullEntityName('nda'))
+            ->findNotApprovedNda());
     }
 
     /**
@@ -90,7 +91,7 @@ class CallService extends ServiceAbstract
      */
     public function findOpenCall($type)
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName('Call\Call'))->findOpenCall($type);
+        return $this->getEntityManager()->getRepository(Call::class)->findOpenCall($type);
     }
 
     /**
@@ -129,17 +130,24 @@ class CallService extends ServiceAbstract
      */
     public function findLastCallAndActiveVersionType()
     {
-        $result = $this->getEntityManager()->getRepository(
-            $this->getFullEntityName('Call\Call')
-        )->findLastCallAndActiveVersionType();
+        $result = $this->getEntityManager()->getRepository(Call::class)->findLastCallAndActiveVersionType();
         $lastCallAndActiveVersionType = new \stdClass();
         $lastCallAndActiveVersionType->call = $result['call'];
-        $lastCallAndActiveVersionType->versionType = $this->getVersionService()->findEntityById(
-            'Version\Type',
-            $result['versionType']
-        );
+        $lastCallAndActiveVersionType->versionType = $this->getVersionService()
+            ->findEntityById('Version\Type', $result['versionType']);
 
         return $lastCallAndActiveVersionType;
+    }
+
+    /**
+     * Find the last open call and check which versionType is active.
+     *
+     * @return \stdClass
+     */
+    public function findLastCall()
+    {
+        return $this->getEntityManager()->getRepository(Call::class)
+            ->findOneBy([], ['id' => 'DESC']);
     }
 
     /**
@@ -153,15 +161,9 @@ class CallService extends ServiceAbstract
     {
         switch ($type->getId()) {
             case Type::TYPE_PO:
-                return in_array(
-                    $this->getCallStatus()->result,
-                    [self::PO_GRACE, self::PO_OPEN]
-                );
+                return in_array($this->getCallStatus()->result, [self::PO_GRACE, self::PO_OPEN]);
             case Type::TYPE_FPP:
-                return in_array(
-                    $this->getCallStatus()->result,
-                    [self::FPP_OPEN, self::FPP_GRACE]
-                );
+                return in_array($this->getCallStatus()->result, [self::FPP_OPEN, self::FPP_GRACE]);
             default:
                 return true;
         }
@@ -199,16 +201,10 @@ class CallService extends ServiceAbstract
      */
     public function findFirstAndLastCall()
     {
-        $firstCall = $this->getEntityManager()->getRepository($this->getFullEntityName('Call\Call'))
-            ->findOneBy(
-                [],
-                ['id' => 'ASC']
-            );
-        $lastCall = $this->getEntityManager()->getRepository($this->getFullEntityName('Call\Call'))
-            ->findOneBy(
-                [],
-                ['id' => 'DESC']
-            );
+        $firstCall = $this->getEntityManager()->getRepository(Call::class)
+            ->findOneBy([], ['id' => 'ASC']);
+        $lastCall = $this->getEntityManager()->getRepository(Call::class)
+            ->findOneBy([], ['id' => 'DESC']);
         $callSpan = new \stdClass();
         $callSpan->firstCall = $firstCall;
         $callSpan->lastCall = $lastCall;
@@ -223,9 +219,8 @@ class CallService extends ServiceAbstract
      */
     public function findNonEmptyCalls(Program $program = null)
     {
-        return $this->getEntityManager()->getRepository(
-            $this->getFullEntityName('Call\Call')
-        )->findNonEmptyCalls($program);
+        return $this->getEntityManager()->getRepository(Call::class)
+            ->findNonEmptyCalls($program);
     }
 
     /**
@@ -233,9 +228,8 @@ class CallService extends ServiceAbstract
      */
     public function findProjectAndPartners()
     {
-        return $this->getEntityManager()->getRepository(
-            $this->getFullEntityName('Call\Call')
-        )->findProjectAndPartners($this->getCall());
+        return $this->getEntityManager()->getRepository(Call::class)
+            ->findProjectAndPartners($this->getCall());
     }
 
     /**
@@ -275,8 +269,8 @@ class CallService extends ServiceAbstract
                 $referenceDate = $this->getCall()->getPoCloseDate();
                 $result = self::PO_GRACE;
                 $type = Type::TYPE_PO;
-            } elseif ($this->getCall()->getPoCloseDate() > $notificationDeadline &&
-                $this->getCall()->getFppOpenDate() > $today
+            } elseif ($this->getCall()->getPoCloseDate() > $notificationDeadline
+                && $this->getCall()->getFppOpenDate() > $today
             ) {
                 $referenceDate = $this->getCall()->getPoCloseDate();
                 $result = self::PO_CLOSED;
@@ -332,17 +326,15 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * @param Call $call
+     * @param Call    $call
      * @param Contact $contact
      *
      * @return null|\Program\Entity\Nda
      */
     public function findNdaByCallAndContact(Call $call, Contact $contact)
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName('nda'))->findNdaByCallAndContact(
-            $call,
-            $contact
-        );
+        return $this->getEntityManager()->getRepository($this->getFullEntityName('nda'))
+            ->findNdaByCallAndContact($call, $contact);
     }
 
     /**
@@ -352,9 +344,7 @@ class CallService extends ServiceAbstract
      */
     public function findNdaByContact(Contact $contact)
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName('nda'))->findNdaByContact(
-            $contact
-        );
+        return $this->getEntityManager()->getRepository($this->getFullEntityName('nda'))->findNdaByContact($contact);
     }
 
     /**
@@ -374,9 +364,7 @@ class CallService extends ServiceAbstract
      */
     public function findCountryByCall(Call $call)
     {
-        return $this->getGeneralService()->findCountryByCall(
-            $call
-        );
+        return $this->getGeneralService()->findCountryByCall($call);
     }
 
     /**
@@ -395,9 +383,8 @@ class CallService extends ServiceAbstract
         if (is_null($docRef)) {
             throw new \InvalidArgumentException("A docRef is required to find an entity");
         }
-        $entity = $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->findOneBy(
-            ['docRef' => $docRef]
-        );
+        $entity = $this->getEntityManager()->getRepository($this->getFullEntityName($entity))
+            ->findOneBy(['docRef' => $docRef]);
 
         return $entity;
     }
@@ -409,18 +396,15 @@ class CallService extends ServiceAbstract
      */
     public function findProjectByCall(Call $call, $which)
     {
-        return $this->getProjectService()->findProjectsByCall(
-            $call,
-            $which
-        );
+        return $this->getProjectService()->findProjectsByCall($call, $which);
     }
 
     /**
      * Upload a NDA to the system and store it for the user.
      *
-     * @param array $file
+     * @param array   $file
      * @param Contact $contact
-     * @param Call $call
+     * @param Call    $call
      *
      * @return NdaObject
      */

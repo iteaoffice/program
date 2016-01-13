@@ -53,7 +53,9 @@ class Call extends EntityRepository
     }
 
     /**
-     * @return CallEntity[]
+     * @param ProgramEntity|null $program
+     *
+     * @return array
      */
     public function findNonEmptyCalls(ProgramEntity $program = null)
     {
@@ -86,7 +88,8 @@ class Call extends EntityRepository
         $queryBuilder->where('c.poOpenDate < :today')
             ->andWhere('c.poCloseDate > :today OR c.poGraceDate > :today')
             ->setParameter('today', $today);
-        /*
+
+        /**
          * Check first if we find an open PO
          */
         if (!is_null($queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult())) {

@@ -89,7 +89,7 @@ class ProgramManagerController extends ProgramAbstractController
             }
         }
 
-        return new ViewModel(['form' => $form, 'entity' => $entityName]);
+        return new ViewModel(['form' => $form, 'entityName' => $entityName, 'entity' => $this->params('entity')]);
     }
 
     /**
