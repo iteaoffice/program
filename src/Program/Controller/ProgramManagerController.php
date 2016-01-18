@@ -134,8 +134,6 @@ class ProgramManagerController extends ProgramAbstractController
                 return $this->redirect()->toRoute('zfcadmin/program-manager/list', [
                     'entity' => strtolower($entity->get('dashed_entity_name'))
                 ]);
-            } else {
-                var_dump($form->getInputFilter()->getMessages());
             }
         }
 

@@ -47,8 +47,8 @@ class RenderNdaTest extends \PHPUnit_Framework_TestCase
         /**
          * Bootstrap the application to have the other information available
          */
-//        $application = $this->serviceManager->get('application');
-//        $application->bootstrap();
+        //        $application = $this->serviceManager->get('application');
+        //        $application->bootstrap();
         $renderNda = new RenderNda();
         $renderNda->setServiceLocator($this->serviceManager);
         $contact = new Contact();

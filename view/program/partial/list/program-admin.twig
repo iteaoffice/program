@@ -9,6 +9,7 @@
         <th>{{ translate("txt-program-name") }}</th>
         <th>{{ translate("txt-number") }}</th>
         <th>{{ translate("txt-amount-of-calls") }}</th>
+        <th>{{ translate("txt-eurkeka-export") }}</th>
     </tr>
     </thead>
     <tbody>
@@ -17,6 +18,7 @@
             <td>{{ program }} {{ programLink(program,'edit','icon') }}</td>
             <td>{{ program.number }}</td>
             <td>{{ program.call.count }}</td>
+            <td><a href="{{ url('zfcadmin/project/export/program',{'id': program.id}) }}"><i class="fa fa-exchange"></i></a></td>
         </tr>
     {% endfor %}
     </tbody>
