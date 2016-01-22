@@ -329,6 +329,14 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
+     * @return string
+     */
+    public function parseInvoiceName()
+    {
+        return sprintf("%s %s", $this->call, $this->program->getProgram());
+    }
+
+    /**
      * @return \Program\Entity\Program
      */
     public function getProgram()
