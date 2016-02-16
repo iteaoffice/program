@@ -20,6 +20,8 @@ use General\Service\GeneralService;
 use General\Service\GeneralServiceAwareInterface;
 use Organisation\Service\OrganisationService;
 use Organisation\Service\OrganisationServiceAwareInterface;
+use Program\Controller\Plugin\RenderSession;
+use Program\Controller\Plugin;
 use Program\Options\ModuleOptions;
 use Program\Service\CallService;
 use Program\Service\CallServiceAwareInterface;
@@ -32,7 +34,6 @@ use Zend\I18n\View\Helper\Translate;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
 use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
-use Program\Controller\Plugin\RenderSession;
 
 /**
  * Create a link to an project.
@@ -48,6 +49,7 @@ use Program\Controller\Plugin\RenderSession;
  * @method      FlashMessenger flashMessenger()
  * @method      IsAllowed isAllowed($resource, $action)
  * @method      RenderSession renderSession($session)
+ * @method      Plugin\GetFilter getProgramFilter()
  */
 abstract class ProgramAbstractController extends AbstractActionController implements
     FormServiceAwareInterface,
@@ -233,7 +235,8 @@ abstract class ProgramAbstractController extends AbstractActionController implem
     }
 
     /**
-     * @param  ProjectService            $projectService
+     * @param  ProjectService $projectService
+     *
      * @return ProgramAbstractController
      */
     public function setProjectService($projectService)
@@ -252,7 +255,8 @@ abstract class ProgramAbstractController extends AbstractActionController implem
     }
 
     /**
-     * @param  OrganisationService       $organisationService
+     * @param  OrganisationService $organisationService
+     *
      * @return ProgramAbstractController
      */
     public function setOrganisationService(OrganisationService $organisationService)
@@ -271,7 +275,8 @@ abstract class ProgramAbstractController extends AbstractActionController implem
     }
 
     /**
-     * @param  AdminService              $adminService
+     * @param  AdminService $adminService
+     *
      * @return ProgramAbstractController
      */
     public function setAdminService(AdminService $adminService)

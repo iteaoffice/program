@@ -1,4 +1,8 @@
-<h1>{{ translate("txt-%s-new-title")|format(entity) }}</h1>
-<p class="lead">{{ translate("txt-%s-new-explanation")|format(entity) }}</p>
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-new-program")) %}
 
-{% include 'program/partial/form/' ~ entity  with [{'entity': entity}, {'form': form}] %}
+<h1>{{ translate("txt-new-program") }}</h1>
+
+{% include 'program/partial/form/program' %}
+
+{{ programLink(null, 'list','button') }}

@@ -1,0 +1,8 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-new-call")) %}
+
+<h1>{{ translate("txt-new-call") }}</h1>
+
+{% include 'program/partial/form/call' %}
+
+{{ callLink(null, 'list','button') }}

@@ -154,11 +154,11 @@ class NdaLink extends LinkAbstract
                 }
                 break;
             case 'approval-admin':
-                $this->setRouter('zfcadmin/nda-manager/approval');
+                $this->setRouter('zfcadmin/nda/approval');
                 $this->setText($this->translate("txt-approval-doa"));
                 break;
             case 'view-admin':
-                $this->setRouter('zfcadmin/nda-manager/view');
+                $this->setRouter('zfcadmin/nda/view');
                 $this->setText(
                     sprintf(
                         $this->translate("txt-view-nda-for-%s-for-%s-title"),
@@ -168,7 +168,7 @@ class NdaLink extends LinkAbstract
                 );
                 break;
             case 'edit-admin':
-                $this->setRouter('zfcadmin/nda-manager/edit');
+                $this->setRouter('zfcadmin/nda/edit');
                 $this->setText(
                     sprintf(
                         $this->translate("txt-edit-nda-for-%s-for-%s-link-title"),

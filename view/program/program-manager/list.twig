@@ -1,1 +1,70 @@
-{% include 'program/partial/list/' ~ entity ~ '-admin' with [{'entities': entities}] %}
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-program-list")) %}
+
+{% do form.prepare() %}
+{{ form().openTag(form)|raw }}
+{% set filter = form.get('filter') %}
+
+<input type="hidden" name="filter[order]" value="{{ order }}">
+<input type="hidden" name="filter[direction]" value="{{ direction }}">
+
+<div class="row">
+
+    <div class="col-md-10">
+        <h1>{{ translate("txt-program-list") }}</h1>
+
+        <div class="row">
+            <div class="col-md-6">
+                <p class="lead">{{ translate("txt-program-list-explanation") }}</p>
+            </div>
+            <div class="col-md-6">
+                <div class="input-group">
+                    {{ formelement(filter.get('search')) }}
+                    <span class="input-group-btn">{{ formelement(form.get('submit')) }}</span></div>
+            </div>
+        </div>
+
+        {% if paginator.pageRange > 0 %}
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr>
+                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/program/list', 'criteria': 'id', 'text': translate('txt-id')} %}</th>
+                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/program/list', 'criteria': 'name', 'text': translate('txt-name')} %}</th>
+                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/program/list', 'criteria': 'number', 'text': translate('txt-number')} %}</th>
+                    <th>{{ translate("txt-amount-of-calls") }}</th>
+                    <th>{{ translate("txt-eurkeka-export") }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for program in paginator.getCurrentItems() %}
+                    <tr>
+                        <td>{{ program.id }} {{ programLink(program,'edit', 'icon') }}</td>
+                        <td>{{ programLink(program,'view-admin','name') }}</td>
+                        <td>{{ program.number }}</td>
+                        <td>{{ program.call.count }}</td>
+                        <td><a href="{{ url('zfcadmin/project/export/program',{'id': program.id}) }}"><i class="fa fa-exchange"></i></a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% include 'program/partial/pagination-control' %}
+        {% else %}
+            {{ ztbalert().info(translate("txt-no-program-could-be-found"))|raw }}
+        {% endif %}
+    </div>
+    <div class="col-md-2">
+        <div class="well well-sm">
+            <fieldset>
+
+                <div class="form-group">
+                    {{ ztbformelement(form.get('submit')) }}
+                    {{ ztbformelement(form.get('clear')) }}
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>
+
+{{ form().closeTag()|raw }}
+
+{{ programLink(null, 'new','button') }}

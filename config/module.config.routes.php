@@ -18,39 +18,13 @@ return [
                 'options'       => [
                     'route'    => '/program',
                     'defaults' => [
-                        'namespace'  => 'program',
-                        'controller' => 'program',
+                        'controller' => Controller\ProgramManagerController::class,
                         'action'     => 'index',
                     ],
                 ],
                 'may_terminate' => true,
                 'child_routes'  => [
-                    'view'        => [
-                        'type'     => 'Literal',
-                        'priority' => 1000,
-                        'options'  => [
-                            'route'    => '/view',
-                            'defaults' => [
-                                'controller' => 'program',
-                                'action'     => 'view',
-                            ],
-                        ]
-                    ],
-                    'programcall' => [
-                        'type'     => 'Segment',
-                        'priority' => -1000,
-                        'options'  => [
-                            'route'       => '/programcall/[:id].html',
-                            'constraints' => [
-                                'id' => '\d+',
-                            ],
-                            'defaults'    => [
-                                'controller' => 'programcall',
-                                'action'     => 'view',
-                            ],
-                        ],
-                    ],
-                    'session'     => [
+                    'session' => [
                         'type'         => 'Literal',
                         'options'      => [
                             'route'    => '/session',
@@ -75,7 +49,7 @@ return [
                             ],
                         ]
                     ],
-                    'nda'         => [
+                    'nda'     => [
                         'type'         => 'Literal',
                         'priority'     => 1000,
                         'options'      => [
@@ -150,7 +124,7 @@ return [
                             ],
                         ],
                     ],
-                    'doa'         => [
+                    'doa'     => [
                         'type'         => 'Segment',
                         'options'      => [
                             'route'    => '/doa',
@@ -216,7 +190,7 @@ return [
             ],
             'zfcadmin' => [
                 'child_routes' => [
-                    'program-manager' => [
+                    'program' => [
                         'type'          => 'Segment',
                         'priority'      => 1000,
                         'options'       => [
@@ -231,7 +205,7 @@ return [
                             'list' => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/list/[:entity].html',
+                                    'route'    => '/list[/f-:encodedFilter][/page-:page].html',
                                     'defaults' => [
                                         'action' => 'list',
                                     ],
@@ -240,7 +214,7 @@ return [
                             'new'  => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/new/:entity',
+                                    'route'    => '/new.html',
                                     'defaults' => [
                                         'action' => 'new',
                                     ],
@@ -249,7 +223,7 @@ return [
                             'edit' => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/edit/:entity/:id',
+                                    'route'    => '/edit/[:id].html',
                                     'defaults' => [
                                         'action' => 'edit',
                                     ],
@@ -258,7 +232,7 @@ return [
                             'view' => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/view/:entity/:id',
+                                    'route'    => '/view/[:id].html',
                                     'defaults' => [
                                         'action' => 'view',
                                     ],
@@ -266,7 +240,98 @@ return [
                             ],
                         ],
                     ],
-                    'nda-manager'     => [
+                    'call'    => [
+                        'type'          => 'Segment',
+                        'priority'      => 1000,
+                        'options'       => [
+                            'route'    => '/call',
+                            'defaults' => [
+                                'controller' => Controller\CallManagerController::class,
+                                'action'     => 'index',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes'  => [
+                            'list' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/list[/f-:encodedFilter][/page-:page].html',
+                                    'defaults' => [
+                                        'action' => 'list',
+                                    ],
+                                ],
+                            ],
+                            'new'  => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/new.html',
+                                    'defaults' => [
+                                        'action' => 'new',
+                                    ],
+                                ],
+                            ],
+                            'edit' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/edit/[:id].html',
+                                    'defaults' => [
+                                        'action' => 'edit',
+                                    ],
+                                ],
+                            ],
+                            'view' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/view/[:id].html',
+                                    'defaults' => [
+                                        'action' => 'view',
+                                    ],
+                                ],
+                            ],
+                            'country' => [
+                                'type'          => 'Segment',
+                                'priority'      => 1000,
+                                'options'       => [
+                                    'route'    => '/country',
+                                    'defaults' => [
+                                        'controller' => Controller\CallCountryManagerController::class,
+                                        'action'     => 'index',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                                'child_routes'  => [
+                                    'new'  => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/new/call-[:call]/country-[:country].html',
+                                            'defaults' => [
+                                                'action' => 'new',
+                                            ],
+                                        ],
+                                    ],
+                                    'edit' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/edit/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'edit',
+                                            ],
+                                        ],
+                                    ],
+                                    'view' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/view/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'view',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'nda'     => [
                         'type'          => 'Segment',
                         'priority'      => 1000,
                         'options'       => [
@@ -329,7 +394,7 @@ return [
                             ],
                         ],
                     ],
-                    'funder-manager'  => [
+                    'funder'  => [
                         'type'          => 'Segment',
                         'options'       => [
                             'route'    => '/funder',

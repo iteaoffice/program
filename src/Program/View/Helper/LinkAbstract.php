@@ -16,7 +16,10 @@ namespace Program\View\Helper;
 
 use BjyAuthorize\Service\Authorize;
 use BjyAuthorize\View\Helper\IsAllowed;
+use General\Entity\Country;
 use Organisation\Entity\Organisation;
+use Program\Entity\Call\Call;
+use Program\Entity\Call\Country as CallCountry;
 use Program\Entity\Doa;
 use Program\Entity\EntityAbstract;
 use Program\Entity\Program;
@@ -98,6 +101,18 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
      */
     protected $program;
     /**
+     * @var Call
+     */
+    protected $call;
+    /**
+     * @var Country
+     */
+    protected $country;
+    /**
+     * @var CallCountry
+     */
+    protected $callCountry;
+    /**
      * @var int
      */
     protected $page;
@@ -133,10 +148,8 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
             $serverUrl() . $url($this->router, $this->routerParams),
             htmlentities($this->text),
             implode(' ', $this->classes),
-            in_array($this->getShow(), ['icon', 'button', 'alternativeShow']) ? implode(
-                '',
-                $this->linkContent
-            ) : htmlentities(implode('', $this->linkContent))
+            in_array($this->getShow(), ['icon', 'button', 'alternativeShow']) ? implode('', $this->linkContent)
+            : htmlentities(implode('', $this->linkContent))
         );
     }
 
@@ -155,35 +168,46 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
     {
         switch ($this->getShow()) {
             case 'icon':
+            case 'button':
                 switch ($this->getAction()) {
+                    case 'new':
+                    case 'new-admin':
+                        $this->addLinkContent('<i class="fa fa-plus"></i>');
+                        break;
+                    case 'list':
+                        $this->addLinkContent('<i class="fa fa-list-ul"></i>');
+                        break;
                     case 'edit':
                     case 'edit-admin':
-                    case 'edit-community':
-                        $this->addLinkContent('<i class="fa fa-pencil-square-o"></i>');
+                        $this->addLinkContent('<i class="fa fa-edit"></i>');
+                        break;
+                    case 'view':
+                    case 'view-admin':
+                        $this->addLinkContent('<i class="fa fa-external-link"></i>');
                         break;
                     case 'download':
-                        $this->addLinkContent('<i class="fa fa-download"></i>');
-                        break;
-                    case 'replace':
-                        $this->addLinkContent('<span class="glyphicon glyphicon-repeat"></span>');
+                        $this->addLinkContent('<i class="fa fa-file-zip-o"></i>');
                         break;
                     default:
-                        $this->addLinkContent('<i class="fa fa-link"></i>');
+                        $this->addLinkContent('<i class="fa fa-file-o"></i>');
                         break;
                 }
-                break;
-            case 'button':
-                $this->addLinkContent('<span class="glyphicon glyphicon-info"></span> ' . $this->getText());
-                $this->addClasses("btn btn-primary");
+
+                if ($this->getShow() === 'button') {
+                    $this->addLinkContent(' ' . $this->getText());
+                    if ($this->getAction() === 'delete') {
+                        $this->addClasses("btn btn-danger");
+                    } else {
+                        $this->addClasses("btn btn-primary");
+                    }
+                }
                 break;
             case 'text':
                 $this->addLinkContent($this->getText());
                 break;
             case 'paginator':
                 if (is_null($this->getAlternativeShow())) {
-                    throw new \InvalidArgumentException(
-                        sprintf("this->alternativeShow cannot be null for a paginator link")
-                    );
+                    throw new \InvalidArgumentException(sprintf("this->alternativeShow cannot be null for a paginator link"));
                 }
                 $this->addLinkContent($this->getAlternativeShow());
                 break;
@@ -195,13 +219,11 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
                 return;
             default:
                 if (!array_key_exists($this->getShow(), $this->showOptions)) {
-                    throw new \InvalidArgumentException(
-                        sprintf(
-                            "The option \"%s\" should be available in the showOptions array, only \"%s\" are available",
-                            $this->getShow(),
-                            implode(', ', array_keys($this->showOptions))
-                        )
-                    );
+                    throw new \InvalidArgumentException(sprintf(
+                        "The option \"%s\" should be available in the showOptions array, only \"%s\" are available",
+                        $this->getShow(),
+                        implode(', ', array_keys($this->showOptions))
+                    ));
                 }
                 $this->addLinkContent($this->showOptions[$this->getShow()]);
                 break;
@@ -473,7 +495,8 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
     }
 
     /**
-     * @param  Doa          $doa
+     * @param  Doa $doa
+     *
      * @return LinkAbstract
      */
     public function setDoa($doa)
@@ -493,6 +516,7 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
 
     /**
      * @param  Organisation $organisation
+     *
      * @return LinkAbstract
      */
     public function setOrganisation($organisation)
@@ -511,7 +535,8 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
     }
 
     /**
-     * @param  Program      $program
+     * @param  Program $program
+     *
      * @return LinkAbstract
      */
     public function setProgram($program)
@@ -531,11 +556,84 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
 
     /**
      * @param int $page
+     *
      * @return LinkAbstract
      */
     public function setPage($page)
     {
         $this->page = $page;
+
+        return $this;
+    }
+
+    /**
+     * @return Call
+     */
+    public function getCall()
+    {
+        if (is_null($this->call)) {
+            $this->call = new Call();
+        }
+
+        return $this->call;
+    }
+
+    /**
+     * @param Call $call
+     *
+     * @return LinkAbstract
+     */
+    public function setCall($call)
+    {
+        $this->call = $call;
+
+        return $this;
+    }
+
+    /**
+     * @return Country
+     */
+    public function getCountry()
+    {
+        if (is_null($this->country)) {
+            $this->country = new Country();
+        }
+
+        return $this->country;
+    }
+
+    /**
+     * @param Country $country
+     *
+     * @return LinkAbstract
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    /**
+     * @return CallCountry
+     */
+    public function getCallCountry()
+    {
+        if (is_null($this->callCountry)) {
+            $this->callCountry = new CallCountry();
+        }
+
+        return $this->callCountry;
+    }
+
+    /**
+     * @param CallCountry $callCountry
+     *
+     * @return LinkAbstract
+     */
+    public function setCallCountry($callCountry)
+    {
+        $this->callCountry = $callCountry;
 
         return $this;
     }

@@ -21,6 +21,9 @@ return [
         'program_nda_form'     => function ($sm) {
             return new Form\CreateObject($sm, new Entity\Nda());
         },
+        'program_country_form' => function ($sm) {
+            return new Form\CreateObject($sm, new Entity\Call\Country());
+        },
         'program_funder_form'  => function ($sm) {
             return new Form\CreateObject($sm, new Entity\Funder());
         },

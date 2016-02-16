@@ -10,10 +10,13 @@
 
 namespace Program\Service;
 
+use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Query;
 use General\Service\GeneralService;
 use Program\Entity;
 use Program\Entity\EntityAbstract;
 use Program\Options\ModuleOptions;
+use Program\Options\ProgramOptionsInterface;
 use Project\Service\VersionService;
 use Zend\Authentication\AuthenticationService;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -62,6 +65,22 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
     public function findEntityById($entity, $id)
     {
         return $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->find($id);
+    }
+
+    /**
+     * @param string $entity
+     * @param  $filter
+     * @param array $ignoreFilter
+     *
+     * @return Query
+     */
+    public function findEntitiesFiltered($entity, $filter, $ignoreFilter = [])
+    {
+        return $this->getEntityManager()->getRepository($entity)->findFiltered(
+            $filter,
+            $ignoreFilter,
+            AbstractQuery::HYDRATE_SIMPLEOBJECT
+        );
     }
 
     /**
@@ -148,12 +167,11 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
          */
         if (strpos($entity, '-') !== false) {
             $entity = explode('-', $entity);
-            $entity = $entity[0].ucfirst($entity[1]);
+            $entity = $entity[0] . ucfirst($entity[1]);
         }
 
-        return ucfirst(implode('', array_slice(explode('\\', __NAMESPACE__), 0, 1))).'\\'.'Entity'.'\\'.ucfirst(
-            $entity
-        );
+        return ucfirst(implode('', array_slice(explode('\\', __NAMESPACE__), 0, 1))) . '\\' . 'Entity' . '\\'
+        . ucfirst($entity);
     }
 
     /**
@@ -201,6 +219,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
     {
         return $this->getServiceLocator()->get(VersionService::class);
     }
+
 
     /**
      * @return \Doctrine\ORM\EntityManager

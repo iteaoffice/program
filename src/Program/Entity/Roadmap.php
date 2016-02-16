@@ -31,7 +31,7 @@ use Zend\InputFilter\InputFilterInterface;
 class Roadmap extends EntityAbstract
 {
     /**
-     * @ORM\Column(name="roadmap_id", type="integer", nullable=false)
+     * @ORM\Column(name="roadmap_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Exclude()

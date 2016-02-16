@@ -12,6 +12,7 @@
 
 namespace Program;
 
+use Program\Controller\Plugin;
 use Program\Controller\Plugin\RenderDoa;
 use Program\Controller\Plugin\RenderNda;
 use Program\Controller\Plugin\RenderSession;
@@ -84,7 +85,10 @@ class Module implements
     public function getControllerPluginConfig()
     {
         return [
-            'factories' => [
+            'invokables' => [
+                'getProgramFilter' => Plugin\GetFilter::class,
+            ],
+            'factories'  => [
                 'renderNda'        => function (PluginManager $sm) {
                     $renderNda = new RenderNda();
                     $renderNda->setServiceLocator($sm->getServiceLocator());
@@ -119,8 +123,7 @@ class Module implements
         $app = $e->getParam('application');
         $em = $app->getEventManager();
         $em->attach(MvcEvent::EVENT_DISPATCH, function (MvcEvent $event) {
-            $event->getApplication()->getServiceManager()
-                ->get('program_nda_navigation_service')->update();
+            $event->getApplication()->getServiceManager()->get('program_nda_navigation_service')->update();
         });
     }
 }

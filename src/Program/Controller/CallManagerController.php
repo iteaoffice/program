@@ -15,17 +15,19 @@
 
 namespace Program\Controller;
 
+use Affiliation\Service\AffiliationService;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
-use Program\Entity\Program;
-use Program\Form\ProgramFilter;
+use General\Service\GeneralServiceAwareInterface;
+use Program\Entity\Call\Call;
+use Program\Form\CallFilter;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 
 /**
  *
  */
-class ProgramManagerController extends ProgramAbstractController
+class CallManagerController extends ProgramAbstractController implements GeneralServiceAwareInterface
 {
     /**
      * @return \Zend\View\Model\ViewModel
@@ -34,7 +36,7 @@ class ProgramManagerController extends ProgramAbstractController
     {
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getProgramFilter();
-        $contactQuery = $this->getProgramService()->findEntitiesFiltered(Program::class, $filterPlugin->getFilter());
+        $contactQuery = $this->getProgramService()->findEntitiesFiltered(Call::class, $filterPlugin->getFilter());
 
         $paginator
             = new Paginator(new PaginatorAdapter(new ORMPaginator($contactQuery, false)));
@@ -42,7 +44,7 @@ class ProgramManagerController extends ProgramAbstractController
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator->getDefaultItemCountPerPage()));
 
-        $form = new ProgramFilter();
+        $form = new CallFilter();
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
         return new ViewModel([
@@ -59,12 +61,18 @@ class ProgramManagerController extends ProgramAbstractController
      */
     public function viewAction()
     {
-        $program = $this->getProgramService()->findEntityById('Program', $this->params('id'));
-        if (is_null($program)) {
+        $call = $this->getProgramService()->findEntityById('Call\Call', $this->params('id'));
+        if (is_null($call)) {
             return $this->notFoundAction();
         }
 
-        return new ViewModel(['program' => $program]);
+        //We need the countries active in the call, to store the funding decisions
+        $countries = $this->getGeneralService()->findCountryByCall($call, AffiliationService::WHICH_ALL);
+
+        return new ViewModel([
+            'call'      => $call,
+            'countries' => $countries
+        ]);
     }
 
     /**
@@ -76,23 +84,23 @@ class ProgramManagerController extends ProgramAbstractController
     {
         $data = array_merge($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
 
-        $form = $this->getFormService()->prepare('Program', null, $data);
+        $form = $this->getFormService()->prepare('Call\Call', null, $data);
         $form->remove('delete');
 
         $form->setAttribute('class', 'form-horizontal');
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                $this->redirect()->toRoute('zfcadmin/program/list');
+                $this->redirect()->toRoute('zfcadmin/call/list');
             }
 
             if ($form->isValid()) {
-                /* @var $program Program */
-                $program = $form->getData();
+                /* @var $call Call */
+                $call = $form->getData();
 
-                $program = $this->getProgramService()->newEntity($program);
-                $this->redirect()->toRoute('zfcadmin/program/view', [
-                    'id' => $program->getId(),
+                $call = $this->getProgramService()->newEntity($call);
+                $this->redirect()->toRoute('zfcadmin/call/view', [
+                    'id' => $call->getId(),
                 ]);
             }
         }
@@ -101,37 +109,35 @@ class ProgramManagerController extends ProgramAbstractController
     }
 
     /**
-     * Edit an template by finding it and program the corresponding form.
+     * Edit an template by finding it and call the corresponding form.
      *
      * @return \Zend\View\Model\ViewModel
      */
     public function editAction()
     {
-        /** @var Program $program */
-        $program = $this->getProgramService()->findEntityById('Program', $this->params('id'));
+        $call = $this->getProgramService()->findEntityById('Call\Call', $this->params('id'));
 
         $data = array_merge($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
 
-        $form = $this->getFormService()->prepare($program->get('entity_name'), $program, $data);
-        $form->setAttribute('class', 'form-horizontal');
+        $form = $this->getFormService()->prepare($call->get('entity_name'), $call, $data);
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                return $this->redirect()->toRoute('zfcadmin/program/list');
+                return $this->redirect()->toRoute('zfcadmin/program/vat/call/list');
             }
 
             if ($form->isValid()) {
-                /** @var Program $program */
-                $program = $form->getData();
+                /** @var Call $call */
+                $call = $form->getData();
 
-                /** @var Program $program */
-                $program = $this->getProgramService()->updateEntity($program);
-                $this->redirect()->toRoute('zfcadmin/program/view', [
-                    'id' => $program->getId(),
+                /** @var Call $call */
+                $call = $this->getCallService()->updateEntity($call);
+                $this->redirect()->toRoute('zfcadmin/call/view', [
+                    'id' => $call->getId(),
                 ]);
             }
         }
 
-        return new ViewModel(['form' => $form, 'program' => $program]);
+        return new ViewModel(['form' => $form, 'call' => $call]);
     }
 }

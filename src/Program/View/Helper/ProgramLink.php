@@ -50,12 +50,10 @@ class ProgramLink extends LinkAbstract
         /*
          * Set the non-standard options needed to give an other link value
          */
-        $this->setShowOptions(
-            [
-                'name' => $this->getProgram(),
+        $this->setShowOptions([
+            'name' => $this->getProgram(),
 
-            ]
-        );
+        ]);
         $this->addRouterParam('entity', 'program');
         if (!is_null($program)) {
             $this->addRouterParam('id', $this->getProgram()->getId());
@@ -87,15 +85,23 @@ class ProgramLink extends LinkAbstract
     {
         switch ($this->getAction()) {
             case 'new':
-                $this->setRouter('zfcadmin/program-manager/new');
+                $this->setRouter('zfcadmin/program/new');
                 $this->setText($this->translate("txt-new-program"));
                 break;
-            case 'view':
-                $this->setRouter('zfcadmin/program-manager/view');
+            case 'view-admin':
+                $this->setRouter('zfcadmin/program/view');
                 $this->setText(sprintf($this->translate("txt-view-program-%s"), $this->getProgram()));
                 break;
+            case 'edit-admin':
+                $this->setRouter('zfcadmin/program/edit');
+                $this->setText(sprintf($this->translate("txt-edit-program-%s"), $this->getProgram()));
+                break;
+            case 'list-admin':
+                $this->setRouter('zfcadmin/program/list');
+                $this->setText(sprintf($this->translate("txt-list-programs")));
+                break;
             case 'edit':
-                $this->setRouter('zfcadmin/program-manager/edit');
+                $this->setRouter('zfcadmin/program/edit');
                 $this->setText(sprintf($this->translate("txt-edit-program-%s"), $this->getProgram()));
                 break;
             case 'view-list':
@@ -108,9 +114,11 @@ class ProgramLink extends LinkAbstract
                 $this->setText(sprintf(_("txt-view-program-%s"), $this->getProgram()));
                 break;
             default:
-                throw new \InvalidArgumentException(
-                    sprintf("%s is an incorrect action for %s", $this->getAction(), __CLASS__)
-                );
+                throw new \InvalidArgumentException(sprintf(
+                    "%s is an incorrect action for %s",
+                    $this->getAction(),
+                    __CLASS__
+                ));
         }
     }
 }

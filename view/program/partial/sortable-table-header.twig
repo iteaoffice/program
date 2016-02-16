@@ -1,0 +1,15 @@
+{% if order == criteria %}{{ direction == 'desc' ? '<i class="fa fa-sort-alpha-desc"></i>' : (direction == 'asc' ? '<i class="fa fa-sort-alpha-asc"></i>' : '') }}{% endif %}
+
+{% if arguments %}
+    {% if direction == 'asc' %}
+        <a href="{{ url(route) }}?{{ arguments }}">{{ text|raw }}</a>
+    {% else %}
+        <a href="{{ url(route) }}?{{ arguments }}&order={{ criteria }}&direction={{ direction == 'desc' ? 'asc' : 'desc' }}">{{ text|raw }}</a>
+    {% endif %}
+{% else %}
+    {% if direction == 'asc' %}
+        <a href="{{ url(route) }}">{{ text|raw }}</a>
+    {% else %}
+        <a href="{{ url(route) }}?order={{ criteria }}&direction={{ direction == 'desc' ? 'asc' : 'desc' }}">{{ text|raw }}</a>
+    {% endif %}
+{% endif %}

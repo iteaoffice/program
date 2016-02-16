@@ -94,7 +94,7 @@ class NdaManagerController extends ProgramAbstractController implements
         //Get contacts in an organisation
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                return $this->redirect()->toRoute('zfcadmin/nda-manager/view', ['id' => $nda->getId()]);
+                return $this->redirect()->toRoute('zfcadmin/nda/view', ['id' => $nda->getId()]);
             }
 
             if (isset($data['delete'])) {
@@ -106,7 +106,7 @@ class NdaManagerController extends ProgramAbstractController implements
 
                 $this->getCallService()->removeEntity($nda);
 
-                return $this->redirect()->toRoute('zfcadmin/nda-manager/approval');
+                return $this->redirect()->toRoute('zfcadmin/nda/approval');
             }
 
             if ($form->isValid()) {
@@ -156,7 +156,7 @@ class NdaManagerController extends ProgramAbstractController implements
                         $nda->getContact()->getDisplayName()
                     ));
 
-                return $this->redirect()->toRoute('zfcadmin/nda-manager/view', ['id' => $nda->getId()]);
+                return $this->redirect()->toRoute('zfcadmin/nda/view', ['id' => $nda->getId()]);
             }
         }
 

@@ -1,7 +1,6 @@
 {% do headTitle().append(translate("txt-admin")) %}
-{% do headTitle().append(translate("txt-edit-%s")|format(entity.get('entity_name'))) %}
+{% do headTitle().append(translate("txt-edit-program")) %}
 
-<h1>{{ translate("txt-edit-%s")|format(entity.get('entity_name')) }}</h1>
+<h1>{{ translate("txt-edit-program") }}</h1>
 
-{% include 'program/partial/form/' ~ entity.get('underscore_entity_name')
-with [{'entity': entity}, {'form': form}] %}
+{% include 'program/partial/form/program' %}

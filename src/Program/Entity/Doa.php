@@ -33,7 +33,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
 class Doa extends EntityAbstract implements ResourceInterface
 {
     /**
-     * @ORM\Column(name="doa_id", type="integer", nullable=false)
+     * @ORM\Column(name="doa_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
@@ -68,7 +68,7 @@ class Doa extends EntityAbstract implements ResourceInterface
      */
     private $contentType;
     /**
-     * @ORM\Column(name="size", type="integer", nullable=false)
+     * @ORM\Column(name="size", length=10, type="integer", nullable=false)
      *
      * @var integer
      */

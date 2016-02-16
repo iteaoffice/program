@@ -23,7 +23,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * @ORM\Table(name="program")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Program\Repository\Program")
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("contact_contact")
  *
@@ -32,7 +32,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
 class Program extends EntityAbstract implements ResourceInterface
 {
     /**
-     * @ORM\Column(name="program_id", type="integer", nullable=false)
+     * @ORM\Column(name="program_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *

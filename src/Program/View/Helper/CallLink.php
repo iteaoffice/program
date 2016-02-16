@@ -54,12 +54,10 @@ class CallLink extends LinkAbstract
         if (!is_null($call)) {
             $this->addRouterParam('id', $this->getCall()->getId());
 
-            $this->setShowOptions(
-                [
-                    'name'                 => $this->getCall(),
-                    'name-without-program' => $this->getCall()->getCall(),
-                ]
-            );
+            $this->setShowOptions([
+                'name'                 => $this->getCall(),
+                'name-without-program' => $this->getCall()->getCall(),
+            ]);
         }
         $this->addRouterParam('entity', 'call');
 
@@ -89,21 +87,25 @@ class CallLink extends LinkAbstract
     {
         switch ($this->getAction()) {
             case 'new':
-                $this->setRouter('zfcadmin/program-manager/new');
+                $this->setRouter('zfcadmin/program/new');
                 $this->setText($this->translate("txt-new-program-call"));
                 break;
             case 'edit':
-                $this->setRouter('zfcadmin/program-manager/edit');
+                $this->setRouter('zfcadmin/program/edit');
                 $this->setText(sprintf($this->translate("txt-edit-call-%s"), $this->getCall()));
+                break;
+            case 'view-admin':
+                $this->setRouter('zfcadmin/program/view');
+                $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));
+                break;
+            case 'list-admin':
+                $this->setRouter('zfcadmin/program/list');
+                $this->setText(sprintf($this->translate("txt-call-list")));
                 break;
             case 'external':
                 $this->addRouterParam('docRef', $this->getCall()->getDocRef());
                 $this->setRouter('route-program_entity_call_call');
                 $this->addRouterParam('call', $this->getCall()->getId());
-                $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));
-                break;
-            case 'view-admin':
-                $this->setRouter('zfcadmin/program-manager/view');
                 $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));
                 break;
             case 'view-list':
@@ -117,9 +119,11 @@ class CallLink extends LinkAbstract
                 break;
 
             default:
-                throw new \InvalidArgumentException(
-                    sprintf("%s is an incorrect action for %s", $this->getAction(), __CLASS__)
-                );
+                throw new \InvalidArgumentException(sprintf(
+                    "%s is an incorrect action for %s",
+                    $this->getAction(),
+                    __CLASS__
+                ));
         }
     }
 }

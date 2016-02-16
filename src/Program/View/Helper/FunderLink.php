@@ -87,22 +87,22 @@ class FunderLink extends LinkAbstract
     {
         switch ($this->getAction()) {
             case 'new':
-                $this->setRouter('zfcadmin/funder-manager/new');
+                $this->setRouter('zfcadmin/funder/new');
                 $this->setText($this->translate("txt-new-funder"));
                 break;
             case 'list':
-                $this->setRouter('zfcadmin/funder-manager/list');
+                $this->setRouter('zfcadmin/funder/list');
                 $this->setText($this->translate("txt-list-funders"));
 
                 break;
             case 'edit':
-                $this->setRouter('zfcadmin/funder-manager/edit');
+                $this->setRouter('zfcadmin/funder/edit');
                 $this->setText(
                     sprintf($this->translate("txt-edit-funder-%s"), $this->getFunder()->getContact())
                 );
                 break;
             case 'view-admin':
-                $this->setRouter('zfcadmin/funder-manager/view');
+                $this->setRouter('zfcadmin/funder/view');
                 $this->setText(
                     sprintf($this->translate("txt-view-funder-%s"), $this->getFunder()->getContact())
                 );

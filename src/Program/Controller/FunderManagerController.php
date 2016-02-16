@@ -68,7 +68,7 @@ class FunderManagerController extends ProgramAbstractController
             $funder = $this->getProgramService()->newEntity($form->getData());
 
             return $this->redirect()->toRoute(
-                'zfcadmin/funder-manager/view',
+                'zfcadmin/funder/view',
                 ['id' => $funder->getId()]
             );
         }
@@ -112,7 +112,7 @@ class FunderManagerController extends ProgramAbstractController
                     sprintf($this->translate("txt-funder-has-successfully-been-deleted"))
                 );
 
-                return $this->redirect()->toRoute('zfcadmin/funder-manager/list');
+                return $this->redirect()->toRoute('zfcadmin/funder/list');
             }
 
             if (!isset($data['cancel'])) {
@@ -120,7 +120,7 @@ class FunderManagerController extends ProgramAbstractController
             }
 
             return $this->redirect()->toRoute(
-                'zfcadmin/funder-manager/view',
+                'zfcadmin/funder/view',
                 ['id' => $funder->getId()]
             );
         }

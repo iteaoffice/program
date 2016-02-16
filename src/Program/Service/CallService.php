@@ -142,7 +142,7 @@ class CallService extends ServiceAbstract
     /**
      * Find the last open call and check which versionType is active.
      *
-     * @return \stdClass
+     * @return Call
      */
     public function findLastCall()
     {

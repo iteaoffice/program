@@ -24,7 +24,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Image
 {
     /**
-     * @ORM\Column(name="programcall_image_id", type="integer", nullable=false)
+     * @ORM\Column(name="programcall_image_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *

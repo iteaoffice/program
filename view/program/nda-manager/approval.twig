@@ -61,7 +61,7 @@
         var ndaId = btn.attr('rel');
 
         $.ajax({
-            url: '{{ serverUrl() }}{{ url('zfcadmin/nda-manager/approve') }}',
+            url: '{{ serverUrl() }}{{ url('zfcadmin/nda/approve') }}',
             type: 'post',
             dataType: 'json',
             data: {

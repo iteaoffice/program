@@ -75,7 +75,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
         ];
 
     /**
-     * @ORM\Column(name="programcall_id", type="integer", nullable=false)
+     * @ORM\Column(name="programcall_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Exclude()
@@ -186,7 +186,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
      * @ORM\OneToMany(targetEntity="\Project\Entity\Project", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Project\Entity\Project[]
+     * @var \Project\Entity\Project[]|Collections\ArrayCollection
      */
     private $project;
     /**
@@ -202,65 +202,72 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
      * @ORM\ManyToMany(targetEntity="Program\Entity\Nda", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\Nda[]
+     * @var \Program\Entity\Nda[]|Collections\ArrayCollection
      */
     private $nda;
     /**
      * @ORM\ManyToMany(targetEntity="\Publication\Entity\Publication", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Publication\Entity\Publication[]
+     * @var \Publication\Entity\Publication[]|Collections\ArrayCollection
      */
     private $publication;
     /**
      * @ORM\ManyToMany(targetEntity="Event\Entity\Meeting\Meeting", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Event\Entity\Meeting\Meeting[]
+     * @var \Event\Entity\Meeting\Meeting[]|Collections\ArrayCollection
      */
     private $meeting;
     /**
      * @ORM\ManyToMany(targetEntity="Calendar\Entity\Calendar", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Calendar\Entity\Calendar[]
+     * @var \Calendar\Entity\Calendar[]|Collections\ArrayCollection
      */
     private $calendar;
     /**
      * @ORM\OneToMany(targetEntity="Program\Entity\Call\Doa", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\Call\Doa[]
+     * @var \Program\Entity\Call\Doa[]|Collections\ArrayCollection
      */
     private $doa;
     /**
      * @ORM\OneToMany(targetEntity="Program\Entity\Call\Image", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\Call\Image[]
+     * @var \Program\Entity\Call\Image[]|Collections\ArrayCollection
      */
     private $image;
     /**
      * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Idea", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Project\Entity\Idea\Idea[]
+     * @var \Project\Entity\Idea\Idea[]|Collections\ArrayCollection
      */
     private $idea;
     /**
      * @ORM\OneToMany(targetEntity="Project\Entity\Idea\MessageBoard", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Project\Entity\Idea\MessageBoard[]
+     * @var \Project\Entity\Idea\MessageBoard[]|Collections\ArrayCollection
      */
     private $ideaMessageBoard;
     /**
      * @ORM\OneToMany(targetEntity="Program\Entity\Call\Session", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\Call\Session[]
+     * @var \Program\Entity\Call\Session[]|Collections\ArrayCollection
      */
     private $session;
+    /**
+     * @ORM\OneToMany(targetEntity="Program\Entity\Call\Country", cascade={"persist"}, mappedBy="call")
+     * @Annotation\Exclude()
+     *
+     * @var \Program\Entity\Call\Country[]|Collections\ArrayCollection
+     */
+    private $callCountry;
 
     /**
      * Class constructor.
@@ -276,6 +283,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
         $this->idea = new Collections\ArrayCollection();
         $this->ideaMessageBoard = new Collections\ArrayCollection();
         $this->session = new Collections\ArrayCollection();
+        $this->callCountry = new Collections\ArrayCollection();
     }
 
     /**
@@ -524,27 +532,24 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
         return $this->inputFilter;
     }
 
-    public function populate()
+    /**
+     * @return int
+     */
+    public function getId()
     {
-        return $this->getArrayCopy();
+        return $this->id;
     }
 
     /**
-     * Needed for the hydration of form elements.
+     * @param int $id
      *
-     * @return array
+     * @return Call
      */
-    public function getArrayCopy()
+    public function setId($id)
     {
-        return [
-            'call'         => $this->call,
-            'poOpenDate'   => $this->poOpenDate->format(DATE_ISO8601),
-            'poCloseDate'  => $this->poCloseDate,
-            'fppOpenDate'  => $this->fppOpenDate,
-            'fppCloseDate' => $this->fppCloseDate,
-            'nda'          => $this->nda,
-            'docRef'       => $this->docRef,
-        ];
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -557,250 +562,14 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
 
     /**
      * @param string $call
+     *
+     * @return Call
      */
     public function setCall($call)
     {
         $this->call = $call;
-    }
 
-    /**
-     * @return \DateTime
-     */
-    public function getFppCloseDate()
-    {
-        return $this->fppCloseDate;
-    }
-
-    /**
-     * @param \DateTime $fppCloseDate
-     */
-    public function setFppCloseDate($fppCloseDate)
-    {
-        $this->fppCloseDate = $fppCloseDate;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getFppOpenDate()
-    {
-        return $this->fppOpenDate;
-    }
-
-    /**
-     * @param \DateTime $fppOpenDate
-     */
-    public function setFppOpenDate($fppOpenDate)
-    {
-        $this->fppOpenDate = $fppOpenDate;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getPoCloseDate()
-    {
-        return $this->poCloseDate;
-    }
-
-    /**
-     * @param \DateTime $poCloseDate
-     */
-    public function setPoCloseDate($poCloseDate)
-    {
-        $this->poCloseDate = $poCloseDate;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getPoOpenDate()
-    {
-        return $this->poOpenDate;
-    }
-
-    /**
-     * @param \DateTime $poOpenDate
-     */
-    public function setPoOpenDate($poOpenDate)
-    {
-        $this->poOpenDate = $poOpenDate;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return \Project\Entity\Project[]
-     */
-    public function getProject()
-    {
-        return $this->project;
-    }
-
-    /**
-     * @param \Project\Entity\Project[] $project
-     */
-    public function setProject($project)
-    {
-        $this->project = $project;
-    }
-
-    /**
-     * @return \Program\Entity\Roadmap
-     */
-    public function getRoadmap()
-    {
-        return $this->roadmap;
-    }
-
-    /**
-     * @param \Program\Entity\Roadmap $roadmap
-     */
-    public function setRoadmap($roadmap)
-    {
-        $this->roadmap = $roadmap;
-    }
-
-    /**
-     * @return \Program\Entity\Nda[]
-     */
-    public function getNda()
-    {
-        return $this->nda;
-    }
-
-    /**
-     * @param \Program\Entity\Nda[] $nda
-     */
-    public function setNda($nda)
-    {
-        $this->nda = $nda;
-    }
-
-    /**
-     * @return \Event\Entity\Meeting\Meeting[]
-     */
-    public function getMeeting()
-    {
-        return $this->meeting;
-    }
-
-    /**
-     * @param \Event\Entity\Meeting\Meeting[] $meeting
-     */
-    public function setMeeting($meeting)
-    {
-        $this->meeting = $meeting;
-    }
-
-    /**
-     * @return \Publication\Entity\Publication[]
-     */
-    public function getPublication()
-    {
-        return $this->publication;
-    }
-
-    /**
-     * @param \Publication\Entity\Publication[] $publication
-     */
-    public function setPublication($publication)
-    {
-        $this->publication = $publication;
-    }
-
-    /**
-     * @return \Calendar\Entity\Calendar[]
-     */
-    public function getCalendar()
-    {
-        return $this->calendar;
-    }
-
-    /**
-     * @param \Calendar\Entity\Calendar[] $calendar
-     */
-    public function setCalendar($calendar)
-    {
-        $this->calendar = $calendar;
-    }
-
-    /**
-     * @return \Program\Entity\Call\Doa[]
-     */
-    public function getDoa()
-    {
-        return $this->doa;
-    }
-
-    /**
-     * @param \Program\Entity\Call\Doa[] $doa
-     */
-    public function setDoa($doa)
-    {
-        $this->doa = $doa;
-    }
-
-    /**
-     * @return \Program\Entity\Call\Image[]
-     */
-    public function getImage()
-    {
-        return $this->image;
-    }
-
-    /**
-     * @param \Program\Entity\Call\Image[] $image
-     */
-    public function setImage($image)
-    {
-        $this->image = $image;
-    }
-
-    /**
-     * @return \Project\Entity\Idea\Idea[]
-     */
-    public function getIdea()
-    {
-        return $this->idea;
-    }
-
-    /**
-     * @param \Project\Entity\Idea\Idea[] $idea
-     */
-    public function setIdea($idea)
-    {
-        $this->idea = $idea;
-    }
-
-    /**
-     * @return \Program\Entity\Call\Session[]
-     */
-    public function getSession()
-    {
-        return $this->session;
-    }
-
-    /**
-     * @param \Program\Entity\Call\Session[] $session
-     */
-    public function setSession($session)
-    {
-        $this->session = $session;
+        return $this;
     }
 
     /**
@@ -813,10 +582,54 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
 
     /**
      * @param string $docRef
+     *
+     * @return Call
      */
     public function setDocRef($docRef)
     {
         $this->docRef = $docRef;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getPoOpenDate()
+    {
+        return $this->poOpenDate;
+    }
+
+    /**
+     * @param \DateTime $poOpenDate
+     *
+     * @return Call
+     */
+    public function setPoOpenDate($poOpenDate)
+    {
+        $this->poOpenDate = $poOpenDate;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getPoCloseDate()
+    {
+        return $this->poCloseDate;
+    }
+
+    /**
+     * @param \DateTime $poCloseDate
+     *
+     * @return Call
+     */
+    public function setPoCloseDate($poCloseDate)
+    {
+        $this->poCloseDate = $poCloseDate;
+
+        return $this;
     }
 
     /**
@@ -829,10 +642,54 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
 
     /**
      * @param \DateTime $poGraceDate
+     *
+     * @return Call
      */
     public function setPoGraceDate($poGraceDate)
     {
         $this->poGraceDate = $poGraceDate;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getFppOpenDate()
+    {
+        return $this->fppOpenDate;
+    }
+
+    /**
+     * @param \DateTime $fppOpenDate
+     *
+     * @return Call
+     */
+    public function setFppOpenDate($fppOpenDate)
+    {
+        $this->fppOpenDate = $fppOpenDate;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getFppCloseDate()
+    {
+        return $this->fppCloseDate;
+    }
+
+    /**
+     * @param \DateTime $fppCloseDate
+     *
+     * @return Call
+     */
+    public function setFppCloseDate($fppCloseDate)
+    {
+        $this->fppCloseDate = $fppCloseDate;
+
+        return $this;
     }
 
     /**
@@ -845,10 +702,254 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
 
     /**
      * @param \DateTime $fppGraceDate
+     *
+     * @return Call
      */
     public function setFppGraceDate($fppGraceDate)
     {
         $this->fppGraceDate = $fppGraceDate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Project\Entity\Project[]
+     */
+    public function getProject()
+    {
+        return $this->project;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Project\Entity\Project[] $project
+     *
+     * @return Call
+     */
+    public function setProject($project)
+    {
+        $this->project = $project;
+
+        return $this;
+    }
+
+    /**
+     * @return \Program\Entity\Roadmap
+     */
+    public function getRoadmap()
+    {
+        return $this->roadmap;
+    }
+
+    /**
+     * @param \Program\Entity\Roadmap $roadmap
+     *
+     * @return Call
+     */
+    public function setRoadmap($roadmap)
+    {
+        $this->roadmap = $roadmap;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Program\Entity\Nda[]
+     */
+    public function getNda()
+    {
+        return $this->nda;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Program\Entity\Nda[] $nda
+     *
+     * @return Call
+     */
+    public function setNda($nda)
+    {
+        $this->nda = $nda;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Publication\Entity\Publication[]
+     */
+    public function getPublication()
+    {
+        return $this->publication;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Publication\Entity\Publication[] $publication
+     *
+     * @return Call
+     */
+    public function setPublication($publication)
+    {
+        $this->publication = $publication;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Event\Entity\Meeting\Meeting[]
+     */
+    public function getMeeting()
+    {
+        return $this->meeting;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Event\Entity\Meeting\Meeting[] $meeting
+     *
+     * @return Call
+     */
+    public function setMeeting($meeting)
+    {
+        $this->meeting = $meeting;
+
+        return $this;
+    }
+
+    /**
+     * @return \Calendar\Entity\Calendar[]|Collections\ArrayCollection
+     */
+    public function getCalendar()
+    {
+        return $this->calendar;
+    }
+
+    /**
+     * @param \Calendar\Entity\Calendar[]|Collections\ArrayCollection $calendar
+     *
+     * @return Call
+     */
+    public function setCalendar($calendar)
+    {
+        $this->calendar = $calendar;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|Doa[]
+     */
+    public function getDoa()
+    {
+        return $this->doa;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|Doa[] $doa
+     *
+     * @return Call
+     */
+    public function setDoa($doa)
+    {
+        $this->doa = $doa;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|Image[]
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|Image[] $image
+     *
+     * @return Call
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Project\Entity\Idea\Idea[]
+     */
+    public function getIdea()
+    {
+        return $this->idea;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Project\Entity\Idea\Idea[] $idea
+     *
+     * @return Call
+     */
+    public function setIdea($idea)
+    {
+        $this->idea = $idea;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Project\Entity\Idea\MessageBoard[]
+     */
+    public function getIdeaMessageBoard()
+    {
+        return $this->ideaMessageBoard;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Project\Entity\Idea\MessageBoard[] $ideaMessageBoard
+     *
+     * @return Call
+     */
+    public function setIdeaMessageBoard($ideaMessageBoard)
+    {
+        $this->ideaMessageBoard = $ideaMessageBoard;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|Session[]
+     */
+    public function getSession()
+    {
+        return $this->session;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|Session[] $session
+     *
+     * @return Call
+     */
+    public function setSession($session)
+    {
+        $this->session = $session;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|Country[]
+     */
+    public function getCallCountry()
+    {
+        return $this->callCountry;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|Country[] $callCountry
+     *
+     * @return Call
+     */
+    public function setCallCountry($callCountry)
+    {
+        $this->callCountry = $callCountry;
+
+        return $this;
     }
 
     /**
@@ -866,7 +967,7 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     }
 
     /**
-     * @param int $doaRequirement
+     * @param int $ndaRequirement
      */
     public function setNdaRequirement($ndaRequirement)
     {
@@ -893,25 +994,5 @@ class Call extends EntityAbstract implements ResourceInterface, InputFilterAware
     public function setDoaRequirement($doaRequirement)
     {
         $this->doaRequirement = $doaRequirement;
-    }
-
-    /**
-     * @return \Project\Entity\Idea\MessageBoard[]
-     */
-    public function getIdeaMessageBoard()
-    {
-        return $this->ideaMessageBoard;
-    }
-
-    /**
-     * @param \Project\Entity\Idea\MessageBoard[] $ideaMessageBoard
-     *
-     * @return Call
-     */
-    public function setIdeaMessageBoard($ideaMessageBoard)
-    {
-        $this->ideaMessageBoard = $ideaMessageBoard;
-
-        return $this;
     }
 }

@@ -1,0 +1,17 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-view-country-%s-in-call-%s")|format(callCountry.country,callCountry.call)) %}
+
+<h1>{{ translate("txt-view-country-%s-in-call-%s")|format(callCountry.country,callCountry.call) }}</h1>
+
+<dl class="dl-horizontal">
+    <dt>{{ translate("txt-call") }}</dt>
+    <dd>{{ callLink(callCountry.call,'view-admin','name') }}</dd>
+    <dt>{{ translate("txt-country") }}</dt>
+    <dd>{{ countryLink(callCountry.country,'view-admin','name') }}</dd>
+    <dt>{{ translate("txt-date-national-application") }}</dt>
+    <dd>{{ callCountry.dateNationalApplication|default('-') }}</dd>
+    <dt>{{ translate("txt-date-expected-funding-decision") }}</dt>
+    <dd>{{ callCountry.dateExpectedFundingDecision|default('-') }}</dd>
+</dl>
+
+{{ callCountryLink(callCountry,'edit-admin', 'button') }} {{ callLink(callCountry.call,'view-admin','button') }}

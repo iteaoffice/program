@@ -53,7 +53,7 @@ class NdaController extends ProgramAbstractController
      */
     public function uploadAction()
     {
-        $call = $this->getCallService()->findLastCallAndActiveVersionType()->call;
+        $call = $this->getCallService()->findLastCall();
 
         if (!is_null($callId = $this->params('id'))) {
             $call = $this->getCallService()->setCallId($callId)->getCall();

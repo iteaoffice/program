@@ -33,7 +33,7 @@ use Zend\InputFilter\InputFilterInterface;
 class Technology extends EntityAbstract
 {
     /**
-     * @ORM\Column(name="technology_id", type="integer", nullable=false)
+     * @ORM\Column(name="technology_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *

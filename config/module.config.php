@@ -21,12 +21,14 @@ $config = [
             Controller\ControllerInitializer::class
         ],
         'invokables'   => [
-            Controller\ProgramManagerController::class                         => Controller\ProgramManagerController::class,
-            Controller\NdaManagerController::class                             => Controller\NdaManagerController::class,
-            Controller\NdaController::class                             => Controller\NdaController::class,
-            Controller\DoaController::class                             => Controller\DoaController::class,
-            Controller\FunderManagerController::class => Controller\FunderManagerController::class,
-            Controller\SessionController::class       => Controller\SessionController::class
+            Controller\ProgramManagerController::class     => Controller\ProgramManagerController::class,
+            Controller\CallManagerController::class        => Controller\CallManagerController::class,
+            Controller\NdaManagerController::class         => Controller\NdaManagerController::class,
+            Controller\NdaController::class                => Controller\NdaController::class,
+            Controller\DoaController::class                => Controller\DoaController::class,
+            Controller\FunderManagerController::class      => Controller\FunderManagerController::class,
+            Controller\CallCountryManagerController::class => Controller\CallCountryManagerController::class,
+            Controller\SessionController::class            => Controller\SessionController::class
         ],
         'factories'    => [
             'program_module_options' => 'Program\Factory\OptionServiceFactory',
@@ -47,6 +49,7 @@ $config = [
             'callLink'            => Helper\CallLink::class,
             'ndaLink'             => Helper\NdaLink::class,
             'funderLink'          => Helper\FunderLink::class,
+            'callCountryLink'     => Helper\CallCountryLink::class,
         ]
     ],
     'service_manager' => [
@@ -65,6 +68,7 @@ $config = [
             'program_program_form_filter' => 'Program\Form\FilterCreateObject',
             'program_call_form_filter'    => 'Program\Form\FilterCreateObject',
             'program_nda_form_filter'     => 'Program\Form\FilterCreateObject',
+            'program_country_form_filter' => 'Program\Form\FilterCreateObject',
             'program_funder_form_filter'  => 'Program\Form\FilterCreateObject'
         ]
     ],
@@ -74,7 +78,11 @@ $config = [
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
                 'paths' => [__DIR__ . '/../src/Program/Entity/']
             ],
-            'orm_default'               => ['drivers' => ['Program\Entity' => 'program_annotation_driver',]]
+            'orm_default'               => [
+                'drivers' => [
+                    'Program\Entity' => 'program_annotation_driver',
+                ]
+            ]
         ],
         'eventmanager' => [
             'orm_default' => [
