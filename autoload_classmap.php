@@ -74,6 +74,7 @@ return array(
     'Program\Navigation\Factory\NdaNavigationServiceFactory' => __DIR__ . '/src/Program/Navigation/Factory/NdaNavigationServiceFactory.php',
     'Program\Navigation\Service\NdaNavigationService'        => __DIR__ . '/src/Program/Navigation/Service/NdaNavigationService.php',
     'Program\Navigation\Service\NavigationServiceAbstract'   => __DIR__ . '/src/Program/Navigation/Service/NavigationServiceAbstract.php',
+    'Program\Navigation\Invokable\FunderLabel'               => __DIR__ . '/src/Program/Navigation/Invokable/FunderLabel.php',
     'Program\Form\UploadNda'                                 => __DIR__ . '/src/Program/Form/UploadNda.php',
     'Program\Form\ProgramFilter'                             => __DIR__ . '/src/Program/Form/ProgramFilter.php',
     'Program\Form\FilterCreateObject'                        => __DIR__ . '/src/Program/Form/FilterCreateObject.php',

@@ -1,3 +1,4 @@
+{% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-funder-list")) %}
 
 <h1>{{ translate("txt-funder-list") }}</h1>
@@ -8,9 +9,8 @@
         <tr>
             <th>{{ translate("txt-contact") }}</th>
             <th>{{ translate("txt-country") }}</th>
+            <th>{{ translate("txt-position") }}</th>
             <th>{{ translate("txt-show-on-website") }}</th>
-            <th>{{ translate("txt-info-office") }}</th>
-            <th>{{ translate("txt-info-public") }}</th>
         </tr>
         </thead>
         <tfoot>
@@ -20,9 +20,8 @@
             <tr>
                 <td>{{ funderLink(funder,'view-admin', 'name') }} {{ funderLink(funder,'edit', 'icon') }}</td>
                 <td>{{ funder.country }}</td>
+                <td>{{ funder.position }}</td>
                 <td>{% if funder.getShowOnWebsite %}{{ translate(funder.getShowOnWebsite(true)) }}{% endif %}</td>
-                <td>{{ funder.infoOffice }}</td>
-                <td>{{ funder.infoPublic }}</td>
             </tr>
         {% endfor %}
         </tbody>

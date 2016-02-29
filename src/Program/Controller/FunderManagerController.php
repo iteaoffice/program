@@ -60,6 +60,7 @@ class FunderManagerController extends ProgramAbstractController
         );
 
         $form = $this->getFormService()->prepare('funder', null, $data);
+        $form->remove('delete');
 
         if ($this->getRequest()->isPost() && $form->isValid()) {
             /**

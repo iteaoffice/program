@@ -74,10 +74,14 @@ class CallLink extends LinkAbstract
 
     /**
      * @param Call $call
+     *
+     * @return CallLink
      */
     public function setCall($call)
     {
         $this->call = $call;
+
+        return $this;
     }
 
     /**
@@ -87,19 +91,19 @@ class CallLink extends LinkAbstract
     {
         switch ($this->getAction()) {
             case 'new':
-                $this->setRouter('zfcadmin/program/new');
+                $this->setRouter('zfcadmin/call/new');
                 $this->setText($this->translate("txt-new-program-call"));
                 break;
             case 'edit':
-                $this->setRouter('zfcadmin/program/edit');
+                $this->setRouter('zfcadmin/call/edit');
                 $this->setText(sprintf($this->translate("txt-edit-call-%s"), $this->getCall()));
                 break;
             case 'view-admin':
-                $this->setRouter('zfcadmin/program/view');
+                $this->setRouter('zfcadmin/call/view');
                 $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));
                 break;
             case 'list-admin':
-                $this->setRouter('zfcadmin/program/list');
+                $this->setRouter('zfcadmin/call/list');
                 $this->setText(sprintf($this->translate("txt-call-list")));
                 break;
             case 'external':
