@@ -50,8 +50,10 @@ class FunderManagerController extends ProgramAbstractController
      */
     public function newAction()
     {
-        $data = array_merge_recursive($this->getRequest()->getPost()->toArray(),
-            $this->getRequest()->getFiles()->toArray());
+        $data = array_merge_recursive(
+            $this->getRequest()->getPost()->toArray(),
+            $this->getRequest()->getFiles()->toArray()
+        );
 
         $form = $this->getFormService()->prepare('funder', null, $data);
         $form->get('funder')->get('contact')->setDisableInArrayValidator(true);
@@ -81,8 +83,10 @@ class FunderManagerController extends ProgramAbstractController
          */
         $funder = $this->getProgramService()->findEntityById('funder', $this->params('id'));
 
-        $data = array_merge_recursive($this->getRequest()->getPost()->toArray(),
-            $this->getRequest()->getFiles()->toArray());
+        $data = array_merge_recursive(
+            $this->getRequest()->getPost()->toArray(),
+            $this->getRequest()->getFiles()->toArray()
+        );
 
         $form = $this->getFormService()->prepare($funder->get('entity_name'), $funder, $data);
 
