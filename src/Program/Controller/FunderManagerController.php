@@ -23,11 +23,9 @@ class FunderManagerController extends ProgramAbstractController
      */
     public function listAction()
     {
-        return new ViewModel(
-            [
+        return new ViewModel([
                 'funder' => $this->getProgramService()->findAll('funder'),
-            ]
-        );
+            ]);
     }
 
     /**
@@ -40,11 +38,9 @@ class FunderManagerController extends ProgramAbstractController
          */
         $funder = $this->getProgramService()->findEntityById('funder', $this->params('id'));
 
-        return new ViewModel(
-            [
+        return new ViewModel([
                 'funder' => $funder,
-            ]
-        );
+            ]);
     }
 
     /**
@@ -54,12 +50,11 @@ class FunderManagerController extends ProgramAbstractController
      */
     public function newAction()
     {
-        $data = array_merge_recursive(
-            $this->getRequest()->getPost()->toArray(),
-            $this->getRequest()->getFiles()->toArray()
-        );
+        $data = array_merge_recursive($this->getRequest()->getPost()->toArray(),
+            $this->getRequest()->getFiles()->toArray());
 
         $form = $this->getFormService()->prepare('funder', null, $data);
+        $form->get('funder')->get('contact')->setDisableInArrayValidator(true);
         $form->remove('delete');
 
         if ($this->getRequest()->isPost() && $form->isValid()) {
@@ -68,10 +63,7 @@ class FunderManagerController extends ProgramAbstractController
              */
             $funder = $this->getProgramService()->newEntity($form->getData());
 
-            return $this->redirect()->toRoute(
-                'zfcadmin/funder/view',
-                ['id' => $funder->getId()]
-            );
+            return $this->redirect()->toRoute('zfcadmin/funder/view', ['id' => $funder->getId()]);
         }
 
         return new ViewModel(['form' => $form]);
@@ -87,19 +79,16 @@ class FunderManagerController extends ProgramAbstractController
         /**
          * @var $funder Funder
          */
-        $funder = $this->getProgramService()->findEntityById(
-            'funder',
-            $this->params('id')
-        );
+        $funder = $this->getProgramService()->findEntityById('funder', $this->params('id'));
 
-        $data = array_merge_recursive(
-            $this->getRequest()->getPost()->toArray(),
-            $this->getRequest()->getFiles()->toArray()
-        );
+        $data = array_merge_recursive($this->getRequest()->getPost()->toArray(),
+            $this->getRequest()->getFiles()->toArray());
 
         $form = $this->getFormService()->prepare($funder->get('entity_name'), $funder, $data);
 
-        $form->get('funder')->get('contact')->setValueOptions([$funder->getContact()->getId() => $funder->getContact()->getDisplayName()]);
+        $form->get('funder')->get('contact')->setValueOptions([
+            $funder->getContact()->getId() => $funder->getContact()->getDisplayName()
+        ])->setDisableInArrayValidator(true);
 
         if ($this->getRequest()->isPost() && $form->isValid()) {
             if (isset($data['delete'])) {
@@ -109,9 +98,8 @@ class FunderManagerController extends ProgramAbstractController
                 $funder = $form->getData();
 
                 $this->getProgramService()->removeEntity($funder);
-                $this->flashMessenger()->setNamespace('success')->addMessage(
-                    sprintf($this->translate("txt-funder-has-successfully-been-deleted"))
-                );
+                $this->flashMessenger()->setNamespace('success')
+                    ->addMessage(sprintf($this->translate("txt-funder-has-successfully-been-deleted")));
 
                 return $this->redirect()->toRoute('zfcadmin/funder/list');
             }
@@ -120,10 +108,7 @@ class FunderManagerController extends ProgramAbstractController
                 $funder = $this->getProgramService()->updateEntity($funder);
             }
 
-            return $this->redirect()->toRoute(
-                'zfcadmin/funder/view',
-                ['id' => $funder->getId()]
-            );
+            return $this->redirect()->toRoute('zfcadmin/funder/view', ['id' => $funder->getId()]);
         }
 
         return new ViewModel(['form' => $form]);
