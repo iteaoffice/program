@@ -18,7 +18,7 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "php": ">=5.5",
+    "php": ">=5.6",
     "zendframework/zendframework": "~2.5"
   },
   "require-dev": {
@@ -36,6 +36,9 @@
       "Program\\": "src/Program/",
       "ProgramTest\\": "tests/ProgramTest/"
     }
+  },
+  "config": {
+    "secure-http": false
   },
   "extra": {
     "branch-alias": {
