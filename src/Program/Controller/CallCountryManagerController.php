@@ -149,7 +149,7 @@ class CallCountryManagerController extends ProgramAbstractController
 
             if ($form->isValid()) {
                 /**
-                 * @var $country CallCountry
+                 * @var $callCountry CallCountry
                  */
                 $callCountry = $form->getData();
                 $callCountry->setCall($callService->getCall());

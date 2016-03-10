@@ -17,18 +17,13 @@ use Admin\Service\AdminService;
 use BjyAuthorize\Controller\Plugin\IsAllowed;
 use Contact\Service\ContactService;
 use General\Service\GeneralService;
-use General\Service\GeneralServiceAwareInterface;
 use Organisation\Service\OrganisationService;
-use Organisation\Service\OrganisationServiceAwareInterface;
-use Program\Controller\Plugin\RenderSession;
 use Program\Controller\Plugin;
+use Program\Controller\Plugin\RenderSession;
 use Program\Options\ModuleOptions;
 use Program\Service\CallService;
-use Program\Service\CallServiceAwareInterface;
 use Program\Service\FormService;
-use Program\Service\FormServiceAwareInterface;
 use Program\Service\ProgramService;
-use Program\Service\ProgramServiceAwareInterface;
 use Project\Service\ProjectService;
 use Zend\I18n\View\Helper\Translate;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -50,13 +45,10 @@ use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
  * @method      IsAllowed isAllowed($resource, $action)
  * @method      RenderSession renderSession($session)
  * @method      Plugin\GetFilter getProgramFilter()
+ * @method      Plugin\RenderDoa renderDoa($doa)
+ * @method      Plugin\RenderNda renderNda($nda)
  */
-abstract class ProgramAbstractController extends AbstractActionController implements
-    FormServiceAwareInterface,
-    CallServiceAwareInterface,
-    OrganisationServiceAwareInterface,
-    ProgramServiceAwareInterface,
-    GeneralServiceAwareInterface
+abstract class ProgramAbstractController extends AbstractActionController
 {
     /**
      * @var ProgramService
@@ -181,13 +173,6 @@ abstract class ProgramAbstractController extends AbstractActionController implem
         return $this;
     }
 
-    /**
-     * @return \Program\Options\ModuleOptions
-     */
-    public function getModuleOptions()
-    {
-        return $this->getServiceLocator()->get('program_module_options');
-    }
 
     /**
      * @return ContactService
@@ -282,6 +267,26 @@ abstract class ProgramAbstractController extends AbstractActionController implem
     public function setAdminService(AdminService $adminService)
     {
         $this->adminService = $adminService;
+
+        return $this;
+    }
+
+    /**
+     * @return ModuleOptions
+     */
+    public function getModuleOptions()
+    {
+        return $this->moduleOptions;
+    }
+
+    /**
+     * @param ModuleOptions $moduleOptions
+     *
+     * @return ProgramAbstractController
+     */
+    public function setModuleOptions($moduleOptions)
+    {
+        $this->moduleOptions = $moduleOptions;
 
         return $this;
     }

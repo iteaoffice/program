@@ -7,32 +7,28 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c] 2004-2015 ITEA Office (https://itea3.org]
  */
-use Program\Acl\Assertion;
+use Program\Acl;
 use Program\Controller;
-use Program\Service\CallService;
-use Program\Service\FormService;
-use Program\Service\ProgramService;
-use Program\Service\ServiceInitializer;
+use Program\Factory;
+use Program\Options;
+use Program\Service;
 use Program\View\Helper;
 
 $config = [
     'controllers'     => [
-        'initializers' => [
-            Controller\ControllerInitializer::class
+        'invokables'         => [
+            //Controller\ProgramManagerController::class     ,
+            //Controller\CallManagerController::class        ,
+            //Controller\NdaManagerController::class         ,
+            //Controller\NdaController::class                ,
+            //Controller\DoaController::class                ,
+            //Controller\FunderManagerController::class      ,
+            //Controller\CallCountryManagerController::class ,
+            //Controller\SessionController::class            ,
         ],
-        'invokables'   => [
-            Controller\ProgramManagerController::class     => Controller\ProgramManagerController::class,
-            Controller\CallManagerController::class        => Controller\CallManagerController::class,
-            Controller\NdaManagerController::class         => Controller\NdaManagerController::class,
-            Controller\NdaController::class                => Controller\NdaController::class,
-            Controller\DoaController::class                => Controller\DoaController::class,
-            Controller\FunderManagerController::class      => Controller\FunderManagerController::class,
-            Controller\CallCountryManagerController::class => Controller\CallCountryManagerController::class,
-            Controller\SessionController::class            => Controller\SessionController::class
+        'abstract_factories' => [
+            Controller\Factory\ControllerInvokableAbstractFactory::class
         ],
-        'factories'    => [
-            'program_module_options' => 'Program\Factory\OptionServiceFactory',
-        ]
     ],
     'view_manager'    => [
         'template_map' => include __DIR__ . '/../template_map.php',
@@ -53,18 +49,20 @@ $config = [
         ]
     ],
     'service_manager' => [
-        'initializers' => [ServiceInitializer::class],
-        'factories'    => [
-            'program_module_options'         => 'Program\Service\OptionServiceFactory',
+        'factories'          => [
+            Service\ProgramService::class    => Factory\ProgramServiceFactory::class,
+            Service\CallService::class       => Factory\CallServiceFactory::class,
+            Service\FormService::class       => Factory\FormServiceFactory::class,
+            Options\ModuleOptions::class     => Factory\ModuleOptionsFactory::class,
             'program_nda_navigation_service' => 'Program\Navigation\Factory\NdaNavigationServiceFactory',
+            //Assertion\Nda::class,
+            //Assertion\Doa::class,
+            //Assertion\Funder::class,
         ],
-        'invokables'   => [
-            Assertion\Nda::class          => Assertion\Nda::class,
-            Assertion\Doa::class          => Assertion\Doa::class,
-            Assertion\Funder::class       => Assertion\Funder::class,
-            ProgramService::class         => ProgramService::class,
-            CallService::class            => CallService::class,
-            FormService::class            => FormService::class,
+        'abstract_factories' => [
+            Acl\Factory\AssertionInvokableAbstractFactory::class
+        ],
+        'invokables'         => [
             'program_program_form_filter' => 'Program\Form\FilterCreateObject',
             'program_call_form_filter'    => 'Program\Form\FilterCreateObject',
             'program_nda_form_filter'     => 'Program\Form\FilterCreateObject',

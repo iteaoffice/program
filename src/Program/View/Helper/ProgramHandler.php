@@ -62,30 +62,27 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
 
         switch ($content->getHandler()->getHandler()) {
             case 'programcall_selector':
-                return $this->parseCallSelector(
-                    !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null,
-                    !$this->getProgramService()->isEmpty() ? $this->getProgramService()->getProgram() : null
-                );
+                return $this->parseCallSelector(!$this->getCallService()->isEmpty() ? $this->getCallService()->getCall()
+                    : null, !$this->getProgramService()->isEmpty() ? $this->getProgramService()->getProgram() : null);
             /*
              * Shows the title , not included in the "programcall_info"
              * to allow some separation of content from the title
              */
             case 'programcall_title':
-                return $this->parseProgramcallTitle(
-                    !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null
-                );
+                return $this->parseProgramcallTitle(!$this->getCallService()->isEmpty() ? $this->getCallService()
+                    ->getCall() : null);
 
             case 'programcall_project':
-                return $this->parseProgramcallProjectList(
-                    !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null
-                );
+                return $this->parseProgramcallProjectList(!$this->getCallService()->isEmpty() ? $this->getCallService()
+                    ->getCall() : null);
 
             /*
              * Info sheet with statistics
              */
             case 'programcall_info':
                 return $this->parseProgramcallInfo(
-                    !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null,
+                    !$this->getCallService()->isEmpty() ? $this->getCallService()
+                    ->getCall() : null,
                     !$this->getProgramService()->isEmpty() ? $this->getProgramService()->getProgram() : null
                 );
 
@@ -96,9 +93,8 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
              * Map of the countries in which projects of the current call are being highlighted
              */
             case 'programcall_map':
-                return $this->parseProgramcallMap(
-                    !$this->getCallService()->isEmpty() ? $this->getCallService()->getCall() : null
-                );
+                return $this->parseProgramcallMap(!$this->getCallService()->isEmpty() ? $this->getCallService()
+                    ->getCall() : null);
 
             default:
                 return sprintf(
@@ -123,9 +119,8 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     public function extractContentParam(Content $content)
     {
         if (!is_null($this->getRouteMatch()->getParam('docRef'))) {
-            $this->getCallService()->setCall(
-                $this->getCallService()->findEntityByDocRef('Call\Call', $this->getRouteMatch()->getParam('docRef'))
-            );
+            $this->getCallService()->setCall($this->getCallService()
+                ->findEntityByDocRef('Call\Call', $this->getRouteMatch()->getParam('docRef')));
             if (!$this->getCallService()->isEmpty()) {
                 $this->setCallId($this->getCallService()->getCall()->getId());
             }
@@ -236,7 +231,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
      */
     public function getModuleOptions()
     {
-        return $this->getServiceLocator()->get('program_module_options');
+        return $this->getServiceLocator()->get(ModuleOptions::class);
     }
 
     /**
@@ -246,16 +241,13 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
      */
     public function parseCallTitle(Call $call)
     {
-        return $this->getZfcTwigRenderer()->render(
-            'program/partial/entity/programcall-title',
-            [
-                'call' => $call,
-            ]
-        );
+        return $this->getZfcTwigRenderer()->render('program/partial/entity/programcall-title', [
+            'call' => $call,
+        ]);
     }
 
     /**
-     * @param Call    $call
+     * @param Call $call
      * @param Program $program
      *
      * @return string
@@ -264,15 +256,12 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     {
         $displayName = (DEBRANOVA_HOST == 'artemisia' ? 'name-without-program' : 'name');
 
-        return $this->getZfcTwigRenderer()->render(
-            'program/partial/call-selector',
-            [
-                'displayNameCall'   => $displayName,
-                'calls'             => $this->getCallService()->findNonEmptyCalls($program),
-                'callId'            => !is_null($call) ? $call->getId() : null,
-                'selectedProgramId' => !is_null($program) ? $program->getId() : null,
-            ]
-        );
+        return $this->getZfcTwigRenderer()->render('program/partial/call-selector', [
+            'displayNameCall'   => $displayName,
+            'calls'             => $this->getCallService()->findNonEmptyCalls($program),
+            'callId'            => !is_null($call) ? $call->getId() : null,
+            'selectedProgramId' => !is_null($program) ? $program->getId() : null,
+        ]);
     }
 
     /**
@@ -287,17 +276,16 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
             'colorMin'  => $options->getCountryColorFaded(),
             'colorMax'  => $options->getCountryColor(),
             'focusOn'   => ['x' => 0.5, 'y' => 0.5, 'scale' => 1.1], // Slight zoom
-            'height'    => '400px'
+            'height'    => '400px',
         ];
 
         foreach ($countries as $country) {
-            $affiliations = $this->getAffiliationService()
-                ->findAmountOfAffiliationByCountryAndCall($country, $call);
+            $affiliations = $this->getAffiliationService()->findAmountOfAffiliationByCountryAndCall($country, $call);
             $mapOptions['tipData'][$country->getCd()] = [
                 'title' => $country->getCountry(),
                 'data'  => [
-                    [$this->translate('txt-partners') => $affiliations]
-                ]
+                    [$this->translate('txt-partners') => $affiliations],
+                ],
             ];
         }
 
@@ -314,19 +302,15 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
      */
     public function parseProgramcallProjectList($call)
     {
-        $whichProjects =
-            $this->getCallService()->getProjectService()->getOptions()->getProjectHasVersions() ? ProjectService::WHICH_ONLY_ACTIVE : ProjectService::WHICH_ALL;
+        $whichProjects
+            = $this->getProjectModuleOptions()->getProjectHasVersions()
+            ? ProjectService::WHICH_ONLY_ACTIVE : ProjectService::WHICH_ALL;
 
-        return $this->getZfcTwigRenderer()->render(
-            'program/partial/list/project',
-            [
-                'call'     => $this->getCallService(),
-                'projects' => $this->getCallService()->getProjectService()->findProjectsByCall(
-                    $call,
-                    $whichProjects
-                )->getQuery()->getResult(),
-            ]
-        );
+        return $this->getZfcTwigRenderer()->render('program/partial/list/project', [
+            'call'     => $this->getCallService(),
+            'projects' => $this->getCallService()->getProjectService()->findProjectsByCall($call, $whichProjects)
+                ->getQuery()->getResult(),
+        ]);
     }
 
     /**
@@ -334,16 +318,13 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
      */
     public function parseProgramcallTitle()
     {
-        return $this->getZfcTwigRenderer()->render(
-            'program/partial/entity/programcall-title',
-            [
-                'call' => $this->getCallService(),
-            ]
-        );
+        return $this->getZfcTwigRenderer()->render('program/partial/entity/programcall-title', [
+            'call' => $this->getCallService(),
+        ]);
     }
 
     /**
-     * @param Call    $call
+     * @param Call $call
      * @param Program $program
      *
      * @return string
@@ -352,16 +333,13 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     {
         $arr = $this->getCallService()->findProjectAndPartners();
 
-        return $this->getZfcTwigRenderer()->render(
-            'program/partial/entity/programcall-info',
-            [
-                'call'             => $call,
-                'projects'         => $arr['0']['projects'],
-                'partners'         => $arr['0']['partners'],
-                'funding_eu'       => $arr['0']['funding_eu'],
-                'funding_national' => $arr['0']['funding_national'],
-            ]
-        );
+        return $this->getZfcTwigRenderer()->render('program/partial/entity/programcall-info', [
+            'call'             => $call,
+            'projects'         => $arr['0']['projects'],
+            'partners'         => $arr['0']['partners'],
+            'funding_eu'       => $arr['0']['funding_eu'],
+            'funding_national' => $arr['0']['funding_national'],
+        ]);
     }
 
     /**
@@ -379,10 +357,15 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
      */
     public function parseSessionOverview(Session $session)
     {
-        return $this->getZfcTwigRenderer()->render(
-            'program/partial/entity/session',
-            ['session' => $session]
-        );
+        return $this->getZfcTwigRenderer()->render('program/partial/entity/session', ['session' => $session]);
+    }
+
+    /**
+     * @return \Project\Options\ModuleOptions
+     */
+    public function getProjectModuleOptions()
+    {
+        return $this->getServiceLocator()->get(\Project\Options\ModuleOptions::class);
     }
 
     /**

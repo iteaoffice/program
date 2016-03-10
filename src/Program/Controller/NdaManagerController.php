@@ -15,12 +15,8 @@
 
 namespace Program\Controller;
 
-use Admin\Service\AdminServiceAwareInterface;
-use Contact\Service\ContactServiceAwareInterface;
-use General\Service\GeneralServiceAwareInterface;
 use Program\Entity\NdaObject;
 use Program\Form\NdaApproval;
-use Program\Service\CallServiceAwareInterface;
 use Zend\Validator\File\FilesSize;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
@@ -36,11 +32,7 @@ use Zend\View\Model\ViewModel;
  *
  * @link       https://itea3.org
  */
-class NdaManagerController extends ProgramAbstractController implements
-    CallServiceAwareInterface,
-    GeneralServiceAwareInterface,
-    ContactServiceAwareInterface,
-    AdminServiceAwareInterface
+class NdaManagerController extends ProgramAbstractController
 {
     /**
      * @return ViewModel

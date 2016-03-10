@@ -25,12 +25,8 @@ use Program\Entity\Program;
  * will be used to fetch the correct model service, one exception is the 'linkModel'
  * method.
  */
-class ProgramService extends ServiceAbstract implements ModuleOptionAwareInterface
+class ProgramService extends ServiceAbstract
 {
-    /**
-     * @var Program
-     */
-    protected $program;
 
     /**
      * @param $id

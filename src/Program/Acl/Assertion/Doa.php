@@ -47,8 +47,6 @@ class Doa extends AssertionAbstract
             $resource = $this->getProgramService()->findEntityById('Doa', $id);
         }
 
-        return true;
-
         switch ($privilege) {
             case 'upload':
                 /*
@@ -73,7 +71,7 @@ class Doa extends AssertionAbstract
                     )->getOrganisation();
                 }
 
-                return $this->getOrganisationAssert()->assert($acl, $role, $organisation, 'edit-community');
+                return $this->getOrganisationAssertion()->assert($acl, $role, $organisation, 'edit-community');
             case 'replace':
                 /*
                  * For the replace we need to see if the user has access on the editing of the program
@@ -81,13 +79,12 @@ class Doa extends AssertionAbstract
                  */
 
                 return is_null($resource->getDateApproved()) && $resource->getContact()->getId() ===
-                $this->getContactService()->getContact()->getId();
+                $this->getContact()->getId();
             case 'render':
                 return $this->hasContact();
             case 'download':
             case 'view':
-                return true;
-                return $resource->getContact()->getId() === $this->contactService->getContact()->getId();
+                return $resource->getContact()->getId() === $this->getContact()->getId();
         }
 
         return false;

@@ -15,20 +15,16 @@ namespace Program\Acl\Assertion;
 
 use Admin\Entity\Access;
 use Admin\Service\AdminService;
-use Admin\Service\AdminServiceAwareInterface;
+use Contact\Entity\Contact;
 use Contact\Service\ContactService;
-use Contact\Service\ContactServiceAwareInterface;
 use Doctrine\ORM\PersistentCollection;
 use Organisation\Acl\Assertion\Organisation as OrganisationAssertion;
 use Organisation\Service\OrganisationService;
-use Organisation\Service\OrganisationServiceAwareInterface;
 use Program\Service\CallService;
-use Program\Service\CallServiceAwareInterface;
 use Program\Service\ProgramService;
-use Program\Service\ProgramServiceAwareInterface;
+use Zend\Http\PhpEnvironment\Request;
 use Zend\Mvc\Router\Http\RouteMatch;
 use Zend\Permissions\Acl\Assertion\AssertionInterface;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -42,19 +38,16 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @link       https://itea3.org
  */
-abstract class AssertionAbstract implements
-    AssertionInterface,
-    OrganisationServiceAwareInterface,
-    AdminServiceAwareInterface,
-    ServiceLocatorAwareInterface,
-    ProgramServiceAwareInterface,
-    CallServiceAwareInterface,
-    ContactServiceAwareInterface
+abstract class AssertionAbstract implements AssertionInterface
 {
     /**
      * @var ServiceLocatorInterface
      */
     protected $serviceLocator;
+    /**
+     * @var Contact
+     */
+    protected $contact;
     /**
      * @var ContactService
      */
@@ -76,6 +69,10 @@ abstract class AssertionAbstract implements
      */
     protected $callService;
     /**
+     * @var OrganisationAssertion
+     */
+    protected $organisationAssertion;
+    /**
      * @var array
      */
     protected $accessRoles = [];
@@ -89,27 +86,13 @@ abstract class AssertionAbstract implements
     }
 
     /**
-     * Get the service locator.
+     * Proxy to the original request object to handle form.
      *
-     * @return ServiceLocatorInterface
+     * @return Request
      */
-    public function getServiceLocator()
+    public function getRequest()
     {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * Set the service locator.
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return AssertionAbstract
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-
-        return $this;
+        return $this->getServiceLocator()->get('application')->getMvcEvent()->getRequest();
     }
 
     /**
@@ -117,123 +100,19 @@ abstract class AssertionAbstract implements
      */
     public function hasContact()
     {
-        return !$this->getContactService()->isEmpty();
+        return !$this->getContact()->isEmpty();
     }
 
     /**
-     * @return ContactService
+     * @return array
      */
-    public function getContactService()
+    public function getAccessRoles()
     {
-        return $this->contactService;
-    }
-
-    /**
-     * The contact service.
-     *
-     * @param ContactService $contactService
-     *
-     * @return $this;
-     */
-    public function setContactService(ContactService $contactService)
-    {
-        $this->contactService = $contactService;
-        if ($this->contactService->isEmpty() && $this->getServiceLocator()->get('zfcuser_auth_service')->hasIdentity()
-        ) {
-            $this->contactService->setContact(
-                $this->getServiceLocator()->get('zfcuser_auth_service')->getIdentity()
-            );
+        if (empty($this->accessRoles) && $this->hasContact()) {
+            $this->accessRoles = $this->getAdminService()->findAccessRolesByContactAsArray($this->getContact());
         }
 
-        return $this;
-    }
-
-    /**
-     * @return ProgramService
-     */
-    public function getProgramService()
-    {
-        return $this->programService;
-    }
-
-    /**
-     * @param ProgramService $programService
-     *
-     * @return AssertionAbstract
-     */
-    public function setProgramService(ProgramService $programService)
-    {
-        $this->programService = $programService;
-
-        return $this;
-    }
-
-    /**
-     * @return CallService
-     */
-    public function getCallService()
-    {
-        return $this->callService;
-    }
-
-    /**
-     * @param CallService $callService
-     *
-     * @return AssertionAbstract
-     */
-    public function setCallService(CallService $callService)
-    {
-        $this->callService = $callService;
-
-        return $this;
-    }
-
-    /**
-     * @return AdminService
-     */
-    public function getAdminService()
-    {
-        return $this->adminService;
-    }
-
-    /**
-     * @param AdminService $adminService
-     *
-     * @return AssertionAbstract
-     */
-    public function setAdminService(AdminService $adminService)
-    {
-        $this->adminService = $adminService;
-
-        return $this;
-    }
-
-    /**
-     * @return OrganisationService
-     */
-    public function getOrganisationService()
-    {
-        return $this->organisationService;
-    }
-
-    /**
-     * @param OrganisationService $organisationService
-     *
-     * @return AssertionAbstract
-     */
-    public function setOrganisationService(OrganisationService $organisationService)
-    {
-        $this->organisationService = $organisationService;
-
-        return $this;
-    }
-
-    /**
-     * @return OrganisationAssertion
-     */
-    public function getOrganisationAssert()
-    {
-        return $this->getServiceLocator()->get(OrganisationAssertion::class);
+        return $this->accessRoles;
     }
 
     /**
@@ -256,9 +135,8 @@ abstract class AssertionAbstract implements
             if ($this->hasContact()) {
                 if (in_array(
                     strtolower($accessRole->getAccess()),
-                    $this->getAdminService()->findAccessRolesByContactAsArray($this->getContactService()->getContact())
-                )
-                ) {
+                    $this->getAdminService()->findAccessRolesByContactAsArray($this->getContact())
+                )) {
                     return true;
                 }
             }
@@ -287,16 +165,166 @@ abstract class AssertionAbstract implements
     }
 
     /**
-     * @return array
+     * @return ServiceLocatorInterface
      */
-    public function getAccessRoles()
+    public function getServiceLocator()
     {
-        if (empty($this->accessRoles) && !$this->getContactService()->isEmpty()) {
-            $this->accessRoles = $this->getAdminService()->findAccessRolesByContactAsArray(
-                $this->getContactService()->getContact()
-            );
+        return $this->serviceLocator;
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     *
+     * @return AssertionAbstract
+     */
+    public function setServiceLocator($serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+
+        return $this;
+    }
+
+    /**
+     * @return Contact
+     */
+    public function getContact()
+    {
+        if (is_null($this->contact)) {
+            $this->contact = new Contact();
         }
 
-        return $this->accessRoles;
+        return $this->contact;
+    }
+
+    /**
+     * @param Contact $contact
+     *
+     * @return AssertionAbstract
+     */
+    public function setContact($contact)
+    {
+        $this->contact = $contact;
+
+        return $this;
+    }
+
+    /**
+     * @return ContactService
+     */
+    public function getContactService()
+    {
+        return $this->contactService;
+    }
+
+    /**
+     * @param ContactService $contactService
+     *
+     * @return AssertionAbstract
+     */
+    public function setContactService($contactService)
+    {
+        $this->contactService = $contactService;
+
+        return $this;
+    }
+
+    /**
+     * @return OrganisationService
+     */
+    public function getOrganisationService()
+    {
+        return $this->organisationService;
+    }
+
+    /**
+     * @param OrganisationService $organisationService
+     *
+     * @return AssertionAbstract
+     */
+    public function setOrganisationService($organisationService)
+    {
+        $this->organisationService = $organisationService;
+
+        return $this;
+    }
+
+    /**
+     * @return AdminService
+     */
+    public function getAdminService()
+    {
+        return $this->adminService;
+    }
+
+    /**
+     * @param AdminService $adminService
+     *
+     * @return AssertionAbstract
+     */
+    public function setAdminService($adminService)
+    {
+        $this->adminService = $adminService;
+
+        return $this;
+    }
+
+    /**
+     * @return ProgramService
+     */
+    public function getProgramService()
+    {
+        return $this->programService;
+    }
+
+    /**
+     * @param ProgramService $programService
+     *
+     * @return AssertionAbstract
+     */
+    public function setProgramService($programService)
+    {
+        $this->programService = $programService;
+
+        return $this;
+    }
+
+    /**
+     * @return CallService
+     */
+    public function getCallService()
+    {
+        return $this->callService;
+    }
+
+    /**
+     * @param CallService $callService
+     *
+     * @return AssertionAbstract
+     */
+    public function setCallService($callService)
+    {
+        $this->callService = $callService;
+
+        return $this;
+    }
+
+    /**
+     * @return OrganisationAssertion
+     */
+    public function getOrganisationAssertion()
+    {
+        return $this->organisationAssertion;
+    }
+
+    /**
+     * @param OrganisationAssertion $organisationAssertion
+     *
+     * @return AssertionAbstract
+     */
+    public function setOrganisationAssertion($organisationAssertion)
+    {
+        $this->organisationAssertion = $organisationAssertion;
+
+        return $this;
     }
 }

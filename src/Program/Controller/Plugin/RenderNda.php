@@ -13,6 +13,7 @@
 
 namespace Program\Controller\Plugin;
 
+use Contact\Repository\Contact;
 use Contact\Service\ContactService;
 use General\Service\GeneralService;
 use Program\Entity\Nda;
@@ -53,6 +54,7 @@ class RenderNda extends AbstractPlugin
         /*
          * Write the contact details
          */
+        /** @var ContactService $contactService */
         $contactService = $this->getContactService()->setContact($nda->getContact());
         $pdf->SetXY(14, 55);
         $pdf->Write(0, $contactService->parseFullName());
@@ -71,13 +73,10 @@ class RenderNda extends AbstractPlugin
          * Use the NDA object to render the filename
          */
         $pdf->Write(0, $nda->parseFileName());
-        $ndaContent = $twig->render(
-            'program/pdf/nda-call',
-            [
+        $ndaContent = $twig->render('program/pdf/nda-call', [
                 'contact' => $nda->getContact(),
                 'call'    => $nda->getCall(),
-            ]
-        );
+            ]);
         $pdf->writeHTMLCell(0, 0, 14, 70, $ndaContent);
         /*
          * Signage block
@@ -105,7 +104,7 @@ class RenderNda extends AbstractPlugin
      */
     public function getModuleOptions()
     {
-        return $this->getServiceLocator()->get('program_module_options');
+        return $this->getServiceLocator()->get(ModuleOptions::class);
     }
 
     /**
@@ -135,7 +134,7 @@ class RenderNda extends AbstractPlugin
      */
     public function getContactService()
     {
-        return $this->getServiceLocator()->get('contact_contact_service');
+        return $this->getServiceLocator()->get(ContactService::class);
     }
 
     /**
@@ -173,12 +172,9 @@ class RenderNda extends AbstractPlugin
          */
         $pdf->SetXY(118, 55);
         $pdf->Write(0, $nda->parseFileName());
-        $ndaContent = $twig->render(
-            'program/pdf/nda-general',
-            [
+        $ndaContent = $twig->render('program/pdf/nda-general', [
                 'contact' => $nda->getContact(),
-            ]
-        );
+            ]);
         $pdf->writeHTMLCell(0, 0, 14, 70, $ndaContent);
         /*
          * Signage block

@@ -62,7 +62,7 @@ class Nda extends AssertionAbstract
                  */
 
                 return is_null($resource->getDateApproved())
-                && $resource->getContact()->getId() === $this->getContactService()->getContact()->getId();
+                && $resource->getContact()->getId() === $this->getContact()->getId();
             case 'render':
                 if (!$this->hasContact()) {
                     return false;
@@ -90,7 +90,7 @@ class Nda extends AssertionAbstract
                     return false;
                 }
 
-                if ($resource->getContact()->getId() === $this->getContactService()->getContact()->getId()) {
+                if ($resource->getContact()->getId() === $this->getContact()->getId()) {
                     return true;
                 }
 

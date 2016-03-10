@@ -101,6 +101,7 @@ interface ProgramOptionsInterface
      * @return string
      */
     public function getCountryColorFaded();
+
     /**
      * Returns the assigned hex color of the country map.
      *

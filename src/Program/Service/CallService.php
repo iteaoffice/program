@@ -10,7 +10,6 @@
 
 namespace Program\Service;
 
-use Affiliation\Service\AffiliationService;
 use Contact\Entity\Contact;
 use Doctrine\Common\Collections\ArrayCollection;
 use Program\Entity\Call\Call;
@@ -19,7 +18,6 @@ use Program\Entity\Nda;
 use Program\Entity\NdaObject;
 use Program\Entity\Program;
 use Project\Entity\Version\Type;
-use Project\Service\ProjectService;
 use Zend\Stdlib\ArrayObject;
 
 /**
@@ -95,22 +93,6 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * @return ProjectService
-     */
-    public function getProjectService()
-    {
-        return $this->getServiceLocator()->get(ProjectService::class);
-    }
-
-    /**
-     * @return AffiliationService
-     */
-    public function getAffiliationService()
-    {
-        return $this->getServiceLocator()->get(AffiliationService::class);
-    }
-
-    /**
      * @return \stdClass
      */
     public function findMinAndMaxYearInCall(Call $call)
@@ -146,8 +128,7 @@ class CallService extends ServiceAbstract
      */
     public function findLastCall()
     {
-        return $this->getEntityManager()->getRepository(Call::class)
-            ->findOneBy([], ['id' => 'DESC']);
+        return $this->getEntityManager()->getRepository(Call::class)->findOneBy([], ['id' => 'DESC']);
     }
 
     /**
@@ -201,10 +182,8 @@ class CallService extends ServiceAbstract
      */
     public function findFirstAndLastCall()
     {
-        $firstCall = $this->getEntityManager()->getRepository(Call::class)
-            ->findOneBy([], ['id' => 'ASC']);
-        $lastCall = $this->getEntityManager()->getRepository(Call::class)
-            ->findOneBy([], ['id' => 'DESC']);
+        $firstCall = $this->getEntityManager()->getRepository(Call::class)->findOneBy([], ['id' => 'ASC']);
+        $lastCall = $this->getEntityManager()->getRepository(Call::class)->findOneBy([], ['id' => 'DESC']);
         $callSpan = new \stdClass();
         $callSpan->firstCall = $firstCall;
         $callSpan->lastCall = $lastCall;
@@ -219,8 +198,7 @@ class CallService extends ServiceAbstract
      */
     public function findNonEmptyCalls(Program $program = null)
     {
-        return $this->getEntityManager()->getRepository(Call::class)
-            ->findNonEmptyCalls($program);
+        return $this->getEntityManager()->getRepository(Call::class)->findNonEmptyCalls($program);
     }
 
     /**
@@ -228,8 +206,7 @@ class CallService extends ServiceAbstract
      */
     public function findProjectAndPartners()
     {
-        return $this->getEntityManager()->getRepository(Call::class)
-            ->findProjectAndPartners($this->getCall());
+        return $this->getEntityManager()->getRepository(Call::class)->findProjectAndPartners($this->getCall());
     }
 
     /**

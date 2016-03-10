@@ -20,7 +20,5 @@ interface ServiceInterface
 
     public function newEntity(EntityAbstract $entity);
 
-    public function getEntityManager();
-
     public function findAll($entity);
 }

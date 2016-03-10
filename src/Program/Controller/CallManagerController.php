@@ -18,7 +18,6 @@ namespace Program\Controller;
 use Affiliation\Service\AffiliationService;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
-use General\Service\GeneralServiceAwareInterface;
 use Program\Entity\Call\Call;
 use Program\Form\CallFilter;
 use Zend\Paginator\Paginator;
@@ -27,7 +26,7 @@ use Zend\View\Model\ViewModel;
 /**
  *
  */
-class CallManagerController extends ProgramAbstractController implements GeneralServiceAwareInterface
+class CallManagerController extends ProgramAbstractController
 {
     /**
      * @return \Zend\View\Model\ViewModel

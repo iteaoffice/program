@@ -24,8 +24,8 @@ class FunderManagerController extends ProgramAbstractController
     public function listAction()
     {
         return new ViewModel([
-                'funder' => $this->getProgramService()->findAll('funder'),
-            ]);
+            'funder' => $this->getProgramService()->findAll('funder'),
+        ]);
     }
 
     /**
@@ -39,8 +39,8 @@ class FunderManagerController extends ProgramAbstractController
         $funder = $this->getProgramService()->findEntityById('funder', $this->params('id'));
 
         return new ViewModel([
-                'funder' => $funder,
-            ]);
+            'funder' => $funder,
+        ]);
     }
 
     /**
@@ -63,7 +63,8 @@ class FunderManagerController extends ProgramAbstractController
             /**
              * @var $funder Funder
              */
-            $funder = $this->getProgramService()->newEntity($form->getData());
+            $funder = $form->getData();
+            $funder = $this->getProgramService()->newEntity($funder);
 
             return $this->redirect()->toRoute('zfcadmin/funder/view', ['id' => $funder->getId()]);
         }
@@ -97,7 +98,7 @@ class FunderManagerController extends ProgramAbstractController
         if ($this->getRequest()->isPost() && $form->isValid()) {
             if (isset($data['delete'])) {
                 /**
-                 * @var $funder Funder
+                 * @var Funder $funder
                  */
                 $funder = $form->getData();
 

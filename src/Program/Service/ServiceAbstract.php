@@ -10,40 +10,54 @@
 
 namespace Program\Service;
 
+use Affiliation\Service\AffiliationService;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
 use General\Service\GeneralService;
 use Program\Entity;
 use Program\Entity\EntityAbstract;
-use Program\Options\ModuleOptions;
-use Program\Options\ProgramOptionsInterface;
+use Project\Service\ProjectService;
 use Project\Service\VersionService;
 use Zend\Authentication\AuthenticationService;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * ServiceAbstract.
  */
-abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceInterface
+abstract class ServiceAbstract implements ServiceInterface
 {
     /**
      * @var \Doctrine\ORM\EntityManager
      */
     protected $entityManager;
     /**
-     * @var AuthenticationService;
-     */
-    protected $authenticationService;
-    /**
      * @var ServiceLocatorInterface
      */
     protected $serviceLocator;
-
     /**
-     * @return ProgramOptionsInterface
+     * @var AffiliationService
      */
-    protected $options;
+    protected $affiliationService;
+    /**
+     * @var GeneralService
+     */
+    protected $generalService;
+    /**
+     * @var VersionService;
+     */
+    protected $versionService;
+    /**
+     * @var ProjectService
+     */
+    protected $projectService;
+    /**
+     * @var Entity\Program
+     */
+    protected $program;
+    /**
+     * @var Entity\Call\Call
+     */
+    protected $call;
 
     /**
      * @param      $entity
@@ -69,24 +83,21 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
 
     /**
      * @param string $entity
-     * @param  $filter
-     * @param array $ignoreFilter
+     * @param        $filter
+     * @param array  $ignoreFilter
      *
      * @return Query
      */
     public function findEntitiesFiltered($entity, $filter, $ignoreFilter = [])
     {
-        return $this->getEntityManager()->getRepository($entity)->findFiltered(
-            $filter,
-            $ignoreFilter,
-            AbstractQuery::HYDRATE_SIMPLEOBJECT
-        );
+        return $this->getEntityManager()->getRepository($entity)
+            ->findFiltered($filter, $ignoreFilter, AbstractQuery::HYDRATE_SIMPLEOBJECT);
     }
 
     /**
-     * @param \Program\Entity\EntityAbstract $entity
+     * @param Entity\EntityAbstract $entity
      *
-     * @return \Program\Entity\EntityAbstract
+     * @return Entity\EntityAbstract
      */
     public function newEntity(EntityAbstract $entity)
     {
@@ -94,9 +105,9 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
     }
 
     /**
-     * @param \Program\Entity\EntityAbstract $entity
+     * @param Entity\EntityAbstract $entity
      *
-     * @return \Program\Entity\EntityAbstract
+     * @return Entity\EntityAbstract
      */
     public function updateEntity(EntityAbstract $entity)
     {
@@ -107,7 +118,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
     }
 
     /**
-     * @param \Program\Entity\EntityAbstract $entity
+     * @param Entity\EntityAbstract $entity
      *
      * @return bool
      */
@@ -117,26 +128,6 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
         $this->getEntityManager()->flush();
 
         return true;
-    }
-
-    /**
-     * @param ModuleOptions $options
-     *
-     * @return ServiceAbstract
-     */
-    public function setOptions(ModuleOptions $options)
-    {
-        $this->options = $options;
-
-        return $this;
-    }
-
-    /**
-     * @return ModuleOptions
-     */
-    public function getOptions()
-    {
-        return $this->options;
     }
 
     /**
@@ -175,62 +166,23 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
     }
 
     /**
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return ServiceAbstract
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-
-        return $this;
-    }
-
-    /**
-     * @return \Zend\ServiceManager\ServiceManager
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param \Doctrine\ORM\EntityManager $entityManager
-     */
-    public function setEntityManager($entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
-    /**
-     * @return GeneralService
-     */
-    public function getGeneralService()
-    {
-        return $this->getServiceLocator()->get(GeneralService::class);
-    }
-
-    /**
-     * get the version service.
-     *
-     * @return VersionService
-     */
-    public function getVersionService()
-    {
-        return $this->getServiceLocator()->get(VersionService::class);
-    }
-
-
-    /**
      * @return \Doctrine\ORM\EntityManager
      */
     public function getEntityManager()
     {
-        if (null === $this->entityManager) {
-            $this->entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        }
-
         return $this->entityManager;
+    }
+
+    /**
+     * @param \Doctrine\ORM\EntityManager $entityManager
+     *
+     * @return ServiceAbstract
+     */
+    public function setEntityManager($entityManager)
+    {
+        $this->entityManager = $entityManager;
+
+        return $this;
     }
 
     /**
@@ -238,10 +190,162 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
      */
     public function getAuthenticationService()
     {
-        if (null === $this->authenticationService) {
-            $this->authenticationService = $this->getServiceLocator()->get('zfcuser_auth_service');
+        return $this->authenticationService;
+    }
+
+    /**
+     * @param AuthenticationService $authenticationService
+     *
+     * @return ServiceAbstract
+     */
+    public function setAuthenticationService($authenticationService)
+    {
+        $this->authenticationService = $authenticationService;
+
+        return $this;
+    }
+
+    /**
+     * @return ServiceLocatorInterface
+     */
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator;
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     *
+     * @return ServiceAbstract
+     */
+    public function setServiceLocator($serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+
+        return $this;
+    }
+
+    /**
+     * @return AffiliationService
+     */
+    public function getAffiliationService()
+    {
+        return $this->affiliationService;
+    }
+
+    /**
+     * @param AffiliationService $affiliationService
+     *
+     * @return ServiceAbstract
+     */
+    public function setAffiliationService($affiliationService)
+    {
+        $this->affiliationService = $affiliationService;
+
+        return $this;
+    }
+
+    /**
+     * @return GeneralService
+     */
+    public function getGeneralService()
+    {
+        return $this->generalService;
+    }
+
+    /**
+     * @param GeneralService $generalService
+     *
+     * @return ServiceAbstract
+     */
+    public function setGeneralService($generalService)
+    {
+        $this->generalService = $generalService;
+
+        return $this;
+    }
+
+    /**
+     * @return VersionService
+     */
+    public function getVersionService()
+    {
+        return $this->versionService;
+    }
+
+    /**
+     * @param VersionService $versionService
+     *
+     * @return ServiceAbstract
+     */
+    public function setVersionService($versionService)
+    {
+        $this->versionService = $versionService;
+
+        return $this;
+    }
+
+    /**
+     * @return ProjectService
+     */
+    public function getProjectService()
+    {
+        if (is_null($this->projectService)) {
+            $this->projectService = $this->getServiceLocator()->get(ProjectService::class);
         }
 
-        return $this->authenticationService;
+        return $this->projectService;
+    }
+
+    /**
+     * @param ProjectService $projectService
+     *
+     * @return ServiceAbstract
+     */
+    public function setProjectService($projectService)
+    {
+        $this->projectService = $projectService;
+
+        return $this;
+    }
+
+    /**
+     * @return Entity\Program
+     */
+    public function getProgram()
+    {
+        return $this->program;
+    }
+
+    /**
+     * @param Entity\Program $program
+     *
+     * @return ServiceAbstract
+     */
+    public function setProgram($program)
+    {
+        $this->program = $program;
+
+        return $this;
+    }
+
+    /**
+     * @return Entity\Call\Call
+     */
+    public function getCall()
+    {
+        return $this->call;
+    }
+
+    /**
+     * @param Entity\Call\Call $call
+     *
+     * @return ServiceAbstract
+     */
+    public function setCall($call)
+    {
+        $this->call = $call;
+
+        return $this;
     }
 }
