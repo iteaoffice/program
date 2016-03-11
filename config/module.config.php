@@ -50,11 +50,10 @@ $config = [
     ],
     'service_manager' => [
         'factories'          => [
-            Service\ProgramService::class    => Factory\ProgramServiceFactory::class,
-            Service\CallService::class       => Factory\CallServiceFactory::class,
-            Service\FormService::class       => Factory\FormServiceFactory::class,
-            Options\ModuleOptions::class     => Factory\ModuleOptionsFactory::class,
-            'program_nda_navigation_service' => 'Program\Navigation\Factory\NdaNavigationServiceFactory',
+            Service\ProgramService::class => Factory\ProgramServiceFactory::class,
+            Service\CallService::class    => Factory\CallServiceFactory::class,
+            Service\FormService::class    => Factory\FormServiceFactory::class,
+            Options\ModuleOptions::class  => Factory\ModuleOptionsFactory::class,
             //Assertion\Nda::class,
             //Assertion\Doa::class,
             //Assertion\Funder::class,

@@ -132,6 +132,23 @@ class CallService extends ServiceAbstract
     }
 
     /**
+     * Find the last open call and check which versionType is active.
+     *
+     * @return Call|null
+     */
+    public function findLastActiveCall()
+    {
+        $notEmptyCalls = $this->getEntityManager()->getRepository(Call::class)->findNonEmptyCalls();
+
+        if (sizeof($notEmptyCalls) > 0) {
+            return end($notEmptyCalls);
+        }
+
+        return null;
+    }
+
+
+    /**
      * Return true when the call is open specified for the given type.
      *
      * @param $type ;
@@ -170,6 +187,9 @@ class CallService extends ServiceAbstract
         return $this->call->getDoaRequirement() === Call::DOA_REQUIREMENT_PER_PROJECT;
     }
 
+    /**
+     * @return bool
+     */
     public function requireDoaPerProgram()
     {
         return $this->call->getDoaRequirement() === Call::DOA_REQUIREMENT_PER_PROGRAM;
@@ -192,9 +212,9 @@ class CallService extends ServiceAbstract
     }
 
     /**
-     * Return all calls which have at least one project.
+     * @param Program|null $program
      *
-     * @return Call[]
+     * @return mixed
      */
     public function findNonEmptyCalls(Program $program = null)
     {

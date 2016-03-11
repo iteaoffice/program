@@ -45,7 +45,7 @@ class NdaLink extends LinkAbstract
      * @param Nda    $nda
      * @param string $action
      * @param string $show
-     * @param Call   $call   program_acl_assertion_nda
+     * @param Call   $call program_acl_assertion_nda
      *
      * @return string
      *
@@ -57,12 +57,7 @@ class NdaLink extends LinkAbstract
         $this->setCall($call);
         $this->setAction($action);
         $this->setShow($show);
-        if (!$this->hasAccess(
-            $this->getNda(),
-            NdaAssertion::class,
-            $this->getAction()
-        )
-        ) {
+        if (!$this->hasAccess($this->getNda(), NdaAssertion::class, $this->getAction())) {
             return '';
         }
         $this->addRouterParam('entity', 'Nda');
@@ -107,11 +102,16 @@ class NdaLink extends LinkAbstract
 
     /**
      * @param Call $call
+     *
+     * @return NdaLink
      */
     public function setCall($call)
     {
         $this->call = $call;
+
+        return $this;
     }
+
 
     /**
      * Extract the relevant parameters based on the action.
@@ -120,38 +120,41 @@ class NdaLink extends LinkAbstract
     {
         switch ($this->getAction()) {
             case 'upload':
-                $this->setRouter('program/nda/upload');
+                $this->setRouter('community/program/nda/upload');
                 if (!is_null($this->getCall())) {
                     $this->setText(sprintf($this->translate("txt-upload-nda-for-call-%s-title"), $this->getCall()));
                     $this->addRouterParam('id', $this->getCall()->getId());
                 } elseif (!is_null($this->getNda()->getCall())) {
-                    $this->setText(
-                        sprintf($this->translate("txt-upload-nda-for-call-%s-title"), $this->getNda()->getCall())
-                    );
+                    $this->setText(sprintf(
+                        $this->translate("txt-upload-nda-for-call-%s-title"),
+                        $this->getNda()->getCall()
+                    ));
                     $this->addRouterParam('id', $this->getNda()->getCall()->getId());
                 } else {
                     $this->setText(sprintf($this->translate("txt-upload-nda-title")));
                 }
                 break;
             case 'replace':
-                $this->setRouter('program/nda/replace');
+                $this->setRouter('community/program/nda/replace');
                 $this->setText(sprintf($this->translate("txt-replace-nda-%s-title"), $this->getNda()));
                 break;
             case 'render':
-                $this->setRouter('program/nda/render');
+                $this->setRouter('community/program/nda/render');
                 $this->setText(sprintf($this->translate("txt-render-general-nda-title")));
                 /*
                  * Produce special texts for call-dedicated NDA's
                  */
                 if ($call = $this->getNda()->getCall()) {
-                    $this->setText(
-                        sprintf($this->translate("txt-render-nda-for-call-%s-title"), $call)
-                    );
+                    $this->setText(sprintf($this->translate("txt-render-nda-for-call-%s-title"), $call));
                     $this->addRouterParam('id', $call->getId());
                 } elseif (!is_null($this->getCall())) {
                     $this->setText(sprintf($this->translate("txt-render-nda-for-call-%s-title"), $this->getCall()));
                     $this->addRouterParam('id', $this->getCall()->getId());
                 }
+                break;
+            case 'download':
+                $this->setRouter('community/program/nda/download');
+                $this->setText(sprintf($this->translate("txt-download-nda-%s-title"), $this->getNda()));
                 break;
             case 'approval-admin':
                 $this->setRouter('zfcadmin/nda/approval');
@@ -159,32 +162,27 @@ class NdaLink extends LinkAbstract
                 break;
             case 'view-admin':
                 $this->setRouter('zfcadmin/nda/view');
-                $this->setText(
-                    sprintf(
-                        $this->translate("txt-view-nda-for-%s-for-%s-title"),
-                        !is_null($this->getNda()->getCall()) ? $this->getNda()->getCall() : 'LR',
-                        $this->getNda()->getContact()->getDisplayName()
-                    )
-                );
+                $this->setText(sprintf(
+                    $this->translate("txt-view-nda-for-%s-for-%s-title"),
+                    !is_null($this->getNda()->getCall()) ? $this->getNda()->getCall() : 'LR',
+                    $this->getNda()->getContact()->getDisplayName()
+                ));
                 break;
             case 'edit-admin':
                 $this->setRouter('zfcadmin/nda/edit');
-                $this->setText(
-                    sprintf(
-                        $this->translate("txt-edit-nda-for-%s-for-%s-link-title"),
-                        !is_null($this->getNda()->getCall()) ? $this->getNda()->getCall() : 'LR',
-                        $this->getNda()->getContact()->getDisplayName()
-                    )
-                );
+                $this->setText(sprintf(
+                    $this->translate("txt-edit-nda-for-%s-for-%s-link-title"),
+                    !is_null($this->getNda()->getCall()) ? $this->getNda()->getCall() : 'LR',
+                    $this->getNda()->getContact()->getDisplayName()
+                ));
                 break;
-            case 'download':
-                $this->setRouter('program/nda/download');
-                $this->setText(sprintf($this->translate("txt-download-nda-%s-title"), $this->getNda()));
-                break;
+
             default:
-                throw new \InvalidArgumentException(
-                    sprintf("%s is an incorrect action for %s", $this->getAction(), __CLASS__)
-                );
+                throw new \InvalidArgumentException(sprintf(
+                    "%s is an incorrect action for %s",
+                    $this->getAction(),
+                    __CLASS__
+                ));
         }
     }
 }

@@ -9,7 +9,54 @@
  */
 return [
     'navigation' => [
-        'admin' => [
+        'community' => [
+            'idea' => [
+                'pages' => [
+                    'upload-nda' => [
+                        'label'  => _("txt-nav-upload-nda"),
+                        'route'  => 'community/program/nda/upload',
+                        'params' => [
+                            'entities'   => [
+                                'id' => Program\Entity\Call\Call::class
+                            ],
+                            'routeParam' => [
+                                'id' => 'callId'
+                            ],
+                            'invokables' => [
+                                Program\Navigation\Invokable\UploadNdaLabel::class
+                            ]
+                        ],
+                    ],
+                    'view-nda'   => [
+                        'label'   => _("txt-nav-view-nda"),
+                        'route'   => 'community/program/nda/view',
+                        'visible' => false,
+                        'params'  => [
+                            'entities'   => [
+                                'id' => Program\Entity\Nda::class
+                            ],
+                            'invokables' => [
+                                Program\Navigation\Invokable\NdaLabel::class
+                            ]
+                        ],
+                        'pages'   => [
+                            'replace-nda' => [
+                                'label'   => _("txt-nav-replace-nda"),
+                                'route'   => 'community/program/nda/replace',
+                                'visible' => false,
+                                'params'  => [
+                                    'entities' => [
+                                        'id' => Program\Entity\Nda::class
+                                    ],
+                                ],
+                            ],
+                        ]
+                    ],
+
+                ],
+            ],
+        ],
+        'admin'     => [
             // And finally, here is where we define our page hierarchy
             'project' => [
                 'pages' => [

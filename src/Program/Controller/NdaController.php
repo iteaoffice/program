@@ -37,10 +37,7 @@ class NdaController extends ProgramAbstractController
      */
     public function viewAction()
     {
-        $nda = $this->getProgramService()->findEntityById(
-            'Nda',
-            $this->params('id')
-        );
+        $nda = $this->getProgramService()->findEntityById('Nda', $this->params('id'));
         if (is_null($nda) || sizeof($nda->getObject()) === 0) {
             return $this->notFoundAction();
         }
@@ -55,20 +52,16 @@ class NdaController extends ProgramAbstractController
     {
         $call = $this->getCallService()->findLastCall();
 
-        if (!is_null($callId = $this->params('id'))) {
+        if (!is_null($callId = $this->params('callId'))) {
             $call = $this->getCallService()->setCallId($callId)->getCall();
             if ($this->getCallService()->isEmpty()) {
                 return $this->notFoundAction();
             }
-            $nda = $this->getCallService()->findNdaByCallAndContact(
-                $call,
-                $this->zfcUserAuthentication()->getIdentity()
-            );
+            $nda = $this->getCallService()
+                ->findNdaByCallAndContact($call, $this->zfcUserAuthentication()->getIdentity());
         } elseif (!is_null($call)) {
-            $nda = $this->getCallService()->findNdaByCallAndContact(
-                $call,
-                $this->zfcUserAuthentication()->getIdentity()
-            );
+            $nda = $this->getCallService()
+                ->findNdaByCallAndContact($call, $this->zfcUserAuthentication()->getIdentity());
         } else {
             $nda = $this->getCallService()->findNdaByContact($this->zfcUserAuthentication()->getIdentity());
         }
@@ -80,26 +73,19 @@ class NdaController extends ProgramAbstractController
         $form->setData($data);
         if ($this->getRequest()->isPost() && $form->isValid()) {
             $fileData = $form->getData('file');
-            $this->getCallService()->uploadNda(
-                $fileData['file'],
-                $this->zfcUserAuthentication()->getIdentity(),
-                $call
-            );
+            $this->getCallService()->uploadNda($fileData['file'], $this->zfcUserAuthentication()->getIdentity(), $call);
 
-            $this->flashMessenger()->setNamespace('success')->addMessage(
-                sprintf($this->translate("txt-nda-has-been-uploaded-successfully"))
-            );
+            $this->flashMessenger()->setNamespace('success')
+                ->addMessage(sprintf($this->translate("txt-nda-has-been-uploaded-successfully")));
 
             return $this->redirect()->toRoute('community');
         }
 
-        return new ViewModel(
-            [
-                'call' => $call,
-                'nda'  => $nda,
-                'form' => $form,
-            ]
-        );
+        return new ViewModel([
+            'call' => $call,
+            'nda'  => $nda,
+            'form' => $form,
+        ]);
     }
 
     /**
@@ -114,10 +100,7 @@ class NdaController extends ProgramAbstractController
      */
     public function replaceAction()
     {
-        $nda = $this->getProgramService()->findEntityById(
-            'Nda',
-            $this->params('id')
-        );
+        $nda = $this->getProgramService()->findEntityById('Nda', $this->params('id'));
         if (is_null($nda) || sizeof($nda->getObject()) === 0) {
             return $this->notFoundAction();
         }
@@ -142,38 +125,26 @@ class NdaController extends ProgramAbstractController
                 $fileSizeValidator = new FilesSize(PHP_INT_MAX);
                 $fileSizeValidator->isValid($fileData['file']);
                 $nda->setSize($fileSizeValidator->size);
-                $nda->setContentType(
-                    $this->getGeneralService()->findContentTypeByContentTypeName($fileData['file']['type'])
-                );
+                $nda->setContentType($this->getGeneralService()
+                    ->findContentTypeByContentTypeName($fileData['file']['type']));
                 $ndaObject->setNda($nda);
                 $this->getProgramService()->newEntity($ndaObject);
-                $this->flashMessenger()->setNamespace('success')->addMessage(
-                    sprintf(_("txt-nda-has-been-replaced-successfully"))
-                );
+                $this->flashMessenger()->setNamespace('success')
+                    ->addMessage(sprintf(_("txt-nda-has-been-replaced-successfully")));
 
-                return $this->redirect()->toRoute(
-                    'program/nda/view',
-                    ['id' => $nda->getId()]
-                );
+                return $this->redirect()->toRoute('program/nda/view', ['id' => $nda->getId()]);
             }
             if (isset($data['cancel'])) {
-                $this->flashMessenger()->setNamespace('info')->addMessage(
-                    sprintf(_("txt-action-has-been-cancelled"))
-                );
+                $this->flashMessenger()->setNamespace('info')->addMessage(sprintf(_("txt-action-has-been-cancelled")));
 
-                return $this->redirect()->toRoute(
-                    'program/nda/view',
-                    ['id' => $nda->getId()]
-                );
+                return $this->redirect()->toRoute('program/nda/view', ['id' => $nda->getId()]);
             }
         }
 
-        return new ViewModel(
-            [
-                'nda'  => $nda,
-                'form' => $form,
-            ]
-        );
+        return new ViewModel([
+            'nda'  => $nda,
+            'form' => $form,
+        ]);
     }
 
     /**
@@ -187,10 +158,8 @@ class NdaController extends ProgramAbstractController
         /*
          * Add the call when a id is given
          */
-        if (!is_null($this->params('id'))) {
-            $call = $this->getCallService()->setCallId(
-                $this->params('id')
-            )->getCall();
+        if (!is_null($this->params('callId'))) {
+            $call = $this->getCallService()->setCallId($this->params('callId'))->getCall();
             if ($this->getCallService()->isEmpty()) {
                 return $this->notFoundAction();
             }
@@ -201,10 +170,8 @@ class NdaController extends ProgramAbstractController
             $renderNda = $this->renderNda()->render($nda);
         }
         $response = $this->getResponse();
-        $response->getHeaders()
-            ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
-            ->addHeaderLine("Pragma: public")
+        $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
+            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
             ->addHeaderLine('Content-Disposition', 'attachment; filename="' . $nda->parseFileName() . '.pdf"')
             ->addHeaderLine('Content-Type: application/pdf')
             ->addHeaderLine('Content-Length', strlen($renderNda->getPDFData()));
@@ -229,17 +196,13 @@ class NdaController extends ProgramAbstractController
         $object = $nda->getObject()->first()->getObject();
         $response = $this->getResponse();
         $response->setContent(stream_get_contents($object));
-        $response->getHeaders()
-            ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
-            ->addHeaderLine(
+        $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
+            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine(
                 'Content-Disposition',
-                'attachment; filename="' . $nda->parseFileName() . '.' .
-                $nda->getContentType()->getExtension() . '"'
+                'attachment; filename="' . $nda->parseFileName() . '.' . $nda->getContentType()->getExtension() . '"'
             )
-            ->addHeaderLine("Pragma: public")
-            ->addHeaderLine('Content-Type: ' . $nda->getContentType()->getContentType())
-            ->addHeaderLine('Content-Length: ' . $nda->getSize());
+            ->addHeaderLine("Pragma: public")->addHeaderLine('Content-Type: ' . $nda->getContentType()
+                    ->getContentType())->addHeaderLine('Content-Length: ' . $nda->getSize());
 
         return $this->response;
     }

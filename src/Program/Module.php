@@ -16,20 +16,17 @@ use Program\Controller\Plugin;
 use Program\Controller\Plugin\RenderDoa;
 use Program\Controller\Plugin\RenderNda;
 use Program\Controller\Plugin\RenderSession;
-use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature;
 use Zend\Mvc\Controller\PluginManager;
-use Zend\Mvc\MvcEvent;
 
 /**
  *
  */
-class Module implements
-    Feature\AutoloaderProviderInterface,
-    Feature\ServiceProviderInterface,
-    Feature\ConfigProviderInterface,
-    Feature\BootstrapListenerInterface
+class Module implements Feature\AutoloaderProviderInterface, Feature\ServiceProviderInterface, Feature\ConfigProviderInterface
 {
+    /**
+     * @return array
+     */
     public function getAutoloaderConfig()
     {
         return [
@@ -60,21 +57,6 @@ class Module implements
     public function getServiceConfig()
     {
         return include __DIR__ . '/../../config/services.config.php';
-    }
-
-    /**
-     * @return array
-     */
-    public function getViewHelperConfig()
-    {
-        return include __DIR__ . '/../../config/viewhelpers.config.php';
-    }
-
-    /**
-     * @return array
-     */
-    public function getControllerConfig()
-    {
     }
 
     /**
@@ -109,21 +91,5 @@ class Module implements
                 },
             ],
         ];
-    }
-
-    /**
-     * Listen to the bootstrap event.
-     *
-     * @param EventInterface $e
-     *
-     * @return array
-     */
-    public function onBootstrap(EventInterface $e)
-    {
-        $app = $e->getParam('application');
-        $em = $app->getEventManager();
-        $em->attach(MvcEvent::EVENT_DISPATCH, function (MvcEvent $event) {
-            $event->getApplication()->getServiceManager()->get('program_nda_navigation_service')->update();
-        });
     }
 }
