@@ -1,14 +1,16 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Project
- * @package    Entity
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2014 ITEA Office
- * @license    http://debranova.org/license.txt proprietary
- * @link       http://debranova.org
+ * @copyright  2004-2015 ITEA Office
+ * @license    https://itea3.org/license.txt proprietary
+ *
+ * @link       https://itea3.org
  */
+
 namespace Program\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -27,29 +29,32 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * @Annotation\Name("program_doa")
  *
  * @category    Program
- * @package     Entity
  */
 class Doa extends EntityAbstract implements ResourceInterface
 {
     /**
-     * @ORM\Column(name="doa_id", type="integer", nullable=false)
+     * @ORM\Column(name="doa_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
      * @var integer
      */
     private $id;
     /**
      * @ORM\Column(name="date_approved", type="datetime", nullable=true)
+     *
      * @var \DateTime
      */
     private $dateApproved;
     /**
      * @ORM\Column(name="date_signed", type="date", nullable=true)
+     *
      * @var \DateTime
      */
     private $dateSigned;
     /**
      * @ORM\Column(name="branch", type="string", length=40, nullable=true)
+     *
      * @var string
      */
     private $branch;
@@ -58,29 +63,34 @@ class Doa extends EntityAbstract implements ResourceInterface
      * @ORM\JoinColumn(name="contenttype_id", referencedColumnName="contenttype_id", nullable=false)
      * @Annotation\Type("\Zend\Form\Element\File")
      * @Annotation\Options({"label":"txt-nda-file"})
+     *
      * @var \General\Entity\ContentType
      */
     private $contentType;
     /**
-     * @ORM\Column(name="size", type="integer", nullable=false)
+     * @ORM\Column(name="size", length=10, type="integer", nullable=false)
+     *
      * @var integer
      */
     private $size;
     /**
      * @ORM\Column(name="date_updated", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="update")
+     *
      * @var \DateTime
      */
     private $dateUpdated;
     /**
      * @ORM\Column(name="date_created", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="create")
+     *
      * @var \DateTime
      */
     private $dateCreated;
     /**
      * @ORM\OneToMany(targetEntity="Program\Entity\DoaObject", cascade={"persist","remove"}, mappedBy="doa")
      * @Annotation\Exclude()
+     *
      * @var \Program\Entity\DoaObject[]
      */
     private $object;
@@ -89,6 +99,7 @@ class Doa extends EntityAbstract implements ResourceInterface
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id")
      * })
+     *
      * @var \Contact\Entity\Contact
      */
     private $contact;
@@ -97,6 +108,7 @@ class Doa extends EntityAbstract implements ResourceInterface
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")
      * })
+     *
      * @var \Organisation\Entity\Organisation
      */
     private $organisation;
@@ -105,19 +117,20 @@ class Doa extends EntityAbstract implements ResourceInterface
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="program_id", referencedColumnName="program_id")
      * })
+     *
      * @var \Program\Entity\Program
      */
     private $program;
 
     /**
-     * Class constructor
+     * Class constructor.
      */
     public function __construct()
     {
     }
 
     /**
-     * Magic Getter
+     * Magic Getter.
      *
      * @param $property
      *
@@ -129,12 +142,10 @@ class Doa extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * Magic Setter
+     * Magic Setter.
      *
      * @param $property
      * @param $value
-     *
-     * @return void
      */
     public function __set($property, $value)
     {
@@ -150,7 +161,7 @@ class Doa extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * Returns the string identifier of the Resource
+     * Returns the string identifier of the Resource.
      *
      * @return string
      */
@@ -160,11 +171,10 @@ class Doa extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * Set input filter
+     * Set input filter.
      *
      * @param InputFilterInterface $inputFilter
      *
-     * @return void
      * @throws \Exception
      */
     public function setInputFilter(InputFilterInterface $inputFilter)
@@ -245,7 +255,7 @@ class Doa extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * Parse a filename
+     * Parse a filename.
      *
      * @return string
      */

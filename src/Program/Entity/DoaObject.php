@@ -1,14 +1,16 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Project
- * @package    Entity
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2014 ITEA Office
- * @license    http://debranova.org/license.txt proprietary
- * @link       http://debranova.org
+ * @copyright  2004-2015 ITEA Office
+ * @license    https://itea3.org/license.txt proprietary
+ *
+ * @link       https://itea3.org
  */
+
 namespace Program\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -20,14 +22,14 @@ use Zend\InputFilter\InputFilterInterface;
  * @ORM\Entity
  *
  * @category    Program
- * @package     Entity
  */
 class DoaObject extends EntityAbstract
 {
     /**
-     * @ORM\Column(name="object_id", type="integer", nullable=false)
+     * @ORM\Column(name="object_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
      * @var integer
      */
     private $id;
@@ -36,17 +38,19 @@ class DoaObject extends EntityAbstract
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="doa_id", referencedColumnName="doa_id",nullable=false)
      * })
+     *
      * @var \Program\Entity\Doa
      */
     private $doa;
     /**
      * @ORM\Column(name="object", type="blob", nullable=false)
+     *
      * @var resource
      */
     private $object;
 
     /**
-     * Magic Getter
+     * Magic Getter.
      *
      * @param $property
      *
@@ -58,12 +62,10 @@ class DoaObject extends EntityAbstract
     }
 
     /**
-     * Magic Setter
+     * Magic Setter.
      *
      * @param $property
      * @param $value
-     *
-     * @return void
      */
     public function __set($property, $value)
     {
@@ -71,11 +73,10 @@ class DoaObject extends EntityAbstract
     }
 
     /**
-     * Set input filter
+     * Set input filter.
      *
      * @param InputFilterInterface $inputFilter
      *
-     * @return void
      * @throws \Exception
      */
     public function setInputFilter(InputFilterInterface $inputFilter)

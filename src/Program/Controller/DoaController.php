@@ -1,14 +1,16 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Program
- * @package    Controller
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2014 ITEA Office
- * @license    http://debranova.org/license.txt proprietary
- * @link       http://debranova.org
+ * @copyright  2004-2015 ITEA Office
+ * @license    https://itea3.org/license.txt proprietary
+ *
+ * @link       https://itea3.org
  */
+
 namespace Program\Controller;
 
 use Program\Entity;
@@ -18,13 +20,14 @@ use Zend\Validator\File\FilesSize;
 use Zend\View\Model\ViewModel;
 
 /**
- * Create a link to an project
+ * Create a link to an project.
  *
  * @category   Program
- * @package    Controller
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    http://debranova.org/licence.txt proprietary
- * @link       http://debranova.org
+ * @license    https://itea3.org/licence.txt proprietary
+ *
+ * @link       https://itea3.org
  */
 class DoaController extends ProgramAbstractController
 {
@@ -35,7 +38,7 @@ class DoaController extends ProgramAbstractController
     {
         $doa = $this->getProgramService()->findEntityById(
             'Doa',
-            $this->getEvent()->getRouteMatch()->getParam('id')
+            $this->params('id')
         );
         if (is_null($doa) || sizeof($doa->getObject()) === 0) {
             return $this->notFoundAction();
@@ -46,18 +49,18 @@ class DoaController extends ProgramAbstractController
 
     /**
      * Upload a DOA for a program (based on the affiliation, to be sure that the organisation is
-     * active in at least a project in the database)
+     * active in at least a project in the database).
      *
      * @return ViewModel
      */
     public function uploadAction()
     {
         $organisationService = $this->getOrganisationService()->setOrganisationId(
-            $this->getEvent()->getRouteMatch()->getParam('organisation-id')
+            $this->params('organisation-id')
         );
         $program = $this->getProgramService()->findEntityById(
             'Program',
-            $this->getEvent()->getRouteMatch()->getParam('program-id')
+            $this->params('program-id')
         );
         $data = array_merge_recursive(
             $this->getRequest()->getPost()->toArray(),
@@ -112,9 +115,10 @@ class DoaController extends ProgramAbstractController
     }
 
     /**
-     * Action to replace an mis-uploaded DoA
+     * Action to replace an mis-uploaded DoA.
      *
      * @return ViewModel
+     *
      * @throws \Zend\Form\Exception\InvalidArgumentException
      * @throws \InvalidArgumentException
      * @throws \Zend\Mvc\Exception\DomainException
@@ -124,7 +128,7 @@ class DoaController extends ProgramAbstractController
     {
         $doa = $this->getProgramService()->findEntityById(
             'Doa',
-            $this->getEvent()->getRouteMatch()->getParam('id')
+            $this->params('id')
         );
         if (is_null($doa) || sizeof($doa->getObject()) === 0) {
             return $this->notFoundAction();
@@ -145,7 +149,7 @@ class DoaController extends ProgramAbstractController
 
             if ($form->isValid()) {
                 $fileData = $this->params()->fromFiles();
-                /**
+                /*
                  * Remove the current entity
                  */
                 foreach ($doa->getObject() as $object) {
@@ -192,11 +196,11 @@ class DoaController extends ProgramAbstractController
     public function renderAction()
     {
         $organisationService = $this->getOrganisationService()->setOrganisationId(
-            $this->getEvent()->getRouteMatch()->getParam('organisation-id')
+            $this->params('organisation-id')
         );
         $program = $this->getProgramService()->findEntityById(
             'Program',
-            $this->getEvent()->getRouteMatch()->getParam('program-id')
+            $this->params('program-id')
         );
         //Create an empty Doa object
         $programDoa = new Doa();
@@ -226,11 +230,11 @@ class DoaController extends ProgramAbstractController
     public function downloadAction()
     {
         set_time_limit(0);
-        $doa = $this->getProgramService()->findEntityById('Doa', $this->getEvent()->getRouteMatch()->getParam('id'));
+        $doa = $this->getProgramService()->findEntityById('Doa', $this->params('id'));
         if (is_null($doa) || sizeof($doa->getObject()) === 0) {
             return $this->notFoundAction();
         }
-        /**
+        /*
          * Due to the BLOB issue, we treat this as an array and we need to capture the first element
          */
         $object = $doa->getObject()->first()->getObject();

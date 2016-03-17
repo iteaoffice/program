@@ -5,7 +5,7 @@
  * @category    ProgramTest
  * @package     Service
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
  */
 namespace ProgramTest\Service;
 
@@ -43,7 +43,7 @@ class CallServiceTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->serviceManager = Bootstrap::getServiceManager();
-        $this->entityManager = $this->serviceManager->get('doctrine.entitymanager.orm_default');
+        $this->entityManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
         $this->callService = new CallService();
         $this->callService->setServiceLocator($this->serviceManager);
         $this->programService = new ProgramService();

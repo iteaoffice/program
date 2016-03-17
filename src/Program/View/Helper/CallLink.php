@@ -1,29 +1,30 @@
 <?php
 
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Program
- * @package    View
- * @subpackage Helper
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2014 ITEA Office
- * @license    http://debranova.org/license.txt proprietary
- * @link       http://debranova.org
+ * @copyright  2004-2015 ITEA Office
+ * @license    https://itea3.org/license.txt proprietary
+ *
+ * @link       https://itea3.org
  */
+
 namespace Program\View\Helper;
 
 use Program\Entity\Call\Call;
 
 /**
- * Create a link to an project
+ * Create a link to an project.
  *
  * @category   Program
- * @package    View
- * @subpackage Helper
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    http://debranova.org/licence.txt proprietary
- * @link       http://debranova.org
+ * @license    https://itea3.org/licence.txt proprietary
+ *
+ * @link       https://itea3.org
  */
 class CallLink extends LinkAbstract
 {
@@ -38,6 +39,7 @@ class CallLink extends LinkAbstract
      * @param string $show
      *
      * @return string
+     *
      * @throws \Exception
      */
     public function __invoke(Call $call = null, $action = 'view', $show = 'name')
@@ -46,18 +48,16 @@ class CallLink extends LinkAbstract
         $this->setAction($action);
         $this->setShow($show);
 
-        /**
+        /*
          * Set the non-standard options needed to give an other link value
          */
         if (!is_null($call)) {
             $this->addRouterParam('id', $this->getCall()->getId());
 
-            $this->setShowOptions(
-                [
-                    'name'                 => $this->getCall(),
-                    'name-without-program' => $this->getCall()->getCall(),
-                ]
-            );
+            $this->setShowOptions([
+                'name'                 => $this->getCall(),
+                'name-without-program' => $this->getCall()->getCall(),
+            ]);
         }
         $this->addRouterParam('entity', 'call');
 
@@ -74,28 +74,46 @@ class CallLink extends LinkAbstract
 
     /**
      * @param Call $call
+     *
+     * @return CallLink
      */
     public function setCall($call)
     {
         $this->call = $call;
+
+        return $this;
     }
 
     /**
-     * Parse te action and fill the correct parameters
+     * Parse te action and fill the correct parameters.
      */
     public function parseAction()
     {
         switch ($this->getAction()) {
             case 'new':
-                $this->setRouter('zfcadmin/program-manager/new');
+                $this->setRouter('zfcadmin/call/new');
                 $this->setText($this->translate("txt-new-program-call"));
                 break;
             case 'edit':
-                $this->setRouter('zfcadmin/program-manager/edit');
+                $this->setRouter('zfcadmin/call/edit');
                 $this->setText(sprintf($this->translate("txt-edit-call-%s"), $this->getCall()));
                 break;
+            case 'view-admin':
+                $this->setRouter('zfcadmin/call/view');
+                $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));
+                break;
+            case 'list-admin':
+                $this->setRouter('zfcadmin/call/list');
+                $this->setText(sprintf($this->translate("txt-call-list")));
+                break;
+            case 'external':
+                $this->addRouterParam('docRef', $this->getCall()->getDocRef());
+                $this->setRouter('route-program_entity_call_call');
+                $this->addRouterParam('call', $this->getCall()->getId());
+                $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));
+                break;
             case 'view-list':
-                /**
+                /*
                  * For a list in the front-end simply use the MatchedRouteName
                  */
                 $this->addRouterParam('docRef', $this->getRouteMatch()->getParam('docRef'));
@@ -105,9 +123,11 @@ class CallLink extends LinkAbstract
                 break;
 
             default:
-                throw new \InvalidArgumentException(
-                    sprintf("%s is an incorrect action for %s", $this->getAction(), __CLASS__)
-                );
+                throw new \InvalidArgumentException(sprintf(
+                    "%s is an incorrect action for %s",
+                    $this->getAction(),
+                    __CLASS__
+                ));
         }
     }
 }

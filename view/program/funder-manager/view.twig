@@ -1,0 +1,21 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-funder-%s")|format(funder)) %}
+
+<h1>{{ translate("txt-funder-%s")|format(funder) }}</h1>
+
+<dl class="dl-horizontal">
+    <dt>{{ translate("txt-contact") }}</dt>
+    <dd>{{ contactLink(funder.contact,'view-admin','name') }}</dd>
+    <dt>{{ translate("txt-country") }}</dt>
+    <dd>{{ funder.country }}</dd>
+    <dt>{{ translate("txt-position") }}</dt>
+    <dd>{{ funder.position }}</dd>
+    <dt>{{ translate("txt-show-on-website") }}</dt>
+    <dd>{% if funder.showOnWebsite %}{{ funder.getShowOnWebsite(true) }}{% endif %}</dd>
+    <dt>{{ translate("txt-info-office") }}</dt>
+    <dd>{{ funder.infoOffice|default(translate("txt-not-provided")) }}</dd>
+    <dt>{{ translate("txt-info-public") }}</dt>
+    <dd>{{ funder.infoPublic|default(translate("txt-not-provided")) }}</dd>
+</dl>
+
+{{ funderLink(funder,'edit','button') }}  {{ funderLink(null,'list','button') }}

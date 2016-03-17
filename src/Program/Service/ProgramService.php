@@ -1,12 +1,13 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category    Program
- * @package     Service
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
  */
+
 namespace Program\Service;
 
 use Affiliation\Service\AffiliationService;
@@ -16,21 +17,16 @@ use Program\Entity\Funder;
 use Program\Entity\Program;
 
 /**
- * ProgramService
+ * ProgramService.
  *
  * this is a generic wrapper service for all the other services
  *
  * First parameter of all methods (lowercase, underscore_separated)
  * will be used to fetch the correct model service, one exception is the 'linkModel'
  * method.
- *
  */
 class ProgramService extends ServiceAbstract
 {
-    /**
-     * @var Program
-     */
-    protected $program;
 
     /**
      * @param $id
@@ -59,9 +55,8 @@ class ProgramService extends ServiceAbstract
      */
     public function findFunderByCountry(Country $country)
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName('funder'))->findBy(
-            ['country' => $country]
-        );
+        return $this->getEntityManager()->getRepository($this->getFullEntityName('funder'))
+            ->findBy(['country' => $country], ['position' => 'ASC']);
     }
 
     /**
@@ -72,12 +67,10 @@ class ProgramService extends ServiceAbstract
      */
     public function findProgramDoaByProgramAndOrganisation(Program $program, Organisation $organisation)
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName('Doa'))->findOneBy(
-            [
+        return $this->getEntityManager()->getRepository($this->getFullEntityName('Doa'))->findOneBy([
                 'program'      => $program,
                 'organisation' => $organisation,
-            ]
-        );
+            ]);
     }
 
     /**

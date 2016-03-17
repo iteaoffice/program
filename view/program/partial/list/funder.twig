@@ -10,12 +10,10 @@
         <h3>{{ contactService.parseFullName }}</h3>
 
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 {{ contactPhoto(funder.contact) }}
             </div>
-            <div class="col-md-8">
-
-
+            <div class="col-md-9">
                 <dl>
                     <dt>{{ translate("txt-address") }}</dt>
 
@@ -25,6 +23,7 @@
                     <dd>{{ contactService.getVisitAddress().address.address }}</dd>
                     <dd>{{ contactService.getVisitAddress().address.zipCode }} {{ contactService.getVisitAddress().address.city }}</dd>
                     <dd>{{ contactService.getVisitAddress().address.country }}</dd>
+                    <dd><a href="{{ contactService.contact.email }}">{{ contactService.contact.email }}</a></dd>
 
                     <dt>{{ translate("txt-phone") }}</dt>
                     <dd>{{ contactService.getDirectPhone() }}</dd>
@@ -34,7 +33,7 @@
                     <dd>{{ organisationService.organisation.web[0]|raw }}</dd>
 
                     <dt>{{ translate("txt-extra-information") }}</dt>
-                    <dd>{{ funder.infoPublic }}</dd>
+                    <dd>{{ funder.infoPublic|nl2br }}</dd>
                 </dl>
             </div>
         </div>

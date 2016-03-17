@@ -1,14 +1,16 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Project
- * @package    Entity
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2014 ITEA Office
- * @license    http://debranova.org/license.txt proprietary
- * @link       http://debranova.org
+ * @copyright  2004-2015 ITEA Office
+ * @license    https://itea3.org/license.txt proprietary
+ *
+ * @link       https://itea3.org
  */
+
 namespace Program\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -19,7 +21,7 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 
 /**
- * Roadmap
+ * Roadmap.
  *
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("program_roadmap")
@@ -29,10 +31,11 @@ use Zend\InputFilter\InputFilterInterface;
 class Roadmap extends EntityAbstract
 {
     /**
-     * @ORM\Column(name="roadmap_id", type="integer", nullable=false)
+     * @ORM\Column(name="roadmap_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Exclude()
+     *
      * @var integer
      */
     private $id;
@@ -40,11 +43,13 @@ class Roadmap extends EntityAbstract
      * @ORM\Column(name="roadmap", type="string", length=40, nullable=true)
      * @Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-roadmap"})
+     *
      * @var string
      */
     private $roadmap;
     /**
      * @ORM\Column(name="description", type="text", nullable=true)
+     *
      * @var string
      */
     private $description;
@@ -52,24 +57,28 @@ class Roadmap extends EntityAbstract
      * @ORM\Column(name="date_released", type="date", nullable=true)
      * @Annotation\Type("\Zend\Form\Element\Date")
      * @Annotation\Options({"label":"txt-date-released"})
+     *
      * @var \DateTime
      */
     private $dateReleased;
     /**
      * @ORM\OneToMany(targetEntity="\Program\Entity\Domain", cascade={"persist"}, mappedBy="roadmap")
      * @Annotation\Exclude()
+     *
      * @var \Program\Entity\Domain[]
      */
     private $domain;
     /**
      * @ORM\OneToMany(targetEntity="\Program\Entity\Call\Call", cascade={"persist"}, mappedBy="roadmap")
      * @Annotation\Exclude()
+     *
      * @var \Program\Entity\Call\Call[]
      */
     private $call;
     /**
      * @ORM\OneToMany(targetEntity="\Program\Entity\Technology", cascade={"persist"}, mappedBy="roadmap")
      * @Annotation\Exclude()
+     *
      * @var \Program\Entity\Technology[]
      */
     private $technology;
@@ -85,7 +94,7 @@ class Roadmap extends EntityAbstract
     }
 
     /**
-     * Magic Getter
+     * Magic Getter.
      *
      * @param $property
      *
@@ -97,12 +106,10 @@ class Roadmap extends EntityAbstract
     }
 
     /**
-     * Magic Setter
+     * Magic Setter.
      *
      * @param $property
      * @param $value
-     *
-     * @return void
      */
     public function __set($property, $value)
     {
@@ -110,7 +117,7 @@ class Roadmap extends EntityAbstract
     }
 
     /**
-     * toString returns the name
+     * toString returns the name.
      *
      * @return string
      */
@@ -120,7 +127,7 @@ class Roadmap extends EntityAbstract
     }
 
     /**
-     * Returns the string identifier of the Resource
+     * Returns the string identifier of the Resource.
      *
      * @return string
      */
@@ -130,11 +137,10 @@ class Roadmap extends EntityAbstract
     }
 
     /**
-     * Set input filter
+     * Set input filter.
      *
      * @param InputFilterInterface $inputFilter
      *
-     * @return void
      * @throws \Exception
      */
     public function setInputFilter(InputFilterInterface $inputFilter)
@@ -231,7 +237,7 @@ class Roadmap extends EntityAbstract
     }
 
     /**
-     * Needed for the hydration of form elements
+     * Needed for the hydration of form elements.
      *
      * @return array
      */

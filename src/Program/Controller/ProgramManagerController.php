@@ -1,26 +1,29 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
- * @category   Program
- * @package    Controller
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2014 ITEA Office
- * @license    http://debranova.org/license.txt proprietary
- * @link       http://debranova.org
+ * PHP Version 5
+ *
+ * @category    Project
+ *
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   2004-2016 ITEA Office
+ * @license     https://itea3.org/license.txt proprietary
+ *
+ * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
+
 namespace Program\Controller;
 
+use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
+use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
+use Program\Entity\Program;
+use Program\Form\ProgramFilter;
+use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 
 /**
- * Create a link to an project
  *
- * @category   Program
- * @package    Controller
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    http://debranova.org/licence.txt proprietary
- * @link       http://debranova.org
  */
 class ProgramManagerController extends ProgramAbstractController
 {
@@ -29,122 +32,106 @@ class ProgramManagerController extends ProgramAbstractController
      */
     public function listAction()
     {
-        /**
-         * workaround to find the call\call if that is asked
-         * @todo
-         */
-        if ($this->getEvent()->getRouteMatch()->getParam('entity') === 'call') {
-            $entityName = 'Call\Call';
-        } else {
-            $entityName = $this->getEvent()->getRouteMatch()->getParam('entity');
-        }
+        $page = $this->params()->fromRoute('page', 1);
+        $filterPlugin = $this->getProgramFilter();
+        $contactQuery = $this->getProgramService()->findEntitiesFiltered(Program::class, $filterPlugin->getFilter());
 
-        $entities = $this->getProgramService()->findAll($entityName);
+        $paginator
+            = new Paginator(new PaginatorAdapter(new ORMPaginator($contactQuery, false)));
+        $paginator->setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 20);
+        $paginator->setCurrentPageNumber($page);
+        $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator->getDefaultItemCountPerPage()));
 
-        return new ViewModel(
-            ['entities' => $entities, 'entity' => $this->getEvent()->getRouteMatch()->getParam('entity')]
-        );
+        $form = new ProgramFilter();
+        $form->setData(['filter' => $filterPlugin->getFilter()]);
+
+        return new ViewModel([
+            'paginator'     => $paginator,
+            'form'          => $form,
+            'encodedFilter' => urlencode($filterPlugin->getHash()),
+            'order'         => $filterPlugin->getOrder(),
+            'direction'     => $filterPlugin->getDirection(),
+        ]);
     }
 
     /**
-     * Create a new entity
+     * @return \Zend\View\Model\ViewModel
+     */
+    public function viewAction()
+    {
+        $program = $this->getProgramService()->findEntityById('Program', $this->params('id'));
+        if (is_null($program)) {
+            return $this->notFoundAction();
+        }
+
+        return new ViewModel(['program' => $program]);
+    }
+
+    /**
+     * Create a new template.
      *
      * @return \Zend\View\Model\ViewModel
      */
     public function newAction()
     {
-        /**
-         * workaround to find the call\call if that is asked
-         * @todo
-         */
-        if ($this->getEvent()->getRouteMatch()->getParam('entity') === 'call') {
-            $entityName = 'Call\Call';
-        } else {
-            $entityName = $this->getEvent()->getRouteMatch()->getParam('entity');
-        }
+        $data = array_merge($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
 
-        $form = $this->getFormService()->prepare($entityName, null, $_POST);
+        $form = $this->getFormService()->prepare('Program', null, $data);
+        $form->remove('delete');
+
         $form->setAttribute('class', 'form-horizontal');
-        if ($this->getRequest()->isPost() && $form->isValid()) {
-            $result = $this->getProgramService()->newEntity($form->getData());
 
-            return $this->redirect()->toRoute(
-                'zfcadmin/program-manager/list',
-                [
-                    'entity' => strtolower($this->getEvent()->getRouteMatch()->getParam('entity')),
-                    'id'     => $result->getId(),
-                ]
-            );
+        if ($this->getRequest()->isPost()) {
+            if (isset($data['cancel'])) {
+                $this->redirect()->toRoute('zfcadmin/program/list');
+            }
+
+            if ($form->isValid()) {
+                /* @var $program Program */
+                $program = $form->getData();
+
+                $program = $this->getProgramService()->newEntity($program);
+                $this->redirect()->toRoute('zfcadmin/program/view', [
+                    'id' => $program->getId(),
+                ]);
+            }
         }
 
-        return new ViewModel(['form' => $form, 'entity' => $entityName, 'fullVersion' => true]);
+        return new ViewModel(['form' => $form]);
     }
 
     /**
-     * Edit an entity by finding it and call the corresponding form
+     * Edit an template by finding it and program the corresponding form.
      *
      * @return \Zend\View\Model\ViewModel
      */
     public function editAction()
     {
-        /**
-         * workaround to find the call\call if that is asked
-         * @todo
-         */
-        if ($this->getEvent()->getRouteMatch()->getParam('entity') === 'call') {
-            $entityName = 'Call\Call';
-        } else {
-            $entityName = $this->getEvent()->getRouteMatch()->getParam('entity');
-        }
+        /** @var Program $program */
+        $program = $this->getProgramService()->findEntityById('Program', $this->params('id'));
 
-        $entity = $this->getProgramService()->findEntityById(
-            $entityName,
-            $this->getEvent()->getRouteMatch()->getParam('id')
-        );
+        $data = array_merge($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
 
-        $form = $this->getFormService()->prepare($entity->get('entity_name'), $entity, $_POST);
+        $form = $this->getFormService()->prepare($program->get('entity_name'), $program, $data);
         $form->setAttribute('class', 'form-horizontal');
-        $form->setAttribute('id', 'program-program-'.$entity->getId());
-        if ($this->getRequest()->isPost() && $form->isValid()) {
-            $result = $this->getProgramService()->updateEntity($form->getData());
 
-            return $this->redirect()->toRoute(
-                'zfcadmin/program-manager/list',
-                [
-                    'entity' => strtolower($entity->get('dashed_entity_name')),
-                    'id'     => $result->getId(),
-                ]
-            );
+        if ($this->getRequest()->isPost()) {
+            if (isset($data['cancel'])) {
+                return $this->redirect()->toRoute('zfcadmin/program/list');
+            }
+
+            if ($form->isValid()) {
+                /** @var Program $program */
+                $program = $form->getData();
+
+                /** @var Program $program */
+                $program = $this->getProgramService()->updateEntity($program);
+                $this->redirect()->toRoute('zfcadmin/program/view', [
+                    'id' => $program->getId(),
+                ]);
+            }
         }
 
-        return new ViewModel(['form' => $form, 'entity' => $entity, 'fullVersion' => true]);
-    }
-
-    /**
-     * (soft-delete) an entity
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
-    public function deleteAction()
-    {
-        /**
-         * workaround to find the call\call if that is asked
-         * @todo
-         */
-        if ($this->getEvent()->getRouteMatch()->getParam('entity') === 'call') {
-            $entityName = 'call';
-        } else {
-            $entityName = $this->getEvent()->getRouteMatch()->getParam('entity');
-        }
-
-        $entity = $this->getProgramService()->findEntityById(
-            $entityName,
-            $this->getEvent()->getRouteMatch()->getParam('id')
-        );
-        $this->getProgramService()->removeEntity($entity);
-
-        return $this->redirect()->toRoute(
-            'zfcadmin/program-manager/'.$entity->get('dashed_entity_name').'s'
-        );
+        return new ViewModel(['form' => $form, 'program' => $program]);
     }
 }

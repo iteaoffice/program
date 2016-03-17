@@ -1,11 +1,11 @@
-<h3>Call Information</h3>
-<dl class="project">
-    <dt>Total number of projects</dt>
+<h3>{{ translate("txt-call-information") }}</h3>
+<dl class="project dl-horizontal">
+    <dt>{{ translate("txt-projects") }}</dt>
     <dd>{{ projects }}</dd>
-    <dt>Total number of partners</dt>
+    <dt>{{ translate("txt-partners") }}</dt>
     <dd>{{ partners }}</dd>
-    <dt>National Funding</dt>
-    <dd>{{ funding_national|round(2, 'floor') }} &euro;</dd>
-    <dt>EU Funding</dt>
-    <dd>{{ funding_eu|round(2, 'floor') }} &euro;</dd>
+    <dt>{{ translate("txt-national-funding") }}</dt>
+    <dd>{{ (funding_national/1000000)|number_format(2, '.', ',') }}{{ translate("txt-meuro") }}</dd>
+    <dt>{{ translate("txt-eu-funding") }}</dt>
+    <dd>{{ (funding_eu/1000000)|number_format(2, '.', ',') }} {{ translate("txt-meuro") }}</dd>
 </dl>

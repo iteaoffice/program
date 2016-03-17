@@ -6,13 +6,14 @@
  * @package    Controller
  * @subpackage Plugin
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2014 ITEA Office
- * @license    http://debranova.org/license.txt proprietary
- * @link       http://debranova.org
+ * @copyright  2004-2015 ITEA Office
+ * @license    https://itea3.org/license.txt proprietary
+ * @link       https://itea3.org
  */
 namespace ProgramTest\Controller\Plugin;
 
 use Contact\Entity\Contact;
+use Contact\Service\ContactService;
 use Program\Controller\Plugin\RenderDoa;
 use Program\Entity\Doa;
 use Program\Entity\Program;
@@ -25,8 +26,8 @@ use ProgramTest\Bootstrap;
  * @package    Controller
  * @subpackage Plugin
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    http://debranova.org/licence.txt proprietary
- * @link       http://debranova.org
+ * @license    https://itea3.org/licence.txt proprietary
+ * @link       https://itea3.org
  */
 class RenderDoaTest extends \PHPUnit_Framework_TestCase
 {
@@ -40,7 +41,28 @@ class RenderDoaTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->serviceManager = Bootstrap::getServiceManager();
+
+        $serviceManager = Bootstrap::getServiceManager();
+        $serviceManager->setAllowOverride(true);
+
+        /** Mock the contactService */
+        $contactServiceMock = $this->getMockBuilder('ZfcTwigRenderer')->disableOriginalConstructor()->getMock();
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject $organisationServiceMock */
+        $contactServiceMock->expects($this->any())->method('render()')->will($this->returnValue('Test'));
+        $serviceManager->setService('ZfcTwigRenderer', $contactServiceMock);
+
+        $serviceManager = Bootstrap::getServiceManager();
+        $serviceManager->setAllowOverride(true);
+
+       $contactService = new ContactService();
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject $organisationServiceMock */
+
+        $serviceManager->setService('contact_contact_service', $contactService);
+
+        $this->serviceManager = $serviceManager;
+
     }
 
     public function testCanRenderDoa()
@@ -48,8 +70,6 @@ class RenderDoaTest extends \PHPUnit_Framework_TestCase
         /**
          * Bootstrap the application to have the other information available
          */
-//        $application = $this->serviceManager->get('application');
-//        $application->bootstrap();
         $renderDoa = new RenderDoa();
         $renderDoa->setServiceLocator($this->serviceManager);
         $contact = new Contact();

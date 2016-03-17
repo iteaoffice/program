@@ -1,21 +1,24 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Project
- * @package    Entity
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2014 ITEA Office
- * @license    http://debranova.org/license.txt proprietary
- * @link       http://debranova.org
+ * @copyright  2004-2015 ITEA Office
+ * @license    https://itea3.org/license.txt proprietary
+ *
+ * @link       https://itea3.org
  */
+
 namespace Program\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
 
 /**
- * RoadmapPromo
+ * RoadmapPromo.
+ *
  * @ORM\Table(name="roadmap_search")
  * @ORM\Entity
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
@@ -24,34 +27,40 @@ use Zend\Form\Annotation;
 class RoadmapSearch
 {
     /**
-     * @ORM\Column(name="search_id", type="integer", nullable=false)
+     * @ORM\Column(name="search_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
      * @var integer
      */
     private $id;
     /**
-     * @ORM\Column(name="key_id", type="integer", nullable=false)
+     * @ORM\Column(name="key_id", length=10, type="integer", nullable=false)
+     *
      * @var integer
      */
     private $keyId;
     /**
      * @ORM\Column(name="type", type="string", length=20, nullable=false)
+     *
      * @var string
      */
     private $type;
     /**
      * @ORM\Column(name="subject", type="string", length=64, nullable=true)
+     *
      * @var string
      */
     private $subject;
     /**
      * @ORM\Column(name="content", type="text", nullable=true)
+     *
      * @var string
      */
     private $content;
     /**
      * @ORM\Column(name="date_updated", type="datetime", nullable=false)
+     *
      * @var \DateTime
      */
     private $dateUpdated;

@@ -1,15 +1,16 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Program
- * @package    Controller
- * @subpackage Plugin
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2014 ITEA Office
- * @license    http://debranova.org/license.txt proprietary
- * @link       http://debranova.org
+ * @copyright  2004-2015 ITEA Office
+ * @license    https://itea3.org/license.txt proprietary
+ *
+ * @link       https://itea3.org
  */
+
 namespace Program\Controller\Plugin;
 
 use Contact\Service\ContactService;
@@ -20,14 +21,14 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Create a link to an project
+ * Create a link to an project.
  *
  * @category   Program
- * @package    Controller
- * @subpackage Plugin
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    http://debranova.org/licence.txt proprietary
- * @link       http://debranova.org
+ * @license    https://itea3.org/licence.txt proprietary
+ *
+ * @link       https://itea3.org
  */
 class RenderDoa extends AbstractPlugin
 {
@@ -48,7 +49,7 @@ class RenderDoa extends AbstractPlugin
         $pdf->addPage();
         $pdf->SetFontSize(9);
         $twig = $this->getServiceLocator()->get('ZfcTwigRenderer');
-        /**
+        /*
          * Write the contact details
          */
         $contactService = $this->getContactService()->setContact($doa->getContact());
@@ -56,16 +57,16 @@ class RenderDoa extends AbstractPlugin
         $pdf->Write(0, $contactService->parseFullName());
         $pdf->SetXY(14, 60);
         $pdf->Write(0, $contactService->parseOrganisation());
-        /**
+        /*
          * Write the current date
          */
         $pdf->SetXY(77, 55);
         $pdf->Write(0, date("Y-m-d"));
-        /**
+        /*
          * Write the Reference
          */
         $pdf->SetXY(118, 55);
-        /**
+        /*
          * Use the NDA object to render the filename
          */
         $pdf->Write(0, $doa->parseFileName());
@@ -77,7 +78,7 @@ class RenderDoa extends AbstractPlugin
             ]
         );
         $pdf->writeHTMLCell(0, 0, 14, 70, $ndaContent);
-        /**
+        /*
          * Signage block
          */
         $pdf->SetXY(14, 250);
@@ -103,7 +104,7 @@ class RenderDoa extends AbstractPlugin
      */
     public function getModuleOptions()
     {
-        return $this->getServiceLocator()->get('program_module_options');
+        return $this->getServiceLocator()->get(ModuleOptions::class);
     }
 
     /**
@@ -127,17 +128,17 @@ class RenderDoa extends AbstractPlugin
     }
 
     /**
-     * Gateway to the Contact Service
+     * Gateway to the Contact Service.
      *
      * @return ContactService
      */
     public function getContactService()
     {
-        return $this->getServiceLocator()->get('contact_contact_service');
+        return $this->getServiceLocator()->get(ContactService::class);
     }
 
     /**
-     * Gateway to the General Service
+     * Gateway to the General Service.
      *
      * @return GeneralService
      */

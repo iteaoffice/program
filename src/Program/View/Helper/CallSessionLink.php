@@ -1,31 +1,32 @@
 <?php
 
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * PHP version 5
  *
  * @category   Program
- * @package    View
- * @subpackage Helper
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2014 ITEA Office
- * @license    http://debranova.org/license.txt proprietary
- * @link       http://debranova.org
+ * @copyright  2004-2015 ITEA Office
+ * @license    https://itea3.org/license.txt proprietary
+ *
+ * @link       https://itea3.org
  */
+
 namespace Program\View\Helper;
 
 use Program\Entity\Call\Session;
 
 /**
- * Create a link to an project
+ * Create a link to an project.
  *
  * @category   Project
- * @package    View
- * @subpackage Helper
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    http://debranova.org/licence.txt proprietary
- * @link       http://debranova.org
+ * @license    https://itea3.org/licence.txt proprietary
+ *
+ * @link       https://itea3.org
  */
 class CallSessionLink extends LinkAbstract
 {
@@ -36,10 +37,11 @@ class CallSessionLink extends LinkAbstract
 
     /**
      * @param Session $session
-     * @param string  $action
-     * @param string  $show
+     * @param string $action
+     * @param string $show
      *
      * @return string
+     *
      * @throws \InvalidArgumentException
      */
     public function __invoke(
@@ -50,7 +52,7 @@ class CallSessionLink extends LinkAbstract
         $this->setSession($session);
         $this->setAction($action);
         $this->setShow($show);
-        /**
+        /*
          * Set the non-standard options needed to give an other link value
          */
         $this->setShowOptions(
@@ -83,9 +85,7 @@ class CallSessionLink extends LinkAbstract
     }
 
     /**
-     * Extract the relevant parameters based on the action
-     *
-     * @return void;
+     * Extract the relevant parameters based on the action.
      */
     public function parseAction()
     {
@@ -93,13 +93,17 @@ class CallSessionLink extends LinkAbstract
             case 'view':
                 $this->addRouterParam('session', $this->getSession()->getId());
                 $this->setRouter(
-                    'route-'.str_replace(
+                    'route-' . str_replace(
                         'doctrineormmodule_proxy___cg___',
                         '',
                         $this->getSession()->get("underscore_full_entity_name")
                     )
                 );
                 $this->setText(sprintf($this->translate("txt-view-session-%s"), $this->getSession()->getSession()));
+                break;
+            case 'download':
+                $this->setRouter('program/session/download');
+                $this->setText(sprintf($this->translate("txt-download-session-%s"), $this->getSession()->getSession()));
                 break;
             default:
                 throw new \InvalidArgumentException(

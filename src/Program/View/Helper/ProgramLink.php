@@ -1,28 +1,29 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Program
- * @package    View
- * @subpackage Helper
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2014 ITEA Office
- * @license    http://debranova.org/license.txt proprietary
- * @link       http://debranova.org
+ * @copyright  2004-2015 ITEA Office
+ * @license    https://itea3.org/license.txt proprietary
+ *
+ * @link       https://itea3.org
  */
+
 namespace Program\View\Helper;
 
 use Program\Entity\Program;
 
 /**
- * Create a link to an project
+ * Create a link to an project.
  *
  * @category   Program
- * @package    View
- * @subpackage Helper
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    http://debranova.org/licence.txt proprietary
- * @link       http://debranova.org
+ * @license    https://itea3.org/licence.txt proprietary
+ *
+ * @link       https://itea3.org
  */
 class ProgramLink extends LinkAbstract
 {
@@ -37,6 +38,7 @@ class ProgramLink extends LinkAbstract
      * @param                         $show
      *
      * @return string
+     *
      * @throws \RuntimeException
      * @throws \Exception
      */
@@ -45,15 +47,13 @@ class ProgramLink extends LinkAbstract
         $this->setProgram($program);
         $this->setAction($action);
         $this->setShow($show);
-        /**
+        /*
          * Set the non-standard options needed to give an other link value
          */
-        $this->setShowOptions(
-            [
-                'name' => $this->getProgram(),
+        $this->setShowOptions([
+            'name' => $this->getProgram(),
 
-            ]
-        );
+        ]);
         $this->addRouterParam('entity', 'program');
         if (!is_null($program)) {
             $this->addRouterParam('id', $this->getProgram()->getId());
@@ -79,21 +79,33 @@ class ProgramLink extends LinkAbstract
     }
 
     /**
-     * Parse te action and fill the correct parameters
+     * Parse te action and fill the correct parameters.
      */
     public function parseAction()
     {
         switch ($this->getAction()) {
             case 'new':
-                $this->setRouter('zfcadmin/program-manager/new');
+                $this->setRouter('zfcadmin/program/new');
                 $this->setText($this->translate("txt-new-program"));
                 break;
+            case 'view-admin':
+                $this->setRouter('zfcadmin/program/view');
+                $this->setText(sprintf($this->translate("txt-view-program-%s"), $this->getProgram()));
+                break;
+            case 'edit-admin':
+                $this->setRouter('zfcadmin/program/edit');
+                $this->setText(sprintf($this->translate("txt-edit-program-%s"), $this->getProgram()));
+                break;
+            case 'list-admin':
+                $this->setRouter('zfcadmin/program/list');
+                $this->setText(sprintf($this->translate("txt-list-programs")));
+                break;
             case 'edit':
-                $this->setRouter('zfcadmin/program-manager/edit');
+                $this->setRouter('zfcadmin/program/edit');
                 $this->setText(sprintf($this->translate("txt-edit-program-%s"), $this->getProgram()));
                 break;
             case 'view-list':
-                /**
+                /*
                  * For a list in the front-end simply use the MatchedRouteName
                  */
                 $this->setRouter($this->getRouteMatch()->getMatchedRouteName());
@@ -102,9 +114,11 @@ class ProgramLink extends LinkAbstract
                 $this->setText(sprintf(_("txt-view-program-%s"), $this->getProgram()));
                 break;
             default:
-                throw new \InvalidArgumentException(
-                    sprintf("%s is an incorrect action for %s", $this->getAction(), __CLASS__)
-                );
+                throw new \InvalidArgumentException(sprintf(
+                    "%s is an incorrect action for %s",
+                    $this->getAction(),
+                    __CLASS__
+                ));
         }
     }
 }

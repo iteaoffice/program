@@ -1,54 +1,63 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Program
- * @package    Controller
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2014 ITEA Office
- * @license    http://debranova.org/license.txt proprietary
- * @link       http://debranova.org
+ * @copyright  2004-2015 ITEA Office
+ * @license    https://itea3.org/license.txt proprietary
+ *
+ * @link       https://itea3.org
  */
+
 namespace Program\Controller;
 
+use Admin\Service\AdminService;
 use BjyAuthorize\Controller\Plugin\IsAllowed;
 use Contact\Service\ContactService;
 use General\Service\GeneralService;
-use General\Service\GeneralServiceAwareInterface;
 use Organisation\Service\OrganisationService;
+use Program\Controller\Plugin;
+use Program\Controller\Plugin\RenderSession;
 use Program\Options\ModuleOptions;
 use Program\Service\CallService;
-use Program\Service\CallServiceAwareInterface;
 use Program\Service\FormService;
-use Program\Service\FormServiceAwareInterface;
 use Program\Service\ProgramService;
-use Program\Service\ProgramServiceAwareInterface;
+use Project\Service\ProjectService;
+use Zend\I18n\View\Helper\Translate;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
 use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
 
 /**
- * Create a link to an project
+ * Create a link to an project.
  *
  * @category   Program
- * @package    Controller
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    http://debranova.org/licence.txt proprietary
- * @link       http://debranova.org
+ * @license    https://itea3.org/licence.txt proprietary
+ *
+ * @link       https://itea3.org
+ *
  * @method      ZfcUserAuthentication zfcUserAuthentication()
  * @method      FlashMessenger flashMessenger()
  * @method      IsAllowed isAllowed($resource, $action)
+ * @method      RenderSession renderSession($session)
+ * @method      Plugin\GetFilter getProgramFilter()
+ * @method      Plugin\RenderDoa renderDoa($doa)
+ * @method      Plugin\RenderNda renderNda($nda)
  */
-abstract class ProgramAbstractController extends AbstractActionController implements
-    FormServiceAwareInterface,
-    CallServiceAwareInterface,
-    ProgramServiceAwareInterface,
-    GeneralServiceAwareInterface
+abstract class ProgramAbstractController extends AbstractActionController
 {
     /**
      * @var ProgramService
      */
     protected $programService;
+    /**
+     * @var AdminService
+     */
+    protected $adminService;
     /**
      * @var GeneralService
      */
@@ -61,6 +70,14 @@ abstract class ProgramAbstractController extends AbstractActionController implem
      * @var ContactService
      */
     protected $contactService;
+    /**
+     * @var ProjectService
+     */
+    protected $projectService;
+    /**
+     * @var OrganisationService
+     */
+    protected $organisationService;
     /**
      * @var FormService
      */
@@ -91,7 +108,7 @@ abstract class ProgramAbstractController extends AbstractActionController implem
     }
 
     /**
-     * Gateway to the Program Service
+     * Gateway to the Program Service.
      *
      * @return ProgramService
      */
@@ -113,7 +130,7 @@ abstract class ProgramAbstractController extends AbstractActionController implem
     }
 
     /**
-     * Gateway to the Call Service
+     * Gateway to the Call Service.
      *
      * @return CallService
      */
@@ -135,7 +152,7 @@ abstract class ProgramAbstractController extends AbstractActionController implem
     }
 
     /**
-     * Gateway to the General Service
+     * Gateway to the General Service.
      *
      * @return GeneralService
      */
@@ -156,31 +173,6 @@ abstract class ProgramAbstractController extends AbstractActionController implem
         return $this;
     }
 
-    /**
-     * Gateway to the Organisation Service
-     *
-     * @return OrganisationService
-     */
-    public function getOrganisationService()
-    {
-        return $this->getServiceLocator()->get('organisation_organisation_service');
-    }
-
-    /**
-     * @return \Project\Service\ProjectService
-     */
-    public function getProjectService()
-    {
-        return $this->getServiceLocator()->get(ProjectService::class);
-    }
-
-    /**
-     * @return \Program\Options\ModuleOptions
-     */
-    public function getModuleOptions()
-    {
-        return $this->getServiceLocator()->get('program_module_options');
-    }
 
     /**
      * @return ContactService
@@ -198,6 +190,103 @@ abstract class ProgramAbstractController extends AbstractActionController implem
     public function setContactService(ContactService $contactService)
     {
         $this->contactService = $contactService;
+
+        return $this;
+    }
+
+    /**
+     * Proxy for the flash messenger helper to have the string translated earlier.
+     *
+     * @param $string
+     *
+     * @return string
+     */
+    protected function translate($string)
+    {
+        /**
+         * @var $translate Translate
+         */
+        $translate = $this->getPluginManager()->getServiceLocator()->get('ViewHelperManager')->get('translate');
+
+        return $translate($string);
+    }
+
+    /**
+     * @return ProjectService
+     */
+    public function getProjectService()
+    {
+        return $this->projectService;
+    }
+
+    /**
+     * @param  ProjectService $projectService
+     *
+     * @return ProgramAbstractController
+     */
+    public function setProjectService($projectService)
+    {
+        $this->projectService = $projectService;
+
+        return $this;
+    }
+
+    /**
+     * @return OrganisationService
+     */
+    public function getOrganisationService()
+    {
+        return $this->organisationService;
+    }
+
+    /**
+     * @param  OrganisationService $organisationService
+     *
+     * @return ProgramAbstractController
+     */
+    public function setOrganisationService(OrganisationService $organisationService)
+    {
+        $this->organisationService = $organisationService;
+
+        return $this;
+    }
+
+    /**
+     * @return AdminService
+     */
+    public function getAdminService()
+    {
+        return $this->adminService;
+    }
+
+    /**
+     * @param  AdminService $adminService
+     *
+     * @return ProgramAbstractController
+     */
+    public function setAdminService(AdminService $adminService)
+    {
+        $this->adminService = $adminService;
+
+        return $this;
+    }
+
+    /**
+     * @return ModuleOptions
+     */
+    public function getModuleOptions()
+    {
+        return $this->moduleOptions;
+    }
+
+    /**
+     * @param ModuleOptions $moduleOptions
+     *
+     * @return ProgramAbstractController
+     */
+    public function setModuleOptions($moduleOptions)
+    {
+        $this->moduleOptions = $moduleOptions;
 
         return $this;
     }

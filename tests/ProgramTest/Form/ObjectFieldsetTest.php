@@ -5,9 +5,9 @@
  * @category   ProgramTest
  * @package    Form
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2014 ITEA Office
- * @license    http://debranova.org/license.txt proprietary
- * @link       http://debranova.org
+ * @copyright  2004-2015 ITEA Office
+ * @license    https://itea3.org/license.txt proprietary
+ * @link       https://itea3.org
  */
 namespace ProgramTest\Form;
 
@@ -22,8 +22,8 @@ use ProgramTest\Bootstrap;
  * @category   ProgramTest
  * @package    Form
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    http://debranova.org/licence.txt proprietary
- * @link       http://debranova.org
+ * @license    https://itea3.org/licence.txt proprietary
+ * @link       https://itea3.org
  */
 class ObjectFieldsetTest extends \PHPUnit_Framework_TestCase
 {
@@ -51,7 +51,7 @@ class ObjectFieldsetTest extends \PHPUnit_Framework_TestCase
     public function testCanCreateObjectFieldsetFormProgram()
     {
         $objectFieldset = new ObjectFieldset(
-            $this->serviceManager->get('doctrine.entitymanager.orm_default'),
+            $this->serviceManager->get('Doctrine\ORM\EntityManager'),
             new Program()
         );
         $this->assertInstanceOf("Zend\Form\Fieldset", $objectFieldset);
@@ -60,7 +60,7 @@ class ObjectFieldsetTest extends \PHPUnit_Framework_TestCase
     public function testCanCreateObjectFieldsetFormFunder()
     {
         $objectFieldset = new ObjectFieldset(
-            $this->serviceManager->get('doctrine.entitymanager.orm_default'),
+            $this->serviceManager->get('Doctrine\ORM\EntityManager'),
             new Funder()
         );
         $this->assertInstanceOf("Zend\Form\Fieldset", $objectFieldset);

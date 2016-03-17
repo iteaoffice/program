@@ -11,4 +11,4 @@ tools:
     php_cs_fixer: true
     sensiolabs_security_checker: true
     external_code_coverage:
-        timeout: 600 # Timeout in seconds.
+          timeout: 600 # Timeout in seconds.

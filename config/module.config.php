@@ -5,64 +5,68 @@
  * @category    Program
  * @package     Config
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c] 2004-2014 ITEA Office (http://itea3.org]
+ * @copyright   Copyright (c] 2004-2015 ITEA Office (https://itea3.org]
  */
-use Program\Acl\Assertion\Doa as DoaAssertion;
-use Program\Acl\Assertion\Nda as NdaAssertion;
-use Program\Controller\ControllerInitializer;
-use Program\Service\CallService;
-use Program\Service\FormService;
-use Program\Service\ProgramService;
-use Program\Service\ServiceInitializer;
-use Program\View\Helper\CallSessionLink;
+use Program\Acl;
+use Program\Controller;
+use Program\Factory;
+use Program\Options;
+use Program\Service;
+use Program\View\Helper;
 
 $config = [
     'controllers'     => [
-        'initializers' => [
-            ControllerInitializer::class
+        'invokables'         => [
+            //Controller\ProgramManagerController::class     ,
+            //Controller\CallManagerController::class        ,
+            //Controller\NdaManagerController::class         ,
+            //Controller\NdaController::class                ,
+            //Controller\DoaController::class                ,
+            //Controller\FunderManagerController::class      ,
+            //Controller\CallCountryManagerController::class ,
+            //Controller\SessionController::class            ,
         ],
-        'invokables'   => [
-            'program'         => 'Program\Controller\ProgramController',
-            'program-manager' => 'Program\Controller\ProgramManagerController',
-            'nda-manager'     => 'Program\Controller\NdaManagerController',
-            'program-nda'     => 'Program\Controller\NdaController',
-            'program-doa'     => 'Program\Controller\DoaController',
+        'abstract_factories' => [
+            Controller\Factory\ControllerInvokableAbstractFactory::class
         ],
-        'factories'    => [
-            'program_module_options' => 'Program\Factory\OptionServiceFactory',
-        ]
     ],
     'view_manager'    => [
         'template_map' => include __DIR__ . '/../template_map.php',
     ],
     'view_helpers'    => [
         'invokables' => [
-            'callSessionLink'     => CallSessionLink::class,
-            'programHandler'      => 'Program\View\Helper\ProgramHandler',
-            'callServiceProxy'    => 'Program\View\Helper\CallServiceProxy',
-            'programServiceProxy' => 'Program\View\Helper\ProgramServiceProxy',
-            'callInformationBox'  => 'Program\View\Helper\CallInformationBox',
-            'programLink'         => 'Program\View\Helper\ProgramLink',
-            'programDoaLink'      => 'Program\View\Helper\DoaLink',
-            'callLink'            => 'Program\View\Helper\CallLink',
-            'ndaLink'             => 'Program\View\Helper\NdaLink',
+            'callSessionLink'     => Helper\CallSessionLink::class,
+            'programHandler'      => Helper\ProgramHandler::class,
+            'callServiceProxy'    => Helper\CallServiceProxy::class,
+            'programServiceProxy' => Helper\ProgramServiceProxy::class,
+            'callInformationBox'  => Helper\CallInformationBox::class,
+            'programLink'         => Helper\ProgramLink::class,
+            'programDoaLink'      => Helper\DoaLink::class,
+            'callLink'            => Helper\CallLink::class,
+            'ndaLink'             => Helper\NdaLink::class,
+            'funderLink'          => Helper\FunderLink::class,
+            'callCountryLink'     => Helper\CallCountryLink::class,
         ]
     ],
     'service_manager' => [
-        'initializers' => [ServiceInitializer::class],
-        'factories'    => [
-            'program_module_options'         => 'Program\Service\OptionServiceFactory',
-            'program_nda_navigation_service' => 'Program\Navigation\Factory\NdaNavigationServiceFactory',
+        'factories'          => [
+            Service\ProgramService::class => Factory\ProgramServiceFactory::class,
+            Service\CallService::class    => Factory\CallServiceFactory::class,
+            Service\FormService::class    => Factory\FormServiceFactory::class,
+            Options\ModuleOptions::class  => Factory\ModuleOptionsFactory::class,
+            //Assertion\Nda::class,
+            //Assertion\Doa::class,
+            //Assertion\Funder::class,
         ],
-        'invokables'   => [
-            NdaAssertion::class           => NdaAssertion::class,
-            DoaAssertion::class           => DoaAssertion::class,
-            ProgramService::class         => ProgramService::class,
-            CallService::class            => CallService::class,
-            FormService::class            => FormService::class,
+        'abstract_factories' => [
+            Acl\Factory\AssertionInvokableAbstractFactory::class
+        ],
+        'invokables'         => [
             'program_program_form_filter' => 'Program\Form\FilterCreateObject',
             'program_call_form_filter'    => 'Program\Form\FilterCreateObject',
-            'program_nda_form_filter'     => 'Program\Form\FilterCreateObject'
+            'program_nda_form_filter'     => 'Program\Form\FilterCreateObject',
+            'program_country_form_filter' => 'Program\Form\FilterCreateObject',
+            'program_funder_form_filter'  => 'Program\Form\FilterCreateObject'
         ]
     ],
     'doctrine'        => [
@@ -71,7 +75,11 @@ $config = [
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
                 'paths' => [__DIR__ . '/../src/Program/Entity/']
             ],
-            'orm_default'               => ['drivers' => ['Program\Entity' => 'program_annotation_driver',]]
+            'orm_default'               => [
+                'drivers' => [
+                    'Program\Entity' => 'program_annotation_driver',
+                ]
+            ]
         ],
         'eventmanager' => [
             'orm_default' => [

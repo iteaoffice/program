@@ -1,15 +1,16 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category   Project
- * @package    Entity
- * @subpackage Call
+ *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2014 ITEA Office
- * @license    http://debranova.org/license.txt proprietary
- * @link       http://debranova.org
+ * @copyright  2004-2015 ITEA Office
+ * @license    https://itea3.org/license.txt proprietary
+ *
+ * @link       https://itea3.org
  */
+
 namespace Program\Entity\Call;
 
 use Doctrine\Common\Collections;
@@ -27,15 +28,15 @@ use Zend\InputFilter\InputFilterInterface;
  * @Annotation\Name("programcall_session")
  *
  * @category    Program
- * @package     Entity
  */
 class Session extends EntityAbstract
 {
     /**
-     * @ORM\Column(name="session_id", type="integer", nullable=false)
+     * @ORM\Column(name="session_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Exclude()
+     *
      * @var integer
      */
     private $id;
@@ -43,6 +44,7 @@ class Session extends EntityAbstract
      * @ORM\Column(name="session", type="string", length=50, nullable=false)
      * @Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-session"})
+     *
      * @var string
      */
     private $session;
@@ -52,6 +54,7 @@ class Session extends EntityAbstract
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
      * @Annotation\Options({"target_class":"Program\Entity\Call\Call"})
      * @Annotation\Attributes({"label":"txt-program-call", "required":"true","class":"span3"})
+     *
      * @var \Program\Entity\Call\Call
      */
     private $call;
@@ -59,6 +62,7 @@ class Session extends EntityAbstract
      * @ORM\Column(name="date", type="datetime", nullable=false)
      * @Annotation\Type("\Zend\Form\Element\Date")
      * @Annotation\Options({"label":"txt-date"})
+     *
      * @var \DateTime
      */
     private $date;
@@ -69,6 +73,7 @@ class Session extends EntityAbstract
      *    inverseJoinColumns={@ORM\JoinColumn(name="track_id", referencedColumnName="track_id")}
      * )
      * @Annotation\Exclude()
+     *
      * @var \Event\Entity\Track[]
      */
     private $track;
@@ -76,12 +81,13 @@ class Session extends EntityAbstract
      * @ORM\OneToMany(targetEntity="\Project\Entity\Idea\Session", cascade={"persist"}, mappedBy="session")
      * @ORM\OrderBy({"schedule" = "ASC"})
      * @Annotation\Exclude()
+     *
      * @var \Project\Entity\Idea\Session[]
      */
     private $ideaSession;
 
     /**
-     * Class constructor
+     * Class constructor.
      */
     public function __construct()
     {
@@ -90,7 +96,7 @@ class Session extends EntityAbstract
     }
 
     /**
-     * Magic Getter
+     * Magic Getter.
      *
      * @param $property
      *
@@ -102,12 +108,10 @@ class Session extends EntityAbstract
     }
 
     /**
-     * Magic Setter
+     * Magic Setter.
      *
      * @param $property
      * @param $value
-     *
-     * @return void
      */
     public function __set($property, $value)
     {
@@ -115,11 +119,10 @@ class Session extends EntityAbstract
     }
 
     /**
-     * Set input filter
+     * Set input filter.
      *
      * @param InputFilterInterface $inputFilter
      *
-     * @return void
      * @throws \Exception
      */
     public function setInputFilter(InputFilterInterface $inputFilter)

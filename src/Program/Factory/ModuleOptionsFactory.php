@@ -1,28 +1,31 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
+ *
+ * PHP Version 5
  *
  * @category    Program
- * @package     Service
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @copyright   2004-2016 ITEA Office
+ * @license     https://itea3.org/license.txt proprietary
+ *
+ * @link        http://github.com/iteaoffice/main for the canonical source repository
  */
-namespace Program\Service;
+namespace Program\Factory;
 
 use Program\Options\ModuleOptions;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Factory responsible of retrieving an array containing the program configuration
+ * Class ModuleOptionsFactory
  *
- * @author Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @package Program\Factory
  */
-class OptionServiceFactory implements FactoryInterface
+class ModuleOptionsFactory implements FactoryInterface
 {
     /**
-     * {@inheritDoc}
-     *
      * @param ServiceLocatorInterface $serviceLocator
      *
      * @return ModuleOptions
@@ -31,6 +34,6 @@ class OptionServiceFactory implements FactoryInterface
     {
         $config = $serviceLocator->get('Config');
 
-        return new ModuleOptions($config['program-option']);
+        return new ModuleOptions(isset($config['program_option']) ? $config['program_option'] : []);
     }
 }

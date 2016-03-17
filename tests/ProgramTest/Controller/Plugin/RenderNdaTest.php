@@ -6,9 +6,9 @@
  * @package    Controller
  * @subpackage Plugin
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2014 ITEA Office
- * @license    http://debranova.org/license.txt proprietary
- * @link       http://debranova.org
+ * @copyright  2004-2015 ITEA Office
+ * @license    https://itea3.org/license.txt proprietary
+ * @link       https://itea3.org
  */
 namespace ProgramTest\Controller\Plugin;
 
@@ -24,8 +24,8 @@ use ProgramTest\Bootstrap;
  * @package    Controller
  * @subpackage Plugin
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    http://debranova.org/licence.txt proprietary
- * @link       http://debranova.org
+ * @license    https://itea3.org/licence.txt proprietary
+ * @link       https://itea3.org
  */
 class RenderNdaTest extends \PHPUnit_Framework_TestCase
 {
@@ -47,8 +47,8 @@ class RenderNdaTest extends \PHPUnit_Framework_TestCase
         /**
          * Bootstrap the application to have the other information available
          */
-//        $application = $this->serviceManager->get('application');
-//        $application->bootstrap();
+        //        $application = $this->serviceManager->get('application');
+        //        $application->bootstrap();
         $renderNda = new RenderNda();
         $renderNda->setServiceLocator($this->serviceManager);
         $contact = new Contact();

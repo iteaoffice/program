@@ -5,7 +5,7 @@
  * @category    Program
  * @package     Config
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
  */
 use Program\Entity;
 use Program\Form;
@@ -20,6 +20,12 @@ return [
         },
         'program_nda_form'     => function ($sm) {
             return new Form\CreateObject($sm, new Entity\Nda());
+        },
+        'program_country_form' => function ($sm) {
+            return new Form\CreateObject($sm, new Entity\Call\Country());
+        },
+        'program_funder_form'  => function ($sm) {
+            return new Form\CreateObject($sm, new Entity\Funder());
         },
     ],
 ];

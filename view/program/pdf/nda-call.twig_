@@ -12,11 +12,11 @@
     <li>The undersigned acknowledges that "{{ contactService.parseFullName() }}" of
         "{{ contactService.parseOrganisation() }}" will obtain access to the {{ call }}
         "Project Outline Preparation Days" as well as access rights to the {{ call }} "Project Idea Tool". The Project
-        Idea Tool is accessible through the ITEA website (https://itea3.org/idea).
+        Idea Tool is accessible through the ITEA website.
     </li>
     <li>The undersigned acknowledges that "{{ contactService.parseFullName() }}" of
         "{{ contactService.parseOrganisation() }}" has access to the restricted ITEA
-        Community website (https://community.itea3.org/) and that he/she will obtain access rights to the
+        Community website (https://itea3.org/community) and that he/she will obtain access rights to the
         "ITEA Living Roadmap" during 2 (two) years after the date of signature. The "ITEA Living Roadmap" is accessible
         through the ITEA Community website.
     </li>
@@ -41,6 +41,20 @@
                 directly or indirectly, under a confidentiality obligation or in breach of any legal, contractual or
                 fiduciary duty on the part of the transferor of such information.
             </li>
+            <li>Information or material which becomes rightfully available to "{{ contactService.parseOrganisation() }}" from a source
+                other than the "ITEA Living Roadmap", the organisations involved in the {{ call }} and/or any of their
+                affiliated companies or any of their representatives, provided that "{{ contactService.parseOrganisation() }}" has no
+                reason to believe that such source is itself bound by a confidentiality or non-disclosure agreement with
+                the organisations involved in the {{ call }} or is otherwise prohibited from disclosing such
+                information by a legal, contractual or fiduciary obligation,
+            </li>
+            <li>information or material of which "{{ contactService.parseOrganisation() }}" can show that it is independently
+                developed by "{{ contactService.parseOrganisation() }}" without the use of information or material obtained via the
+                "ITEA Living Roadmap" or obtained during 2 (two) years after the date of signature in connection with
+                the {{ call }} from any of the organisations involved therein and/or from any of their affiliated
+                companies or any of their representatives.
+            </li>
+
         </ol>
     </li>
 
@@ -56,6 +70,16 @@
         the {{ call.program.program }} Programme of whom the undersigned has ensured that the obligations set out in
         this Declaration of Non-Disclosure are also
         observed by them
+    </li>
+
+    <li>"{{ contactService.parseOrganisation() }}" shall be permitted to disclose Confidential Information to any of
+        their Affiliates who have a reasonable need for such information for the purpose set forth in the Preamble
+        above. "{{ contactService.parseOrganisation() }}" shall ensure that such Affiliates comply with the provisions
+        of this Declaration. For the purposes of this Declaration, Affiliate shall mean any corporation, partnership, or
+        other entity that, directly or indirectly, owns, is owned by, or is under common ownership with, such party
+        hereto, for so long as such ownership exists. For the purposes of the foregoing, "own," "owned," or "ownership"
+        shall mean ownership of more than fifty percent (50%) of the stock or other equity interests entitled to vote
+        for the election of directors or an equivalent governing body.
     </li>
 
     <li>In the event that the undersigned is or becomes obliged to pass on Confidential Information due to a lawful
