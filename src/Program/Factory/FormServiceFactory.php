@@ -14,8 +14,8 @@
  */
 namespace Program\Factory;
 
-use Program\Service\FormService;
 use Doctrine\ORM\EntityManager;
+use Program\Service\FormService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

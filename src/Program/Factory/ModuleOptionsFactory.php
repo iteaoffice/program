@@ -19,26 +19,21 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class GeneralServiceFactory
+ * Class ModuleOptionsFactory
  *
- * @package General\Factory
+ * @package Program\Factory
  */
 class ModuleOptionsFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return EmailService
+     * @return ModuleOptions
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        try {
-            $config = $serviceLocator->get('Config');
+        $config = $serviceLocator->get('Config');
 
-            return new ModuleOptions(isset($config['program_option']) ? $config['program_option'] : []);
-        } catch (\Exception $e) {
-            var_dump($e);
-            die();
-        }
+        return new ModuleOptions(isset($config['program_option']) ? $config['program_option'] : []);
     }
 }

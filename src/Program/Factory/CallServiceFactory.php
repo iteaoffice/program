@@ -17,7 +17,6 @@ namespace Program\Factory;
 use Doctrine\ORM\EntityManager;
 use General\Service\GeneralService;
 use Program\Service\CallService;
-use Project\Service\ProjectService;
 use Project\Service\VersionService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -50,10 +49,6 @@ class CallServiceFactory implements FactoryInterface
         /** @var VersionService $versionService */
         $versionService = $serviceLocator->get(VersionService::class);
         $callService->setVersionService($versionService);
-
-//        /** @var ProjectService $projectService */
-//        $projectService = $serviceLocator->get(ProjectService::class);
-//        $callService->setProjectService($projectService);
 
         return $callService;
     }

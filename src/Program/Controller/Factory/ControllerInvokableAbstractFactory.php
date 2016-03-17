@@ -57,54 +57,48 @@ class ControllerInvokableAbstractFactory implements AbstractFactoryInterface
      */
     public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
-        try {
+        /** @var ProgramAbstractController $controller */
+        $controller = new $requestedName();
+        $controller->setServiceLocator($serviceLocator);
 
-            /** @var ProgramAbstractController $controller */
-            $controller = new $requestedName();
-            $controller->setServiceLocator($serviceLocator);
+        $serviceManager = $serviceLocator->getServiceLocator();
 
-            $serviceManager = $serviceLocator->getServiceLocator();
+        /** @var FormService $formService */
+        $formService = $serviceManager->get(FormService::class);
+        $controller->setFormService($formService);
 
-            /** @var FormService $formService */
-            $formService = $serviceManager->get(FormService::class);
-            $controller->setFormService($formService);
+        /** @var ContactService $contactService */
+        $contactService = $serviceManager->get(ContactService::class);
+        $controller->setContactService($contactService);
 
-            /** @var ContactService $contactService */
-            $contactService = $serviceManager->get(ContactService::class);
-            $controller->setContactService($contactService);
+        /** @var GeneralService $generalService */
+        $generalService = $serviceManager->get(GeneralService::class);
+        $controller->setGeneralService($generalService);
 
-            /** @var GeneralService $generalService */
-            $generalService = $serviceManager->get(GeneralService::class);
-            $controller->setGeneralService($generalService);
+        /** @var ProjectService $projectService */
+        $projectService = $serviceManager->get(ProjectService::class);
+        $controller->setProjectService($projectService);
 
-            /** @var ProjectService $projectService */
-            $projectService = $serviceManager->get(ProjectService::class);
-            $controller->setProjectService($projectService);
+        /** @var OrganisationService $organisationService */
+        $organisationService = $serviceManager->get(OrganisationService::class);
+        $controller->setOrganisationService($organisationService);
 
-            /** @var OrganisationService $organisationService */
-            $organisationService = $serviceManager->get(OrganisationService::class);
-            $controller->setOrganisationService($organisationService);
+        /** @var ProgramService $programService */
+        $programService = $serviceManager->get(ProgramService::class);
+        $controller->setProgramService($programService);
 
-            /** @var ProgramService $programService */
-            $programService = $serviceManager->get(ProgramService::class);
-            $controller->setProgramService($programService);
+        /** @var CallService $callService */
+        $callService = $serviceManager->get(CallService::class);
+        $controller->setCallService($callService);
 
-            /** @var CallService $callService */
-            $callService = $serviceManager->get(CallService::class);
-            $controller->setCallService($callService);
+        /** @var AdminService $adminService */
+        $adminService = $serviceManager->get(AdminService::class);
+        $controller->setAdminService($adminService);
 
-            /** @var AdminService $adminService */
-            $adminService = $serviceManager->get(AdminService::class);
-            $controller->setAdminService($adminService);
+        /** @var ModuleOptions $moduleOptions */
+        $moduleOptions = $serviceManager->get(ModuleOptions::class);
+        $controller->setModuleOptions($moduleOptions);
 
-            /** @var ModuleOptions $moduleOptions */
-            $moduleOptions = $serviceManager->get(ModuleOptions::class);
-            $controller->setModuleOptions($moduleOptions);
-
-            return $controller;
-        } catch (\Exception $e) {
-            var_dump($e);
-            die();
-        }
+        return $controller;
     }
 }

@@ -16,7 +16,7 @@ namespace Program\Navigation\Invokable;
 
 use Admin\Navigation\Invokable\AbstractNavigationInvokable;
 use Program\Entity\Funder;
-use Zend\Navigation\Page\AbstractPage;
+use Zend\Navigation\Page\Mvc;
 
 /**
  * Class FunderLabel
@@ -28,12 +28,12 @@ class FunderLabel extends AbstractNavigationInvokable
     /**
      * Parse a Funder navigation label
      *
-     * @param AbstractPage $page
-     * @param Funder       $funder
+     * @param Mvc    $page
+     * @param Funder $funder
      *
      * @return string
      */
-    public function __invoke(AbstractPage $page, $funder = null)
+    public function __invoke(Mvc $page, $funder = null)
     {
         if ($funder instanceof Funder) {
             return sprintf("%s in %s", $funder->getContact()->getDisplayName(), $funder->getCountry());
