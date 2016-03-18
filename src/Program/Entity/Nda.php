@@ -177,7 +177,7 @@ class Nda extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param \Program\Entity\Call\Call[]|ArrayCollection[] $call
+     * @param \Program\Entity\Call\Call[]|ArrayCollection $call
      */
     public function setCall($call)
     {

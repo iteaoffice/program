@@ -75,12 +75,13 @@ class NdaLink extends LinkAbstract
     {
         if (is_null($this->nda)) {
             $this->nda = new Nda();
-            if (!is_null($this->getCall())) {
-                $arrayCollection = new ArrayCollection([$this->getCall()]);
-                $this->nda->setCall($arrayCollection);
-            }
         }
 
+        if (!is_null($this->getCall())) {
+            $arrayCollection = new ArrayCollection([$this->getCall()]);
+            $this->nda->setCall($arrayCollection);
+        }
+        
         return $this->nda;
     }
 
@@ -141,15 +142,15 @@ class NdaLink extends LinkAbstract
             case 'render':
                 $this->setRouter('community/program/nda/render');
                 $this->setText(sprintf($this->translate("txt-render-general-nda-title")));
-                /*
+                /**
                  * Produce special texts for call-dedicated NDA's
                  */
                 if ($call = $this->getNda()->getCall()) {
                     $this->setText(sprintf($this->translate("txt-render-nda-for-call-%s-title"), $call));
-                    $this->addRouterParam('id', $call->getId());
+                    $this->addRouterParam('callId', $call->getId());
                 } elseif (!is_null($this->getCall())) {
                     $this->setText(sprintf($this->translate("txt-render-nda-for-call-%s-title"), $this->getCall()));
-                    $this->addRouterParam('id', $this->getCall()->getId());
+                    $this->addRouterParam('callId', $this->getCall()->getId());
                 }
                 break;
             case 'download':
