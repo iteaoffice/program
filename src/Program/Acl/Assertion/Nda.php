@@ -52,7 +52,7 @@ class Nda extends AssertionAbstract
         if (!$resource instanceof NdaEntity && !is_null($id)) {
             $resource = $this->getProgramService()->findEntityById('Nda', $id);
         }
-        return true;
+
         switch ($privilege) {
             case 'upload':
                 return $this->hasContact();
