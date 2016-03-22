@@ -16,16 +16,6 @@ use Program\View\Helper;
 
 $config = [
     'controllers'     => [
-        'invokables'         => [
-            //Controller\ProgramManagerController::class     ,
-            //Controller\CallManagerController::class        ,
-            //Controller\NdaManagerController::class         ,
-            //Controller\NdaController::class                ,
-            //Controller\DoaController::class                ,
-            //Controller\FunderManagerController::class      ,
-            //Controller\CallCountryManagerController::class ,
-            //Controller\SessionController::class            ,
-        ],
         'abstract_factories' => [
             Controller\Factory\ControllerInvokableAbstractFactory::class
         ],
@@ -54,9 +44,6 @@ $config = [
             Service\CallService::class    => Factory\CallServiceFactory::class,
             Service\FormService::class    => Factory\FormServiceFactory::class,
             Options\ModuleOptions::class  => Factory\ModuleOptionsFactory::class,
-            //Assertion\Nda::class,
-            //Assertion\Doa::class,
-            //Assertion\Funder::class,
         ],
         'abstract_factories' => [
             Acl\Factory\AssertionInvokableAbstractFactory::class
@@ -73,7 +60,7 @@ $config = [
         'driver'       => [
             'program_annotation_driver' => [
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'paths' => [__DIR__ . '/../src/Program/Entity/']
+                'paths' => [__DIR__ . '/../src/Entity/']
             ],
             'orm_default'               => [
                 'drivers' => [

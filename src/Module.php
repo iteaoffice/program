@@ -2,12 +2,15 @@
 /**
  * ITEA Office copyright message placeholder.
  *
- * @category    SoloDB
+ * PHP Version 5
+ *
+ * @category    Project
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   2004-2016 ITEA Office
+ * @license     https://itea3.org/license.txt proprietary
  *
- * @version     4.0
+ * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
 namespace Program;
@@ -31,11 +34,11 @@ class Module implements Feature\AutoloaderProviderInterface, Feature\ServiceProv
     {
         return [
             'Zend\Loader\ClassMapAutoloader' => [
-                __DIR__ . '/../../autoload_classmap.php',
+                __DIR__ . '/../autoload_classmap.php',
             ],
             'Zend\Loader\StandardAutoloader' => [
                 'namespaces' => [
-                    __NAMESPACE__ => __DIR__ . '/../../src/' . __NAMESPACE__,
+                    __NAMESPACE__ => __DIR__ . '/../src/',
                 ],
             ],
         ];
@@ -46,7 +49,7 @@ class Module implements Feature\AutoloaderProviderInterface, Feature\ServiceProv
      */
     public function getConfig()
     {
-        return include __DIR__ . '/../../config/module.config.php';
+        return include __DIR__ . '/../config/module.config.php';
     }
 
     /**
@@ -56,7 +59,7 @@ class Module implements Feature\AutoloaderProviderInterface, Feature\ServiceProv
      */
     public function getServiceConfig()
     {
-        return include __DIR__ . '/../../config/services.config.php';
+        return include __DIR__ . '/../config/services.config.php';
     }
 
     /**
