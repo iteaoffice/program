@@ -37,6 +37,7 @@ return array(
     'Program\Service\ServiceInterface'                              => __DIR__ . '/src/Service/ServiceInterface.php',
     'Program\Service\CallService'                                   => __DIR__ . '/src/Service/CallService.php',
     'Program\Service\ServiceAbstract'                               => __DIR__ . '/src/Service/ServiceAbstract.php',
+    'Program\View\Factory\LinkInvokableFactory'                     => __DIR__ . '/src/View/Factory/LinkInvokableFactory.php',
     'Program\View\Helper\CallSessionLink'                           => __DIR__ . '/src/View/Helper/CallSessionLink.php',
     'Program\View\Helper\FunderLink'                                => __DIR__ . '/src/View/Helper/FunderLink.php',
     'Program\View\Helper\CallLink'                                  => __DIR__ . '/src/View/Helper/CallLink.php',

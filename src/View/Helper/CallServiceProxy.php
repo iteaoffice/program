@@ -19,6 +19,7 @@ use Program\Service\ProgramService;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Helper\AbstractHelper;
+use Zend\View\HelperPluginManager;
 
 /**
  * Create a link to an project.
@@ -33,7 +34,7 @@ use Zend\View\Helper\AbstractHelper;
 class CallServiceProxy extends AbstractHelper implements ServiceLocatorAwareInterface
 {
     /**
-     * @var ServiceLocatorInterface
+     * @var HelperPluginManager
      */
     protected $serviceLocator;
 
@@ -44,7 +45,7 @@ class CallServiceProxy extends AbstractHelper implements ServiceLocatorAwareInte
      */
     public function __invoke(Call $call)
     {
-        $callService = clone $this->serviceLocator->getServiceLocator()->get(CallService::class);
+        $callService = $this->serviceLocator->getServiceLocator()->get(CallService::class);
 
         return $callService->setCall($call);
     }

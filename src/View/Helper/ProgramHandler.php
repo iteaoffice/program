@@ -24,7 +24,6 @@ use Program\Service\CallService;
 use Program\Service\ProgramService;
 use Project\Service\ProjectService;
 use Zend\Mvc\Router\Http\RouteMatch;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\HelperPluginManager;
@@ -40,7 +39,7 @@ use ZfcTwig\View\TwigRenderer;
  *
  * @link       https://itea3.org
  */
-class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterface
+class ProgramHandler extends AbstractHelper
 {
     /**
      * @var HelperPluginManager
@@ -69,8 +68,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
              * to allow some separation of content from the title
              */
             case 'programcall_title':
-                return $this->parseProgramcallTitle(!$this->getCallService()->isEmpty() ? $this->getCallService()
-                    ->getCall() : null);
+                return $this->parseProgramcallTitle();
 
             case 'programcall_project':
                 return $this->parseProgramcallProjectList(!$this->getCallService()->isEmpty() ? $this->getCallService()
@@ -247,7 +245,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     }
 
     /**
-     * @param Call $call
+     * @param Call    $call
      * @param Program $program
      *
      * @return string
@@ -303,8 +301,8 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     public function parseProgramcallProjectList($call)
     {
         $whichProjects
-            = $this->getProjectModuleOptions()->getProjectHasVersions()
-            ? ProjectService::WHICH_ONLY_ACTIVE : ProjectService::WHICH_ALL;
+            = $this->getProjectModuleOptions()->getProjectHasVersions() ? ProjectService::WHICH_ONLY_ACTIVE
+            : ProjectService::WHICH_ALL;
 
         return $this->getZfcTwigRenderer()->render('program/partial/list/project', [
             'call'     => $this->getCallService(),
@@ -324,7 +322,7 @@ class ProgramHandler extends AbstractHelper implements ServiceLocatorAwareInterf
     }
 
     /**
-     * @param Call $call
+     * @param Call    $call
      * @param Program $program
      *
      * @return string

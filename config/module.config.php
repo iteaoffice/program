@@ -12,7 +12,7 @@ use Program\Controller;
 use Program\Factory;
 use Program\Options;
 use Program\Service;
-use Program\View\Helper;
+use Program\View;
 
 $config = [
     'controllers'     => [
@@ -24,18 +24,31 @@ $config = [
         'template_map' => include __DIR__ . '/../template_map.php',
     ],
     'view_helpers'    => [
-        'invokables' => [
-            'callSessionLink'     => Helper\CallSessionLink::class,
-            'programHandler'      => Helper\ProgramHandler::class,
-            'callServiceProxy'    => Helper\CallServiceProxy::class,
-            'programServiceProxy' => Helper\ProgramServiceProxy::class,
-            'callInformationBox'  => Helper\CallInformationBox::class,
-            'programLink'         => Helper\ProgramLink::class,
-            'programDoaLink'      => Helper\DoaLink::class,
-            'callLink'            => Helper\CallLink::class,
-            'ndaLink'             => Helper\NdaLink::class,
-            'funderLink'          => Helper\FunderLink::class,
-            'callCountryLink'     => Helper\CallCountryLink::class,
+        'aliases'   => [
+            'callSessionLink'     => View\Helper\CallSessionLink::class,
+            'programHandler'      => View\Helper\ProgramHandler::class,
+            'callServiceProxy'    => View\Helper\CallServiceProxy::class,
+            'programServiceProxy' => View\Helper\ProgramServiceProxy::class,
+            'callInformationBox'  => View\Helper\CallInformationBox::class,
+            'programLink'         => View\Helper\ProgramLink::class,
+            'programDoaLink'      => View\Helper\DoaLink::class,
+            'callLink'            => View\Helper\CallLink::class,
+            'ndaLink'             => View\Helper\NdaLink::class,
+            'funderLink'          => View\Helper\FunderLink::class,
+            'callCountryLink'     => View\Helper\CallCountryLink::class,
+        ],
+        'factories' => [
+            View\Helper\CallSessionLink::class     => View\Factory\LinkInvokableFactory::class,
+            View\Helper\ProgramHandler::class      => View\Factory\LinkInvokableFactory::class,
+            View\Helper\CallServiceProxy::class    => View\Factory\LinkInvokableFactory::class,
+            View\Helper\ProgramServiceProxy::class => View\Factory\LinkInvokableFactory::class,
+            View\Helper\CallInformationBox::class  => View\Factory\LinkInvokableFactory::class,
+            View\Helper\ProgramLink::class         => View\Factory\LinkInvokableFactory::class,
+            View\Helper\DoaLink::class             => View\Factory\LinkInvokableFactory::class,
+            View\Helper\CallLink::class            => View\Factory\LinkInvokableFactory::class,
+            View\Helper\NdaLink::class             => View\Factory\LinkInvokableFactory::class,
+            View\Helper\FunderLink::class          => View\Factory\LinkInvokableFactory::class,
+            View\Helper\CallCountryLink::class     => View\Factory\LinkInvokableFactory::class,
         ]
     ],
     'service_manager' => [

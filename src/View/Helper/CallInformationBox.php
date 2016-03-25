@@ -16,7 +16,6 @@ namespace Program\View\Helper;
 
 use Program\Entity\Call\Call;
 use Program\Service\CallService;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\HelperPluginManager;
@@ -31,7 +30,7 @@ use Zend\View\HelperPluginManager;
  *
  * @link       https://itea3.org
  */
-class CallInformationBox extends AbstractHelper implements ServiceLocatorAwareInterface
+class CallInformationBox extends AbstractHelper
 {
     /**
      * @var HelperPluginManager
@@ -62,9 +61,10 @@ class CallInformationBox extends AbstractHelper implements ServiceLocatorAwareIn
          * Return null when we have an undefined status
          */
         if ($callStatus->result === CallService::UNDEFINED) {
-            return;
+            return '';
         }
         $result = $callStatus->result;
+        /** @var \DateTime $referenceDate */
         $referenceDate = $callStatus->referenceDate;
         $today = new \DateTime();
         $dateDifference = $referenceDate->diff($today);
@@ -77,19 +77,15 @@ class CallInformationBox extends AbstractHelper implements ServiceLocatorAwareIn
         } else {
             $format = '%i minutes';
         }
-        $content = str_replace(
-            [
-                '%call%',
-                '%diff%',
-                '%time%',
-            ],
-            [
-                $call,
-                $dateDifference->format($format),
-                $referenceDate->format('l, d F Y H:i:s T'),
-            ],
-            $contents[$result]
-        );
+        $content = str_replace([
+            '%call%',
+            '%diff%',
+            '%time%',
+        ], [
+            $call,
+            $dateDifference->format($format),
+            $referenceDate->format('l, d F Y H:i:s T'),
+        ], $contents[$result]);
         $alert = '<div class="alert alert-%s"><strong>%s</strong><br>%s</div>';
 
         switch ($callStatus->result) {
@@ -103,12 +99,7 @@ class CallInformationBox extends AbstractHelper implements ServiceLocatorAwareIn
 
         }
 
-        return sprintf(
-            $alert,
-            $type,
-            $result,
-            $content
-        );
+        return sprintf($alert, $type, $result, $content);
     }
 
     /**

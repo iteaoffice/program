@@ -15,9 +15,9 @@ namespace Program\View\Helper;
 
 use Program\Entity\Program;
 use Program\Service\ProgramService;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Helper\AbstractHelper;
+use Zend\View\HelperPluginManager;
 
 /**
  * Create a link to an project.
@@ -29,10 +29,10 @@ use Zend\View\Helper\AbstractHelper;
  *
  * @link       https://itea3.org
  */
-class ProgramServiceProxy extends AbstractHelper implements ServiceLocatorAwareInterface
+class ProgramServiceProxy extends AbstractHelper
 {
     /**
-     * @var ServiceLocatorInterface
+     * @var HelperPluginManager
      */
     protected $serviceLocator;
 
