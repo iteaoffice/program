@@ -48,7 +48,7 @@ class RenderNda extends AbstractPlugin
     {
         $pdf = new ProgramPdf();
         $pdf->setTemplate($this->getModuleOptions()->getNdaTemplate());
-        $pdf->addPage();
+        $pdf->AddPage();
         $pdf->SetFontSize(7.5);
         $twig = $this->getServiceLocator()->get('ZfcTwigRenderer');
         /*
@@ -148,7 +148,7 @@ class RenderNda extends AbstractPlugin
     {
         $pdf = new ProgramPdf();
         $pdf->setTemplate($this->getModuleOptions()->getNdaTemplate());
-        $pdf->addPage();
+        $pdf->AddPage();
         $pdf->SetFontSize(7.5);
         /**
          * @var $twig TwigRenderer

@@ -15,6 +15,7 @@
 
 namespace Program\Controller;
 
+use Program\Entity\Nda;
 use Program\Entity\NdaObject;
 use Program\Form\NdaApproval;
 use Zend\Validator\File\FilesSize;
@@ -53,7 +54,7 @@ class NdaManagerController extends ProgramAbstractController
      */
     public function viewAction()
     {
-        $nda = $this->callService->findEntityById('nda', $this->params('id'));
+        $nda = $this->callService->findEntityById(Nda::class, $this->params('id'));
         if (is_null($nda)) {
             return $this->notFoundAction();
         }
@@ -66,7 +67,7 @@ class NdaManagerController extends ProgramAbstractController
      */
     public function editAction()
     {
-        $nda = $this->getCallService()->findEntityById('nda', $this->params('id'));
+        $nda = $this->getCallService()->findEntityById(Nda::class, $this->params('id'));
 
         if (is_null($nda)) {
             return $this->notFoundAction();
@@ -78,10 +79,10 @@ class NdaManagerController extends ProgramAbstractController
         );
 
         $form = $this->getFormService()->prepare('nda', $nda, $data);
-        $form->get('nda')->get('contact')->setValueOptions([
+        $form->get($nda->get('underscore_entity_name'))->get('contact')->setValueOptions([
             $nda->getContact()->getId() => $nda->getContact()->getFormName()
         ]);
-        $form->get('nda')->get('programCall')->setValue($nda->getCall());
+        $form->get($nda->get('underscore_entity_name'))->get('programCall')->setValue($nda->getCall());
 
         //Get contacts in an organisation
         if ($this->getRequest()->isPost()) {
@@ -102,8 +103,8 @@ class NdaManagerController extends ProgramAbstractController
             }
 
             if ($form->isValid()) {
-                /*
-                 * @var Nda
+                /**
+                 * @var Nda $nda
                  */
                 $nda = $form->getData();
 
@@ -135,7 +136,7 @@ class NdaManagerController extends ProgramAbstractController
                  * The programme call needs to have a dedicated treatment
                  */
                 if (!empty($data['nda']['programCall'])) {
-                    $nda->setCall([$this->getCallService()->setCallId($data['nda']['programCall'])->getCall()]);
+                    $nda->setCall([$this->getCallService()->findCallById($data['nda']['programCall'])]);
                 } else {
                     $nda->setCall([]);
                 }
@@ -185,7 +186,7 @@ class NdaManagerController extends ProgramAbstractController
         /*
          * @var Nda
          */
-        $nda = $this->getCallService()->findEntityById('Nda', $nda);
+        $nda = $this->getCallService()->findEntityById(Nda::class, $nda);
         $nda->setDateSigned(\DateTime::createFromFormat('Y-h-d', $dateSigned));
         $nda->setDateApproved(new \DateTime());
         $this->getCallService()->updateEntity($nda);

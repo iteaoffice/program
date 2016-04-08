@@ -59,7 +59,7 @@ class ProgramManagerController extends ProgramAbstractController
      */
     public function viewAction()
     {
-        $program = $this->getProgramService()->findEntityById('Program', $this->params('id'));
+        $program = $this->getProgramService()->findEntityById(Program::class, $this->params('id'));
         if (is_null($program)) {
             return $this->notFoundAction();
         }
@@ -76,7 +76,8 @@ class ProgramManagerController extends ProgramAbstractController
     {
         $data = array_merge($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
 
-        $form = $this->getFormService()->prepare('Program', null, $data);
+        $program = new Program();
+        $form = $this->getFormService()->prepare($program, null, $data);
         $form->remove('delete');
 
         $form->setAttribute('class', 'form-horizontal');
@@ -108,11 +109,11 @@ class ProgramManagerController extends ProgramAbstractController
     public function editAction()
     {
         /** @var Program $program */
-        $program = $this->getProgramService()->findEntityById('Program', $this->params('id'));
+        $program = $this->getProgramService()->findEntityById(Program::class, $this->params('id'));
 
         $data = array_merge($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
 
-        $form = $this->getFormService()->prepare($program->get('entity_name'), $program, $data);
+        $form = $this->getFormService()->prepare($program, $program, $data);
         $form->setAttribute('class', 'form-horizontal');
 
         if ($this->getRequest()->isPost()) {

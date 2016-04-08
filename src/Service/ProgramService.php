@@ -10,9 +10,9 @@
 
 namespace Program\Service;
 
-use Affiliation\Service\AffiliationService;
 use General\Entity\Country;
 use Organisation\Entity\Organisation;
+use Program\Entity\Doa;
 use Program\Entity\Funder;
 use Program\Entity\Program;
 
@@ -31,21 +31,11 @@ class ProgramService extends ServiceAbstract
     /**
      * @param $id
      *
-     * @return $this
+     * @return null|Program
      */
-    public function setProgramId($id)
+    public function findProgramById($id)
     {
-        $this->setProgram($this->findEntityById('Program', $id));
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isEmpty()
-    {
-        return is_null($this->program) || is_null($this->program->getId());
+        return $this->getEntityManager()->getRepository(Program::class)->find($id);
     }
 
     /**
@@ -55,7 +45,7 @@ class ProgramService extends ServiceAbstract
      */
     public function findFunderByCountry(Country $country)
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName('funder'))
+        return $this->getEntityManager()->getRepository(Funder::class)
             ->findBy(['country' => $country], ['position' => 'ASC']);
     }
 
@@ -63,43 +53,13 @@ class ProgramService extends ServiceAbstract
      * @param Program      $program
      * @param Organisation $organisation
      *
-     * @return null|\Program\Entity\Doa
+     * @return null|Doa
      */
     public function findProgramDoaByProgramAndOrganisation(Program $program, Organisation $organisation)
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName('Doa'))->findOneBy([
-                'program'      => $program,
-                'organisation' => $organisation,
-            ]);
-    }
-
-    /**
-     * @return Program
-     */
-    public function getProgram()
-    {
-        return $this->program;
-    }
-
-    /**
-     * @param $program
-     *
-     * @return $this
-     */
-    public function setProgram($program)
-    {
-        $this->program = $program;
-
-        return $this;
-    }
-
-    /**
-     * @param $which
-     *
-     * @return AffiliationService[]
-     */
-    public function getAffiliation($which = AffiliationService::WHICH_ONLY_ACTIVE)
-    {
-        return $this->getAffiliationService()->findAffiliationByProjectAndWhich($this->project, $which);
+        return $this->getEntityManager()->getRepository(Doa::class)->findOneBy([
+            'program'      => $program,
+            'organisation' => $organisation,
+        ]);
     }
 }

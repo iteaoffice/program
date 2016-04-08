@@ -24,38 +24,34 @@ class Doa extends AssertionAbstract
      * Returns true if and only if the assertion conditions are met.
      *
      * This method is passed the ACL, Role, Resource, and privilege to which the authorization query applies. If the
-     * $role, $resource, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
+     * $role, $doa, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
      * privileges, respectively.
      *
      * @param Acl               $acl
      * @param RoleInterface     $role
-     * @param ResourceInterface $resource
+     * @param ResourceInterface $doa
      * @param string            $privilege
      *
      * @return bool
      */
-    public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
+    public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $doa = null, $privilege = null)
     {
-        $id = $this->getRouteMatch()->getParam('id');
-        /*
-         * When the privilege is_null (not given by the isAllowed helper), get it from the routeMatch
-         */
-        if (is_null($privilege)) {
-            $privilege = $this->getRouteMatch()->getParam('privilege');
-        }
-        if (!$resource instanceof DoaEntity && !is_null($id)) {
-            $resource = $this->getProgramService()->findEntityById('Doa', $id);
+        $this->setPrivilege($privilege);
+        $id = $this->getId();
+
+        if (!$doa instanceof DoaEntity && !is_null($id)) {
+            $doa = $this->getProgramService()->findEntityById(DoaEntity::class, $id);
         }
 
-        switch ($privilege) {
+        switch ($this->getPrivilege()) {
             case 'upload':
                 /*
                  * For the upload we need to see if the user has access on the editing of the affiliation
                  * The affiliation can already be known, but if not grab it from the routeMatch
                  */
                 $organisation = null;
-                if ($resource instanceof DoaEntity) {
-                    $organisation = $resource->getOrganisation();
+                if ($doa instanceof DoaEntity) {
+                    $organisation = $doa->getOrganisation();
                 }
                 if (is_null($organisation)) {
                     /*
@@ -64,11 +60,9 @@ class Doa extends AssertionAbstract
                     if (!is_null($this->getRouteMatch()->getParam('id'))) {
                         $organisationId = $this->getRouteMatch()->getParam('id');
                     } else {
-                        $organisationId = $this->getRouteMatch()->getParam('organisation-id');
+                        $organisationId = $this->getRouteMatch()->getParam('organisationId');
                     }
-                    $organisation = $this->getOrganisationService()->setOrganisationId(
-                        $organisationId
-                    )->getOrganisation();
+                    $organisation = $this->getOrganisationService()->findOrganisationById($organisationId);
                 }
 
                 return $this->getOrganisationAssertion()->assert($acl, $role, $organisation, 'edit-community');
@@ -78,13 +72,13 @@ class Doa extends AssertionAbstract
                  * and the acl should not be approved
                  */
 
-                return is_null($resource->getDateApproved()) && $resource->getContact()->getId() ===
-                $this->getContact()->getId();
+                return is_null($doa->getDateApproved())
+                && $doa->getContact()->getId() === $this->getContact()->getId();
             case 'render':
                 return $this->hasContact();
             case 'download':
             case 'view':
-                return $resource->getContact()->getId() === $this->getContact()->getId();
+                return $doa->getContact()->getId() === $this->getContact()->getId();
         }
 
         return false;

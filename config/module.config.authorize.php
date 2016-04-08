@@ -30,9 +30,10 @@ return [
                 ['route' => 'zfcadmin/call/country/edit', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
                 ['route' => 'zfcadmin/call/country/view', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
                 ['route' => 'zfcadmin/call/country/new', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
-                ['route'     => 'zfcadmin/nda/approval',
-                 'roles'     => [strtolower(Access::ACCESS_OFFICE)],
-                 'assertion' => NdaAssertion::class
+                [
+                    'route'     => 'zfcadmin/nda/approval',
+                    'roles'     => [strtolower(Access::ACCESS_OFFICE)],
+                    'assertion' => NdaAssertion::class
                 ],
                 [
                     'route'     => 'zfcadmin/nda/view',

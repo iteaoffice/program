@@ -32,7 +32,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  *
  * @category    Program
  */
-class Call extends EntityAbstract implements ResourceInterface, InputFilterAwareInterface
+class Call extends EntityAbstract implements ResourceInterface
 {
     /**
      * Produce a list of different statuses in a call, which are required for representation and access control.

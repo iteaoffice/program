@@ -74,8 +74,8 @@ class DoaLink extends LinkAbstract
         switch ($this->getAction()) {
             case 'upload':
                 $this->setRouter('program/doa/upload');
-                $this->addRouterParam('organisation-id', $this->getOrganisation()->getId());
-                $this->addRouterParam('program-id', $this->getProgram()->getId());
+                $this->addRouterParam('organisationId', $this->getOrganisation()->getId());
+                $this->addRouterParam('programId', $this->getProgram()->getId());
                 $this->setText(sprintf(
                     $this->translate("txt-upload-doa-for-organisation-%s-in-program-%s-link-title"),
                     $this->getOrganisation(),
@@ -90,16 +90,16 @@ class DoaLink extends LinkAbstract
                 $renderText = _("txt-render-doa-for-organisation-%s-in-program-%s-link-title");
                 if (is_null($this->getDoa()->getId())) {
                     $this->setText(sprintf($renderText, $this->getOrganisation(), $this->getProgram()));
-                    $this->addRouterParam('organisation-id', $this->getOrganisation()->getId());
-                    $this->addRouterParam('program-id', $this->getProgram()->getId());
+                    $this->addRouterParam('organisationId', $this->getOrganisation()->getId());
+                    $this->addRouterParam('programId', $this->getProgram()->getId());
                 } else {
                     $this->setText(sprintf(
                         $renderText,
                         $this->getDoa()->getOrganisation(),
                         $this->getDoa()->getProgram()
                     ));
-                    $this->addRouterParam('organisation-id', $this->getDoa()->getOrganisation()->getId());
-                    $this->addRouterParam('program-id', $this->getDoa()->getProgram()->getId());
+                    $this->addRouterParam('organisationId', $this->getDoa()->getOrganisation()->getId());
+                    $this->addRouterParam('programId', $this->getDoa()->getProgram()->getId());
                 }
                 break;
             case 'replace':

@@ -139,7 +139,7 @@ return [
                                     'render'   => [
                                         'type'    => 'Segment',
                                         'options' => [
-                                            'route'    => '/render/organisation-[:organisation-id]/program-[:program-id].pdf',
+                                            'route'    => '/render/organisation-[:organisationId]/program-[:programId].pdf',
                                             'defaults' => [
                                                 'action'    => 'render',
                                                 'privilege' => 'render'
@@ -149,7 +149,7 @@ return [
                                     'upload'   => [
                                         'type'    => 'Segment',
                                         'options' => [
-                                            'route'    => '/upload/organisation-[:organisation-id]/program-[:program-id].html',
+                                            'route'    => '/upload/organisation-[:organisationId]/program-[:programId].html',
                                             'defaults' => [
                                                 'action'    => 'upload',
                                                 'privilege' => 'upload'

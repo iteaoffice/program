@@ -5,9 +5,7 @@
     {% endif %}
 
     <div class="well well-sm">
-        {% set contactService = contactServiceProxy(funder.contact) %}
-
-        <h3>{{ contactService.parseFullName }}</h3>
+        <h3>{{ funder.contact.parseFullName }}</h3>
 
         <div class="row">
             <div class="col-md-3">
@@ -17,20 +15,18 @@
                 <dl>
                     <dt>{{ translate("txt-address") }}</dt>
 
-                    {% set organisationService = organisationServiceProxy(funder.contact.contactOrganisation.organisation) %}
-
-                    <dd>{{ organisationService.parseOrganisationWithBranch(funder.contact.contactOrganisation.branch) }}</dd>
-                    <dd>{{ contactService.getVisitAddress().address.address }}</dd>
-                    <dd>{{ contactService.getVisitAddress().address.zipCode }} {{ contactService.getVisitAddress().address.city }}</dd>
-                    <dd>{{ contactService.getVisitAddress().address.country }}</dd>
-                    <dd><a href="{{ contactService.contact.email }}">{{ contactService.contact.email }}</a></dd>
+                    <dd>{{ contactService.parseOrganisation(funder.contact) }}</dd>
+                    <dd>{{ contactService.getVisitAddress(funder.contact) }}</dd>
+                    <dd>{{ contactService.getVisitAddress(funder.contact).zipCode }} {{ contactService.getVisitAddress(funder.contact).city }}</dd>
+                    <dd>{{ contactService.getVisitAddress(funder.contact).country }}</dd>
+                    <dd><a href="{{ contact.email }}">{{ contact.email }}</a></dd>
 
                     <dt>{{ translate("txt-phone") }}</dt>
-                    <dd>{{ contactService.getDirectPhone() }}</dd>
+                    <dd>{{ contactService.getDirectPhone(funder.contact) }}</dd>
 
                     <dt>{{ translate("txt-website") }}</dt>
                     {# show only the first result#}
-                    <dd>{{ organisationService.organisation.web[0]|raw }}</dd>
+                    <dd>{{ organisation.web[0]|raw }}</dd>
 
                     <dt>{{ translate("txt-extra-information") }}</dt>
                     <dd>{{ funder.infoPublic|nl2br }}</dd>

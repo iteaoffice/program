@@ -1,13 +1,10 @@
-{% set contactService = contactServiceProxy(contact) %}
-{% set mailAddress = contactService.getMailAddress() %}
-
 <h1>Annex B to ITEA 2 Frame Agreement</h1>
 
 <br>
-{{ contactService.parseFullName() }}<br>
-{{ mailAddress.address.address }}<br>
-{{ mailAddress.address.zipCode }} {{ mailAddress.address.city }}<br>
-{{ mailAddress.address.country|upper }}
+{{ contactService.parseFullName(contact) }}<br>
+{{ mailAddress.address }}<br>
+{{ mailAddress.zipCode }} {{ mailAddress.city }}<br>
+{{ mailAddress.country|upper }}
 <br>
 
 
@@ -24,7 +21,7 @@
     <dd>Fax: +31 88 003 6130</dd>
 </dl>
 
-<p>The undersigned <strong>{{ contactService.parseOrganisation }}</strong> is
+<p>The undersigned <strong>{{ contactService.parseOrganisation(contact) }}</strong> is
     applicant for an ITEA 2 Label for an ITEA 2 Project.</p>
 
 <p>In case of the award of an ITEA 2 Project with the ITEA 2 Label by the ITEA 2 Board the undersigned accepts and

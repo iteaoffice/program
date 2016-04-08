@@ -46,7 +46,7 @@ use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
  * @method      RenderSession renderSession($session)
  * @method      Plugin\GetFilter getProgramFilter()
  * @method      Plugin\RenderDoa renderDoa($doa)
- * @method      Plugin\RenderNda renderNda($nda)
+ * @method      Plugin\RenderNda renderNda()
  */
 abstract class ProgramAbstractController extends AbstractActionController
 {

@@ -26,34 +26,30 @@ class Nda extends AssertionAbstract
      * Returns true if and only if the assertion conditions are met.
      *
      * This method is passed the ACL, Role, Resource, and privilege to which the authorization query applies. If the
-     * $role, $resource, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
+     * $role, $nda, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
      * privileges, respectively.
      *
      * @param Acl               $acl
      * @param RoleInterface     $role
-     * @param ResourceInterface $resource
+     * @param ResourceInterface $nda
      * @param string            $privilege
      *
      * @return bool
      */
-    public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
+    public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $nda = null, $privilege = null)
     {
-        $id = $this->getRouteMatch()->getParam('id');
+        $this->setPrivilege($privilege);
+        $id = $this->getId();
 
         /*
-         * When the privilege is_null (not given by the isAllowed helper), get it from the routeMatch
+         * @var $nda NdaEntity
          */
-        if (is_null($privilege)) {
-            $privilege = $this->getRouteMatch()->getParam('privilege');
-        }
-        /*
-         * @var $resource NdaEntity
-         */
-        if (!$resource instanceof NdaEntity && !is_null($id)) {
-            $resource = $this->getProgramService()->findEntityById('Nda', $id);
+        if (!$nda instanceof NdaEntity && !is_null($id)) {
+            /** @var NdaEntity $nda */
+            $nda = $this->getProgramService()->findEntityById(NdaEntity::class, $id);
         }
 
-        switch ($privilege) {
+        switch ($this->getPrivilege()) {
             case 'upload':
                 return $this->hasContact();
             case 'replace':
@@ -62,8 +58,8 @@ class Nda extends AssertionAbstract
                  * and the acl should not be approved
                  */
 
-                return is_null($resource->getDateApproved())
-                && $resource->getContact()->getId() === $this->getContact()->getId();
+                return is_null($nda->getDateApproved())
+                && $nda->getContact()->getId() === $this->getContact()->getId();
             case 'render':
                 if (!$this->hasContact()) {
                     return false;
@@ -73,15 +69,16 @@ class Nda extends AssertionAbstract
                  * The call can be found in 1 ways, or via the $id, or via the resource.
                  * The resource has goes first
                  */
-                if ($resource instanceof NdaEntity && !is_null($resource->getCall())) {
-                    $this->getCallService()->setCall($resource->getCall());
-                } elseif (!is_null($id)) {
-                    $this->getCallService()->setCallId($id);
+                $call = null;
+                if ($nda instanceof NdaEntity && !is_null($nda->getCall())) {
+                    $call = $nda->getCall();
+                } elseif (!is_null($callId = $this->getRouteMatch()->getParam('callId'))) {
+                    $call = $this->getCallService()->findCallById($callId);
                 }
 
                 //We have no 2 methods to get the call, if the call is set check if the status is correct
-                if (!$this->getCallService()->isEmpty()) {
-                    return $this->getCallService()->getCallStatus()->result !== CallService::UNDEFINED;
+                if (!is_null($call)) {
+                    return $this->getCallService()->getCallStatus($call)->result !== CallService::UNDEFINED;
                 }
 
                 return true;
@@ -91,7 +88,7 @@ class Nda extends AssertionAbstract
                     return false;
                 }
 
-                if ($resource->getContact()->getId() === $this->getContact()->getId()) {
+                if ($nda->getContact()->getId() === $this->getContact()->getId()) {
                     return true;
                 }
 

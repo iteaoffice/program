@@ -49,6 +49,14 @@ class ProgramHandler extends AbstractHelper
      * @var Session
      */
     protected $session;
+    /**
+     * @var Program
+     */
+    protected $program;
+    /**
+     * @var Call
+     */
+    protected $call;
 
     /**
      * @param Content $content
@@ -61,39 +69,15 @@ class ProgramHandler extends AbstractHelper
 
         switch ($content->getHandler()->getHandler()) {
             case 'programcall_selector':
-                return $this->parseCallSelector(!$this->getCallService()->isEmpty() ? $this->getCallService()->getCall()
-                    : null, !$this->getProgramService()->isEmpty() ? $this->getProgramService()->getProgram() : null);
-            /*
-             * Shows the title , not included in the "programcall_info"
-             * to allow some separation of content from the title
-             */
+                return $this->parseCallSelector($this->getCall(), $this->getProgram());
             case 'programcall_title':
                 return $this->parseProgramcallTitle();
-
             case 'programcall_project':
-                return $this->parseProgramcallProjectList(!$this->getCallService()->isEmpty() ? $this->getCallService()
-                    ->getCall() : null);
-
-            /*
-             * Info sheet with statistics
-             */
-            case 'programcall_info':
-                return $this->parseProgramcallInfo(
-                    !$this->getCallService()->isEmpty() ? $this->getCallService()
-                    ->getCall() : null,
-                    !$this->getProgramService()->isEmpty() ? $this->getProgramService()->getProgram() : null
-                );
-
+                return $this->parseProgramcallProjectList($this->getCall());
             case 'programcall_session':
                 return $this->parseSessionOverview($this->getSession());
-
-            /*
-             * Map of the countries in which projects of the current call are being highlighted
-             */
             case 'programcall_map':
-                return $this->parseProgramcallMap(!$this->getCallService()->isEmpty() ? $this->getCallService()
-                    ->getCall() : null);
-
+                return $this->parseProgramcallMap($this->getCall());
             default:
                 return sprintf(
                     "No handler available for <code>%s</code> in class <code>%s</code>",
@@ -103,13 +87,6 @@ class ProgramHandler extends AbstractHelper
         }
     }
 
-    /**
-     * @param $sessionId
-     */
-    public function setSessionId($sessionId)
-    {
-        $this->session = $this->getCallService()->findEntityById('Call\Session', $sessionId);
-    }
 
     /**
      * @param Content $content
@@ -117,10 +94,14 @@ class ProgramHandler extends AbstractHelper
     public function extractContentParam(Content $content)
     {
         if (!is_null($this->getRouteMatch()->getParam('docRef'))) {
-            $this->getCallService()->setCall($this->getCallService()
-                ->findEntityByDocRef('Call\Call', $this->getRouteMatch()->getParam('docRef')));
-            if (!$this->getCallService()->isEmpty()) {
-                $this->setCallId($this->getCallService()->getCall()->getId());
+
+            //First try to find the call via the docref
+            /** @var Call $call */
+            $call = $this->getCallService()
+                ->findEntityByDocRef(Call::class, $this->getRouteMatch()->getParam('docRef'));
+
+            if (is_null($call)) {
+                $this->setCall($call);
             }
         }
 
@@ -131,21 +112,21 @@ class ProgramHandler extends AbstractHelper
             switch ($param->getParameter()->getParam()) {
                 case 'session':
                     if (!is_null($sessionId = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
-                        $this->setSessionId($sessionId);
+                        $this->setSessionById($sessionId);
                     } else {
-                        $this->setSessionId($param->getParameterId());
+                        $this->setSessionById($param->getParameterId());
                     }
                     break;
 
                 case 'call':
                     if (!is_null($callId = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
-                        $this->setCallId($callId);
+                        $this->setCallById($callId);
                     }
                     break;
 
                 case 'program':
                     if (!is_null($programId = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
-                        $this->setProgramId($programId);
+                        $this->setProgramById($programId);
                     }
                     break;
             }
@@ -187,9 +168,30 @@ class ProgramHandler extends AbstractHelper
     /**
      * @param $callId
      */
-    public function setCallId($callId)
+    public function setCallById($callId)
     {
-        $this->getCallService()->setCallId($callId);
+        $call = $this->getCallService()->findCallById($callId);
+        $this->setCall($call);
+    }
+
+
+    /**
+     * @param $programId
+     */
+    public function setProgramById($programId)
+    {
+        $program = $this->getProgramService()->findProgramById($programId);
+        $this->setProgram($program);
+    }
+
+    /**
+     * @param $sessionId
+     */
+    public function setSessionById($sessionId)
+    {
+        /** @var Session $session */
+        $session = $this->getCallService()->findEntityById(Session::class, $sessionId);
+        $this->setSession($session);
     }
 
     /**
@@ -208,13 +210,6 @@ class ProgramHandler extends AbstractHelper
         return $this->getServiceLocator()->get(AffiliationService::class);
     }
 
-    /**
-     * @param $programId
-     */
-    public function setProgramId($programId)
-    {
-        $this->getProgramService()->setProgramId($programId);
-    }
 
     /**
      * @return ProgramService
@@ -252,10 +247,8 @@ class ProgramHandler extends AbstractHelper
      */
     public function parseCallSelector(Call $call = null, Program $program = null)
     {
-        $displayName = (DEBRANOVA_HOST == 'artemisia' ? 'name-without-program' : 'name');
-
         return $this->getZfcTwigRenderer()->render('program/partial/call-selector', [
-            'displayNameCall'   => $displayName,
+            'displayNameCall'   => 'name',
             'calls'             => $this->getCallService()->findNonEmptyCalls($program),
             'callId'            => !is_null($call) ? $call->getId() : null,
             'selectedProgramId' => !is_null($program) ? $program->getId() : null,
@@ -263,9 +256,11 @@ class ProgramHandler extends AbstractHelper
     }
 
     /**
-     * @return string
+     * @param Call $call
+     *
+     * @return mixed
      */
-    public function parseProgramcallMap($call)
+    public function parseProgramcallMap(Call $call)
     {
         $countries = $this->getCallService()->findCountryByCall($call);
         $options = $this->getModuleOptions();
@@ -296,9 +291,11 @@ class ProgramHandler extends AbstractHelper
     }
 
     /**
-     * @return string
+     * @param Call $call
+     *
+     * @return null|string
      */
-    public function parseProgramcallProjectList($call)
+    public function parseProgramcallProjectList(Call $call)
     {
         $whichProjects
             = $this->getProjectModuleOptions()->getProjectHasVersions() ? ProjectService::WHICH_ONLY_ACTIVE
@@ -318,25 +315,6 @@ class ProgramHandler extends AbstractHelper
     {
         return $this->getZfcTwigRenderer()->render('program/partial/entity/programcall-title', [
             'call' => $this->getCallService(),
-        ]);
-    }
-
-    /**
-     * @param Call    $call
-     * @param Program $program
-     *
-     * @return string
-     */
-    public function parseProgramcallInfo(Call $call = null, Program $program = null)
-    {
-        $arr = $this->getCallService()->findProjectAndPartners();
-
-        return $this->getZfcTwigRenderer()->render('program/partial/entity/programcall-info', [
-            'call'             => $call,
-            'projects'         => $arr['0']['projects'],
-            'partners'         => $arr['0']['partners'],
-            'funding_eu'       => $arr['0']['funding_eu'],
-            'funding_national' => $arr['0']['funding_national'],
         ]);
     }
 
@@ -385,6 +363,47 @@ class ProgramHandler extends AbstractHelper
 
         return $this;
     }
+
+    /**
+     * @return Program
+     */
+    public function getProgram()
+    {
+        return $this->program;
+    }
+
+    /**
+     * @param Program $program
+     *
+     * @return ProgramHandler
+     */
+    public function setProgram($program)
+    {
+        $this->program = $program;
+
+        return $this;
+    }
+
+    /**
+     * @return Call
+     */
+    public function getCall()
+    {
+        return $this->call;
+    }
+
+    /**
+     * @param Call $call
+     *
+     * @return ProgramHandler
+     */
+    public function setCall($call)
+    {
+        $this->call = $call;
+
+        return $this;
+    }
+
 
     /**
      * @param $string

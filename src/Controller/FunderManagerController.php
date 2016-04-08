@@ -14,7 +14,9 @@ use Program\Entity\Funder;
 use Zend\View\Model\ViewModel;
 
 /**
+ * Class FunderManagerController
  *
+ * @package Program\Controller
  */
 class FunderManagerController extends ProgramAbstractController
 {
@@ -24,7 +26,7 @@ class FunderManagerController extends ProgramAbstractController
     public function listAction()
     {
         return new ViewModel([
-            'funder' => $this->getProgramService()->findAll('funder'),
+            'funder' => $this->getProgramService()->findAll(Funder::class),
         ]);
     }
 
@@ -36,7 +38,7 @@ class FunderManagerController extends ProgramAbstractController
         /*
          * @var Funder
          */
-        $funder = $this->getProgramService()->findEntityById('funder', $this->params('id'));
+        $funder = $this->getProgramService()->findEntityById(Funder::class, $this->params('id'));
 
         return new ViewModel([
             'funder' => $funder,
@@ -55,8 +57,9 @@ class FunderManagerController extends ProgramAbstractController
             $this->getRequest()->getFiles()->toArray()
         );
 
-        $form = $this->getFormService()->prepare('funder', null, $data);
-        $form->get('funder')->get('contact')->setDisableInArrayValidator(true);
+        $funder = new Funder();
+        $form = $this->getFormService()->prepare($funder, null, $data);
+        $form->get($funder->get('underscore_entity_name'))->get('contact')->setDisableInArrayValidator(true);
         $form->remove('delete');
 
         if ($this->getRequest()->isPost() && $form->isValid()) {
@@ -82,16 +85,16 @@ class FunderManagerController extends ProgramAbstractController
         /**
          * @var $funder Funder
          */
-        $funder = $this->getProgramService()->findEntityById('funder', $this->params('id'));
+        $funder = $this->getProgramService()->findEntityById(Funder::class, $this->params('id'));
 
         $data = array_merge_recursive(
             $this->getRequest()->getPost()->toArray(),
             $this->getRequest()->getFiles()->toArray()
         );
 
-        $form = $this->getFormService()->prepare($funder->get('entity_name'), $funder, $data);
+        $form = $this->getFormService()->prepare($funder, $funder, $data);
 
-        $form->get('funder')->get('contact')->setValueOptions([
+        $form->get($funder->get('underscore_entity_name'))->get('contact')->setValueOptions([
             $funder->getContact()->getId() => $funder->getContact()->getDisplayName()
         ])->setDisableInArrayValidator(true);
 

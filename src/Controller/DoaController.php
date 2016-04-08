@@ -36,15 +36,12 @@ class DoaController extends ProgramAbstractController
      */
     public function viewAction()
     {
-        $doa = $this->getProgramService()->findEntityById(
-            'Doa',
-            $this->params('id')
-        );
+        $doa = $this->getProgramService()->findEntityById(Doa::class, $this->params('id'));
         if (is_null($doa) || sizeof($doa->getObject()) === 0) {
             return $this->notFoundAction();
         }
 
-        return new ViewModel(['doa' => $doa]);
+        return new ViewModel([Doa::class => $doa]);
     }
 
     /**
@@ -55,13 +52,8 @@ class DoaController extends ProgramAbstractController
      */
     public function uploadAction()
     {
-        $organisationService = $this->getOrganisationService()->setOrganisationId(
-            $this->params('organisation-id')
-        );
-        $program = $this->getProgramService()->findEntityById(
-            'Program',
-            $this->params('program-id')
-        );
+        $organisation = $this->getOrganisationService()->findOrganisationById($this->params('organisationId'));
+        $program = $this->getProgramService()->findProgramById($this->params('programId'));
         $data = array_merge_recursive(
             $this->getRequest()->getPost()->toArray(),
             $this->getRequest()->getFiles()->toArray()
@@ -82,36 +74,31 @@ class DoaController extends ProgramAbstractController
                 $fileSizeValidator->isValid($fileData['file']);
                 $doa = new Entity\Doa();
                 $doa->setSize($fileSizeValidator->size);
-                $doa->setContentType(
-                    $this->getGeneralService()->findContentTypeByContentTypeName($fileData['file']['type'])
-                );
+                $doa->setContentType($this->getGeneralService()
+                    ->findContentTypeByContentTypeName($fileData['file']['type']));
                 $doa->setContact($this->zfcUserAuthentication()->getIdentity());
-                $doa->setOrganisation($organisationService->getOrganisation());
+                $doa->setOrganisation($organisation);
                 $doa->setProgram($program);
                 $doaObject->setDoa($doa);
                 $this->getProgramService()->newEntity($doaObject);
-                $this->flashMessenger()->setNamespace('success')->addMessage(
-                    sprintf(
-                        _("txt-doa-for-organisation-%s-in-program-%s-has-been-uploaded"),
-                        $organisationService->getOrganisation(),
+                $this->flashMessenger()->setNamespace('success')
+                    ->addMessage(sprintf(
+                        $this->translate("txt-doa-for-organisation-%s-in-program-%s-has-been-uploaded"),
+                        $organisation,
                         $program
-                    )
-                );
+                    ));
 
-                return $this->redirect()->toRoute(
-                    'community/program/doa/view',
-                    ['id' => $doaObject->getDoa()->getId()]
-                );
+                return $this->redirect()
+                    ->toRoute('community/program/doa/view', ['id' => $doaObject->getDoa()->getId()]);
             }
         }
 
-        return new ViewModel(
-            [
-                'organisationService' => $organisationService,
-                'program'             => $program,
-                'form'                => $form,
-            ]
-        );
+        return new ViewModel([
+            'organisationService' => $this->getOrganisationService(),
+            'organisation'        => $organisation,
+            'program'             => $program,
+            'form'                => $form,
+        ]);
     }
 
     /**
@@ -126,10 +113,8 @@ class DoaController extends ProgramAbstractController
      */
     public function replaceAction()
     {
-        $doa = $this->getProgramService()->findEntityById(
-            'Doa',
-            $this->params('id')
-        );
+        /** @var Doa $doa */
+        $doa = $this->getProgramService()->findEntityById(Doa::class, $this->params('id'));
         if (is_null($doa) || sizeof($doa->getObject()) === 0) {
             return $this->notFoundAction();
         }
@@ -141,10 +126,7 @@ class DoaController extends ProgramAbstractController
         $form->setData($data);
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                return $this->redirect()->toRoute(
-                    'program/doa/view',
-                    ['id' => $doa->getId()]
-                );
+                return $this->redirect()->toRoute('program/doa/view', ['id' => $doa->getId()]);
             }
 
             if ($form->isValid()) {
@@ -162,32 +144,25 @@ class DoaController extends ProgramAbstractController
                 $fileSizeValidator->isValid($fileData['file']);
                 $doa->setSize($fileSizeValidator->size);
                 $doa->setContact($this->zfcUserAuthentication()->getIdentity());
-                $doa->setContentType(
-                    $this->getGeneralService()->findContentTypeByContentTypeName($fileData['file']['type'])
-                );
+                $doa->setContentType($this->getGeneralService()
+                    ->findContentTypeByContentTypeName($fileData['file']['type']));
                 $programDoaObject->setDoa($doa);
                 $this->getProgramService()->newEntity($programDoaObject);
-                $this->flashMessenger()->setNamespace('success')->addMessage(
-                    sprintf(
+                $this->flashMessenger()->setNamespace('success')
+                    ->addMessage(sprintf(
                         _("txt-doa-for-organisation-%s-in-program-%s-has-been-uploaded"),
                         $doa->getOrganisation(),
                         $doa->getProgram()
-                    )
-                );
+                    ));
 
-                return $this->redirect()->toRoute(
-                    'program/doa/view',
-                    ['id' => $doa->getId()]
-                );
+                return $this->redirect()->toRoute('program/doa/view', ['id' => $doa->getId()]);
             }
         }
 
-        return new ViewModel(
-            [
-                'doa'  => $doa,
-                'form' => $form,
-            ]
-        );
+        return new ViewModel([
+            Doa::class => $doa,
+            'form'     => $form,
+        ]);
     }
 
     /**
@@ -195,28 +170,19 @@ class DoaController extends ProgramAbstractController
      */
     public function renderAction()
     {
-        $organisationService = $this->getOrganisationService()->setOrganisationId(
-            $this->params('organisation-id')
-        );
-        $program = $this->getProgramService()->findEntityById(
-            'Program',
-            $this->params('program-id')
-        );
+        $organisation = $this->getOrganisationService()->findOrganisationById($this->params('organisationId'));
+        $program = $this->getProgramService()->findProgramById($this->params('programId'));
+
         //Create an empty Doa object
         $programDoa = new Doa();
         $programDoa->setContact($this->zfcUserAuthentication()->getIdentity());
-        $programDoa->setOrganisation($organisationService->getOrganisation());
+        $programDoa->setOrganisation($organisation);
         $programDoa->setProgram($program);
-        $renderProjectDoa = $this->renderProgramDoa()->renderForDoa($programDoa);
+        $renderProjectDoa = $this->renderDoa($programDoa);
         $response = $this->getResponse();
-        $response->getHeaders()
-            ->addHeaderLine('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
-            ->addHeaderLine("Pragma: public")
-            ->addHeaderLine(
-                'Content-Disposition',
-                'attachment; filename="'.$programDoa->parseFileName().'.pdf"'
-            )
+        $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
+            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
+            ->addHeaderLine('Content-Disposition', 'attachment; filename="' . $programDoa->parseFileName() . '.pdf"')
             ->addHeaderLine('Content-Type: application/pdf')
             ->addHeaderLine('Content-Length', strlen($renderProjectDoa->getPDFData()));
         $response->setContent($renderProjectDoa->getPDFData());
@@ -230,7 +196,7 @@ class DoaController extends ProgramAbstractController
     public function downloadAction()
     {
         set_time_limit(0);
-        $doa = $this->getProgramService()->findEntityById('Doa', $this->params('id'));
+        $doa = $this->getProgramService()->findEntityById(Doa::class, $this->params('id'));
         if (is_null($doa) || sizeof($doa->getObject()) === 0) {
             return $this->notFoundAction();
         }
@@ -240,17 +206,13 @@ class DoaController extends ProgramAbstractController
         $object = $doa->getObject()->first()->getObject();
         $response = $this->getResponse();
         $response->setContent(stream_get_contents($object));
-        $response->getHeaders()
-            ->addHeaderLine('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
-            ->addHeaderLine(
+        $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
+            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine(
                 'Content-Disposition',
-                'attachment; filename="'.$doa->parseFileName().'.'.
-                $doa->getContentType()->getExtension().'"'
+                'attachment; filename="' . $doa->parseFileName() . '.' . $doa->getContentType()->getExtension() . '"'
             )
-            ->addHeaderLine("Pragma: public")
-            ->addHeaderLine('Content-Type: '.$doa->getContentType()->getContentType())
-            ->addHeaderLine('Content-Length: '.$doa->getSize());
+            ->addHeaderLine("Pragma: public")->addHeaderLine('Content-Type: ' . $doa->getContentType()
+                    ->getContentType())->addHeaderLine('Content-Length: ' . $doa->getSize());
 
         return $this->response;
     }

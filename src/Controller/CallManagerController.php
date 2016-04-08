@@ -60,7 +60,7 @@ class CallManagerController extends ProgramAbstractController
      */
     public function viewAction()
     {
-        $call = $this->getProgramService()->findEntityById('Call\Call', $this->params('id'));
+        $call = $this->getProgramService()->findEntityById(Call::class, $this->params('id'));
         if (is_null($call)) {
             return $this->notFoundAction();
         }
@@ -83,7 +83,7 @@ class CallManagerController extends ProgramAbstractController
     {
         $data = array_merge($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
 
-        $form = $this->getFormService()->prepare('Call\Call', null, $data);
+        $form = $this->getFormService()->prepare(Call::class, null, $data);
         $form->remove('delete');
 
         $form->setAttribute('class', 'form-horizontal');
@@ -114,11 +114,10 @@ class CallManagerController extends ProgramAbstractController
      */
     public function editAction()
     {
-        $call = $this->getProgramService()->findEntityById('Call\Call', $this->params('id'));
-
+        $call = $this->getProgramService()->findEntityById(Call::class, $this->params('id'));
         $data = array_merge($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
 
-        $form = $this->getFormService()->prepare($call->get('entity_name'), $call, $data);
+        $form = $this->getFormService()->prepare($call, $call, $data);
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {

@@ -25,29 +25,28 @@
     </thead>
     <tbody>
     {% for ideaSession in session.ideaSession %}
-        {% set ideaService = ideaServiceProxy(ideaSession.idea) %}
         <tr>
             <td>{{ ideaSession.schedule }}</td>
-            <td>{{ ideaService.idea.number }}</td>
-            <td>{{ ideaLink(ideaService,'view','name') }}
+            <td>{{ ideaSession.idea.number }}</td>
+            <td>{{ ideaLink(ideaSession.idea,'view','name') }}
                 {% if session.id in [17,20] %}
-                    {% for document in ideaService.idea.document if 'pitch' in document.document and document.contentType.id == 1 %}
+                    {% for document in ideaSession.idea.document if 'pitch' in document.document and document.contentType.id == 1 %}
                         {{ ideaDocumentLink(document,'download','icon') }}
                     {% endfor %}
                 {% endif %}
                 {% if session.id in [21] %}
-                    {% for document in ideaService.idea.document if 'day1' in document.document and document.contentType.id == 1 %}
+                    {% for document in ideaSession.idea.document if 'day1' in document.document and document.contentType.id == 1 %}
                         {{ ideaDocumentLink(document,'download','icon') }}
                     {% endfor %}
                 {% endif %}
                 {% if session.id in [24] %}
-                    {% for document in ideaService.idea.document if 'day2' in document.document and document.contentType.id == 1 %}
+                    {% for document in ideaSession.idea.document if 'day2' in document.document and document.contentType.id == 1 %}
                         {{ ideaDocumentLink(document,'download','icon') }}
                     {% endfor %}
                 {% endif %}
             </td>
-            <td>{{ ideaService.idea.title }}</td>
-            <td>{{ ideaService.idea.contact.displayName() }}</td>
+            <td>{{ ideaSession.idea.title }}</td>
+            <td>{{ ideaSession.idea.contact.displayName() }}</td>
         </tr>
     {% endfor %}
     </tbody>

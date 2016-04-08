@@ -2,46 +2,52 @@
 /**
  * ITEA Office copyright message placeholder.
  *
- * @category    Program
+ * PHP Version 5
+ *
+ * @category    Project
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   2004-2016 ITEA Office
+ * @license     https://itea3.org/license.txt proprietary
+ *
+ * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
 namespace Program\Form;
 
 use Program\Entity\EntityAbstract;
+use Doctrine\ORM\EntityManager;
 use Zend\Form\Form;
-use Zend\ServiceManager\ServiceManager;
 
 /**
- * Create a link to an project.
+ * Jield webdev copyright message placeholder.
  *
- * @category   Program
+ * @category    Program
  *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    https://itea3.org/licence.txt proprietary
- *
- * @link       https://itea3.org
+ * @author      Johan van der Heide <info@jield.nl>
+ * @copyright   Copyright (c) 2015-2016 Jield (http://jield.nl)
  */
 class CreateObject extends Form
 {
     /**
-     * @var ServiceManager
-     */
-    protected $serviceManager;
-
-    /**
-     * @param ServiceManager $serviceManager
+     * CreateObject constructor.
+     *
+     * @param EntityManager  $entityManager
      * @param EntityAbstract $object
      */
-    public function __construct(ServiceManager $serviceManager, EntityAbstract $object)
+    public function __construct(EntityManager $entityManager, EntityAbstract $object)
     {
-        parent::__construct($object->get('underscore_entity_name'));
-        $this->serviceManager = $serviceManager;
-        $entityManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
-        $objectSpecificFieldset = '\Program\Form\\'.ucfirst($object->get('entity_name')).'Fieldset';
-        /*
+        parent::__construct($object->get("underscore_entity_name"));
+
+        /**
+         * There is an option to drag the fieldset from the serviceManager,
+         * We then need to check if if an factory is present,
+         * If not we will use the default ObjectFieldset
+         */
+
+        $objectSpecificFieldset = $object->get('entity_fieldset_name');
+
+        /**
          * Load a specific fieldSet when present
          */
         if (class_exists($objectSpecificFieldset)) {
@@ -51,39 +57,42 @@ class CreateObject extends Form
         }
         $objectFieldset->setUseAsBaseFieldset(true);
         $this->add($objectFieldset);
+
+
         $this->setAttribute('method', 'post');
         $this->setAttribute('class', 'form-horizontal');
-        $this->setAttribute('action', '');
 
-        $this->add(
-            [
-                'type'       => 'Zend\Form\Element\Submit',
-                'name'       => 'submit',
-                'attributes' => [
-                    'class' => "btn btn-primary",
-                    'value' => _("txt-submit"),
-                ],
-            ]
-        );
-        $this->add(
-            [
-                'type'       => 'Zend\Form\Element\Submit',
-                'name'       => 'cancel',
-                'attributes' => [
-                    'class' => "btn btn-warning",
-                    'value' => _("txt-cancel"),
-                ],
-            ]
-        );
-        $this->add(
-            [
-                'type'       => 'Zend\Form\Element\Submit',
-                'name'       => 'delete',
-                'attributes' => [
-                    'class' => "btn btn-danger",
-                    'value' => _("txt-delete"),
-                ],
-            ]
-        );
+        $this->add([
+            'type'       => 'Zend\Form\Element\Submit',
+            'name'       => 'submit',
+            'attributes' => [
+                'class' => "btn btn-primary",
+                'value' => _("txt-submit"),
+            ],
+        ]);
+        $this->add([
+            'type'       => 'Zend\Form\Element\Submit',
+            'name'       => 'cancel',
+            'attributes' => [
+                'class' => "btn btn-warning",
+                'value' => _("txt-cancel"),
+            ],
+        ]);
+        $this->add([
+            'type'       => 'Zend\Form\Element\Submit',
+            'name'       => 'delete',
+            'attributes' => [
+                'class' => "btn btn-danger",
+                'value' => _("txt-delete"),
+            ],
+        ]);
+        $this->add([
+            'type'       => 'Zend\Form\Element\Submit',
+            'name'       => 'restore',
+            'attributes' => [
+                'class' => "btn btn-info",
+                'value' => _("txt-restore"),
+            ],
+        ]);
     }
 }

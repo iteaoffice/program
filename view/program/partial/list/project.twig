@@ -2,13 +2,12 @@
 
 <div class="row">
     {% for project in projects %}
-    {% set projectService = projectServiceProxy(project) %}
     <div class="col-md-2">
         <div class="thumbnail">
-            {% set projectImage = '<div class="information-box-image">' ~ projectLogo(projectService, 'img-responsive') ~ '</div>' %}
-            {{ projectLink(projectService,'view','alternativeShow',null,projectImage) }}
+            {% set projectImage = '<div class="information-box-image">' ~ projectLogo(project, 'img-responsive') ~ '</div>' %}
+            {{ projectLink(project,'view','alternativeShow',null,projectImage) }}
             <p class="information-box-title text-center">
-                {{ projectLink(projectService,'view','name-without-number') }}
+                {{ projectLink(project,'view','name-without-number') }}
             </p>
         </div>
     </div>

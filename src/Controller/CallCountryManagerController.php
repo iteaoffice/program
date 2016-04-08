@@ -15,6 +15,7 @@
 
 namespace Program\Controller;
 
+use General\Entity\Country;
 use Program\Entity\Call\Country as CallCountry;
 use Zend\View\Model\ViewModel;
 
@@ -36,7 +37,7 @@ class CallCountryManagerController extends ProgramAbstractController
         /**
          * @var $callCountry CallCountry
          */
-        $callCountry = $this->getCallService()->findEntityById('Call\Country', (int)$this->params('id'));
+        $callCountry = $this->getCallService()->findEntityById(CallCountry::class, (int)$this->params('id'));
 
         if (is_null($callCountry)) {
             return $this->notFoundAction();
@@ -55,7 +56,7 @@ class CallCountryManagerController extends ProgramAbstractController
         /**
          * @var $callCountry CallCountry
          */
-        $callCountry = $this->getCallService()->findEntityById('Call\Country', (int)$this->params('id'));
+        $callCountry = $this->getCallService()->findEntityById(CallCountry::class, (int)$this->params('id'));
 
 
         if (is_null($callCountry)) {
@@ -63,7 +64,7 @@ class CallCountryManagerController extends ProgramAbstractController
         }
 
         $data = array_merge($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
-        $form = $this->getFormService()->prepare($callCountry->get('entity_name'), $callCountry, $data);
+        $form = $this->getFormService()->prepare($callCountry, $callCountry, $data);
         $country = $callCountry->getCountry();
 
         if ($this->getRequest()->isPost()) {
@@ -119,11 +120,11 @@ class CallCountryManagerController extends ProgramAbstractController
         /**
          * Find the corresponding call and country and process
          */
-        $callService = $this->getCallService()->setCallId($this->params('call'));
-        /** @var \General\Entity\Country $country */
-        $country = $this->getGeneralService()->findEntityById('country', $this->params('country'));
+        $call = $this->getCallService()->findCallById($this->params('call'));
+        /** @var Country $country */
+        $country = $this->getGeneralService()->findEntityById(Country::class, $this->params('country'));
 
-        if ($callService->isEmpty() || is_null($country)) {
+        if (is_null($call) || is_null($country)) {
             return $this->notFoundAction();
         }
 
@@ -131,12 +132,12 @@ class CallCountryManagerController extends ProgramAbstractController
          * @var $country CallCountry
          */
         $callCountry = new CallCountry();
-        $callCountry->setCall($callService->getCall());
+        $callCountry->setCall($call);
         $callCountry->setCountry($country);
 
         $data = array_merge($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
 
-        $form = $this->getFormService()->prepare($callCountry->get('entity_name'), $callCountry, $data);
+        $form = $this->getFormService()->prepare($callCountry, $callCountry, $data);
 
         $form->remove('delete');
 
@@ -152,7 +153,7 @@ class CallCountryManagerController extends ProgramAbstractController
                  * @var $callCountry CallCountry
                  */
                 $callCountry = $form->getData();
-                $callCountry->setCall($callService->getCall());
+                $callCountry->setCall($call);
                 $callCountry->setCountry($country);
 
                 $this->getCallService()->updateEntity($callCountry);

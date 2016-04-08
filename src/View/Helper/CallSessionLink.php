@@ -96,7 +96,7 @@ class CallSessionLink extends LinkAbstract
                     'route-' . str_replace(
                         'doctrineormmodule_proxy___cg___',
                         '',
-                        $this->getSession()->get("underscore_full_entity_name")
+                        $this->getSession()->get("underscore_entity_name")
                     )
                 );
                 $this->setText(sprintf($this->translate("txt-view-session-%s"), $this->getSession()->getSession()));

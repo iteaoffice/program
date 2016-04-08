@@ -56,7 +56,7 @@ class CallInformationBox extends AbstractHelper
             CallService::FPP_GRACE    => "%call% for Full Project Proposals will close %diff% from now (deadline: %time%), but a grace period for accepting Project Outlines is still open",
             CallService::FPP_CLOSED   => "%call% for Full Project Proposals closed %diff% ago (deadline: %time%)",
         ];
-        $callStatus = $this->getCallService()->setCall($call)->getCallStatus();
+        $callStatus = $this->getCallService()->getCallStatus($call);
         /*
          * Return null when we have an undefined status
          */

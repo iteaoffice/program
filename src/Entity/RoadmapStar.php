@@ -23,6 +23,7 @@ use Zend\Form\Annotation;
  * @ORM\Entity
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("roadmap_star")
+ * @deprecated
  */
 class RoadmapStar
 {

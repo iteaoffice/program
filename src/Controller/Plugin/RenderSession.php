@@ -93,7 +93,7 @@ class RenderSession extends AbstractPlugin
     {
         $pdf = new ProgramPdf();
         $pdf->setTemplate($this->getModuleOptions()->getBlankTemplate());
-        $pdf->addPage();
+        $pdf->AddPage();
         $pdf->SetFontSize(8);
         $pdf->SetTopMargin(30);
 

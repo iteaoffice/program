@@ -18,7 +18,6 @@ use Program\Entity;
 use Program\Entity\EntityAbstract;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
-use Zend\Authentication\AuthenticationService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -50,14 +49,6 @@ abstract class ServiceAbstract implements ServiceInterface
      * @var ProjectService
      */
     protected $projectService;
-    /**
-     * @var Entity\Program
-     */
-    protected $program;
-    /**
-     * @var Entity\Call\Call
-     */
-    protected $call;
 
     /**
      * @param      $entity
@@ -67,7 +58,7 @@ abstract class ServiceAbstract implements ServiceInterface
      */
     public function findAll($entity, $toArray = false)
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->findAll();
+        return $this->getEntityManager()->getRepository($entity)->findAll();
     }
 
     /**
@@ -78,7 +69,7 @@ abstract class ServiceAbstract implements ServiceInterface
      */
     public function findEntityById($entity, $id)
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->find($id);
+        return $this->getEntityManager()->getRepository($entity)->find($id);
     }
 
     /**
@@ -131,41 +122,6 @@ abstract class ServiceAbstract implements ServiceInterface
     }
 
     /**
-     * Build dynamically a entity based on the full entity name.
-     *
-     * @param $entity
-     *
-     * @return mixed
-     */
-    public function getEntity($entity)
-    {
-        $entity = $this->getFullEntityName($entity);
-
-        return new $entity();
-    }
-
-    /**
-     * Create a full path to the entity for Doctrine.
-     *
-     * @param $entity
-     *
-     * @return string
-     */
-    public function getFullEntityName($entity)
-    {
-        /*
-         * Convert a - to a camelCased situation
-         */
-        if (strpos($entity, '-') !== false) {
-            $entity = explode('-', $entity);
-            $entity = $entity[0] . ucfirst($entity[1]);
-        }
-
-        return ucfirst(implode('', array_slice(explode('\\', __NAMESPACE__), 0, 1))) . '\\' . 'Entity' . '\\'
-        . ucfirst($entity);
-    }
-
-    /**
      * @return \Doctrine\ORM\EntityManager
      */
     public function getEntityManager()
@@ -181,26 +137,6 @@ abstract class ServiceAbstract implements ServiceInterface
     public function setEntityManager($entityManager)
     {
         $this->entityManager = $entityManager;
-
-        return $this;
-    }
-
-    /**
-     * @return AuthenticationService
-     */
-    public function getAuthenticationService()
-    {
-        return $this->authenticationService;
-    }
-
-    /**
-     * @param AuthenticationService $authenticationService
-     *
-     * @return ServiceAbstract
-     */
-    public function setAuthenticationService($authenticationService)
-    {
-        $this->authenticationService = $authenticationService;
 
         return $this;
     }
@@ -305,46 +241,6 @@ abstract class ServiceAbstract implements ServiceInterface
     public function setProjectService($projectService)
     {
         $this->projectService = $projectService;
-
-        return $this;
-    }
-
-    /**
-     * @return Entity\Program
-     */
-    public function getProgram()
-    {
-        return $this->program;
-    }
-
-    /**
-     * @param Entity\Program $program
-     *
-     * @return ServiceAbstract
-     */
-    public function setProgram($program)
-    {
-        $this->program = $program;
-
-        return $this;
-    }
-
-    /**
-     * @return Entity\Call\Call
-     */
-    public function getCall()
-    {
-        return $this->call;
-    }
-
-    /**
-     * @param Entity\Call\Call $call
-     *
-     * @return ServiceAbstract
-     */
-    public function setCall($call)
-    {
-        $this->call = $call;
 
         return $this;
     }

@@ -25,7 +25,10 @@ use Zend\Mvc\Controller\PluginManager;
 /**
  *
  */
-class Module implements Feature\AutoloaderProviderInterface, Feature\ServiceProviderInterface, Feature\ConfigProviderInterface
+class Module implements
+    Feature\AutoloaderProviderInterface,
+    Feature\ConfigProviderInterface,
+    Feature\ControllerPluginProviderInterface
 {
     /**
      * @return array
@@ -36,11 +39,6 @@ class Module implements Feature\AutoloaderProviderInterface, Feature\ServiceProv
             'Zend\Loader\ClassMapAutoloader' => [
                 __DIR__ . '/../autoload_classmap.php',
             ],
-            'Zend\Loader\StandardAutoloader' => [
-                'namespaces' => [
-                    __NAMESPACE__ => __DIR__ . '/../src/',
-                ],
-            ],
         ];
     }
 
@@ -50,16 +48,6 @@ class Module implements Feature\AutoloaderProviderInterface, Feature\ServiceProv
     public function getConfig()
     {
         return include __DIR__ . '/../config/module.config.php';
-    }
-
-    /**
-     * Go to the service configuration.
-     *
-     * @return array
-     */
-    public function getServiceConfig()
-    {
-        return include __DIR__ . '/../config/services.config.php';
     }
 
     /**
