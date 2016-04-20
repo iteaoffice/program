@@ -16,19 +16,12 @@
 namespace Program;
 
 use Program\Controller\Plugin;
-use Program\Controller\Plugin\RenderDoa;
-use Program\Controller\Plugin\RenderNda;
-use Program\Controller\Plugin\RenderSession;
 use Zend\ModuleManager\Feature;
-use Zend\Mvc\Controller\PluginManager;
 
 /**
  *
  */
-class Module implements
-    Feature\AutoloaderProviderInterface,
-    Feature\ConfigProviderInterface,
-    Feature\ControllerPluginProviderInterface
+class Module implements Feature\AutoloaderProviderInterface, Feature\ConfigProviderInterface
 {
     /**
      * @return array
@@ -48,39 +41,5 @@ class Module implements
     public function getConfig()
     {
         return include __DIR__ . '/../config/module.config.php';
-    }
-
-    /**
-     * Move this to here to have config cache working.
-     *
-     * @return array
-     */
-    public function getControllerPluginConfig()
-    {
-        return [
-            'invokables' => [
-                'getProgramFilter' => Plugin\GetFilter::class,
-            ],
-            'factories'  => [
-                'renderNda'        => function (PluginManager $sm) {
-                    $renderNda = new RenderNda();
-                    $renderNda->setServiceLocator($sm->getServiceLocator());
-
-                    return $renderNda;
-                },
-                'renderProgramDoa' => function (PluginManager $sm) {
-                    $renderDoa = new RenderDoa();
-                    $renderDoa->setServiceLocator($sm->getServiceLocator());
-
-                    return $renderDoa;
-                },
-                'renderSession'    => function (PluginManager $sm) {
-                    $renderSession = new RenderSession();
-                    $renderSession->setServiceLocator($sm->getServiceLocator());
-
-                    return $renderSession;
-                },
-            ],
-        ];
     }
 }

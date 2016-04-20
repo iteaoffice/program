@@ -42,14 +42,12 @@ class NdaLink extends LinkAbstract
     protected $call;
 
     /**
-     * @param Nda    $nda
-     * @param string $action
-     * @param string $show
-     * @param Call   $call program_acl_assertion_nda
+     * @param Nda|null  $nda
+     * @param string    $action
+     * @param string    $show
+     * @param Call|null $call
      *
      * @return string
-     *
-     * @throws \Exception
      */
     public function __invoke(Nda $nda = null, $action = 'upload', $show = 'text', Call $call = null)
     {
@@ -81,7 +79,7 @@ class NdaLink extends LinkAbstract
             $arrayCollection = new ArrayCollection([$this->getCall()]);
             $this->nda->setCall($arrayCollection);
         }
-        
+
         return $this->nda;
     }
 

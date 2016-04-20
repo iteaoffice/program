@@ -23,11 +23,6 @@ use Program\Options\ModuleOptions;
 use Program\Service\CallService;
 use Program\Service\ProgramService;
 use Project\Service\ProjectService;
-use Zend\Mvc\Router\Http\RouteMatch;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\View\Helper\AbstractHelper;
-use Zend\View\HelperPluginManager;
-use ZfcTwig\View\TwigRenderer;
 
 /**
  * Create a link to an project.
@@ -39,12 +34,8 @@ use ZfcTwig\View\TwigRenderer;
  *
  * @link       https://itea3.org
  */
-class ProgramHandler extends AbstractHelper
+class ProgramHandler extends AbstractViewHelper
 {
-    /**
-     * @var HelperPluginManager
-     */
-    protected $serviceLocator;
     /**
      * @var Session
      */
@@ -94,7 +85,6 @@ class ProgramHandler extends AbstractHelper
     public function extractContentParam(Content $content)
     {
         if (!is_null($this->getRouteMatch()->getParam('docRef'))) {
-
             //First try to find the call via the docref
             /** @var Call $call */
             $call = $this->getCallService()
@@ -134,38 +124,6 @@ class ProgramHandler extends AbstractHelper
     }
 
     /**
-     * @return RouteMatch
-     */
-    public function getRouteMatch()
-    {
-        return $this->getServiceLocator()->get('application')->getMvcEvent()->getRouteMatch();
-    }
-
-    /**
-     * Get the service locator.
-     *
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator->getServiceLocator();
-    }
-
-    /**
-     * Set the service locator.
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return AbstractHelper
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-
-        return $this;
-    }
-
-    /**
      * @param $callId
      */
     public function setCallById($callId)
@@ -199,7 +157,7 @@ class ProgramHandler extends AbstractHelper
      */
     public function getCallService()
     {
-        return $this->getServiceLocator()->get(CallService::class);
+        return $this->getServiceManager()->get(CallService::class);
     }
 
     /**
@@ -207,7 +165,7 @@ class ProgramHandler extends AbstractHelper
      */
     public function getAffiliationService()
     {
-        return $this->getServiceLocator()->get(AffiliationService::class);
+        return $this->getServiceManager()->get(AffiliationService::class);
     }
 
 
@@ -216,7 +174,7 @@ class ProgramHandler extends AbstractHelper
      */
     public function getProgramService()
     {
-        return $this->getServiceLocator()->get(ProgramService::class);
+        return $this->getServiceManager()->get(ProgramService::class);
     }
 
     /**
@@ -224,7 +182,7 @@ class ProgramHandler extends AbstractHelper
      */
     public function getModuleOptions()
     {
-        return $this->getServiceLocator()->get(ModuleOptions::class);
+        return $this->getServiceManager()->get(ModuleOptions::class);
     }
 
     /**
@@ -234,7 +192,7 @@ class ProgramHandler extends AbstractHelper
      */
     public function parseCallTitle(Call $call)
     {
-        return $this->getZfcTwigRenderer()->render('program/partial/entity/programcall-title', [
+        return $this->getRenderer()->render('program/partial/entity/programcall-title', [
             'call' => $call,
         ]);
     }
@@ -247,7 +205,7 @@ class ProgramHandler extends AbstractHelper
      */
     public function parseCallSelector(Call $call = null, Program $program = null)
     {
-        return $this->getZfcTwigRenderer()->render('program/partial/call-selector', [
+        return $this->getRenderer()->render('program/partial/call-selector', [
             'displayNameCall'   => 'name',
             'calls'             => $this->getCallService()->findNonEmptyCalls($program),
             'callId'            => !is_null($call) ? $call->getId() : null,
@@ -285,7 +243,7 @@ class ProgramHandler extends AbstractHelper
         /**
          * @var $countryMap CountryMap
          */
-        $countryMap = $this->serviceLocator->get('countryMap');
+        $countryMap = $this->getHelperPluginManager()->get('countryMap');
 
         return $countryMap($countries, null, $mapOptions);
     }
@@ -301,7 +259,7 @@ class ProgramHandler extends AbstractHelper
             = $this->getProjectModuleOptions()->getProjectHasVersions() ? ProjectService::WHICH_ONLY_ACTIVE
             : ProjectService::WHICH_ALL;
 
-        return $this->getZfcTwigRenderer()->render('program/partial/list/project', [
+        return $this->getRenderer()->render('program/partial/list/project', [
             'call'     => $this->getCallService(),
             'projects' => $this->getCallService()->getProjectService()->findProjectsByCall($call, $whichProjects)
                 ->getQuery()->getResult(),
@@ -313,17 +271,9 @@ class ProgramHandler extends AbstractHelper
      */
     public function parseProgramcallTitle()
     {
-        return $this->getZfcTwigRenderer()->render('program/partial/entity/programcall-title', [
+        return $this->getRenderer()->render('program/partial/entity/programcall-title', [
             'call' => $this->getCallService(),
         ]);
-    }
-
-    /**
-     * @return TwigRenderer
-     */
-    public function getZfcTwigRenderer()
-    {
-        return $this->getServiceLocator()->get('ZfcTwigRenderer');
     }
 
     /**
@@ -333,7 +283,7 @@ class ProgramHandler extends AbstractHelper
      */
     public function parseSessionOverview(Session $session)
     {
-        return $this->getZfcTwigRenderer()->render('program/partial/entity/session', ['session' => $session]);
+        return $this->getRenderer()->render('program/partial/entity/session', ['session' => $session]);
     }
 
     /**
@@ -341,7 +291,7 @@ class ProgramHandler extends AbstractHelper
      */
     public function getProjectModuleOptions()
     {
-        return $this->getServiceLocator()->get(\Project\Options\ModuleOptions::class);
+        return $this->getServiceManager()->get(\Project\Options\ModuleOptions::class);
     }
 
     /**
@@ -402,16 +352,5 @@ class ProgramHandler extends AbstractHelper
         $this->call = $call;
 
         return $this;
-    }
-
-
-    /**
-     * @param $string
-     *
-     * @return string
-     */
-    public function translate($string)
-    {
-        return $this->serviceLocator->get('translate')->__invoke($string);
     }
 }

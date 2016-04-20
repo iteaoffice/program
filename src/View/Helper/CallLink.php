@@ -29,11 +29,6 @@ use Program\Entity\Call\Call;
 class CallLink extends LinkAbstract
 {
     /**
-     * @var Call
-     */
-    protected $call;
-
-    /**
      * @param Call   $call
      * @param string $action
      * @param string $show
@@ -62,26 +57,6 @@ class CallLink extends LinkAbstract
         $this->addRouterParam('entity', 'call');
 
         return $this->createLink();
-    }
-
-    /**
-     * @return Call
-     */
-    public function getCall()
-    {
-        return $this->call;
-    }
-
-    /**
-     * @param Call $call
-     *
-     * @return CallLink
-     */
-    public function setCall($call)
-    {
-        $this->call = $call;
-
-        return $this;
     }
 
     /**

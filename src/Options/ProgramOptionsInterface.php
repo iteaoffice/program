@@ -105,16 +105,16 @@ interface ProgramOptionsInterface
     /**
      * Returns the assigned hex color of the country map.
      *
-     * @param string $requireMembership
+     * @param string $requirePartnership
      *
      * @return ModuleOptions
      */
-    public function setRequireMembership($requireMembership);
+    public function setRequirePartnership($requirePartnership);
 
     /**
      * Returns the assigned hex color of the country map.
      *
      * @return string
      */
-    public function getRequireMembership();
+    public function getRequirePartnership();
 }

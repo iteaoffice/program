@@ -50,7 +50,6 @@ class Program extends EntityRepository
                 break;
             default:
                 $queryBuilder->addOrderBy('p.id', $direction);
-
         }
 
         return $queryBuilder->getQuery();

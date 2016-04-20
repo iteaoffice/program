@@ -61,7 +61,6 @@ class Call extends EntityRepository
                 break;
             default:
                 $queryBuilder->addOrderBy('c.id', $direction);
-
         }
 
         return $queryBuilder->getQuery();

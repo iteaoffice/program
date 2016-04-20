@@ -28,11 +28,6 @@ use Program\Entity\Program;
 class ProgramLink extends LinkAbstract
 {
     /**
-     * @var Program
-     */
-    protected $program;
-
-    /**
      * @param \Program\Entity\Program $program
      * @param                         $action
      * @param                         $show
@@ -60,22 +55,6 @@ class ProgramLink extends LinkAbstract
         }
 
         return $this->createLink();
-    }
-
-    /**
-     * @return Program
-     */
-    public function getProgram()
-    {
-        return $this->program;
-    }
-
-    /**
-     * @param Program $program
-     */
-    public function setProgram($program)
-    {
-        $this->program = $program;
     }
 
     /**

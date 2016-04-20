@@ -16,9 +16,6 @@ namespace Program\View\Helper;
 
 use Program\Entity\Call\Call;
 use Program\Service\CallService;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\View\Helper\AbstractHelper;
-use Zend\View\HelperPluginManager;
 
 /**
  * Create a link to an project.
@@ -30,12 +27,8 @@ use Zend\View\HelperPluginManager;
  *
  * @link       https://itea3.org
  */
-class CallInformationBox extends AbstractHelper
+class CallInformationBox extends AbstractViewHelper
 {
-    /**
-     * @var HelperPluginManager
-     */
-    protected $serviceLocator;
 
     /**
      * @param Call $call
@@ -96,7 +89,6 @@ class CallInformationBox extends AbstractHelper
             default:
                 $type = 'info';
                 break;
-
         }
 
         return sprintf($alert, $type, $result, $content);
@@ -107,30 +99,6 @@ class CallInformationBox extends AbstractHelper
      */
     public function getCallService()
     {
-        return $this->getServiceLocator()->get(CallService::class);
-    }
-
-    /**
-     * Get the service locator.
-     *
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator->getServiceLocator();
-    }
-
-    /**
-     * Set the service locator.
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return AbstractHelper
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-
-        return $this;
+        return $this->getServiceManager()->get(CallService::class);
     }
 }

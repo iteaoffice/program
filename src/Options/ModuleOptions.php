@@ -83,11 +83,11 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
      */
     protected $countryColorFaded = '#005C00';
     /**
-     * Trigger to see if you need to be member before applying for a project
+     * Trigger to see if you need to be partner before applying for a project
      *
      * @var string
      */
-    protected $requireMembership = false;
+    protected $requirePartnership = false;
 
     /**
      * @return string
@@ -236,19 +236,19 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
     /**
      * @return string
      */
-    public function getRequireMembership()
+    public function getRequirePartnership()
     {
-        return $this->requireMembership;
+        return $this->requirePartnership;
     }
 
     /**
-     * @param string $requireMembership
+     * @param string $requirePartnership
      *
      * @return ModuleOptions
      */
-    public function setRequireMembership($requireMembership)
+    public function setRequirePartnership($requirePartnership)
     {
-        $this->requireMembership = $requireMembership;
+        $this->requirePartnership = $requirePartnership;
 
         return $this;
     }

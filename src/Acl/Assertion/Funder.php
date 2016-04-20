@@ -36,6 +36,6 @@ class Funder extends AssertionAbstract
      */
     public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
     {
-        return $this->rolesHaveAccess([strtolower(Access::ACCESS_OFFICE)]);
+        return $this->rolesHaveAccess([Access::ACCESS_OFFICE]);
     }
 }

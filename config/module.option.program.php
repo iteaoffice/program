@@ -20,7 +20,7 @@ $options = [
         && (defined("DEBRANOVA_HOST") ? DEBRANOVA_HOST : 'test') === 'artemisia'),
     'country_color'       => '#00a651',
     'country_color_faded' => '#005C00',
-    'require_membership'  => (defined("DEBRANOVA_HOST")
+    'require_partnership'  => (defined("DEBRANOVA_HOST")
         && (defined("DEBRANOVA_HOST") ? DEBRANOVA_HOST : 'test') === 'penta'),
 ];
 /**

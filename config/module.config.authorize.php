@@ -19,41 +19,41 @@ return [
              * access to all routes unless they are specified here.
              */
             Route::class => [
-                ['route' => 'zfcadmin/program/edit', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
-                ['route' => 'zfcadmin/program/view', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
-                ['route' => 'zfcadmin/program/new', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
-                ['route' => 'zfcadmin/program/list', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
-                ['route' => 'zfcadmin/call/edit', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
-                ['route' => 'zfcadmin/call/view', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
-                ['route' => 'zfcadmin/call/new', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
-                ['route' => 'zfcadmin/call/list', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
-                ['route' => 'zfcadmin/call/country/edit', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
-                ['route' => 'zfcadmin/call/country/view', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
-                ['route' => 'zfcadmin/call/country/new', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
+                ['route' => 'zfcadmin/program/edit', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/program/view', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/program/new', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/program/list', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/call/edit', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/call/view', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/call/new', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/call/list', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/call/country/edit', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/call/country/view', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/call/country/new', 'roles' => [Access::ACCESS_OFFICE]],
                 [
                     'route'     => 'zfcadmin/nda/approval',
-                    'roles'     => [strtolower(Access::ACCESS_OFFICE)],
+                    'roles'     => [Access::ACCESS_OFFICE],
                     'assertion' => NdaAssertion::class
                 ],
                 [
                     'route'     => 'zfcadmin/nda/view',
-                    'roles'     => [strtolower(Access::ACCESS_OFFICE)],
+                    'roles'     => [Access::ACCESS_OFFICE],
                     'assertion' => NdaAssertion::class
                 ],
                 [
                     'route'     => 'zfcadmin/nda/edit',
-                    'roles'     => [strtolower(Access::ACCESS_OFFICE)],
+                    'roles'     => [Access::ACCESS_OFFICE],
                     'assertion' => NdaAssertion::class
                 ],
                 [
                     'route'     => 'zfcadmin/nda/approve',
-                    'roles'     => [strtolower(Access::ACCESS_OFFICE)],
+                    'roles'     => [Access::ACCESS_OFFICE],
                     'assertion' => NdaAssertion::class
                 ],
-                ['route' => 'zfcadmin/funder/view', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
-                ['route' => 'zfcadmin/funder/new', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
-                ['route' => 'zfcadmin/funder/list', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
-                ['route' => 'zfcadmin/funder/edit', 'roles' => [strtolower(Access::ACCESS_OFFICE)]],
+                ['route' => 'zfcadmin/funder/view', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/funder/new', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/funder/list', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/funder/edit', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'community/program/session/download', 'roles' => [strtolower(Access::ACCESS_USER)],],
                 ['route' => 'community/program/nda/upload', 'roles' => [], 'assertion' => NdaAssertion::class],
                 ['route' => 'community/program/nda/view', 'roles' => [], 'assertion' => NdaAssertion::class],

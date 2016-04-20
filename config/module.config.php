@@ -15,15 +15,36 @@ use Program\Service;
 use Program\View;
 
 $config = [
-    'controllers'     => [
-        'abstract_factories' => [
-            Controller\Factory\ControllerInvokableAbstractFactory::class
+    'controllers'        => [
+        'factories' => [
+            Controller\CallCountryManagerController::class => Controller\Factory\ControllerFactory::class,
+            Controller\CallManagerController::class        => Controller\Factory\ControllerFactory::class,
+            Controller\DoaController::class                => Controller\Factory\ControllerFactory::class,
+            Controller\FunderManagerController::class      => Controller\Factory\ControllerFactory::class,
+            Controller\NdaController::class                => Controller\Factory\ControllerFactory::class,
+            Controller\NdaManagerController::class         => Controller\Factory\ControllerFactory::class,
+            Controller\ProgramManagerController::class     => Controller\Factory\ControllerFactory::class,
+            Controller\SessionController::class            => Controller\Factory\ControllerFactory::class,
         ],
     ],
-    'view_manager'    => [
+    'controller_plugins' => [
+        'aliases'   => [
+            'getProgramFilter' => Controller\Plugin\GetFilter::class,
+            'renderNda'        => Controller\Plugin\RenderNda::class,
+            'renderProgramDoa' => Controller\Plugin\RenderDoa::class,
+            'renderSession'    => Controller\Plugin\RenderSession::class,
+        ],
+        'factories' => [
+            Controller\Plugin\GetFilter::class     => Controller\Factory\PluginFactory::class,
+            Controller\Plugin\RenderNda::class     => Controller\Factory\PluginFactory::class,
+            Controller\Plugin\RenderDoa::class     => Controller\Factory\PluginFactory::class,
+            Controller\Plugin\RenderSession::class => Controller\Factory\PluginFactory::class,
+        ]
+    ],
+    'view_manager'       => [
         'template_map' => include __DIR__ . '/../template_map.php',
     ],
-    'view_helpers'    => [
+    'view_helpers'       => [
         'aliases'   => [
             'callSessionLink'    => View\Helper\CallSessionLink::class,
             'programHandler'     => View\Helper\ProgramHandler::class,
@@ -36,36 +57,29 @@ $config = [
             'callCountryLink'    => View\Helper\CallCountryLink::class,
         ],
         'factories' => [
-            View\Helper\CallSessionLink::class    => View\Factory\LinkInvokableFactory::class,
-            View\Helper\ProgramHandler::class     => View\Factory\LinkInvokableFactory::class,
-            View\Helper\CallInformationBox::class => View\Factory\LinkInvokableFactory::class,
-            View\Helper\ProgramLink::class        => View\Factory\LinkInvokableFactory::class,
-            View\Helper\DoaLink::class            => View\Factory\LinkInvokableFactory::class,
-            View\Helper\CallLink::class           => View\Factory\LinkInvokableFactory::class,
-            View\Helper\NdaLink::class            => View\Factory\LinkInvokableFactory::class,
-            View\Helper\FunderLink::class         => View\Factory\LinkInvokableFactory::class,
-            View\Helper\CallCountryLink::class    => View\Factory\LinkInvokableFactory::class,
+            View\Helper\CallSessionLink::class    => View\Factory\ViewHelperFactory::class,
+            View\Helper\ProgramHandler::class     => View\Factory\ViewHelperFactory::class,
+            View\Helper\CallInformationBox::class => View\Factory\ViewHelperFactory::class,
+            View\Helper\ProgramLink::class        => View\Factory\ViewHelperFactory::class,
+            View\Helper\DoaLink::class            => View\Factory\ViewHelperFactory::class,
+            View\Helper\CallLink::class           => View\Factory\ViewHelperFactory::class,
+            View\Helper\NdaLink::class            => View\Factory\ViewHelperFactory::class,
+            View\Helper\FunderLink::class         => View\Factory\ViewHelperFactory::class,
+            View\Helper\CallCountryLink::class    => View\Factory\ViewHelperFactory::class,
         ]
     ],
-    'service_manager' => [
-        'factories'          => [
+    'service_manager'    => [
+        'factories' => [
             Service\ProgramService::class => Factory\ProgramServiceFactory::class,
             Service\CallService::class    => Factory\CallServiceFactory::class,
             Service\FormService::class    => Factory\FormServiceFactory::class,
             Options\ModuleOptions::class  => Factory\ModuleOptionsFactory::class,
+            Acl\Assertion\Doa::class      => Acl\Factory\AssertionFactory::class,
+            Acl\Assertion\Funder::class   => Acl\Factory\AssertionFactory::class,
+            Acl\Assertion\Nda::class      => Acl\Factory\AssertionFactory::class,
         ],
-        'abstract_factories' => [
-            Acl\Factory\AssertionInvokableAbstractFactory::class
-        ],
-        'invokables'         => [
-            'program_program_form_filter' => 'Program\Form\FilterCreateObject',
-            'program_call_form_filter'    => 'Program\Form\FilterCreateObject',
-            'program_nda_form_filter'     => 'Program\Form\FilterCreateObject',
-            'program_country_form_filter' => 'Program\Form\FilterCreateObject',
-            'program_funder_form_filter'  => 'Program\Form\FilterCreateObject'
-        ]
     ],
-    'doctrine'        => [
+    'doctrine'           => [
         'driver'       => [
             'program_annotation_driver' => [
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',

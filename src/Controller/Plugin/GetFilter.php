@@ -18,20 +18,18 @@ namespace Program\Controller\Plugin;
 
 use Zend\Http\Request;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\Mvc\Controller\PluginManager;
 use Zend\Mvc\Router\RouteMatch;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @category    Application
  */
-class GetFilter extends AbstractPlugin implements ServiceLocatorAwareInterface
+class GetFilter extends AbstractPlugin
 {
     /**
-     * @var PluginManager
+     * @var ServiceLocatorInterface
      */
-    protected $serviceManager;
+    protected $serviceLocator;
     /**
      * @var array
      */
@@ -143,9 +141,9 @@ class GetFilter extends AbstractPlugin implements ServiceLocatorAwareInterface
      *
      * @param ServiceLocatorInterface $serviceLocator
      */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    public function setServiceLocator($serviceLocator)
     {
-        $this->serviceManager = $serviceLocator;
+        $this->serviceLocator = $serviceLocator;
     }
 
     /**
@@ -155,6 +153,6 @@ class GetFilter extends AbstractPlugin implements ServiceLocatorAwareInterface
      */
     public function getServiceLocator()
     {
-        return $this->serviceManager->getServiceLocator();
+        return $this->serviceLocator;
     }
 }

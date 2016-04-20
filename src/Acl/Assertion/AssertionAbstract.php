@@ -18,6 +18,7 @@ use Admin\Service\AdminService;
 use Contact\Entity\Contact;
 use Contact\Service\ContactService;
 use Doctrine\ORM\PersistentCollection;
+use Interop\Container\ContainerInterface;
 use Organisation\Acl\Assertion\Organisation as OrganisationAssertion;
 use Organisation\Service\OrganisationService;
 use Program\Service\CallService;
@@ -108,6 +109,14 @@ abstract class AssertionAbstract implements AssertionInterface
     }
 
     /**
+     * @return bool
+     */
+    public function hasRouteMatch()
+    {
+        return !is_null($this->getRouteMatch());
+    }
+
+    /**
      * @return array
      */
     public function getAccessRoles()
@@ -186,7 +195,7 @@ abstract class AssertionAbstract implements AssertionInterface
         /**
          * When the privilege is_null (not given by the isAllowed helper), get it from the routeMatch
          */
-        if (is_null($privilege)) {
+        if (is_null($privilege) && $this->hasRouteMatch()) {
             $this->privilege = $this->getRouteMatch()
                 ->getParam('privilege', $this->getRouteMatch()->getParam('action'));
         } else {
@@ -207,6 +216,9 @@ abstract class AssertionAbstract implements AssertionInterface
         if (is_null($this->getRouteMatch())) {
             return null;
         }
+        if (!is_null($id = $this->getRouteMatch()->getParam('id'))) {
+            return (int)$id;
+        }
 
         return null;
     }
@@ -220,7 +232,7 @@ abstract class AssertionAbstract implements AssertionInterface
     }
 
     /**
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ServiceLocatorInterface|ContainerInterface $serviceLocator
      *
      * @return AssertionAbstract
      */
