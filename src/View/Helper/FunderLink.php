@@ -29,8 +29,8 @@ class FunderLink extends LinkAbstract
      * @param Funder $funder
      * @param string $action
      * @param string $show
-     * @param null $page
-     * @param null $alternativeShow
+     * @param null   $page
+     * @param null   $alternativeShow
      *
      * @return string
      *
@@ -49,12 +49,7 @@ class FunderLink extends LinkAbstract
         $this->setShow($show);
         $this->setPage($page);
 
-        if (!$this->hasAccess(
-            $this->getFunder(),
-            FunderAssertion::class,
-            $this->getAction()
-        )
-        ) {
+        if (!$this->hasAccess($this->getFunder(), FunderAssertion::class, $this->getAction())) {
             return '';
         }
 
@@ -68,11 +63,9 @@ class FunderLink extends LinkAbstract
         }
 
         if (!is_null($this->getFunder()->getContact())) {
-            $this->setShowOptions(
-                [
+            $this->setShowOptions([
                     'name' => $this->getFunder()->getContact()->getDisplayName(),
-                ]
-            );
+                ]);
         }
 
         $this->addRouterParam('id', $this->getFunder()->getId());
@@ -97,15 +90,17 @@ class FunderLink extends LinkAbstract
                 break;
             case 'edit':
                 $this->setRouter('zfcadmin/funder/edit');
-                $this->setText(
-                    sprintf($this->translate("txt-edit-funder-%s"), $this->getFunder()->getContact())
-                );
+                $this->setText(sprintf(
+                    $this->translate("txt-edit-funder-%s"),
+                    $this->getFunder()->getContact()->getDisplayName()
+                ));
                 break;
             case 'view-admin':
                 $this->setRouter('zfcadmin/funder/view');
-                $this->setText(
-                    sprintf($this->translate("txt-view-funder-%s"), $this->getFunder()->getContact())
-                );
+                $this->setText(sprintf(
+                    $this->translate("txt-view-funder-%s"),
+                    $this->getFunder()->getContact()->getDisplayName()
+                ));
                 break;
             default:
                 throw new \Exception(sprintf("%s is an incorrect action for %s", $this->getAction(), __CLASS__));

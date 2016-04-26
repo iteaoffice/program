@@ -10,7 +10,11 @@
 
 namespace Program\Controller;
 
+use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
+use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use Program\Entity\Funder;
+use Program\Form\ProgramFilter;
+use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -21,12 +25,29 @@ use Zend\View\Model\ViewModel;
 class FunderManagerController extends ProgramAbstractController
 {
     /**
-     * @return ViewModel
+     * @return \Zend\View\Model\ViewModel
      */
     public function listAction()
     {
+        $page = $this->params()->fromRoute('page', 1);
+        $filterPlugin = $this->getProgramFilter();
+        $contactQuery = $this->getProgramService()->findEntitiesFiltered(Funder::class, $filterPlugin->getFilter());
+
+        $paginator
+            = new Paginator(new PaginatorAdapter(new ORMPaginator($contactQuery, false)));
+        $paginator->setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 20);
+        $paginator->setCurrentPageNumber($page);
+        $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator->getDefaultItemCountPerPage()));
+
+        $form = new ProgramFilter();
+        $form->setData(['filter' => $filterPlugin->getFilter()]);
+
         return new ViewModel([
-            'funder' => $this->getProgramService()->findAll(Funder::class),
+            'paginator'     => $paginator,
+            'form'          => $form,
+            'encodedFilter' => urlencode($filterPlugin->getHash()),
+            'order'         => $filterPlugin->getOrder(),
+            'direction'     => $filterPlugin->getDirection(),
         ]);
     }
 

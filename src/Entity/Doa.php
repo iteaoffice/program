@@ -13,13 +13,10 @@
 
 namespace Program\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Zend\Form\Annotation;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\InputFilter\FileInput;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
@@ -91,7 +88,7 @@ class Doa extends EntityAbstract implements ResourceInterface
      * @ORM\OneToMany(targetEntity="Program\Entity\DoaObject", cascade={"persist","remove"}, mappedBy="doa")
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\DoaObject[]
+     * @var \Program\Entity\DoaObject[]|ArrayCollection
      */
     private $object;
     /**
@@ -127,6 +124,7 @@ class Doa extends EntityAbstract implements ResourceInterface
      */
     public function __construct()
     {
+        $this->object = new ArrayCollection();
     }
 
     /**
@@ -161,100 +159,6 @@ class Doa extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * Returns the string identifier of the Resource.
-     *
-     * @return string
-     */
-    public function getResourceId()
-    {
-        return sprintf("%s:%s", __CLASS__, $this->id);
-    }
-
-    /**
-     * Set input filter.
-     *
-     * @param InputFilterInterface $inputFilter
-     *
-     * @throws \Exception
-     */
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
-        throw new \Exception("Setting an inputFilter is currently not supported");
-    }
-
-    /**
-     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
-     */
-    public function getInputFilter()
-    {
-        if (!$this->inputFilter) {
-            $inputFilter = new InputFilter();
-            $factory = new InputFactory();
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'dateApproved',
-                        'required' => false,
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'dateSigned',
-                        'required' => false,
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'branch',
-                        'required' => false,
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'contact',
-                        'required' => false,
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'organisation',
-                        'required' => false,
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'program',
-                        'required' => false,
-                    ]
-                )
-            );
-            $fileUpload = new FileInput('file');
-            $fileUpload->setRequired(true);
-            $fileUpload->getValidatorChain()->attachByName(
-                'File\Size',
-                [
-                    'min' => '20kB',
-                    'max' => '8MB',
-                ]
-            );
-            $inputFilter->add($fileUpload);
-            $this->inputFilter = $inputFilter;
-        }
-
-        return $this->inputFilter;
-    }
-
-    /**
      * Parse a filename.
      *
      * @return string
@@ -273,75 +177,23 @@ class Doa extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param \Organisation\Entity\Organisation $organisation
+     * @return int
      */
-    public function setOrganisation($organisation)
+    public function getId()
     {
-        $this->organisation = $organisation;
+        return $this->id;
     }
 
     /**
-     * @return \Program\Entity\Program
+     * @param int $id
+     *
+     * @return Doa
      */
-    public function getProgram()
+    public function setId($id)
     {
-        return $this->program;
-    }
+        $this->id = $id;
 
-    /**
-     * @param \Program\Entity\Program $program
-     */
-    public function setProgram($program)
-    {
-        $this->program = $program;
-    }
-
-    /**
-     * @return string
-     */
-    public function getBranch()
-    {
-        return $this->branch;
-    }
-
-    /**
-     * @param string $branch
-     */
-    public function setBranch($branch)
-    {
-        $this->branch = $branch;
-    }
-
-    /**
-     * @return \Contact\Entity\Contact
-     */
-    public function getContact()
-    {
-        return $this->contact;
-    }
-
-    /**
-     * @param \Contact\Entity\Contact $contact
-     */
-    public function setContact($contact)
-    {
-        $this->contact = $contact;
-    }
-
-    /**
-     * @return \General\Entity\ContentType
-     */
-    public function getContentType()
-    {
-        return $this->contentType;
-    }
-
-    /**
-     * @param \General\Entity\ContentType $contentType
-     */
-    public function setContentType($contentType)
-    {
-        $this->contentType = $contentType;
+        return $this;
     }
 
     /**
@@ -354,26 +206,14 @@ class Doa extends EntityAbstract implements ResourceInterface
 
     /**
      * @param \DateTime $dateApproved
+     *
+     * @return Doa
      */
     public function setDateApproved($dateApproved)
     {
         $this->dateApproved = $dateApproved;
-    }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDateCreated()
-    {
-        return $this->dateCreated;
-    }
-
-    /**
-     * @param \DateTime $dateCreated
-     */
-    public function setDateCreated($dateCreated)
-    {
-        $this->dateCreated = $dateCreated;
+        return $this;
     }
 
     /**
@@ -386,42 +226,54 @@ class Doa extends EntityAbstract implements ResourceInterface
 
     /**
      * @param \DateTime $dateSigned
+     *
+     * @return Doa
      */
     public function setDateSigned($dateSigned)
     {
         $this->dateSigned = $dateSigned;
+
+        return $this;
     }
 
     /**
-     * @return \DateTime
+     * @return string
      */
-    public function getDateUpdated()
+    public function getBranch()
     {
-        return $this->dateUpdated;
+        return $this->branch;
     }
 
     /**
-     * @param \DateTime $dateUpdated
+     * @param string $branch
+     *
+     * @return Doa
      */
-    public function setDateUpdated($dateUpdated)
+    public function setBranch($branch)
     {
-        $this->dateUpdated = $dateUpdated;
+        $this->branch = $branch;
+
+        return $this;
     }
 
     /**
-     * @return int
+     * @return \General\Entity\ContentType
      */
-    public function getId()
+    public function getContentType()
     {
-        return $this->id;
+        return $this->contentType;
     }
 
     /**
-     * @param int $id
+     * @param \General\Entity\ContentType $contentType
+     *
+     * @return Doa
      */
-    public function setId($id)
+    public function setContentType($contentType)
     {
-        $this->id = $id;
+        $this->contentType = $contentType;
+
+        return $this;
     }
 
     /**
@@ -434,14 +286,58 @@ class Doa extends EntityAbstract implements ResourceInterface
 
     /**
      * @param int $size
+     *
+     * @return Doa
      */
     public function setSize($size)
     {
         $this->size = $size;
+
+        return $this;
     }
 
     /**
-     * @return \Program\Entity\DoaObject[]
+     * @return \DateTime
+     */
+    public function getDateUpdated()
+    {
+        return $this->dateUpdated;
+    }
+
+    /**
+     * @param \DateTime $dateUpdated
+     *
+     * @return Doa
+     */
+    public function setDateUpdated($dateUpdated)
+    {
+        $this->dateUpdated = $dateUpdated;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
+
+    /**
+     * @param \DateTime $dateCreated
+     *
+     * @return Doa
+     */
+    public function setDateCreated($dateCreated)
+    {
+        $this->dateCreated = $dateCreated;
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection|DoaObject[]
      */
     public function getObject()
     {
@@ -449,10 +345,54 @@ class Doa extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param \Program\Entity\DoaObject[] $object
+     * @param ArrayCollection|DoaObject[] $object
+     *
+     * @return Doa
      */
     public function setObject($object)
     {
         $this->object = $object;
+
+        return $this;
+    }
+
+    /**
+     * @return \Contact\Entity\Contact
+     */
+    public function getContact()
+    {
+        return $this->contact;
+    }
+
+    /**
+     * @param \Contact\Entity\Contact $contact
+     *
+     * @return Doa
+     */
+    public function setContact($contact)
+    {
+        $this->contact = $contact;
+
+        return $this;
+    }
+
+    /**
+     * @return Program
+     */
+    public function getProgram()
+    {
+        return $this->program;
+    }
+
+    /**
+     * @param Program $program
+     *
+     * @return Doa
+     */
+    public function setProgram($program)
+    {
+        $this->program = $program;
+
+        return $this;
     }
 }

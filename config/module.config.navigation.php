@@ -58,14 +58,77 @@ return [
         'admin'     => [
             // And finally, here is where we define our page hierarchy
             'project' => [
+                'order' => 20,
                 'pages' => [
                     'program-list'      => [
                         'label' => _("txt-nav-program-list"),
                         'route' => 'zfcadmin/program/list',
+                        'pages' => [
+                            'program-view' => [
+                                'route'   => 'zfcadmin/program/view',
+                                'visible' => false,
+                                'params'  => [
+                                    'entities'   => [
+                                        'id' => Program\Entity\Program::class
+                                    ],
+                                    'invokables' => [
+                                        Program\Navigation\Invokable\ProgramLabel::class
+                                    ]
+                                ],
+                                'pages'   => [
+                                    'edit' => [
+                                        'label'   => _('txt-nav-edit'),
+                                        'route'   => 'zfcadmin/program/edit',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities' => [
+                                                'id' => Program\Entity\Program::class
+                                            ],
+                                        ],
+                                    ],
+                                ]
+                            ],
+                            'program-new'  => [
+                                'route'   => 'zfcadmin/program/new',
+                                'label'   => _("txt-add-program"),
+                                'visible' => false,
+                            ],
+                        ]
                     ],
                     'program-call-list' => [
                         'label' => _("txt-nav-program-calls"),
                         'route' => 'zfcadmin/call/list',
+                        'pages' => [
+                            'program-call-view' => [
+                                'route'   => 'zfcadmin/call/view',
+                                'visible' => false,
+                                'params'  => [
+                                    'entities'   => [
+                                        'id' => Program\Entity\Call\Call::class
+                                    ],
+                                    'invokables' => [
+                                        Program\Navigation\Invokable\CallLabel::class
+                                    ]
+                                ],
+                                'pages'   => [
+                                    'edit' => [
+                                        'label'   => _('txt-nav-edit'),
+                                        'route'   => 'zfcadmin/call/edit',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities' => [
+                                                'id' => Program\Entity\Call\Call::class
+                                            ],
+                                        ],
+                                    ],
+                                ]
+                            ],
+                            'call-new'          => [
+                                'route'   => 'zfcadmin/call/new',
+                                'label'   => _("txt-add-call"),
+                                'visible' => false,
+                            ],
+                        ]
                     ],
                     'nda-approval'      => [
                         'label' => _("txt-nav-nda-approval"),
@@ -79,9 +142,11 @@ return [
                                 'route'   => 'zfcadmin/funder/view',
                                 'visible' => false,
                                 'params'  => [
-                                    'entity'  => \Program\Entity\Funder::class,
-                                    'setters' => [
-                                        'label' => Program\Navigation\Invokable\FunderLabel::class
+                                    'entities'   => [
+                                        'id' => Program\Entity\Funder::class
+                                    ],
+                                    'invokables' => [
+                                        Program\Navigation\Invokable\FunderLabel::class
                                     ]
                                 ],
                                 'pages'   => [
@@ -90,19 +155,21 @@ return [
                                         'route'   => 'zfcadmin/funder/edit',
                                         'visible' => false,
                                         'params'  => [
-                                            'entity' => \Program\Entity\Funder::class,
+                                            'entities' => [
+                                                'id' => Program\Entity\Funder::class
+                                            ],
                                         ],
                                     ],
                                 ]
                             ],
                             'funder-new'  => [
+                                'label'   => _("txt-add-funder"),
                                 'route'   => 'zfcadmin/funder/new',
                                 'visible' => false,
                                 'params'  => [
-                                    'entity'  => \Program\Entity\Funder::class,
-                                    'setters' => [
-                                        'label' => _("txt-add-funder")
-                                    ]
+                                    'entities' => [
+                                        'id' => Program\Entity\Funder::class
+                                    ],
                                 ],
                             ],
                         ]

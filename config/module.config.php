@@ -10,6 +10,7 @@
 use Program\Acl;
 use Program\Controller;
 use Program\Factory;
+use Program\InputFilter;
 use Program\Options;
 use Program\Service;
 use Program\View;
@@ -70,13 +71,17 @@ $config = [
     ],
     'service_manager'    => [
         'factories' => [
-            Service\ProgramService::class => Factory\ProgramServiceFactory::class,
-            Service\CallService::class    => Factory\CallServiceFactory::class,
-            Service\FormService::class    => Factory\FormServiceFactory::class,
-            Options\ModuleOptions::class  => Factory\ModuleOptionsFactory::class,
-            Acl\Assertion\Doa::class      => Acl\Factory\AssertionFactory::class,
-            Acl\Assertion\Funder::class   => Acl\Factory\AssertionFactory::class,
-            Acl\Assertion\Nda::class      => Acl\Factory\AssertionFactory::class,
+            Service\ProgramService::class         => Factory\ProgramServiceFactory::class,
+            Service\CallService::class            => Factory\CallServiceFactory::class,
+            Service\FormService::class            => Factory\FormServiceFactory::class,
+            InputFilter\Call\CallFilter::class    => Factory\InputFilterFactory::class,
+            InputFilter\Call\CountryFilter::class => Factory\InputFilterFactory::class,
+            InputFilter\DoaFilter::class          => Factory\InputFilterFactory::class,
+            InputFilter\ProgramFilter::class      => Factory\InputFilterFactory::class,
+            Options\ModuleOptions::class          => Factory\ModuleOptionsFactory::class,
+            Acl\Assertion\Doa::class              => Acl\Factory\AssertionFactory::class,
+            Acl\Assertion\Funder::class           => Acl\Factory\AssertionFactory::class,
+            Acl\Assertion\Nda::class              => Acl\Factory\AssertionFactory::class,
         ],
     ],
     'doctrine'           => [

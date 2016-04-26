@@ -170,7 +170,7 @@ class Nda extends EntityAbstract implements ResourceInterface
     public function getCall()
     {
         if (is_null($this->call)) {
-            return;
+            return null;
         }
 
         return $this->call->first();

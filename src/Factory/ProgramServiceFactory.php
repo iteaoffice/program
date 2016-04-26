@@ -16,6 +16,7 @@ namespace Program\Factory;
 
 use Affiliation\Service\AffiliationService;
 use Doctrine\ORM\EntityManager;
+use Interop\Container\ContainerInterface;
 use Program\Service\ProgramService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -25,26 +26,40 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @package Program\Factory
  */
-class ProgramServiceFactory implements FactoryInterface
+final class ProgramServiceFactory implements FactoryInterface
 {
     /**
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface $container
+     * @param string             $requestedName
+     * @param array|null         $options
      *
      * @return ProgramService
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $programService = new ProgramService();
-        $programService->setServiceLocator($serviceLocator);
+        $programService = new ProgramService($options);
+        $programService->setServiceLocator($container);
 
         /** @var EntityManager $entityManager */
-        $entityManager = $serviceLocator->get(EntityManager::class);
+        $entityManager = $container->get(EntityManager::class);
         $programService->setEntityManager($entityManager);
 
         /** @var AffiliationService $affiliationService */
-        $affiliationService = $serviceLocator->get(AffiliationService::class);
+        $affiliationService = $container->get(AffiliationService::class);
         $programService->setAffiliationService($affiliationService);
 
         return $programService;
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param string|null             $canonicalName
+     * @param string|null             $requestedName
+     *
+     * @return ProgramService
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator, $canonicalName = null, $requestedName = null)
+    {
+        return $this($serviceLocator, $requestedName);
     }
 }

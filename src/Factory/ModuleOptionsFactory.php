@@ -14,6 +14,7 @@
  */
 namespace Program\Factory;
 
+use Interop\Container\ContainerInterface;
 use Program\Options\ModuleOptions;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -23,17 +24,31 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @package Program\Factory
  */
-class ModuleOptionsFactory implements FactoryInterface
+final class ModuleOptionsFactory implements FactoryInterface
 {
     /**
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface $container
+     * @param string             $requestedName
+     * @param array|null         $options
      *
      * @return ModuleOptions
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config = $serviceLocator->get('Config');
+        $config = $container->get('Config');
 
         return new ModuleOptions(isset($config['program_option']) ? $config['program_option'] : []);
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param string|null             $canonicalName
+     * @param string|null             $requestedName
+     *
+     * @return ModuleOptions
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator, $canonicalName = null, $requestedName = null)
+    {
+        return $this($serviceLocator, $requestedName);
     }
 }

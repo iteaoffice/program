@@ -16,15 +16,15 @@
 namespace Program\Navigation\Invokable;
 
 use Admin\Navigation\Invokable\AbstractNavigationInvokable;
-use Program\Entity\Funder;
+use Program\Entity\Program;
 use Zend\Navigation\Page\Mvc;
 
 /**
- * Class FunderLabel
+ * Class CallLabel
  *
  * @package Program\Navigation\Invokable
  */
-class FunderLabel extends AbstractNavigationInvokable
+class ProgramLabel extends AbstractNavigationInvokable
 {
     /**
      * Set the Project navigation label
@@ -35,13 +35,13 @@ class FunderLabel extends AbstractNavigationInvokable
      */
     public function __invoke(Mvc $page)
     {
-        if ($this->getEntities()->containsKey(Funder::class)) {
-            /** @var Funder $funder */
-            $funder = $this->getEntities()->get(Funder::class);
+        if ($this->getEntities()->containsKey(Program::class)) {
+            /** @var Program $program */
+            $program = $this->getEntities()->get(Program::class);
             $page->setParams(array_merge($page->getParams(), [
-                'id' => $funder->getId(),
+                'id' => $program->getId(),
             ]));
-            $label = (string)$funder;
+            $label = (string)$program;
         } else {
             $label = $this->translate('txt-nav-view');
         }

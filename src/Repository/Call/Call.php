@@ -30,7 +30,7 @@ class Call extends EntityRepository
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('c');
-        $queryBuilder->from("Program\Entity\Call\Call", 'c');
+        $queryBuilder->from(CallEntity::class, 'c');
         $queryBuilder->join("c.program", 'p');
 
         $direction = 'DESC';
@@ -43,6 +43,9 @@ class Call extends EntityRepository
         switch ($filter['order']) {
             case 'id':
                 $queryBuilder->addOrderBy('c.id', $direction);
+                break;
+            case 'program':
+                $queryBuilder->addOrderBy('p.program', $direction);
                 break;
             case 'po-open-date':
                 $queryBuilder->addOrderBy('c.poOpenDate', $direction);
@@ -77,7 +80,7 @@ class Call extends EntityRepository
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('c');
-        $queryBuilder->from("Program\Entity\Call\Call", 'c');
+        $queryBuilder->from(CallEntity::class, 'c');
         $today = new \DateTime();
         switch ($type) {
             case Type::TYPE_PO:
@@ -105,7 +108,7 @@ class Call extends EntityRepository
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('c');
-        $queryBuilder->from("Program\Entity\Call\Call", 'c');
+        $queryBuilder->from(CallEntity::class, 'c');
         //Show only calls which are already in projects
         $subSelect = $this->_em->createQueryBuilder();
         $subSelect->select('call.id');
@@ -127,7 +130,7 @@ class Call extends EntityRepository
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('c');
-        $queryBuilder->from("Program\Entity\Call\Call", 'c');
+        $queryBuilder->from(CallEntity::class, 'c');
         $today = new \DateTime();
         $queryBuilder->where('c.poOpenDate < :today')->andWhere('c.poCloseDate > :today OR c.poGraceDate > :today')
             ->setParameter('today', $today);
@@ -166,7 +169,7 @@ class Call extends EntityRepository
          */
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('c');
-        $queryBuilder->from("Program\Entity\Call\Call", 'c');
+        $queryBuilder->from(CallEntity::class, 'c');
 
         $queryBuilder->where('c.fppOpenDate > :today')->setParameter('today', $today);
         $queryBuilder->orderBy('c.fppOpenDate', 'DESC');
@@ -184,7 +187,7 @@ class Call extends EntityRepository
          */
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('c');
-        $queryBuilder->from("Program\Entity\Call\Call", 'c');
+        $queryBuilder->from(CallEntity::class, 'c');
         $queryBuilder->orderBy('c.fppCloseDate', 'DESC');
         $queryBuilder->setMaxResults(1);
 

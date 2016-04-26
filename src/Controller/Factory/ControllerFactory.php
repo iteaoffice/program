@@ -15,7 +15,6 @@
 namespace Program\Controller\Factory;
 
 use Admin\Service\AdminService;
-use Affiliation\Service\FormService;
 use Contact\Service\ContactService;
 use General\Service\GeneralService;
 use Interop\Container\ContainerInterface;
@@ -23,6 +22,7 @@ use Organisation\Service\OrganisationService;
 use Program\Controller\ProgramAbstractController;
 use Program\Options\ModuleOptions;
 use Program\Service\CallService;
+use Program\Service\FormService;
 use Program\Service\ProgramService;
 use Project\Service\ProjectService;
 use Zend\Mvc\Controller\ControllerManager;
@@ -34,7 +34,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @package Program\Controller\Factory
  */
-class ControllerFactory implements FactoryInterface
+final class ControllerFactory implements FactoryInterface
 {
     /**
      * @param ContainerInterface|ControllerManager $container
@@ -46,7 +46,7 @@ class ControllerFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         /** @var ProgramAbstractController $controller */
-        $controller = new $requestedName();
+        $controller = new $requestedName($options);
 
         $serviceManager = $container->getServiceLocator();
 

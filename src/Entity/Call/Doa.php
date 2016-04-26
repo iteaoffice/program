@@ -72,35 +72,23 @@ class Doa
     private $call;
 
     /**
-     * @return string
+     * @return int
      */
-    public function getBranch()
+    public function getId()
     {
-        return $this->branch;
+        return $this->id;
     }
 
     /**
-     * @param string $branch
+     * @param int $id
+     *
+     * @return Doa
      */
-    public function setBranch($branch)
+    public function setId($id)
     {
-        $this->branch = $branch;
-    }
+        $this->id = $id;
 
-    /**
-     * @return \Program\Entity\Call\Call
-     */
-    public function getCall()
-    {
-        return $this->call;
-    }
-
-    /**
-     * @param \Program\Entity\Call\Call $call
-     */
-    public function setCall($call)
-    {
-        $this->call = $call;
+        return $this;
     }
 
     /**
@@ -113,10 +101,14 @@ class Doa
 
     /**
      * @param \DateTime $dateReceived
+     *
+     * @return Doa
      */
     public function setDateReceived($dateReceived)
     {
         $this->dateReceived = $dateReceived;
+
+        return $this;
     }
 
     /**
@@ -129,26 +121,34 @@ class Doa
 
     /**
      * @param \DateTime $dateSigned
+     *
+     * @return Doa
      */
     public function setDateSigned($dateSigned)
     {
         $this->dateSigned = $dateSigned;
+
+        return $this;
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getId()
+    public function getBranch()
     {
-        return $this->id;
+        return $this->branch;
     }
 
     /**
-     * @param int $id
+     * @param string $branch
+     *
+     * @return Doa
      */
-    public function setId($id)
+    public function setBranch($branch)
     {
-        $this->id = $id;
+        $this->branch = $branch;
+
+        return $this;
     }
 
     /**
@@ -161,9 +161,33 @@ class Doa
 
     /**
      * @param \Organisation\Entity\Organisation $organisation
+     *
+     * @return Doa
      */
     public function setOrganisation($organisation)
     {
         $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * @return Call
+     */
+    public function getCall()
+    {
+        return $this->call;
+    }
+
+    /**
+     * @param Call $call
+     *
+     * @return Doa
+     */
+    public function setCall($call)
+    {
+        $this->call = $call;
+
+        return $this;
     }
 }

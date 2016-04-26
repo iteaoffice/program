@@ -17,9 +17,6 @@ use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Program\Entity\EntityAbstract;
 use Zend\Form\Annotation;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
 
 /**
  * @ORM\Table(name="programcall_session")
@@ -74,7 +71,7 @@ class Session extends EntityAbstract
      * )
      * @Annotation\Exclude()
      *
-     * @var \Event\Entity\Track[]
+     * @var \Event\Entity\Track[]|Collections\ArrayCollection
      */
     private $track;
     /**
@@ -82,7 +79,7 @@ class Session extends EntityAbstract
      * @ORM\OrderBy({"schedule" = "ASC"})
      * @Annotation\Exclude()
      *
-     * @var \Project\Entity\Idea\Session[]
+     * @var \Project\Entity\Idea\Session[]|Collections\ArrayCollection
      */
     private $ideaSession;
 
@@ -119,86 +116,6 @@ class Session extends EntityAbstract
     }
 
     /**
-     * Set input filter.
-     *
-     * @param InputFilterInterface $inputFilter
-     *
-     * @throws \Exception
-     */
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
-        throw new \Exception("Setting an inputFilter is currently not supported");
-    }
-
-    /**
-     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
-     */
-    public function getInputFilter()
-    {
-        if (!$this->inputFilter) {
-            $inputFilter = new InputFilter();
-            $factory = new InputFactory();
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'       => 'session',
-                        'required'   => true,
-                        'filters'    => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
-                        ],
-                        'validators' => [
-                            [
-                                'name'    => 'StringLength',
-                                'options' => [
-                                    'encoding' => 'UTF-8',
-                                    'min'      => 1,
-                                    'max'      => 45,
-                                ],
-                            ],
-                        ],
-                    ]
-                )
-            );
-            $this->inputFilter = $inputFilter;
-        }
-
-        return $this->inputFilter;
-    }
-
-    /**
-     * @return \Program\Entity\Call\Call
-     */
-    public function getCall()
-    {
-        return $this->call;
-    }
-
-    /**
-     * @param \Program\Entity\Call\Call $call
-     */
-    public function setCall($call)
-    {
-        $this->call = $call;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getDate()
-    {
-        return $this->date;
-    }
-
-    /**
-     * @param \DateTime $date
-     */
-    public function setDate($date)
-    {
-        $this->date = $date;
-    }
-
-    /**
      * @return int
      */
     public function getId()
@@ -208,26 +125,14 @@ class Session extends EntityAbstract
 
     /**
      * @param int $id
+     *
+     * @return Session
      */
     public function setId($id)
     {
         $this->id = $id;
-    }
 
-    /**
-     * @return \Project\Entity\Idea\Session[]
-     */
-    public function getIdeaSession()
-    {
-        return $this->ideaSession;
-    }
-
-    /**
-     * @param \Project\Entity\Idea\Session[] $ideaSession
-     */
-    public function setIdeaSession($ideaSession)
-    {
-        $this->ideaSession = $ideaSession;
+        return $this;
     }
 
     /**
@@ -240,14 +145,58 @@ class Session extends EntityAbstract
 
     /**
      * @param string $session
+     *
+     * @return Session
      */
     public function setSession($session)
     {
         $this->session = $session;
+
+        return $this;
     }
 
     /**
-     * @return \Program\Entity\Call\SessionTrack[]
+     * @return Call
+     */
+    public function getCall()
+    {
+        return $this->call;
+    }
+
+    /**
+     * @param Call $call
+     *
+     * @return Session
+     */
+    public function setCall($call)
+    {
+        $this->call = $call;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param \DateTime $date
+     *
+     * @return Session
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Event\Entity\Track[]
      */
     public function getTrack()
     {
@@ -255,10 +204,34 @@ class Session extends EntityAbstract
     }
 
     /**
-     * @param \Program\Entity\Call\SessionTrack[] $track
+     * @param Collections\ArrayCollection|\Event\Entity\Track[] $track
+     *
+     * @return Session
      */
     public function setTrack($track)
     {
         $this->track = $track;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Project\Entity\Idea\Session[]
+     */
+    public function getIdeaSession()
+    {
+        return $this->ideaSession;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Project\Entity\Idea\Session[] $ideaSession
+     *
+     * @return Session
+     */
+    public function setIdeaSession($ideaSession)
+    {
+        $this->ideaSession = $ideaSession;
+
+        return $this;
     }
 }

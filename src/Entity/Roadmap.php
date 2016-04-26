@@ -16,9 +16,6 @@ namespace Program\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
 
 /**
  * Roadmap.
@@ -65,21 +62,21 @@ class Roadmap extends EntityAbstract
      * @ORM\OneToMany(targetEntity="\Program\Entity\Domain", cascade={"persist"}, mappedBy="roadmap")
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\Domain[]
+     * @var \Program\Entity\Domain[]|ArrayCollection
      */
     private $domain;
     /**
      * @ORM\OneToMany(targetEntity="\Program\Entity\Call\Call", cascade={"persist"}, mappedBy="roadmap")
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\Call\Call[]
+     * @var \Program\Entity\Call\Call[]|ArrayCollection
      */
     private $call;
     /**
      * @ORM\OneToMany(targetEntity="\Program\Entity\Technology", cascade={"persist"}, mappedBy="roadmap")
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\Technology[]
+     * @var \Program\Entity\Technology[]|ArrayCollection
      */
     private $technology;
 
@@ -127,178 +124,6 @@ class Roadmap extends EntityAbstract
     }
 
     /**
-     * Returns the string identifier of the Resource.
-     *
-     * @return string
-     */
-    public function getResourceId()
-    {
-        return __NAMESPACE__.':'.__CLASS__.':'.$this->id;
-    }
-
-    /**
-     * Set input filter.
-     *
-     * @param InputFilterInterface $inputFilter
-     *
-     * @throws \Exception
-     */
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
-        throw new \Exception("Setting an inputFilter is currently not supported");
-    }
-
-    /**
-     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
-     */
-    public function getInputFilter()
-    {
-        if (!$this->inputFilter) {
-            $inputFilter = new InputFilter();
-            $factory = new InputFactory();
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'       => 'roadmap',
-                        'required'   => true,
-                        'filters'    => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
-                        ],
-                        'validators' => [
-                            [
-                                'name'    => 'StringLength',
-                                'options' => [
-                                    'encoding' => 'UTF-8',
-                                    'min'      => 1,
-                                    'max'      => 40,
-                                ],
-                            ],
-                        ],
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'description',
-                        'required' => true,
-                        'filters'  => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
-                        ],
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'       => 'label',
-                        'required'   => true,
-                        'filters'    => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
-                        ],
-                        'validators' => [
-                            [
-                                'name'    => 'StringLength',
-                                'options' => [
-                                    'encoding' => 'UTF-8',
-                                    'min'      => 1,
-                                    'max'      => 100,
-                                ],
-                            ],
-                        ],
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'       => 'dateReleased',
-                        'required'   => true,
-                        'validators' => [
-                            [
-                                'name' => 'Date',
-                            ],
-                        ],
-                    ]
-                )
-            );
-            $this->inputFilter = $inputFilter;
-        }
-
-        return $this->inputFilter;
-    }
-
-    public function populate()
-    {
-        return $this->getArrayCopy();
-    }
-
-    /**
-     * Needed for the hydration of form elements.
-     *
-     * @return array
-     */
-    public function getArrayCopy()
-    {
-        return [
-            'roadmap'      => $this->roadmap,
-            'description'  => $this->description,
-            'dateReleased' => $this->dateReleased,
-        ];
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getDateReleased()
-    {
-        return $this->dateReleased;
-    }
-
-    /**
-     * @param \DateTime $dateReleased
-     */
-    public function setDateReleased($dateReleased)
-    {
-        $this->dateReleased = $dateReleased;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param string $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * @return \Project\Entity\Project[]
-     */
-    public function getDomain()
-    {
-        return $this->domain;
-    }
-
-    /**
-     * @param \Project\Entity\Project[] $domain
-     */
-    public function setDomain($domain)
-    {
-        $this->domain = $domain;
-    }
-
-    /**
      * @return int
      */
     public function getId()
@@ -308,10 +133,14 @@ class Roadmap extends EntityAbstract
 
     /**
      * @param int $id
+     *
+     * @return Roadmap
      */
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -324,14 +153,78 @@ class Roadmap extends EntityAbstract
 
     /**
      * @param string $roadmap
+     *
+     * @return Roadmap
      */
     public function setRoadmap($roadmap)
     {
         $this->roadmap = $roadmap;
+
+        return $this;
     }
 
     /**
-     * @return \Program\Entity\Call\Call[]
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     *
+     * @return Roadmap
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateReleased()
+    {
+        return $this->dateReleased;
+    }
+
+    /**
+     * @param \DateTime $dateReleased
+     *
+     * @return Roadmap
+     */
+    public function setDateReleased($dateReleased)
+    {
+        $this->dateReleased = $dateReleased;
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection|Domain[]
+     */
+    public function getDomain()
+    {
+        return $this->domain;
+    }
+
+    /**
+     * @param ArrayCollection|Domain[] $domain
+     *
+     * @return Roadmap
+     */
+    public function setDomain($domain)
+    {
+        $this->domain = $domain;
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection|Call\Call[]
      */
     public function getCall()
     {
@@ -339,15 +232,19 @@ class Roadmap extends EntityAbstract
     }
 
     /**
-     * @param \Program\Entity\Call\Call[] $call
+     * @param ArrayCollection|Call\Call[] $call
+     *
+     * @return Roadmap
      */
     public function setCall($call)
     {
         $this->call = $call;
+
+        return $this;
     }
 
     /**
-     * @return \Program\Entity\Technology[]
+     * @return ArrayCollection|Technology[]
      */
     public function getTechnology()
     {
@@ -355,10 +252,14 @@ class Roadmap extends EntityAbstract
     }
 
     /**
-     * @param \Program\Entity\Technology[] $technology
+     * @param ArrayCollection|Technology[] $technology
+     *
+     * @return Roadmap
      */
     public function setTechnology($technology)
     {
         $this->technology = $technology;
+
+        return $this;
     }
 }

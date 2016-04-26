@@ -54,22 +54,6 @@ class Image
     private $call;
 
     /**
-     * @return \Program\Entity\Call\Call
-     */
-    public function getCall()
-    {
-        return $this->call;
-    }
-
-    /**
-     * @param \Program\Entity\Call\Call $call
-     */
-    public function setCall($call)
-    {
-        $this->call = $call;
-    }
-
-    /**
      * @return int
      */
     public function getId()
@@ -79,10 +63,14 @@ class Image
 
     /**
      * @param int $id
+     *
+     * @return Image
      */
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -95,10 +83,14 @@ class Image
 
     /**
      * @param resource $image
+     *
+     * @return Image
      */
     public function setImage($image)
     {
         $this->image = $image;
+
+        return $this;
     }
 
     /**
@@ -111,9 +103,33 @@ class Image
 
     /**
      * @param string $imageExtension
+     *
+     * @return Image
      */
     public function setImageExtension($imageExtension)
     {
         $this->imageExtension = $imageExtension;
+
+        return $this;
+    }
+
+    /**
+     * @return Call
+     */
+    public function getCall()
+    {
+        return $this->call;
+    }
+
+    /**
+     * @param Call $call
+     *
+     * @return Image
+     */
+    public function setCall($call)
+    {
+        $this->call = $call;
+
+        return $this;
     }
 }

@@ -10,24 +10,22 @@
  * @copyright   2004-2016 ITEA Office
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/main for the canonical source repository
+ * @link        http://github.com/iteaoffice/program for the canonical source repository
  */
+
 namespace Program\Factory;
 
 use Doctrine\ORM\EntityManager;
-use General\Service\GeneralService;
 use Interop\Container\ContainerInterface;
-use Program\Service\CallService;
-use Project\Service\VersionService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class FormFactory
+ * Class InputFilterFactory
  *
  * @package Content\Factory
  */
-final class CallServiceFactory implements FactoryInterface
+final class InputFilterFactory implements FactoryInterface
 {
     /**
      * Create an instance of the requested class name.
@@ -40,30 +38,15 @@ final class CallServiceFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $callService = new CallService($options);
-        $callService->setServiceLocator($container);
-
-        /** @var EntityManager $entityManager */
-        $entityManager = $container->get(EntityManager::class);
-        $callService->setEntityManager($entityManager);
-
-        /** @var GeneralService $generalService */
-        $generalService = $container->get(GeneralService::class);
-        $callService->setGeneralService($generalService);
-
-        /** @var VersionService $versionService */
-        $versionService = $container->get(VersionService::class);
-        $callService->setVersionService($versionService);
-
-        return $callService;
+        return new $requestedName($container->get(EntityManager::class), $options);
     }
 
     /**
      * @param ServiceLocatorInterface $serviceLocator
-     * @param string|null             $canonicalName
-     * @param string|null             $requestedName
+     * @param null|string             $canonicalName
+     * @param null|string             $requestedName
      *
-     * @return CallService
+     * @return mixed
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $canonicalName = null, $requestedName = null)
     {

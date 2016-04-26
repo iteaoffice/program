@@ -10,7 +10,7 @@
 
 {{ form().openTag(form)|raw }}
 
-{% set call = form.get('call') %}
+{% set call = form.get('program_entity_call_call') %}
 
 {{ ztbformelement(call.get('program')) }}
 {{ ztbformelement(call.get('call')) }}

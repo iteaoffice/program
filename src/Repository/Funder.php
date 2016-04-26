@@ -20,9 +20,9 @@ use Doctrine\ORM\Query;
 use Program\Entity;
 
 /**
- * @category    Program
+ * @category    Funder
  */
-class Program extends EntityRepository
+class Funder extends EntityRepository
 {
     /**
      * @param array $filter
@@ -32,8 +32,10 @@ class Program extends EntityRepository
     public function findFiltered(array $filter)
     {
         $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('program_entity_program');
-        $queryBuilder->from(Entity\Program::class, 'program_entity_program');
+        $queryBuilder->select('funder_entity_funder');
+        $queryBuilder->from(Entity\Funder::class, 'funder_entity_funder');
+        $queryBuilder->join('funder_entity_funder.contact', 'contact_entity_contact');
+        $queryBuilder->join('funder_entity_funder.country', 'general_entity_country');
 
         $direction = 'DESC';
         if (isset($filter['direction'])
@@ -43,14 +45,14 @@ class Program extends EntityRepository
         }
 
         switch ($filter['order']) {
-            case 'id':
-                $queryBuilder->addOrderBy('program_entity_program.id', $direction);
+            case 'contact':
+                $queryBuilder->addOrderBy('contact_entity_contact.lastName', $direction);
                 break;
-            case 'program':
-                $queryBuilder->addOrderBy('program_entity_program.program', $direction);
+            case 'country':
+                $queryBuilder->addOrderBy('general_entity_country.country', $direction);
                 break;
             default:
-                $queryBuilder->addOrderBy('program_entity_program.id', $direction);
+                $queryBuilder->addOrderBy('funder_entity_funder.country', 'ASC');
         }
 
         return $queryBuilder->getQuery();

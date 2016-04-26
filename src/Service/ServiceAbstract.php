@@ -14,6 +14,7 @@ use Affiliation\Service\AffiliationService;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
 use General\Service\GeneralService;
+use Interop\Container\ContainerInterface;
 use Program\Entity;
 use Program\Entity\EntityAbstract;
 use Project\Service\ProjectService;
@@ -150,7 +151,7 @@ abstract class ServiceAbstract implements ServiceInterface
     }
 
     /**
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ServiceLocatorInterface|ContainerInterface $serviceLocator
      *
      * @return ServiceAbstract
      */

@@ -11,7 +11,7 @@
     <dt>{{ translate("txt-position") }}</dt>
     <dd>{{ funder.position }}</dd>
     <dt>{{ translate("txt-show-on-website") }}</dt>
-    <dd>{% if funder.showOnWebsite %}{{ funder.getShowOnWebsite(true) }}{% endif %}</dd>
+    <dd>{{ translate(funder.getShowOnWebsite(true)) }}</dd>
     <dt>{{ translate("txt-info-office") }}</dt>
     <dd>{{ funder.infoOffice|default(translate("txt-not-provided")) }}</dd>
     <dt>{{ translate("txt-info-public") }}</dt>

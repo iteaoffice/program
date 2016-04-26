@@ -15,16 +15,13 @@ namespace Program\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * Program.
  *
  * @ORM\Table(name="funder")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Program\Repository\Funder")
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("funder")
  *
@@ -45,10 +42,11 @@ class Funder extends EntityAbstract implements ResourceInterface
      *
      * @var array
      */
-    protected static $showOnWebsiteTemplates = [
-        self::HIDE_ON_WEBSITE => 'txt-hide-on-website',
-        self::SHOW_ON_WEBSITE => 'txt-show-on-website',
-    ];
+    protected static $showOnWebsiteTemplates
+        = [
+            self::HIDE_ON_WEBSITE => 'txt-hide-on-website',
+            self::SHOW_ON_WEBSITE => 'txt-show-on-website',
+        ];
     /**
      * @var integer
      *
@@ -165,77 +163,12 @@ class Funder extends EntityAbstract implements ResourceInterface
         return sprintf("%s:%s", __CLASS__, $this->id);
     }
 
-
-    /**
-     * Set input filter.
-     *
-     * @param InputFilterInterface $inputFilter
-     *
-     * @throws \Exception
-     */
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
-        throw new \Exception("Setting an inputFilter is currently not supported");
-    }
-
-    /**
-     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
-     */
-    public function getInputFilter()
-    {
-        if (!$this->inputFilter) {
-            $inputFilter = new InputFilter();
-            $factory = new InputFactory();
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'       => 'name',
-                        'required'   => true,
-                        'filters'    => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
-                        ],
-                        'validators' => [
-                            [
-                                'name'    => 'StringLength',
-                                'options' => [
-                                    'encoding' => 'UTF-8',
-                                    'min'      => 1,
-                                    'max'      => 100,
-                                ],
-                            ],
-                        ],
-                    ]
-                )
-            );
-            $this->inputFilter = $inputFilter;
-        }
-
-        return $this->inputFilter;
-    }
-
     /**
      * @return array
      */
     public static function getShowOnWebsiteTemplates()
     {
         return self::$showOnWebsiteTemplates;
-    }
-
-    /**
-     * @return \Contact\Entity\Contact
-     */
-    public function getContact()
-    {
-        return $this->contact;
-    }
-
-    /**
-     * @param \Contact\Entity\Contact $contact
-     */
-    public function setContact($contact)
-    {
-        $this->contact = $contact;
     }
 
     /**
@@ -248,42 +181,34 @@ class Funder extends EntityAbstract implements ResourceInterface
 
     /**
      * @param int $id
+     *
+     * @return Funder
      */
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * @return \Contact\Entity\Contact
      */
-    public function getInfoOffice()
+    public function getContact()
     {
-        return $this->infoOffice;
+        return $this->contact;
     }
 
     /**
-     * @param string $infoOffice
+     * @param \Contact\Entity\Contact $contact
+     *
+     * @return Funder
      */
-    public function setInfoOffice($infoOffice)
+    public function setContact($contact)
     {
-        $this->infoOffice = $infoOffice;
-    }
+        $this->contact = $contact;
 
-    /**
-     * @return string
-     */
-    public function getInfoPublic()
-    {
-        return $this->infoPublic;
-    }
-
-    /**
-     * @param string $infoPublic
-     */
-    public function setInfoPublic($infoPublic)
-    {
-        $this->infoPublic = $infoPublic;
+        return $this;
     }
 
     /**
@@ -296,14 +221,59 @@ class Funder extends EntityAbstract implements ResourceInterface
 
     /**
      * @param \General\Entity\Country $country
+     *
+     * @return Funder
      */
     public function setCountry($country)
     {
         $this->country = $country;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInfoOffice()
+    {
+        return $this->infoOffice;
+    }
+
+    /**
+     * @param string $infoOffice
+     *
+     * @return Funder
+     */
+    public function setInfoOffice($infoOffice)
+    {
+        $this->infoOffice = $infoOffice;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInfoPublic()
+    {
+        return $this->infoPublic;
+    }
+
+    /**
+     * @param string $infoPublic
+     *
+     * @return Funder
+     */
+    public function setInfoPublic($infoPublic)
+    {
+        $this->infoPublic = $infoPublic;
+
+        return $this;
     }
 
     /**
      * @param bool $textual
+     *
      * @return int
      */
     public function getShowOnWebsite($textual = false)
@@ -333,6 +303,7 @@ class Funder extends EntityAbstract implements ResourceInterface
 
     /**
      * @param int $position
+     *
      * @return Funder
      */
     public function setPosition($position)

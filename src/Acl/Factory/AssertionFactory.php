@@ -43,7 +43,7 @@ class AssertionFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         /** @var $assertion AssertionAbstract */
-        $assertion = new $requestedName();
+        $assertion = new $requestedName($options);
         $assertion->setServiceLocator($container);
 
         /** @var AdminService $adminService */
