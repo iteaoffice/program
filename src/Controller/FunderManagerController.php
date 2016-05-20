@@ -80,7 +80,7 @@ class FunderManagerController extends ProgramAbstractController
 
         $funder = new Funder();
         $form = $this->getFormService()->prepare($funder, null, $data);
-        $form->get($funder->get('underscore_entity_name'))->get('contact')->setDisableInArrayValidator(true);
+        
         $form->remove('delete');
 
         if ($this->getRequest()->isPost() && $form->isValid()) {

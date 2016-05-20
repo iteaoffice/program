@@ -1,7 +1,7 @@
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-view-country-%s-in-call-%s")|format(callCountry.country,callCountry.call)) %}
 
-<h1>{{ translate("txt-view-country-%s-in-call-%s")|format(callCountry.country,callCountry.call) }}</h1>
+<h1>{{ translate("txt-view-country-%s-in-call-%s")|format(callCountry.country,callCountry.call) }} {{ callCountryLink(callCountry,'edit-admin', 'button') }}</h1>
 
 <dl class="dl-horizontal">
     <dt>{{ translate("txt-call") }}</dt>
@@ -13,5 +13,3 @@
     <dt>{{ translate("txt-date-expected-funding-decision") }}</dt>
     <dd>{{ callCountry.dateExpectedFundingDecision|default('-') }}</dd>
 </dl>
-
-{{ callCountryLink(callCountry,'edit-admin', 'button') }} {{ callLink(callCountry.call,'view-admin','button') }}

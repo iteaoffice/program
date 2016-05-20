@@ -35,6 +35,7 @@ class Program extends EntityAbstract implements ResourceInterface
      * @ORM\Column(name="program_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Annotation\Type("\Zend\Form\Element\Hidden")
      *
      * @var int
      */

@@ -1,7 +1,7 @@
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-funder-%s")|format(funder)) %}
 
-<h1>{{ translate("txt-funder-%s")|format(funder) }}</h1>
+<h1>{{ translate("txt-funder-%s")|format(funder) }} {{ funderLink(funder,'edit','button') }}</h1>
 
 <dl class="dl-horizontal">
     <dt>{{ translate("txt-contact") }}</dt>
@@ -17,5 +17,3 @@
     <dt>{{ translate("txt-info-public") }}</dt>
     <dd>{{ funder.infoPublic|default(translate("txt-not-provided")) }}</dd>
 </dl>
-
-{{ funderLink(funder,'edit','button') }}  {{ funderLink(null,'list','button') }}

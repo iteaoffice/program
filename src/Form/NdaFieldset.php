@@ -110,9 +110,6 @@ class NdaFieldset extends Fieldset implements InputFilterProviderInterface
     public function getInputFilterSpecification()
     {
         return [
-            'dateApproved' => [
-                'required' => true,
-            ],
             'contact'      => [
                 'required' => true,
             ],

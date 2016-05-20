@@ -50,7 +50,7 @@ class Session extends EntityAbstract
      * @ORM\JoinColumn(name="programcall_id", referencedColumnName="programcall_id", nullable=false)
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
      * @Annotation\Options({"target_class":"Program\Entity\Call\Call"})
-     * @Annotation\Attributes({"label":"txt-program-call", "required":"true","class":"span3"})
+     * @Annotation\Attributes({"label":"txt-program-call"})
      *
      * @var \Program\Entity\Call\Call
      */

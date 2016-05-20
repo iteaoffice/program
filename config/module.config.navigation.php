@@ -60,7 +60,7 @@ return [
             'project' => [
                 'order' => 20,
                 'pages' => [
-                    'program-list'      => [
+                    'program-list' => [
                         'label' => _("txt-nav-program-list"),
                         'route' => 'zfcadmin/program/list',
                         'pages' => [
@@ -95,7 +95,7 @@ return [
                             ],
                         ]
                     ],
-                    'program-call-list' => [
+                    'call-list'    => [
                         'label' => _("txt-nav-program-calls"),
                         'route' => 'zfcadmin/call/list',
                         'pages' => [
@@ -111,7 +111,7 @@ return [
                                     ]
                                 ],
                                 'pages'   => [
-                                    'edit' => [
+                                    'edit'         => [
                                         'label'   => _('txt-nav-edit'),
                                         'route'   => 'zfcadmin/call/edit',
                                         'visible' => false,
@@ -119,6 +119,43 @@ return [
                                             'entities' => [
                                                 'id' => Program\Entity\Call\Call::class
                                             ],
+                                        ],
+                                    ],
+                                    'edit-country' => [
+                                        'route'   => 'zfcadmin/call/country/edit',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities'   => [
+                                                'id' => Program\Entity\Call\Country::class
+                                            ],
+                                            'invokables' => [
+                                                Program\Navigation\Invokable\CountryLabel::class
+                                            ]
+                                        ],
+                                    ],
+                                    'new-country'  => [
+                                        'label'   => _("txt-nav-add-country-information-to-call"),
+                                        'route'   => 'zfcadmin/call/country/new',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities'   => [
+                                                'id' => Program\Entity\Call\Call::class
+                                            ],
+                                            'routeParam' => [
+                                                'id' => 'call'
+                                            ],
+                                        ],
+                                    ],
+                                    'view-country' => [
+                                        'route'   => 'zfcadmin/call/country/view',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities'   => [
+                                                'id' => Program\Entity\Call\Country::class
+                                            ],
+                                            'invokables' => [
+                                                Program\Navigation\Invokable\CountryLabel::class
+                                            ]
                                         ],
                                     ],
                                 ]
@@ -130,11 +167,11 @@ return [
                             ],
                         ]
                     ],
-                    'nda-approval'      => [
+                    'nda-approval' => [
                         'label' => _("txt-nav-nda-approval"),
                         'route' => 'zfcadmin/nda/approval',
                     ],
-                    'funder'            => [
+                    'funder'       => [
                         'label' => _("txt-nav-funder-list"),
                         'route' => 'zfcadmin/funder/list',
                         'pages' => [

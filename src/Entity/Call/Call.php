@@ -74,7 +74,7 @@ class Call extends EntityAbstract implements ResourceInterface
      * @ORM\Column(name="programcall_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @Annotation\Exclude()
+     * @Annotation\Type("\Zend\Form\Element\Hidden")
      *
      * @var integer
      */
@@ -158,7 +158,6 @@ class Call extends EntityAbstract implements ResourceInterface
      * @var int
      */
     private $doaRequirement;
-
     /**
      * @ORM\Column(name="nda_requirement", type="smallint", nullable=false)
      * @Annotation\Type("Zend\Form\Element\Radio")
@@ -173,7 +172,7 @@ class Call extends EntityAbstract implements ResourceInterface
      * @ORM\JoinColumn(name="program_id", referencedColumnName="program_id", nullable=false)
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
      * @Annotation\Options({"target_class":"Program\Entity\Program"})
-     * @Annotation\Attributes({"label":"txt-program", "required":"true","class":"span3"})
+     * @Annotation\Attributes({"label":"txt-program"})
      *
      * @var \Program\Entity\Program
      */
@@ -244,6 +243,13 @@ class Call extends EntityAbstract implements ResourceInterface
      */
     private $idea;
     /**
+     * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Tool", cascade={"persist"}, mappedBy="call")
+     * @Annotation\Exclude()
+     *
+     * @var \Project\Entity\Idea\Tool[]|Collections\ArrayCollection
+     */
+    private $ideaTool;
+    /**
      * @ORM\OneToMany(targetEntity="Project\Entity\Idea\MessageBoard", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
@@ -277,6 +283,7 @@ class Call extends EntityAbstract implements ResourceInterface
         $this->doa = new Collections\ArrayCollection();
         $this->image = new Collections\ArrayCollection();
         $this->idea = new Collections\ArrayCollection();
+        $this->ideaTool = new Collections\ArrayCollection();
         $this->ideaMessageBoard = new Collections\ArrayCollection();
         $this->session = new Collections\ArrayCollection();
         $this->callCountry = new Collections\ArrayCollection();
@@ -834,5 +841,25 @@ class Call extends EntityAbstract implements ResourceInterface
     public function setDoaRequirement($doaRequirement)
     {
         $this->doaRequirement = $doaRequirement;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Project\Entity\Idea\Tool[]
+     */
+    public function getIdeaTool()
+    {
+        return $this->ideaTool;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Project\Entity\Idea\Tool[] $ideaTool
+     *
+     * @return Call
+     */
+    public function setIdeaTool($ideaTool)
+    {
+        $this->ideaTool = $ideaTool;
+
+        return $this;
     }
 }

@@ -15,6 +15,9 @@
 
 namespace Program\InputFilter;
 
+use Doctrine\ORM\EntityManager;
+use DoctrineModule\Validator\UniqueObject;
+use Program\Entity\Program;
 use Zend\InputFilter\InputFilter;
 
 /**
@@ -25,13 +28,15 @@ use Zend\InputFilter\InputFilter;
 class ProgramFilter extends InputFilter
 {
     /**
-     * Class constructor.
+     * ProgramFilter constructor.
+     *
+     * @param EntityManager $entityManager
      */
-    public function __construct()
+    public function __construct(EntityManager $entityManager)
     {
         $inputFilter = new InputFilter();
         $inputFilter->add([
-            'name'       => 'name',
+            'name'       => 'program',
             'required'   => true,
             'filters'    => [
                 ['name' => 'StripTags'],
@@ -39,11 +44,20 @@ class ProgramFilter extends InputFilter
             ],
             'validators' => [
                 [
-                    'name'    => 'StringLength',
+                    'name'    => UniqueObject::class,
                     'options' => [
-                        'encoding' => 'UTF-8',
-                        'min'      => 1,
-                        'max'      => 100,
+                        'object_repository' => $entityManager->getRepository(Program::class),
+                        'object_manager'    => $entityManager,
+                        'use_context'       => true,
+                        'fields'            => 'program',
+                    ],
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 100,
+                        ],
                     ],
                 ],
             ],
@@ -56,6 +70,15 @@ class ProgramFilter extends InputFilter
                 ['name' => 'StringTrim'],
             ],
             'validators' => [
+                [
+                    'name'    => UniqueObject::class,
+                    'options' => [
+                        'object_repository' => $entityManager->getRepository(Program::class),
+                        'object_manager'    => $entityManager,
+                        'use_context'       => true,
+                        'fields'            => 'number',
+                    ],
+                ],
                 [
                     'name'    => 'StringLength',
                     'options' => [

@@ -65,7 +65,7 @@ class Technology extends EntityAbstract
      * })
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
      * @Annotation\Options({"target_class":"Program\Entity\Roadmap"})
-     * @Annotation\Attributes({"label":"txt-roadmap", "required":"true","class":"span3"})
+     * @Annotation\Attributes({"label":"txt-roadmap"})
      *
      * @var \Program\Entity\Roadmap
      */

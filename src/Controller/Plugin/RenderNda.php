@@ -13,7 +13,6 @@
 
 namespace Program\Controller\Plugin;
 
-use Contact\Repository\Contact;
 use Contact\Service\ContactService;
 use General\Service\GeneralService;
 use Program\Entity\Nda;
@@ -54,12 +53,10 @@ class RenderNda extends AbstractPlugin
         /*
          * Write the contact details
          */
-        /** @var ContactService $contactService */
-        $contactService = $this->getContactService()->setContact($nda->getContact());
         $pdf->SetXY(14, 55);
-        $pdf->Write(0, $contactService->parseFullName());
+        $pdf->Write(0, $nda->getContact()->parseFullName());
         $pdf->SetXY(14, 60);
-        $pdf->Write(0, $contactService->parseOrganisation());
+        $pdf->Write(0, $this->getContactService()->parseOrganisation($nda->getContact()));
         /*
          * Write the current date
          */
@@ -74,9 +71,10 @@ class RenderNda extends AbstractPlugin
          */
         $pdf->Write(0, $nda->parseFileName());
         $ndaContent = $twig->render('program/pdf/nda-call', [
-                'contact' => $nda->getContact(),
-                'call'    => $nda->getCall(),
-            ]);
+            'contact'        => $nda->getContact(),
+            'call'           => $nda->getCall(),
+            'contactService' => $this->getContactService()
+        ]);
         $pdf->writeHTMLCell(0, 0, 14, 70, $ndaContent);
         /*
          * Signage block
@@ -157,11 +155,10 @@ class RenderNda extends AbstractPlugin
         /*
          * Write the contact details
          */
-        $contactService = $this->getContactService()->setContact($nda->getContact());
         $pdf->SetXY(14, 55);
-        $pdf->Write(0, $contactService->parseFullName());
+        $pdf->Write(0, $nda->getContact()->parseFullName());
         $pdf->SetXY(14, 60);
-        $pdf->Write(0, $contactService->parseOrganisation());
+        $pdf->Write(0, $this->getContactService()->parseOrganisation($nda->getContact()));
         /*
          * Write the current date
          */
@@ -173,8 +170,9 @@ class RenderNda extends AbstractPlugin
         $pdf->SetXY(118, 55);
         $pdf->Write(0, $nda->parseFileName());
         $ndaContent = $twig->render('program/pdf/nda-general', [
-                'contact' => $nda->getContact(),
-            ]);
+            'contact'        => $nda->getContact(),
+            'contactService' => $this->getContactService()
+        ]);
         $pdf->writeHTMLCell(0, 0, 14, 70, $ndaContent);
         /*
          * Signage block

@@ -55,7 +55,7 @@ class Country extends EntityAbstract
      * @ORM\JoinColumn(name="country_id", referencedColumnName="country_id", nullable=false)
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\Call\Call
+     * @var \Program\Entity\Country
      */
     private $country;
     /**
@@ -103,6 +103,14 @@ class Country extends EntityAbstract
     public function __set($property, $value)
     {
         $this->$property = $value;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string) $this->getCountry();
     }
 
     /**

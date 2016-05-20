@@ -10,6 +10,7 @@
 
 namespace Program\Acl\Assertion;
 
+use Admin\Entity\Access;
 use Program\Entity\Doa as DoaEntity;
 use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
@@ -43,6 +44,7 @@ class Doa extends AssertionAbstract
             $doa = $this->getProgramService()->findEntityById(DoaEntity::class, $id);
         }
 
+
         switch ($this->getPrivilege()) {
             case 'upload':
                 /*
@@ -71,6 +73,9 @@ class Doa extends AssertionAbstract
                  * For the replace we need to see if the user has access on the editing of the program
                  * and the acl should not be approved
                  */
+                if ($this->rolesHaveAccess(Access::ACCESS_OFFICE)) {
+                    return true;
+                }
 
                 return is_null($doa->getDateApproved())
                 && $doa->getContact()->getId() === $this->getContact()->getId();
@@ -78,6 +83,10 @@ class Doa extends AssertionAbstract
                 return $this->hasContact();
             case 'download':
             case 'view':
+                if ($this->rolesHaveAccess(Access::ACCESS_OFFICE)) {
+                    return true;
+                }
+            
                 return $doa->getContact()->getId() === $this->getContact()->getId();
         }
 

@@ -11,9 +11,11 @@ use Program\Acl;
 use Program\Controller;
 use Program\Factory;
 use Program\InputFilter;
+use Program\Navigation;
 use Program\Options;
 use Program\Service;
 use Program\View;
+use Zend\Stdlib;
 
 $config = [
     'controllers'        => [
@@ -71,17 +73,23 @@ $config = [
     ],
     'service_manager'    => [
         'factories' => [
-            Service\ProgramService::class         => Factory\ProgramServiceFactory::class,
-            Service\CallService::class            => Factory\CallServiceFactory::class,
-            Service\FormService::class            => Factory\FormServiceFactory::class,
-            InputFilter\Call\CallFilter::class    => Factory\InputFilterFactory::class,
-            InputFilter\Call\CountryFilter::class => Factory\InputFilterFactory::class,
-            InputFilter\DoaFilter::class          => Factory\InputFilterFactory::class,
-            InputFilter\ProgramFilter::class      => Factory\InputFilterFactory::class,
-            Options\ModuleOptions::class          => Factory\ModuleOptionsFactory::class,
-            Acl\Assertion\Doa::class              => Acl\Factory\AssertionFactory::class,
-            Acl\Assertion\Funder::class           => Acl\Factory\AssertionFactory::class,
-            Acl\Assertion\Nda::class              => Acl\Factory\AssertionFactory::class,
+            Service\ProgramService::class              => Factory\ProgramServiceFactory::class,
+            Service\CallService::class                 => Factory\CallServiceFactory::class,
+            Service\FormService::class                 => Factory\FormServiceFactory::class,
+            InputFilter\Call\CallFilter::class         => Factory\InputFilterFactory::class,
+            InputFilter\Call\CountryFilter::class      => Factory\InputFilterFactory::class,
+            InputFilter\DoaFilter::class               => Factory\InputFilterFactory::class,
+            InputFilter\ProgramFilter::class           => Factory\InputFilterFactory::class,
+            Options\ModuleOptions::class               => Factory\ModuleOptionsFactory::class,
+            Acl\Assertion\Doa::class                   => Acl\Factory\AssertionFactory::class,
+            Acl\Assertion\Funder::class                => Acl\Factory\AssertionFactory::class,
+            Acl\Assertion\Nda::class                   => Acl\Factory\AssertionFactory::class,
+            Navigation\Invokable\CallLabel::class      => Navigation\Factory\NavigationInvokableFactory::class,
+            Navigation\Invokable\CountryLabel::class   => Navigation\Factory\NavigationInvokableFactory::class,
+            Navigation\Invokable\FunderLabel::class    => Navigation\Factory\NavigationInvokableFactory::class,
+            Navigation\Invokable\NdaLabel::class       => Navigation\Factory\NavigationInvokableFactory::class,
+            Navigation\Invokable\ProgramLabel::class   => Navigation\Factory\NavigationInvokableFactory::class,
+            Navigation\Invokable\UploadNdaLabel::class => Navigation\Factory\NavigationInvokableFactory::class,
         ],
     ],
     'doctrine'           => [
@@ -106,13 +114,8 @@ $config = [
         ],
     ]
 ];
-$configFiles = [
-    __DIR__ . '/module.config.routes.php',
-    __DIR__ . '/module.config.navigation.php',
-    __DIR__ . '/module.config.authorize.php',
-    __DIR__ . '/module.option.program.php',
-];
-foreach ($configFiles as $configFile) {
-    $config = Zend\Stdlib\ArrayUtils::merge($config, include $configFile);
+foreach (Stdlib\Glob::glob(__DIR__ . '/module.config.{,*}.php', Stdlib\Glob::GLOB_BRACE) as $file) {
+    $config = Stdlib\ArrayUtils::merge($config, include $file);
 }
+
 return $config;

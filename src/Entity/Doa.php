@@ -177,6 +177,14 @@ class Doa extends EntityAbstract implements ResourceInterface
     }
 
     /**
+     * @param \Organisation\Entity\Organisation $organisation
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+    }
+
+    /**
      * @return int
      */
     public function getId()

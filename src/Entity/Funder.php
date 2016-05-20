@@ -60,7 +60,7 @@ class Funder extends EntityAbstract implements ResourceInterface
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id", nullable=false)
      * })
-     * @Annotation\Type("Zend\Form\Element\Select")
+     * @Annotation\Type("Contact\Form\Element\Contact")
      * @Annotation\Options({"label":"txt-contact"})
      *
      * @var \Contact\Entity\Contact
@@ -72,8 +72,17 @@ class Funder extends EntityAbstract implements ResourceInterface
      * @ORM\JoinColumn(name="country_id", referencedColumnName="country_id", nullable=false)
      * })
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
-     * @Annotation\Options({"target_class":"General\Entity\Country"})
-     * @Annotation\Attributes({"label":"txt-country", "required":"true","class":"span3"})
+     * @Annotation\Options({
+     *      "target_class":"General\Entity\Country",
+     *      "find_method":{
+     *          "name":"findForForm",
+     *          "params": {
+     *              "criteria":{},
+     *              "orderBy":{}
+     *          }}
+     *      }
+     * )
+     * @Annotation\Attributes({"label":"txt-country"})
      *
      * @var \General\Entity\Country
      */

@@ -429,6 +429,10 @@ abstract class LinkAbstract extends AbstractViewHelper
      */
     public function getDoa()
     {
+        if (is_null($this->doa)) {
+            $this->doa = new Doa();
+        }
+
         return $this->doa;
     }
 

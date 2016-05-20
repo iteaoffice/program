@@ -41,7 +41,7 @@ class DoaController extends ProgramAbstractController
             return $this->notFoundAction();
         }
 
-        return new ViewModel([Doa::class => $doa]);
+        return new ViewModel(['doa' => $doa]);
     }
 
     /**
@@ -160,8 +160,8 @@ class DoaController extends ProgramAbstractController
         }
 
         return new ViewModel([
-            Doa::class => $doa,
-            'form'     => $form,
+            'doa'  => $doa,
+            'form' => $form,
         ]);
     }
 

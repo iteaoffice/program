@@ -15,6 +15,9 @@
 
 namespace Program\InputFilter\Call;
 
+use Doctrine\ORM\EntityManager;
+use DoctrineModule\Validator\UniqueObject;
+use Program\Entity\Call\Call;
 use Zend\InputFilter\InputFilter;
 
 /**
@@ -25,9 +28,11 @@ use Zend\InputFilter\InputFilter;
 class CallFilter extends InputFilter
 {
     /**
-     * Class constructor.
+     * CallFilter constructor.
+     *
+     * @param EntityManager $entityManager
      */
-    public function __construct()
+    public function __construct(EntityManager $entityManager)
     {
         $inputFilter = new InputFilter();
         $inputFilter->add([
