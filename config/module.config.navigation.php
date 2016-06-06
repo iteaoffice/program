@@ -17,14 +17,14 @@ return [
                         'route'  => 'community/program/nda/upload',
                         'params' => [
                             'entities'   => [
-                                'id' => Program\Entity\Call\Call::class
+                                'id' => Program\Entity\Call\Call::class,
                             ],
                             'routeParam' => [
-                                'id' => 'callId'
+                                'id' => 'callId',
                             ],
                             'invokables' => [
-                                Program\Navigation\Invokable\UploadNdaLabel::class
-                            ]
+                                Program\Navigation\Invokable\UploadNdaLabel::class,
+                            ],
                         ],
                     ],
                     'view-nda'   => [
@@ -33,11 +33,11 @@ return [
                         'visible' => false,
                         'params'  => [
                             'entities'   => [
-                                'id' => Program\Entity\Nda::class
+                                'id' => Program\Entity\Nda::class,
                             ],
                             'invokables' => [
-                                Program\Navigation\Invokable\NdaLabel::class
-                            ]
+                                Program\Navigation\Invokable\NdaLabel::class,
+                            ],
                         ],
                         'pages'   => [
                             'replace-nda' => [
@@ -46,7 +46,7 @@ return [
                                 'visible' => false,
                                 'params'  => [
                                     'entities' => [
-                                        'id' => Program\Entity\Nda::class
+                                        'id' => Program\Entity\Nda::class,
                                     ],
                                 ],
                             ],
@@ -69,11 +69,11 @@ return [
                                 'visible' => false,
                                 'params'  => [
                                     'entities'   => [
-                                        'id' => Program\Entity\Program::class
+                                        'id' => Program\Entity\Program::class,
                                     ],
                                     'invokables' => [
-                                        Program\Navigation\Invokable\ProgramLabel::class
-                                    ]
+                                        Program\Navigation\Invokable\ProgramLabel::class,
+                                    ],
                                 ],
                                 'pages'   => [
                                     'edit' => [
@@ -82,18 +82,18 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => Program\Entity\Program::class
+                                                'id' => Program\Entity\Program::class,
                                             ],
                                         ],
                                     ],
-                                ]
+                                ],
                             ],
                             'program-new'  => [
                                 'route'   => 'zfcadmin/program/new',
                                 'label'   => _("txt-add-program"),
                                 'visible' => false,
                             ],
-                        ]
+                        ],
                     ],
                     'call-list'    => [
                         'label' => _("txt-nav-program-calls"),
@@ -104,11 +104,11 @@ return [
                                 'visible' => false,
                                 'params'  => [
                                     'entities'   => [
-                                        'id' => Program\Entity\Call\Call::class
+                                        'id' => Program\Entity\Call\Call::class,
                                     ],
                                     'invokables' => [
-                                        Program\Navigation\Invokable\CallLabel::class
-                                    ]
+                                        Program\Navigation\Invokable\CallLabel::class,
+                                    ],
                                 ],
                                 'pages'   => [
                                     'edit'         => [
@@ -117,7 +117,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => Program\Entity\Call\Call::class
+                                                'id' => Program\Entity\Call\Call::class,
                                             ],
                                         ],
                                     ],
@@ -126,11 +126,11 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities'   => [
-                                                'id' => Program\Entity\Call\Country::class
+                                                'id' => Program\Entity\Call\Country::class,
                                             ],
                                             'invokables' => [
-                                                Program\Navigation\Invokable\CountryLabel::class
-                                            ]
+                                                Program\Navigation\Invokable\CountryLabel::class,
+                                            ],
                                         ],
                                     ],
                                     'new-country'  => [
@@ -139,10 +139,10 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities'   => [
-                                                'id' => Program\Entity\Call\Call::class
+                                                'id' => Program\Entity\Call\Call::class,
                                             ],
                                             'routeParam' => [
-                                                'id' => 'call'
+                                                'id' => 'call',
                                             ],
                                         ],
                                     ],
@@ -151,25 +151,53 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities'   => [
-                                                'id' => Program\Entity\Call\Country::class
+                                                'id' => Program\Entity\Call\Country::class,
                                             ],
                                             'invokables' => [
-                                                Program\Navigation\Invokable\CountryLabel::class
-                                            ]
+                                                Program\Navigation\Invokable\CountryLabel::class,
+                                            ],
                                         ],
                                     ],
-                                ]
+                                ],
                             ],
                             'call-new'          => [
                                 'route'   => 'zfcadmin/call/new',
                                 'label'   => _("txt-add-call"),
                                 'visible' => false,
                             ],
-                        ]
+                        ],
                     ],
                     'nda-approval' => [
                         'label' => _("txt-nav-nda-approval"),
                         'route' => 'zfcadmin/nda/approval',
+                        'pages' => [
+                            'nda' => [
+                                'route'   => 'zfcadmin/nda/view',
+                                'visible' => false,
+                                'params'  => [
+                                    'entities'   => [
+                                        'id' => Program\Entity\Nda::class,
+                                    ],
+                                    'invokables' => [
+                                        Program\Navigation\Invokable\CountryLabel::class,
+                                    ],
+                                ],
+                                'pages'   => [
+                                    'edit' => [
+                                        'route'   => 'zfcadmin/nda/edit',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities'   => [
+                                                'id' => Program\Entity\Nda::class,
+                                            ],
+                                            'invokables' => [
+                                                Program\Navigation\Invokable\NdaLabel::class,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
                     ],
                     'funder'       => [
                         'label' => _("txt-nav-funder-list"),
@@ -180,11 +208,11 @@ return [
                                 'visible' => false,
                                 'params'  => [
                                     'entities'   => [
-                                        'id' => Program\Entity\Funder::class
+                                        'id' => Program\Entity\Funder::class,
                                     ],
                                     'invokables' => [
-                                        Program\Navigation\Invokable\FunderLabel::class
-                                    ]
+                                        Program\Navigation\Invokable\FunderLabel::class,
+                                    ],
                                 ],
                                 'pages'   => [
                                     'edit' => [
@@ -193,11 +221,11 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => Program\Entity\Funder::class
+                                                'id' => Program\Entity\Funder::class,
                                             ],
                                         ],
                                     ],
-                                ]
+                                ],
                             ],
                             'funder-new'  => [
                                 'label'   => _("txt-add-funder"),
@@ -205,11 +233,11 @@ return [
                                 'visible' => false,
                                 'params'  => [
                                     'entities' => [
-                                        'id' => Program\Entity\Funder::class
+                                        'id' => Program\Entity\Funder::class,
                                     ],
                                 ],
                             ],
-                        ]
+                        ],
                     ],
                 ],
             ],

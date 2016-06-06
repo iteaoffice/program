@@ -130,14 +130,14 @@ class NdaController extends ProgramAbstractController
                 $ndaObject->setNda($nda);
                 $this->getProgramService()->newEntity($ndaObject);
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf(_("txt-nda-has-been-replaced-successfully")));
+                    ->addMessage(sprintf($this->translate("txt-nda-has-been-replaced-successfully")));
 
-                return $this->redirect()->toRoute('program/nda/view', ['id' => $nda->getId()]);
+                return $this->redirect()->toRoute('community/program/nda/view', ['id' => $nda->getId()]);
             }
             if (isset($data['cancel'])) {
                 $this->flashMessenger()->setNamespace('info')->addMessage(sprintf(_("txt-action-has-been-cancelled")));
 
-                return $this->redirect()->toRoute('program/nda/view', ['id' => $nda->getId()]);
+                return $this->redirect()->toRoute('community/program/nda/view', ['id' => $nda->getId()]);
             }
         }
 

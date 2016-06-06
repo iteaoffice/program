@@ -78,9 +78,10 @@ class NdaManagerController extends ProgramAbstractController
             $this->getRequest()->getFiles()->toArray()
         );
 
-        $form = $this->getFormService()->prepare('nda', $nda, $data);
+        $form = $this->getFormService()->prepare(Nda::class, $nda, $data);
+
         $form->get($nda->get('underscore_entity_name'))->get('contact')->setValueOptions([
-            $nda->getContact()->getId() => $nda->getContact()->getFormName()
+            $nda->getContact()->getId() => $nda->getContact()->getFormName(),
         ]);
         $form->get($nda->get('underscore_entity_name'))->get('programCall')->setValue($nda->getCall());
 
@@ -166,8 +167,8 @@ class NdaManagerController extends ProgramAbstractController
      */
     public function approveAction()
     {
-        $nda = $this->getEvent()->getRequest()->getPost()->get('nda');
-        $dateSigned = $this->getEvent()->getRequest()->getPost()->get('dateSigned');
+        $nda = $this->params()->fromPost('nda');
+        $dateSigned = $this->params()->fromPost('dateSigned');
 
         if (empty($dateSigned)) {
             return new JsonModel([

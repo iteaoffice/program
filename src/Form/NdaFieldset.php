@@ -29,9 +29,9 @@ class NdaFieldset extends Fieldset implements InputFilterProviderInterface
      */
     public function __construct(EntityManager $entityManager)
     {
-        parent::__construct('nda');
+        parent::__construct('program_entity_nda');
         $nda = new Entity\Nda();
-        $doctrineHydrator = new DoctrineHydrator($entityManager, 'Program\Entity\Nda');
+        $doctrineHydrator = new DoctrineHydrator($entityManager, Entity\Nda::class);
         $this->setHydrator($doctrineHydrator)->setObject($nda);
 
         $this->add(
@@ -75,7 +75,7 @@ class NdaFieldset extends Fieldset implements InputFilterProviderInterface
                     'object_manager'     => $entityManager,
                     'target_class'       => Call::class,
                     'display_empty_item' => true,
-                    'empty_item_label'   => "-- "._("txt-not-connected-to-a-call"),
+                    'empty_item_label'   => "-- " . _("txt-not-connected-to-a-call"),
                     'find_method'        => [
                         'name'   => 'findBy',
                         'params' => [

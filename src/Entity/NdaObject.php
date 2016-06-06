@@ -40,7 +40,7 @@ class NdaObject extends EntityAbstract
      */
     private $object;
     /**
-     * @ORM\ManyToOne(targetEntity="Nda", inversedBy="object", cascade={"persist","remove"})
+     * @ORM\ManyToOne(targetEntity="Nda", inversedBy="object", cascade={"persist"})
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="nda_id", referencedColumnName="nda_id",nullable=false)
      * })
