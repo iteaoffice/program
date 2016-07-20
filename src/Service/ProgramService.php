@@ -39,6 +39,16 @@ class ProgramService extends ServiceAbstract
     }
 
     /**
+     * @param string $name
+     *
+     * @return null|Program
+     */
+    public function findProgramByName($name)
+    {
+        return $this->getEntityManager()->getRepository(Program::class)->findOneBy(['program' => $name]);
+    }
+
+    /**
      * @param Country $country
      *
      * @return Funder[]

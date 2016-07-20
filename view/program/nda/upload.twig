@@ -72,7 +72,7 @@
     <dl class="dl-horizontal">
         {% if call %}
             <dt>{{ translate("txt-program-call") }}</dt>
-            <dd>{{ callLink(call,'view-list', 'name') }}</dd>
+            <dd>{{ call }}</dd>
         {% endif %}
         <dt>{{ translate("txt-contact") }}</dt>
         <dd>{{ zfcUserIdentity().displayName() }}</dd>

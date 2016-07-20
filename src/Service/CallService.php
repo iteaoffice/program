@@ -54,6 +54,16 @@ class CallService extends ServiceAbstract
     }
 
     /**
+     * @param string $name
+     *
+     * @return null|Call
+     */
+    public function findCallByName($name)
+    {
+        return $this->getEntityManager()->getRepository(Call::class)->findOneBy(['call' => $name]);
+    }
+
+    /**
      * Get a list of not approved lois.
      *
      * @return Nda[]|ArrayCollection
