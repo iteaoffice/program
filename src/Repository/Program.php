@@ -55,4 +55,28 @@ class Program extends EntityRepository
 
         return $queryBuilder->getQuery();
     }
+
+    /**
+     * @param Entity\Program $program
+     *
+     * @return mixed
+     */
+    public function findMinAndMaxYearInProgram(Entity\Program $program)
+    {
+        $emConfig = $this->getEntityManager()->getConfiguration();
+        $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
+
+        $dql
+                = 'SELECT
+                        MIN(YEAR(project_entity_version_version.dateSubmitted)) AS minYear,
+                        MAX(YEAR(project_entity_project.dateEndActual)) AS maxYear
+                   FROM Project\Entity\Project project_entity_project
+                   JOIN project_entity_project.call program_entity_call
+                   JOIN project_entity_project.version project_entity_version_version
+                   JOIN program_entity_call.program program_entity_program
+                   WHERE program_entity_program.id = ' . $program->getId();
+        $result = $this->_em->createQuery($dql)->getScalarResult();
+
+        return array_shift($result);
+    }
 }

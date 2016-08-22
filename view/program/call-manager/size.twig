@@ -1,0 +1,30 @@
+{% do headTitle().append(translate("txt-call-size")) %}
+<h1>{{ translate("txt-call-size-%s")|format(call) }}</h1>
+
+<table class="table table-condensed table-striped table-hover">
+    <thead>
+    <tr>
+        <th>{{ programLink(program,'view-admin','name') }}</th>
+        {% for year in yearSpan %}
+            <th>{{ year }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for project in projects %}
+        <tr>
+            <td>{{ projectLink(project,'view-admin','name') }}</td>
+            {% for year in yearSpan %}
+
+                <td>
+                    {% for version in versionOverview[project.id][year] %}
+                        {{ version.cost|parse_cost }} ({{ versionLink(version.version,'view-admin','type') }}) {% if not loop.last %} &middot; {% endif %}
+                    {% endfor %}
+                </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{{ form().closeTag()|raw }}

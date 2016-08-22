@@ -23,32 +23,34 @@ return [
                 ['route' => 'zfcadmin/program/view', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/program/new', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/program/list', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/program/size', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/call/edit', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/call/view', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/call/new', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/call/list', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/call/size', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/call/country/edit', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/call/country/view', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/call/country/new', 'roles' => [Access::ACCESS_OFFICE]],
                 [
                     'route'     => 'zfcadmin/nda/approval',
                     'roles'     => [Access::ACCESS_OFFICE],
-                    'assertion' => NdaAssertion::class
+                    'assertion' => NdaAssertion::class,
                 ],
                 [
                     'route'     => 'zfcadmin/nda/view',
                     'roles'     => [Access::ACCESS_OFFICE],
-                    'assertion' => NdaAssertion::class
+                    'assertion' => NdaAssertion::class,
                 ],
                 [
                     'route'     => 'zfcadmin/nda/edit',
                     'roles'     => [Access::ACCESS_OFFICE],
-                    'assertion' => NdaAssertion::class
+                    'assertion' => NdaAssertion::class,
                 ],
                 [
                     'route'     => 'zfcadmin/nda/approve',
                     'roles'     => [Access::ACCESS_OFFICE],
-                    'assertion' => NdaAssertion::class
+                    'assertion' => NdaAssertion::class,
                 ],
                 ['route' => 'zfcadmin/funder/view', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/funder/new', 'roles' => [Access::ACCESS_OFFICE]],

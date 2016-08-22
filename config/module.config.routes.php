@@ -49,7 +49,7 @@ return [
                                             ],
                                         ],
                                     ],
-                                ]
+                                ],
                             ],
                             'nda'     => [
                                 'type'         => 'Literal',
@@ -67,11 +67,11 @@ return [
                                         'options' => [
                                             'route'       => '/upload[/call-:callId].html',
                                             'constraints' => [
-                                                'id' => '\d+'
+                                                'id' => '\d+',
                                             ],
                                             'defaults'    => [
                                                 'action'    => 'upload',
-                                                'privilege' => 'upload'
+                                                'privilege' => 'upload',
                                             ],
                                         ],
                                     ],
@@ -80,11 +80,11 @@ return [
                                         'options' => [
                                             'route'       => '/render[/call-:callId].pdf',
                                             'constraints' => [
-                                                'id' => '\d+'
+                                                'id' => '\d+',
                                             ],
                                             'defaults'    => [
                                                 'action'    => 'render',
-                                                'privilege' => 'render'
+                                                'privilege' => 'render',
                                             ],
                                         ],
                                     ],
@@ -94,7 +94,7 @@ return [
                                             'route'    => '/view/nda-[:id].html',
                                             'defaults' => [
                                                 'action'    => 'view',
-                                                'privilege' => 'view'
+                                                'privilege' => 'view',
                                             ],
                                         ],
                                     ],
@@ -103,11 +103,11 @@ return [
                                         'options' => [
                                             'route'       => '/replace/nda-[:id].html',
                                             'constraints' => [
-                                                'id' => '\d+'
+                                                'id' => '\d+',
                                             ],
                                             'defaults'    => [
                                                 'action'    => 'replace',
-                                                'privilege' => 'replace'
+                                                'privilege' => 'replace',
                                             ],
                                         ],
                                     ],
@@ -116,11 +116,11 @@ return [
                                         'options' => [
                                             'route'       => '/download/nda-[:id].pdf',
                                             'constraints' => [
-                                                'id' => '\d+'
+                                                'id' => '\d+',
                                             ],
                                             'defaults'    => [
                                                 'action'    => 'download',
-                                                'privilege' => 'download'
+                                                'privilege' => 'download',
                                             ],
                                         ],
                                     ],
@@ -142,7 +142,7 @@ return [
                                             'route'    => '/render/organisation-[:organisationId]/program-[:programId].pdf',
                                             'defaults' => [
                                                 'action'    => 'render',
-                                                'privilege' => 'render'
+                                                'privilege' => 'render',
                                             ],
                                         ],
                                     ],
@@ -152,7 +152,7 @@ return [
                                             'route'    => '/upload/organisation-[:organisationId]/program-[:programId].html',
                                             'defaults' => [
                                                 'action'    => 'upload',
-                                                'privilege' => 'upload'
+                                                'privilege' => 'upload',
                                             ],
                                         ],
                                     ],
@@ -162,7 +162,7 @@ return [
                                             'route'    => '/view/[:id].html',
                                             'defaults' => [
                                                 'action'    => 'view',
-                                                'privilege' => 'view'
+                                                'privilege' => 'view',
                                             ],
                                         ],
                                     ],
@@ -172,7 +172,7 @@ return [
                                             'route'    => '/replace/[:id].html',
                                             'defaults' => [
                                                 'action'    => 'replace',
-                                                'privilege' => 'replace'
+                                                'privilege' => 'replace',
                                             ],
                                         ],
                                     ],
@@ -182,11 +182,11 @@ return [
                                             'route'    => '/download/[:id].pdf',
                                             'defaults' => [
                                                 'action'    => 'download',
-                                                'privilege' => 'download'
+                                                'privilege' => 'download',
                                             ],
                                         ],
                                     ],
-                                ]
+                                ],
                             ],
                         ],
                     ],
@@ -242,6 +242,15 @@ return [
                                     ],
                                 ],
                             ],
+                            'size' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/size[/program-:id].html',
+                                    'defaults' => [
+                                        'action' => 'size',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                     'call'    => [
@@ -289,6 +298,15 @@ return [
                                     'route'    => '/view/[:id].html',
                                     'defaults' => [
                                         'action' => 'view',
+                                    ],
+                                ],
+                            ],
+                            'size'    => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/size/call-[:id].html',
+                                    'defaults' => [
+                                        'action' => 'size',
                                     ],
                                 ],
                             ],
@@ -418,7 +436,7 @@ return [
                                     'defaults' => [
                                         'action' => 'list',
                                     ],
-                                ]
+                                ],
                             ],
                             'new'  => [
                                 'type'     => 'Literal',

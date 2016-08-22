@@ -1,7 +1,7 @@
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-call-%s")|format(call)) %}
 
-<h1>{{ translate("txt-call-%s")|format(call) }} {{ callLink(call,'edit','button') }}</h1>
+<h1>{{ translate("txt-call-%s")|format(call) }} {{ callLink(call,'edit','button') }} {{ callLink(call,'size','button') }}</h1>
 
 <h2>{{ translate("txt-call-information") }}</h2>
 <dl class="dl-horizontal">

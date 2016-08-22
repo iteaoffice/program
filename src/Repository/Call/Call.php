@@ -209,11 +209,12 @@ class Call extends EntityRepository
 
         $dql
             = 'SELECT
-                        MIN(YEAR(p.dateStartActual)) AS minYear,
-                        MAX(YEAR(p.dateEndActual)) AS maxYear
-                   FROM Project\Entity\Project p
-                   JOIN p.call c
-                   WHERE c.id = ' . $call->getId();
+                        MIN(YEAR(project_entity_version_version.dateSubmitted)) AS minYear,
+                        MAX(YEAR(project_entity_project.dateEnd)) AS maxYear
+                   FROM Project\Entity\Project project_entity_project
+                   JOIN project_entity_project.version project_entity_version_version
+                   JOIN project_entity_project.call program_entity_call
+                   WHERE program_entity_call.id = ' . $call->getId();
         $result = $this->_em->createQuery($dql)->getScalarResult();
 
         return array_shift($result);

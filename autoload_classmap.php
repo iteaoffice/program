@@ -84,6 +84,7 @@ return array(
     'Program\Navigation\Invokable\FunderLabel'              => __DIR__ . '/src/Navigation/Invokable/FunderLabel.php',
     'Program\Navigation\Invokable\CountryLabel'             => __DIR__ . '/src/Navigation/Invokable/CountryLabel.php',
     'Program\Navigation\Invokable\ProgramLabel'             => __DIR__ . '/src/Navigation/Invokable/ProgramLabel.php',
+    'Program\Form\SizeSelect'                               => __DIR__ . '/src/Form/SizeSelect.php',
     'Program\Form\UploadNda'                                => __DIR__ . '/src/Form/UploadNda.php',
     'Program\Form\ProgramFilter'                            => __DIR__ . '/src/Form/ProgramFilter.php',
     'Program\Form\ObjectFieldset'                           => __DIR__ . '/src/Form/ObjectFieldset.php',

@@ -16,6 +16,7 @@ namespace Program\Controller;
 use Admin\Service\AdminService;
 use BjyAuthorize\Controller\Plugin\IsAllowed;
 use Contact\Service\ContactService;
+use Doctrine\ORM\EntityManager;
 use General\Service\GeneralService;
 use Organisation\Service\OrganisationService;
 use Program\Controller\Plugin;
@@ -25,6 +26,7 @@ use Program\Service\CallService;
 use Program\Service\FormService;
 use Program\Service\ProgramService;
 use Project\Service\ProjectService;
+use Project\Service\VersionService;
 use Zend\I18n\View\Helper\Translate;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
@@ -75,6 +77,10 @@ abstract class ProgramAbstractController extends AbstractActionController
      */
     protected $projectService;
     /**
+     * @var VersionService
+     */
+    protected $versionService;
+    /**
      * @var OrganisationService
      */
     protected $organisationService;
@@ -86,6 +92,10 @@ abstract class ProgramAbstractController extends AbstractActionController
      * @var ModuleOptions
      */
     protected $moduleOptions;
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
 
     /**
      * @return FormService
@@ -287,6 +297,46 @@ abstract class ProgramAbstractController extends AbstractActionController
     public function setModuleOptions($moduleOptions)
     {
         $this->moduleOptions = $moduleOptions;
+
+        return $this;
+    }
+
+    /**
+     * @return EntityManager
+     */
+    public function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
+    /**
+     * @param EntityManager $entityManager
+     *
+     * @return ProgramAbstractController
+     */
+    public function setEntityManager($entityManager)
+    {
+        $this->entityManager = $entityManager;
+
+        return $this;
+    }
+
+    /**
+     * @return VersionService
+     */
+    public function getVersionService()
+    {
+        return $this->versionService;
+    }
+
+    /**
+     * @param VersionService $versionService
+     *
+     * @return ProgramAbstractController
+     */
+    public function setVersionService($versionService)
+    {
+        $this->versionService = $versionService;
 
         return $this;
     }

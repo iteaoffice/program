@@ -95,6 +95,10 @@ return [
                             ],
                         ],
                     ],
+                    'program-size' => [
+                        'label' => _("txt-nav-program-size"),
+                        'route' => 'zfcadmin/program/size',
+                    ],
                     'call-list'    => [
                         'label' => _("txt-nav-program-calls"),
                         'route' => 'zfcadmin/call/list',
@@ -116,6 +120,15 @@ return [
                                         'route'   => 'zfcadmin/call/edit',
                                         'visible' => false,
                                         'params'  => [
+                                            'entities' => [
+                                                'id' => Program\Entity\Call\Call::class,
+                                            ],
+                                        ],
+                                    ],
+                                    'call-size'    => [
+                                        'label'  => _("txt-nav-call-size"),
+                                        'route'  => 'zfcadmin/call/size',
+                                        'params' => [
                                             'entities' => [
                                                 'id' => Program\Entity\Call\Call::class,
                                             ],
@@ -167,6 +180,7 @@ return [
                             ],
                         ],
                     ],
+
                     'nda-approval' => [
                         'label' => _("txt-nav-nda-approval"),
                         'route' => 'zfcadmin/nda/approval',

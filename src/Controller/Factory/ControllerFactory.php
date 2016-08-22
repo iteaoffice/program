@@ -16,6 +16,7 @@ namespace Program\Controller\Factory;
 
 use Admin\Service\AdminService;
 use Contact\Service\ContactService;
+use Doctrine\ORM\EntityManager;
 use General\Service\GeneralService;
 use Interop\Container\ContainerInterface;
 use Organisation\Service\OrganisationService;
@@ -25,6 +26,7 @@ use Program\Service\CallService;
 use Program\Service\FormService;
 use Program\Service\ProgramService;
 use Project\Service\ProjectService;
+use Project\Service\VersionService;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -50,6 +52,10 @@ final class ControllerFactory implements FactoryInterface
 
         $serviceManager = $container->getServiceLocator();
 
+        /** @var EntityManager $entityManager */
+        $entityManager = $serviceManager->get(EntityManager::class);
+        $controller->setEntityManager($entityManager);
+
         /** @var FormService $formService */
         $formService = $serviceManager->get(FormService::class);
         $controller->setFormService($formService);
@@ -65,6 +71,10 @@ final class ControllerFactory implements FactoryInterface
         /** @var ProjectService $projectService */
         $projectService = $serviceManager->get(ProjectService::class);
         $controller->setProjectService($projectService);
+
+        /** @var VersionService $versionService */
+        $versionService = $serviceManager->get(VersionService::class);
+        $controller->setVersionService($versionService);
 
         /** @var OrganisationService $organisationService */
         $organisationService = $serviceManager->get(OrganisationService::class);

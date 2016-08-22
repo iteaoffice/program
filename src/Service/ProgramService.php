@@ -49,6 +49,34 @@ class ProgramService extends ServiceAbstract
     }
 
     /**
+     * Find the last open program and check which versionType is active.
+     *
+     * @return Program
+     */
+    public function findLastProgram()
+    {
+        return $this->getEntityManager()->getRepository(Program::class)->findOneBy([], ['id' => 'DESC']);
+    }
+
+    /**
+     * @param Program $program
+     *
+     * @return \stdClass
+     */
+    public function findMinAndMaxYearInProgram(Program $program)
+    {
+        /** @var \Program\Repository\Program $repository */
+        $repository = $this->getEntityManager()->getRepository(Program::class);
+
+        $yearSpanResult    = $repository->findMinAndMaxYearInProgram($program);
+        $yearSpan          = new \stdClass();
+        $yearSpan->minYear = (int)$yearSpanResult['minYear'];
+        $yearSpan->maxYear = (int)$yearSpanResult['maxYear'];
+
+        return $yearSpan;
+    }
+
+    /**
      * @param Country $country
      *
      * @return Funder[]
@@ -67,9 +95,11 @@ class ProgramService extends ServiceAbstract
      */
     public function findProgramDoaByProgramAndOrganisation(Program $program, Organisation $organisation)
     {
-        return $this->getEntityManager()->getRepository(Doa::class)->findOneBy([
-            'program'      => $program,
-            'organisation' => $organisation,
-        ]);
+        return $this->getEntityManager()->getRepository(Doa::class)->findOneBy(
+            [
+                'program'      => $program,
+                'organisation' => $organisation,
+            ]
+        );
     }
 }

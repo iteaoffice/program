@@ -70,7 +70,10 @@ class CallService extends ServiceAbstract
      */
     public function findNotApprovedNda()
     {
-        return new ArrayCollection($this->getEntityManager()->getRepository(Nda::class)->findNotApprovedNda());
+        /** @var \Program\Repository\Nda $repository */
+        $repository = $this->getEntityManager()->getRepository(Nda::class);
+
+        return new ArrayCollection($repository->findNotApprovedNda());
     }
 
     /**
@@ -82,7 +85,10 @@ class CallService extends ServiceAbstract
      */
     public function findOpenCall($type)
     {
-        return $this->getEntityManager()->getRepository(Call::class)->findOpenCall($type);
+        /** @var \Program\Repository\Call\Call $repository */
+        $repository = $this->getEntityManager()->getRepository(Call::class);
+
+        return $repository->findOpenCall($type);
     }
 
     /**
@@ -92,8 +98,11 @@ class CallService extends ServiceAbstract
      */
     public function findMinAndMaxYearInCall(Call $call)
     {
-        $yearSpanResult = $this->getEntityManager()->getRepository(Call::class)->findMinAndMaxYearInCall($call);
-        $yearSpan = new \stdClass();
+        /** @var \Program\Repository\Call\Call $repository */
+        $repository = $this->getEntityManager()->getRepository(Call::class);
+
+        $yearSpanResult    = $repository->findMinAndMaxYearInCall($call);
+        $yearSpan          = new \stdClass();
         $yearSpan->minYear = (int)$yearSpanResult['minYear'];
         $yearSpan->maxYear = (int)$yearSpanResult['maxYear'];
 
@@ -107,9 +116,12 @@ class CallService extends ServiceAbstract
      */
     public function findLastCallAndActiveVersionType()
     {
-        $result = $this->getEntityManager()->getRepository(Call::class)->findLastCallAndActiveVersionType();
-        $lastCallAndActiveVersionType = new \stdClass();
-        $lastCallAndActiveVersionType->call = $result['call'];
+        /** @var \Program\Repository\Call\Call $repository */
+        $repository = $this->getEntityManager()->getRepository(Call::class);
+
+        $result                                    = $repository->findLastCallAndActiveVersionType();
+        $lastCallAndActiveVersionType              = new \stdClass();
+        $lastCallAndActiveVersionType->call        = $result['call'];
         $lastCallAndActiveVersionType->versionType = $this->getVersionService()
             ->findEntityById(Type::class, $result['versionType']);
 
@@ -133,7 +145,10 @@ class CallService extends ServiceAbstract
      */
     public function findLastActiveCall()
     {
-        $notEmptyCalls = $this->getEntityManager()->getRepository(Call::class)->findNonEmptyCalls();
+        /** @var \Program\Repository\Call\Call $repository */
+        $repository = $this->getEntityManager()->getRepository(Call::class);
+
+        $notEmptyCalls = $repository->findNonEmptyCalls();
 
         if (sizeof($notEmptyCalls) > 0) {
             return end($notEmptyCalls);
@@ -204,11 +219,11 @@ class CallService extends ServiceAbstract
      */
     public function findFirstAndLastCall()
     {
-        $firstCall = $this->getEntityManager()->getRepository(Call::class)->findOneBy([], ['id' => 'ASC']);
-        $lastCall = $this->getEntityManager()->getRepository(Call::class)->findOneBy([], ['id' => 'DESC']);
-        $callSpan = new \stdClass();
+        $firstCall           = $this->getEntityManager()->getRepository(Call::class)->findOneBy([], ['id' => 'ASC']);
+        $lastCall            = $this->getEntityManager()->getRepository(Call::class)->findOneBy([], ['id' => 'DESC']);
+        $callSpan            = new \stdClass();
         $callSpan->firstCall = $firstCall;
-        $callSpan->lastCall = $lastCall;
+        $callSpan->lastCall  = $lastCall;
 
         return $callSpan;
     }
@@ -220,7 +235,10 @@ class CallService extends ServiceAbstract
      */
     public function findNonEmptyCalls(Program $program = null)
     {
-        return $this->getEntityManager()->getRepository(Call::class)->findNonEmptyCalls($program);
+        /** @var \Program\Repository\Call\Call $repository */
+        $repository = $this->getEntityManager()->getRepository(Call::class);
+
+        return $repository->findNonEmptyCalls($program);
     }
 
     /**
@@ -230,7 +248,10 @@ class CallService extends ServiceAbstract
      */
     public function findProjectAndPartners(Call $call)
     {
-        return $this->getEntityManager()->getRepository(Call::class)->findProjectAndPartners($call);
+        /** @var \Program\Repository\Call\Call $repository */
+        $repository = $this->getEntityManager()->getRepository(Call::class);
+
+        return $repository->findProjectAndPartners($call);
     }
 
     /**
@@ -250,53 +271,53 @@ class CallService extends ServiceAbstract
         /*
          * Go over the dates and find the most suited date.
          */
-        $type = null;
-        $today = new \DateTime();
-        $dateTime = new \DateTime();
+        $type                 = null;
+        $today                = new \DateTime();
+        $dateTime             = new \DateTime();
         $notificationDeadline = $dateTime->sub(new \DateInterval("P1W"));
 
         if ($call->getPoOpenDate() > $today) {
             $referenceDate = $call->getPoOpenDate();
-            $result = self::PO_NOT_OPEN;
-            $type = Type::TYPE_PO;
+            $result        = self::PO_NOT_OPEN;
+            $type          = Type::TYPE_PO;
         } elseif ($call->getPoCloseDate() > $today) {
             $referenceDate = $call->getPoCloseDate();
-            $result = self::PO_OPEN;
-            $type = Type::TYPE_PO;
+            $result        = self::PO_OPEN;
+            $type          = Type::TYPE_PO;
         } elseif ($call->getPoGraceDate() > $today) {
             $referenceDate = $call->getPoCloseDate();
-            $result = self::PO_GRACE;
-            $type = Type::TYPE_PO;
+            $result        = self::PO_GRACE;
+            $type          = Type::TYPE_PO;
         } elseif ($call->getPoCloseDate() > $notificationDeadline
             && $call->getFppOpenDate() > $today
         ) {
             $referenceDate = $call->getPoCloseDate();
-            $result = self::PO_CLOSED;
-            $type = Type::TYPE_PO;
+            $result        = self::PO_CLOSED;
+            $type          = Type::TYPE_PO;
         } elseif ($call->getFppOpenDate() > $today) {
             $referenceDate = $call->getFppOpenDate();
-            $result = self::FPP_NOT_OPEN;
-            $type = Type::TYPE_FPP;
+            $result        = self::FPP_NOT_OPEN;
+            $type          = Type::TYPE_FPP;
         } elseif ($call->getFppCloseDate() > $today) {
             $referenceDate = $call->getFppCloseDate();
-            $result = self::FPP_OPEN;
-            $type = Type::TYPE_FPP;
+            $result        = self::FPP_OPEN;
+            $type          = Type::TYPE_FPP;
         } elseif ($call->getPoGraceDate() > $today) {
             $referenceDate = $call->getFppCloseDate();
-            $result = self::FPP_GRACE;
-            $type = Type::TYPE_FPP;
+            $result        = self::FPP_GRACE;
+            $type          = Type::TYPE_FPP;
         } elseif ($call->getFppCloseDate() > $notificationDeadline) {
             $referenceDate = $call->getFppCloseDate();
-            $result = self::FPP_CLOSED;
-            $type = Type::TYPE_FPP;
+            $result        = self::FPP_CLOSED;
+            $type          = Type::TYPE_FPP;
         } else {
             $referenceDate = null;
-            $result = self::UNDEFINED;
-            $type = Type::TYPE_CR;
+            $result        = self::UNDEFINED;
+            $type          = Type::TYPE_CR;
         }
 
-        $callStatus->result = $result;
-        $callStatus->type = $this->getVersionService()->findEntityById(Type::class, $type);
+        $callStatus->result        = $result;
+        $callStatus->type          = $this->getVersionService()->findEntityById(Type::class, $type);
         $callStatus->referenceDate = $referenceDate;
 
         return $callStatus;
@@ -310,7 +331,10 @@ class CallService extends ServiceAbstract
      */
     public function findNdaByCallAndContact(Call $call, Contact $contact)
     {
-        return $this->getEntityManager()->getRepository(Nda::class)->findNdaByCallAndContact($call, $contact);
+        /** @var \Program\Repository\Nda $repository */
+        $repository = $this->getEntityManager()->getRepository(Nda::class);
+
+        return $repository->findNdaByCallAndContact($call, $contact);
     }
 
     /**
@@ -320,7 +344,10 @@ class CallService extends ServiceAbstract
      */
     public function findNdaByContact(Contact $contact)
     {
-        return $this->getEntityManager()->getRepository(Nda::class)->findNdaByContact($contact);
+        /** @var \Program\Repository\Nda $repository */
+        $repository = $this->getEntityManager()->getRepository(Nda::class);
+
+        return $repository->findNdaByContact($contact);
     }
 
     /**
@@ -363,7 +390,7 @@ class CallService extends ServiceAbstract
      * @param Contact $contact
      * @param Call    $call
      *
-     * @return NdaObject
+     * @return Nda
      */
     public function uploadNda(array $file, Contact $contact, Call $call = null)
     {
@@ -371,7 +398,7 @@ class CallService extends ServiceAbstract
         $ndaObject->setObject(file_get_contents($file['tmp_name']));
         $nda = new Nda();
         $nda->setContact($contact);
-        if (!is_null($call)) {
+        if (! is_null($call)) {
             $nda->setCall([$call]);
         }
         $nda->setSize($file['size']);

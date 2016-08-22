@@ -49,7 +49,7 @@ class ProgramLink extends LinkAbstract
             'name' => $this->getProgram(),
 
         ]);
-        $this->addRouterParam('entity', 'program');
+
         if (!is_null($program)) {
             $this->addRouterParam('id', $this->getProgram()->getId());
         }
@@ -66,6 +66,10 @@ class ProgramLink extends LinkAbstract
             case 'new':
                 $this->setRouter('zfcadmin/program/new');
                 $this->setText($this->translate("txt-new-program"));
+                break;
+            case 'size':
+                $this->setRouter('zfcadmin/program/size');
+                $this->setText(sprintf($this->translate("txt-program-size-%s"), $this->getProgram()));
                 break;
             case 'view-admin':
                 $this->setRouter('zfcadmin/program/view');

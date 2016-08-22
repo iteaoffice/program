@@ -46,13 +46,15 @@ class CallLink extends LinkAbstract
         /*
          * Set the non-standard options needed to give an other link value
          */
-        if (!is_null($call)) {
+        if (! is_null($call)) {
             $this->addRouterParam('id', $this->getCall()->getId());
 
-            $this->setShowOptions([
-                'name'                 => $this->getCall(),
-                'name-without-program' => $this->getCall()->getCall(),
-            ]);
+            $this->setShowOptions(
+                [
+                    'name'                 => $this->getCall(),
+                    'name-without-program' => $this->getCall()->getCall(),
+                ]
+            );
         }
         $this->addRouterParam('entity', 'call');
 
@@ -72,6 +74,10 @@ class CallLink extends LinkAbstract
             case 'edit':
                 $this->setRouter('zfcadmin/call/edit');
                 $this->setText(sprintf($this->translate("txt-edit-call-%s"), $this->getCall()));
+                break;
+            case 'size':
+                $this->setRouter('zfcadmin/call/size');
+                $this->setText(sprintf($this->translate("txt-call-size-%s"), $this->getCall()));
                 break;
             case 'view-admin':
                 $this->setRouter('zfcadmin/call/view');
@@ -98,11 +104,13 @@ class CallLink extends LinkAbstract
                 break;
 
             default:
-                throw new \InvalidArgumentException(sprintf(
-                    "%s is an incorrect action for %s",
-                    $this->getAction(),
-                    __CLASS__
-                ));
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        "%s is an incorrect action for %s",
+                        $this->getAction(),
+                        __CLASS__
+                    )
+                );
         }
     }
 }
