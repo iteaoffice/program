@@ -109,35 +109,34 @@ class NdaManagerController extends ProgramAbstractController
                  */
                 $nda = $form->getData();
 
-
                 $fileData = $this->params()->fromFiles();
 
-                if ($fileData['nda']['file']['error'] === 0) {
+                if ($fileData['program_entity_nda']['file']['error'] === 0) {
                     /*
                      * Replace the content of the object
                      */
                     if (!$nda->getObject()->isEmpty()) {
-                        $nda->getObject()->first()->setObject(file_get_contents($fileData['nda']['file']['tmp_name']));
+                        $nda->getObject()->first()->setObject(file_get_contents($fileData['program_entity_nda']['file']['tmp_name']));
                     } else {
                         $ndaObject = new NdaObject();
-                        $ndaObject->setObject(file_get_contents($fileData['nda']['file']['tmp_name']));
+                        $ndaObject->setObject(file_get_contents($fileData['program_entity_nda']['file']['tmp_name']));
                         $ndaObject->setNda($nda);
                         $this->getCallService()->newEntity($ndaObject);
                     }
 
                     //Create a article object element
                     $fileSizeValidator = new FilesSize(PHP_INT_MAX);
-                    $fileSizeValidator->isValid($fileData['nda']['file']);
+                    $fileSizeValidator->isValid($fileData['program_entity_nda']['file']);
                     $nda->setSize($fileSizeValidator->size);
                     $nda->setContentType($this->getGeneralService()
-                        ->findContentTypeByContentTypeName($fileData['nda']['file']['type']));
+                        ->findContentTypeByContentTypeName($fileData['program_entity_nda']['file']['type']));
                 }
 
                 /*
                  * The programme call needs to have a dedicated treatment
                  */
-                if (!empty($data['nda']['programCall'])) {
-                    $nda->setCall([$this->getCallService()->findCallById($data['nda']['programCall'])]);
+                if (!empty($data['program_entity_nda']['programCall'])) {
+                    $nda->setCall([$this->getCallService()->findCallById($data['program_entity_nda']['programCall'])]);
                 } else {
                     $nda->setCall([]);
                 }
