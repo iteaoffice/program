@@ -25,6 +25,7 @@ use Program\Options\ModuleOptions;
 use Program\Service\CallService;
 use Program\Service\FormService;
 use Program\Service\ProgramService;
+use Project\Service\EvaluationService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
 use Zend\Mvc\Controller\ControllerManager;
@@ -95,6 +96,10 @@ final class ControllerFactory implements FactoryInterface
         /** @var ModuleOptions $moduleOptions */
         $moduleOptions = $serviceManager->get(ModuleOptions::class);
         $controller->setModuleOptions($moduleOptions);
+
+        /** @var EvaluationService $evaluationService */
+        $evaluationService = $serviceManager->get(EvaluationService::class);
+        $controller->setEvaluationService($evaluationService);
 
         return $controller;
     }

@@ -22,7 +22,7 @@
 
     {% for call in program.call %}
         <tr>
-            <td>{{ callLink(call,'size','name') }}</td>
+            <td>{{ callLink(call,'size','name') }} {{ callLink(call, 'funding', 'icon') }}</td>
             {% for year in yearSpan %}
                 <td {% if projectOverview[call.id][year] %}title="{% for project, amount in projectOverview[call.id][year] %}{{ project }}: {{ amount|parse_funding }}  &middot; {% endfor %}"{% endif %}>{% if totals[call.id][year] %}{{ totals[call.id][year]|parse_cost }}{% endif %}</td>
             {% endfor %}

@@ -1,10 +1,11 @@
 {% do headTitle().append(translate("txt-call-size")) %}
-<h1>{{ translate("txt-call-size-%s")|format(call) }}</h1>
+<h1>{{ translate("txt-call-size-%s")|format(call) }} {{ callLink(call, 'funding', 'button') }}</h1>
+
 
 <table class="table table-condensed table-striped table-hover">
     <thead>
     <tr>
-        <th>{{ programLink(program,'view-admin','name') }}</th>
+        <th colspan="2">{{ programLink(program,'view-admin','name') }}</th>
         {% for year in yearSpan %}
             <th>{{ year }}</th>
         {% endfor %}
@@ -13,6 +14,7 @@
     <tbody>
     {% for project in projects %}
         <tr>
+            <td>{{ projectStatusIcon(project) }}</td>
             <td>{{ projectLink(project,'view-admin','name') }}</td>
             {% for year in yearSpan %}
 
@@ -26,5 +28,4 @@
     {% endfor %}
     </tbody>
 </table>
-
-{{ form().closeTag()|raw }}
+</div>

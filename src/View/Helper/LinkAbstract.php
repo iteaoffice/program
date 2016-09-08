@@ -180,6 +180,15 @@ abstract class LinkAbstract extends AbstractViewHelper
                     case 'download':
                         $this->addLinkContent('<i class="fa fa-file-zip-o"></i>');
                         break;
+                    case 'funding':
+                        $this->addLinkContent('<i class="fa fa-eur" aria-hidden="true"></i>');
+                        break;
+                    case 'download-funding':
+                        $this->addLinkContent('<i class="fa fa-file-excel-o" aria-hidden="true"></i>');
+                        break;
+                    case 'size':
+                        $this->addLinkContent('<i class="fa fa-signal" aria-hidden="true"></i>');
+                        break;
                     default:
                         $this->addLinkContent('<i class="fa fa-file-o"></i>');
                         break;

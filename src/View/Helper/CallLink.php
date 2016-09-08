@@ -79,6 +79,14 @@ class CallLink extends LinkAbstract
                 $this->setRouter('zfcadmin/call/size');
                 $this->setText(sprintf($this->translate("txt-call-size-%s"), $this->getCall()));
                 break;
+            case 'funding':
+                $this->setRouter('zfcadmin/call/funding');
+                $this->setText(sprintf($this->translate("txt-call-funding-%s"), $this->getCall()));
+                break;
+            case 'download-funding':
+                $this->setRouter('zfcadmin/call/download-funding');
+                $this->setText(sprintf($this->translate("txt-download-funding-%s"), $this->getCall()));
+                break;
             case 'view-admin':
                 $this->setRouter('zfcadmin/call/view');
                 $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));

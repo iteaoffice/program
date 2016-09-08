@@ -265,7 +265,7 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes'  => [
-                            'list'    => [
+                            'list'             => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/list[/f-:encodedFilter][/page-:page].html',
@@ -274,7 +274,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'new'     => [
+                            'new'              => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/new.html',
@@ -283,7 +283,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'edit'    => [
+                            'edit'             => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/edit/[:id].html',
@@ -292,7 +292,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'view'    => [
+                            'view'             => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/view/[:id].html',
@@ -301,7 +301,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'size'    => [
+                            'size'             => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/size/call-[:id].html',
@@ -310,7 +310,25 @@ return [
                                     ],
                                 ],
                             ],
-                            'country' => [
+                            'funding'          => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/funding/call-[:id][/year-:year].html',
+                                    'defaults' => [
+                                        'action' => 'funding',
+                                    ],
+                                ],
+                            ],
+                            'download-funding' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/funding/download/call-[:id].csv',
+                                    'defaults' => [
+                                        'action' => 'download-funding',
+                                    ],
+                                ],
+                            ],
+                            'country'          => [
                                 'type'          => 'Segment',
                                 'priority'      => 1000,
                                 'options'       => [

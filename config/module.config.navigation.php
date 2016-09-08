@@ -134,6 +134,15 @@ return [
                                             ],
                                         ],
                                     ],
+                                    'call-funding' => [
+                                        'label'  => _("txt-nav-call-funding"),
+                                        'route'  => 'zfcadmin/call/funding',
+                                        'params' => [
+                                            'entities' => [
+                                                'id' => Program\Entity\Call\Call::class,
+                                            ],
+                                        ],
+                                    ],
                                     'edit-country' => [
                                         'route'   => 'zfcadmin/call/country/edit',
                                         'visible' => false,

@@ -25,6 +25,7 @@ use Program\Options\ModuleOptions;
 use Program\Service\CallService;
 use Program\Service\FormService;
 use Program\Service\ProgramService;
+use Project\Service\EvaluationService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
 use Zend\I18n\View\Helper\Translate;
@@ -49,6 +50,8 @@ use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
  * @method      Plugin\GetFilter getProgramFilter()
  * @method      Plugin\RenderDoa renderDoa($doa)
  * @method      Plugin\RenderNda renderNda()
+ * @method      Plugin\CreateCallFundingOverview createCallFundingOverview()
+ * @method      Plugin\CreateFundingDownload createFundingDownload()
  */
 abstract class ProgramAbstractController extends AbstractActionController
 {
@@ -96,6 +99,10 @@ abstract class ProgramAbstractController extends AbstractActionController
      * @var EntityManager
      */
     protected $entityManager;
+    /**
+     * @var EvaluationService
+     */
+    protected $evaluationService;
 
     /**
      * @return FormService
@@ -337,6 +344,26 @@ abstract class ProgramAbstractController extends AbstractActionController
     public function setVersionService($versionService)
     {
         $this->versionService = $versionService;
+
+        return $this;
+    }
+
+    /**
+     * @return EvaluationService
+     */
+    public function getEvaluationService()
+    {
+        return $this->evaluationService;
+    }
+
+    /**
+     * @param EvaluationService $evaluationService
+     *
+     * @return ProgramAbstractController
+     */
+    public function setEvaluationService($evaluationService)
+    {
+        $this->evaluationService = $evaluationService;
 
         return $this;
     }

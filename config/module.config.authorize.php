@@ -29,6 +29,8 @@ return [
                 ['route' => 'zfcadmin/call/new', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/call/list', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/call/size', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/call/funding', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/call/download-funding', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/call/country/edit', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/call/country/view', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/call/country/new', 'roles' => [Access::ACCESS_OFFICE]],

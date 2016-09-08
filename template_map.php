@@ -25,6 +25,7 @@ return array(
     'program/nda-manager/approval'          => __DIR__ . '//view/program/nda-manager/approval.twig',
     'program/nda-manager/view'              => __DIR__ . '//view/program/nda-manager/view.twig',
     'program/nda-manager/edit'              => __DIR__ . '//view/program/nda-manager/edit.twig',
+    'program/call-manager/funding'          => __DIR__ . '//view/program/call-manager/funding.twig',
     'program/call-manager/new'              => __DIR__ . '//view/program/call-manager/new.twig',
     'program/call-manager/list'             => __DIR__ . '//view/program/call-manager/list.twig',
     'program/call-manager/view'             => __DIR__ . '//view/program/call-manager/view.twig',

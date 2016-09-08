@@ -20,7 +20,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use Program\Entity\Call\Call;
 use Program\Form\CallFilter;
-use Program\Form\SizeSelect;
+use Program\Form\FundingFilter;
 use Project\Entity\Project;
 use Project\Entity\Version\Version;
 use Project\Service\ProjectService;
@@ -162,11 +162,6 @@ class CallManagerController extends ProgramAbstractController
     {
         $call = $this->getCallService()->findCallById($this->params('id'));
 
-
-        //Go over the projects and add the evaluationTypes in a dedicated matrix
-        $projectOverview = [];
-
-
         //Only add the active projects
         $activeProjects = $this->getProjectService()->findProjectsByCall($call, ProjectService::WHICH_LABELLED);
         $projects       = $activeProjects->getQuery()->getResult();
@@ -198,5 +193,88 @@ class CallManagerController extends ProgramAbstractController
                 'projects'        => $projects,
             ]
         );
+    }
+
+    /**
+     * Edit an template by finding it and call the corresponding form.
+     *
+     * @return \Zend\View\Model\ViewModel
+     */
+    public function fundingAction()
+    {
+        $callId = $this->params('id', $this->getCallService()->findFirstAndLastCall()->lastCall->getId());
+
+
+        $call       = $this->getCallService()->findCallById($callId);
+        $minMaxYear = $this->getCallService()->findMinAndMaxYearInCall($call);
+
+        $year = $this->params('year', $minMaxYear->maxYear);
+        /*
+         * The form can be used to overrule some parameters. We therefore need to check if the form is set
+         * posted correctly and need to update the params when the form has been post
+         */
+        $form = new FundingFilter($this->getEntityManager(), $minMaxYear);
+        $form->setData($this->getRequest()->getPost()->toArray());
+
+        if ($this->getRequest()->isPost() && $form->isValid()) {
+            $formData = $form->getData();
+
+            $this->redirect()->toRoute(
+                'zfcadmin/call/funding',
+                [
+                    'id'   => (int)$formData['call'],
+                    'year' => (int)$formData['year'],
+
+
+                ]
+            );
+        } else {
+            $form->setData(
+                [
+                    'call' => $callId,
+                    'year' => $year,
+                ]
+            );
+        }
+
+        $projects = $this->getProjectService()->findProjectsByCall($call)->getQuery()->getResult();
+
+        return new ViewModel(
+            [
+                'projects'      => $projects,
+                'fundingResult' => $this->createCallFundingOverview()->create($projects, $year),
+                'year'          => $year,
+                'call'          => $call,
+                'form'          => $form,
+            ]
+        );
+    }
+
+    /**
+     * @return \Zend\Http\PhpEnvironment\Response|\Zend\Stdlib\ResponseInterface
+     */
+    public function downloadFundingAction()
+    {
+        $callId = $this->params('id');
+        $call   = $this->getCallService()->findCallById($callId);
+
+        $string = $this->createFundingDownload()->create($call);
+
+        //To be able to open the file correctly in Excel, we need to convert it to UTF-16LE
+        $string = mb_convert_encoding($string, 'UTF-16LE', 'UTF8');
+
+        $response = $this->getResponse();
+        $headers  = $response->getHeaders();
+        $headers->addHeaderLine('Content-Type', 'text/csv');
+        $headers->addHeaderLine(
+            'Content-Disposition',
+            "attachment; filename=\"funding_call_$call.csv\""
+        );
+        $headers->addHeaderLine('Accept-Ranges', 'bytes');
+        $headers->addHeaderLine('Content-Length', strlen($string));
+
+        $response->setContent($string);
+
+        return $response;
     }
 }
