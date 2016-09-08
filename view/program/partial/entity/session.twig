@@ -1,7 +1,7 @@
 {% do headTitle().append(translate("txt-session")) %}
 {% do headTitle().append(session.session) %}
 
-<h1>{{ session.session }} {# callSessionLink(session,'download','icon') #}</h1>
+<h1>{{ session.session }}</h1>
 
 <dl class="dl-horizontal">
     <dt>{{ translate("txt-name") }}</dt>
@@ -12,12 +12,11 @@
     <dd>{{ session.call }}</dd>
 </dl>
 
-<h2>{{ translate("txt-presentations") }}</h2>
+<h2 class="pitch-overview">{{ translate("txt-presentations") }}</h2>
 <table class="table table-hover table-striped table-condensed">
     <thead>
     <tr>
         <th>{{ translate("txt-time") }}</th>
-        <th>{{ translate("txt-number") }}</th>
         <th>{{ translate("txt-idea") }}</th>
         <th>{{ translate("txt-title") }}</th>
         <th>{{ translate("txt-presenter") }}</th>
@@ -27,7 +26,6 @@
     {% for ideaSession in session.ideaSession %}
         <tr>
             <td>{{ ideaSession.schedule }}</td>
-            <td>{{ ideaSession.idea.number }}</td>
             <td>{{ ideaLink(ideaSession.idea,'view','name') }}
                 {% if session.id in [25,28] %}
                     {% for document in ideaSession.idea.document if 'pitch' in document.document and document.contentType.id == 1 %}
