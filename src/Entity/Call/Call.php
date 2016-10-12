@@ -42,6 +42,19 @@ class Call extends EntityAbstract implements ResourceInterface
     const PO_GRACE_PERIOD = 'PO_GRACE_PERIOD';
     const PO_OPEN = 'PO_OPEN';
 
+    const INACTIVE = 0;
+    const ACTIVE = 1;
+
+
+    /**
+     * @var array
+     */
+    protected static $activeTemplates
+        = [
+            self::INACTIVE => 'txt-inactive-for-projects',
+            self::ACTIVE   => 'txt-active-for-projects',
+        ];
+
     const DOA_REQUIREMENT_NOT_APPLICABLE = 1;
     const DOA_REQUIREMENT_PER_PROGRAM = 2;
     const DOA_REQUIREMENT_PER_PROJECT = 3;
@@ -168,6 +181,15 @@ class Call extends EntityAbstract implements ResourceInterface
      */
     private $ndaRequirement;
     /**
+     * @ORM\Column(name="active", type="smallint", nullable=false)
+     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Attributes({"array":"activeTemplates"})
+     * @Annotation\Options({"label":"txt-program-call-active-label","help-block":"txt-program-call-active-inline-help"})
+     *
+     * @var int
+     */
+    private $active;
+    /**
      * @ORM\ManyToOne(targetEntity="Program\Entity\Program", cascade={"persist"}, inversedBy="call")
      * @ORM\JoinColumn(name="program_id", referencedColumnName="program_id", nullable=false)
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
@@ -276,17 +298,17 @@ class Call extends EntityAbstract implements ResourceInterface
      */
     public function __construct()
     {
-        $this->publication = new Collections\ArrayCollection();
-        $this->meeting = new Collections\ArrayCollection();
-        $this->nda = new Collections\ArrayCollection();
-        $this->calendar = new Collections\ArrayCollection();
-        $this->doa = new Collections\ArrayCollection();
-        $this->image = new Collections\ArrayCollection();
-        $this->idea = new Collections\ArrayCollection();
-        $this->ideaTool = new Collections\ArrayCollection();
+        $this->publication      = new Collections\ArrayCollection();
+        $this->meeting          = new Collections\ArrayCollection();
+        $this->nda              = new Collections\ArrayCollection();
+        $this->calendar         = new Collections\ArrayCollection();
+        $this->doa              = new Collections\ArrayCollection();
+        $this->image            = new Collections\ArrayCollection();
+        $this->idea             = new Collections\ArrayCollection();
+        $this->ideaTool         = new Collections\ArrayCollection();
         $this->ideaMessageBoard = new Collections\ArrayCollection();
-        $this->session = new Collections\ArrayCollection();
-        $this->callCountry = new Collections\ArrayCollection();
+        $this->session          = new Collections\ArrayCollection();
+        $this->callCountry      = new Collections\ArrayCollection();
     }
 
     /**
@@ -329,7 +351,7 @@ class Call extends EntityAbstract implements ResourceInterface
      */
     public function shortName()
     {
-        $words = explode(" ", $this->getProgram()->getProgram());
+        $words   = explode(" ", $this->getProgram()->getProgram());
         $acronym = "";
 
         foreach ($words as $w) {
@@ -377,6 +399,14 @@ class Call extends EntityAbstract implements ResourceInterface
     public static function getNdaRequirementTemplates()
     {
         return self::$ndaRequirementTemplates;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getActiveTemplates()
+    {
+        return self::$activeTemplates;
     }
 
     /**
@@ -859,6 +889,32 @@ class Call extends EntityAbstract implements ResourceInterface
     public function setIdeaTool($ideaTool)
     {
         $this->ideaTool = $ideaTool;
+
+        return $this;
+    }
+
+    /**
+     * @param bool $textual
+     *
+     * @return int|string
+     */
+    public function getActive($textual = false)
+    {
+        if ($textual) {
+            return self::$activeTemplates[$this->active];
+        }
+
+        return $this->active;
+    }
+
+    /**
+     * @param int $active
+     *
+     * @return Call
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
 
         return $this;
     }

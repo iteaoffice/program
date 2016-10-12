@@ -58,7 +58,7 @@ class NdaLink extends LinkAbstract
         if (!$this->hasAccess($this->getNda(), NdaAssertion::class, $this->getAction())) {
             return '';
         }
-        $this->addRouterParam('entity', 'Nda');
+
         if (!is_null($this->getNda())) {
             $this->addRouterParam('id', $this->getNda()->getId());
         }

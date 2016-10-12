@@ -347,6 +347,23 @@ class CallService extends ServiceAbstract
     }
 
     /**
+     * @param Nda $nda
+     *
+     * @return bool
+     */
+    public function isNdaValid(Nda $nda)
+    {
+        if (is_null($nda->getDateSigned())) {
+            return false;
+        }
+
+        $today       = new \DateTime();
+        $twoYearsAgo = $today->sub(new \DateInterval('P2Y'));
+
+        return $nda->getDateSigned() > $twoYearsAgo;
+    }
+
+    /**
      * @param Call $call
      *
      * @return Country[]

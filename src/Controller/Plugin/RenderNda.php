@@ -45,11 +45,23 @@ class RenderNda extends AbstractPlugin
      */
     public function renderForCall(Nda $nda)
     {
+        /**
+         * @var $pdf \TCPDF
+         */
         $pdf = new ProgramPdf();
         $pdf->setTemplate($this->getModuleOptions()->getNdaTemplate());
         $pdf->AddPage();
-        $pdf->SetFontSize(7.5);
+
         $twig = $this->getServiceLocator()->get('ZfcTwigRenderer');
+
+        $pdf->SetFontSize(9);
+        $pdf->SetXY(14, 50);
+        $pdf->Write(0, 'Name:');
+        $pdf->SetXY(77, 50);
+        $pdf->Write(0, 'Date:');
+        $pdf->SetXY(118, 50);
+        $pdf->Write(0, 'Our reference:');
+
         /*
          * Write the contact details
          */
@@ -66,6 +78,7 @@ class RenderNda extends AbstractPlugin
          * Write the Reference
          */
         $pdf->SetXY(118, 55);
+        $pdf->SetFontSize(7.5);
         /*
          * Use the NDA object to render the filename
          */
@@ -79,8 +92,7 @@ class RenderNda extends AbstractPlugin
         /*
          * Signage block
          */
-        $pdf->SetXY(14, 250);
-        $pdf->Write(0, 'Undersigned');
+
         $pdf->SetXY(14, 260);
         $pdf->Write(0, 'Name:');
         $pdf->SetXY(100, 260);
@@ -147,11 +159,20 @@ class RenderNda extends AbstractPlugin
         $pdf = new ProgramPdf();
         $pdf->setTemplate($this->getModuleOptions()->getNdaTemplate());
         $pdf->AddPage();
-        $pdf->SetFontSize(7.5);
+
         /**
          * @var $twig TwigRenderer
          */
         $twig = $this->getServiceLocator()->get('ZfcTwigRenderer');
+
+        $pdf->SetFontSize(9);
+        $pdf->SetXY(14, 50);
+        $pdf->Write(0, 'Name:');
+        $pdf->SetXY(77, 50);
+        $pdf->Write(0, 'Date:');
+        $pdf->SetXY(118, 50);
+        $pdf->Write(0, 'Our reference:');
+
         /*
          * Write the contact details
          */
@@ -164,6 +185,8 @@ class RenderNda extends AbstractPlugin
          */
         $pdf->SetXY(77, 55);
         $pdf->Write(0, date("Y-m-d"));
+
+        $pdf->SetFontSize(7.5);
         /*
          * Write the Reference
          */

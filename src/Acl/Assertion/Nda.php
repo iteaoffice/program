@@ -75,11 +75,11 @@ class Nda extends AssertionAbstract
                 } elseif (!is_null($callId = $this->getRouteMatch()->getParam('callId'))) {
                     $call = $this->getCallService()->findCallById($callId);
                 }
-
+                return true;
                 //We have no 2 methods to get the call, if the call is set check if the status is correct
-                if (!is_null($call)) {
-                    return $this->getCallService()->getCallStatus($call)->result !== CallService::UNDEFINED;
-                }
+            if (!is_null($call)) {
+                return $this->getCallService()->getCallStatus($call)->result !== CallService::UNDEFINED;
+            }
 
                 return true;
             case 'download':

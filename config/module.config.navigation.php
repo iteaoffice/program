@@ -13,19 +13,8 @@ return [
             'idea' => [
                 'pages' => [
                     'upload-nda' => [
-                        'label'  => _("txt-nav-upload-nda"),
-                        'route'  => 'community/program/nda/upload',
-                        'params' => [
-                            'entities'   => [
-                                'id' => Program\Entity\Call\Call::class,
-                            ],
-                            'routeParam' => [
-                                'id' => 'callId',
-                            ],
-                            'invokables' => [
-                                Program\Navigation\Invokable\UploadNdaLabel::class,
-                            ],
-                        ],
+                        'label' => _("txt-nav-upload-nda"),
+                        'route' => 'community/program/nda/upload',
                     ],
                     'view-nda'   => [
                         'label'   => _("txt-nav-view-nda"),

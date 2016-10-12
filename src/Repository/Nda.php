@@ -31,13 +31,13 @@ class Nda extends EntityRepository
     public function findNdaByCallAndContact(Call $call, Contact $contact)
     {
         $qb = $this->_em->createQueryBuilder();
-        $qb->select('n');
-        $qb->from("Program\Entity\Nda", 'n');
-        $qb->join('n.call', 'call');
+        $qb->select('program_entity_nda');
+        $qb->from("Program\Entity\Nda", 'program_entity_nda');
+        $qb->join('program_entity_nda.call', 'call');
         $qb->andWhere($qb->expr()->in('call', [$call->getId()]));
-        $qb->andWhere('n.contact = ?2');
+        $qb->andWhere('program_entity_nda.contact = ?2');
         $qb->setParameter(2, $contact);
-        $qb->addOrderBy('n.dateCreated', 'DESC');
+        $qb->addOrderBy('program_entity_nda.dateCreated', 'DESC');
         $qb->setMaxResults(1);
 
         return $qb->getQuery()->getOneOrNullResult();
@@ -53,10 +53,10 @@ class Nda extends EntityRepository
     public function findNdaByContact(Contact $contact)
     {
         $qb = $this->_em->createQueryBuilder();
-        $qb->select('n');
-        $qb->from("Program\Entity\Nda", 'n');
-        $qb->andWhere('n.contact = ?2');
-        $qb->addOrderBy('n.dateCreated', 'DESC');
+        $qb->select('program_entity_nda');
+        $qb->from("Program\Entity\Nda", 'program_entity_nda');
+        $qb->andWhere('program_entity_nda.contact = ?2');
+        $qb->addOrderBy('program_entity_nda.dateCreated', 'DESC');
         $qb->setMaxResults(1);
         $qb->setParameter(2, $contact);
 
@@ -69,11 +69,11 @@ class Nda extends EntityRepository
     public function findNotApprovedNda()
     {
         $qb = $this->_em->createQueryBuilder();
-        $qb->select('n');
-        $qb->from("Program\Entity\Nda", 'n');
-        $qb->andWhere($qb->expr()->isNull('n.dateApproved'));
+        $qb->select('program_entity_nda');
+        $qb->from("Program\Entity\Nda", 'program_entity_nda');
+        $qb->andWhere($qb->expr()->isNull('program_entity_nda.dateApproved'));
 
-        $qb->addOrderBy('n.dateCreated', 'ASC');
+        $qb->addOrderBy('program_entity_nda.dateCreated', 'ASC');
 
         return $qb->getQuery()->getResult();
     }

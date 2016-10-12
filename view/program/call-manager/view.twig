@@ -11,6 +11,12 @@
     <dt>{{ translate("txt-call") }}</dt>
     <dd>{{ call }}</dd>
 
+    <dt>{{ translate("txt-doa-requirement") }}</dt>
+    <dd>{{ translate(call.getDoaRequirement(true)) }}</dd>
+
+    <dt>{{ translate("txt-nda-requirement") }}</dt>
+    <dd>{{ translate(call.getNdaRequirement(true)) }}</dd>
+
     <dt>{{ translate("txt-program") }}</dt>
     <dd>{{ programLink(call.program,'view-admin','name') }}</dd>
 </dl>

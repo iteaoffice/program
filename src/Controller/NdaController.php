@@ -14,6 +14,7 @@
 namespace Program\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Program\Entity\Call\Call;
 use Program\Entity\Nda;
 use Program\Entity\NdaObject;
 use Program\Form\UploadNda;
@@ -50,16 +51,23 @@ class NdaController extends ProgramAbstractController
      */
     public function uploadAction()
     {
-        $call = $this->getCallService()->findLastCall();
+        //We only want the active call, having the requirement that this call also requires an NDA
+        $call = $this->getCallService()->findLastActiveCall();
 
-        if (!is_null($callId = $this->params('callId'))) {
+        //When the call requires no NDA, remove it form the form
+        if (! is_null($call) && $call->getDoaRequirement() !== Call::DOA_REQUIREMENT_PER_PROGRAM) {
+            $call = null;
+        }
+
+
+        if (! is_null($callId = $this->params('callId'))) {
             $call = $this->getCallService()->findCallById($callId);
             if (is_null($call)) {
                 return $this->notFoundAction();
             }
             $nda = $this->getCallService()
                 ->findNdaByCallAndContact($call, $this->zfcUserAuthentication()->getIdentity());
-        } elseif (!is_null($call)) {
+        } elseif (! is_null($call)) {
             $nda = $this->getCallService()
                 ->findNdaByCallAndContact($call, $this->zfcUserAuthentication()->getIdentity());
         } else {
@@ -81,11 +89,13 @@ class NdaController extends ProgramAbstractController
             return $this->redirect()->toRoute('community');
         }
 
-        return new ViewModel([
-            'call' => $call,
-            'nda'  => $nda,
-            'form' => $form,
-        ]);
+        return new ViewModel(
+            [
+                'call' => $call,
+                'nda'  => $nda,
+                'form' => $form,
+            ]
+        );
     }
 
     /**
@@ -111,7 +121,7 @@ class NdaController extends ProgramAbstractController
         $form = new UploadNda();
         $form->setData($data);
         if ($this->getRequest()->isPost()) {
-            if (!isset($data['cancel']) && $form->isValid()) {
+            if (! isset($data['cancel']) && $form->isValid()) {
                 $fileData = $this->params()->fromFiles();
                 /*
                  * Remove the current entity
@@ -125,8 +135,10 @@ class NdaController extends ProgramAbstractController
                 $fileSizeValidator = new FilesSize(PHP_INT_MAX);
                 $fileSizeValidator->isValid($fileData['file']);
                 $nda->setSize($fileSizeValidator->size);
-                $nda->setContentType($this->getGeneralService()
-                    ->findContentTypeByContentTypeName($fileData['file']['type']));
+                $nda->setContentType(
+                    $this->getGeneralService()
+                        ->findContentTypeByContentTypeName($fileData['file']['type'])
+                );
                 $ndaObject->setNda($nda);
                 $this->getProgramService()->newEntity($ndaObject);
                 $this->flashMessenger()->setNamespace('success')
@@ -141,10 +153,12 @@ class NdaController extends ProgramAbstractController
             }
         }
 
-        return new ViewModel([
-            'nda'  => $nda,
-            'form' => $form,
-        ]);
+        return new ViewModel(
+            [
+                'nda'  => $nda,
+                'form' => $form,
+            ]
+        );
     }
 
     /**
@@ -158,7 +172,7 @@ class NdaController extends ProgramAbstractController
         /*
          * Add the call when a id is given
          */
-        if (!is_null($this->params('callId'))) {
+        if (! is_null($this->params('callId'))) {
             $call = $this->getCallService()->findCallById($this->params('callId'));
             if (is_null($call)) {
                 return $this->notFoundAction();
@@ -192,7 +206,7 @@ class NdaController extends ProgramAbstractController
         /*
          * Due to the BLOB issue, we treat this as an array and we need to capture the first element
          */
-        $object = $nda->getObject()->first()->getObject();
+        $object   = $nda->getObject()->first()->getObject();
         $response = $this->getResponse();
         $response->setContent(stream_get_contents($object));
         $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
@@ -200,8 +214,10 @@ class NdaController extends ProgramAbstractController
                 'Content-Disposition',
                 'attachment; filename="' . $nda->parseFileName() . '.' . $nda->getContentType()->getExtension() . '"'
             )
-            ->addHeaderLine("Pragma: public")->addHeaderLine('Content-Type: ' . $nda->getContentType()
-                    ->getContentType())->addHeaderLine('Content-Length: ' . $nda->getSize());
+            ->addHeaderLine("Pragma: public")->addHeaderLine(
+                'Content-Type: ' . $nda->getContentType()
+                    ->getContentType()
+            )->addHeaderLine('Content-Length: ' . $nda->getSize());
 
         return $this->response;
     }
