@@ -55,19 +55,18 @@ class NdaController extends ProgramAbstractController
         $call = $this->getCallService()->findLastActiveCall();
 
         //When the call requires no NDA, remove it form the form
-        if (! is_null($call) && $call->getDoaRequirement() !== Call::DOA_REQUIREMENT_PER_PROGRAM) {
+        if ( ! is_null($call) && $call->getNdaRequirement() !== Call::NDA_REQUIREMENT_PER_CALL) {
             $call = null;
         }
 
-
-        if (! is_null($callId = $this->params('callId'))) {
+        if ( ! is_null($callId = $this->params('callId'))) {
             $call = $this->getCallService()->findCallById($callId);
             if (is_null($call)) {
                 return $this->notFoundAction();
             }
             $nda = $this->getCallService()
                 ->findNdaByCallAndContact($call, $this->zfcUserAuthentication()->getIdentity());
-        } elseif (! is_null($call)) {
+        } elseif ( ! is_null($call)) {
             $nda = $this->getCallService()
                 ->findNdaByCallAndContact($call, $this->zfcUserAuthentication()->getIdentity());
         } else {
@@ -121,7 +120,7 @@ class NdaController extends ProgramAbstractController
         $form = new UploadNda();
         $form->setData($data);
         if ($this->getRequest()->isPost()) {
-            if (! isset($data['cancel']) && $form->isValid()) {
+            if ( ! isset($data['cancel']) && $form->isValid()) {
                 $fileData = $this->params()->fromFiles();
                 /*
                  * Remove the current entity
@@ -172,7 +171,7 @@ class NdaController extends ProgramAbstractController
         /*
          * Add the call when a id is given
          */
-        if (! is_null($this->params('callId'))) {
+        if ( ! is_null($this->params('callId'))) {
             $call = $this->getCallService()->findCallById($this->params('callId'));
             if (is_null($call)) {
                 return $this->notFoundAction();
