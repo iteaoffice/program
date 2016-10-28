@@ -21,7 +21,7 @@ use Zend\Form\Annotation;
  *
  * @ORM\Table(name="roadmap_promo")
  * @ORM\Entity
- * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("roadmap_promo")
  */
 class RoadmapPromo

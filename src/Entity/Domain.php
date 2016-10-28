@@ -24,7 +24,7 @@ use Zend\InputFilter\InputFilterInterface;
  * ProjectDomain.
  *
  * @ORM\Table(name="domain")
- * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("project_domain")
  * @ORM\Entity
  */

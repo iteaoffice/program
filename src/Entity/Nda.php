@@ -24,7 +24,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  *
  * @ORM\Table(name="nda")
  * @ORM\Entity(repositoryClass="Program\Repository\Nda")
- * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("nda")
  *
  * @category    Contact

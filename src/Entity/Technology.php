@@ -25,7 +25,7 @@ use Zend\InputFilter\InputFilterInterface;
  *
  * @ORM\Table(name="technology")
  * @ORM\Entity
- * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("technology")
  *
  * @category    Program

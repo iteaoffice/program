@@ -22,7 +22,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
 /**
  * @ORM\Table(name="program_doa")
  * @ORM\Entity
- * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("program_doa")
  *
  * @category    Program

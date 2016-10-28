@@ -19,7 +19,7 @@ use General\Service\GeneralService;
 use Interop\Container\ContainerInterface;
 use Program\Service\CallService;
 use Project\Service\VersionService;
-use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -40,8 +40,7 @@ final class CallServiceFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        /** @var CallService $callService */
-        $callService = new $requestedName($options);
+        $callService = new CallService($options);
         $callService->setServiceLocator($container);
 
         /** @var EntityManager $entityManager */

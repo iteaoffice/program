@@ -25,12 +25,12 @@ use Program\Options\ModuleOptions;
 use Program\Service\CallService;
 use Program\Service\FormService;
 use Program\Service\ProgramService;
-use Project\Service\EvaluationService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
 use Zend\I18n\View\Helper\Translate;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
+use Zend\View\HelperPluginManager;
 use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
 
 /**
@@ -50,8 +50,6 @@ use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
  * @method      Plugin\GetFilter getProgramFilter()
  * @method      Plugin\RenderDoa renderDoa($doa)
  * @method      Plugin\RenderNda renderNda()
- * @method      Plugin\CreateCallFundingOverview createCallFundingOverview()
- * @method      Plugin\CreateFundingDownload createFundingDownload()
  */
 abstract class ProgramAbstractController extends AbstractActionController
 {
@@ -100,9 +98,9 @@ abstract class ProgramAbstractController extends AbstractActionController
      */
     protected $entityManager;
     /**
-     * @var EvaluationService
+     * @var HelperPluginManager
      */
-    protected $evaluationService;
+    protected $viewHelperManager;
 
     /**
      * @return FormService
@@ -223,7 +221,7 @@ abstract class ProgramAbstractController extends AbstractActionController
         /**
          * @var $translate Translate
          */
-        $translate = $this->getPluginManager()->getServiceLocator()->get('ViewHelperManager')->get('translate');
+        $translate = $this->getViewHelperManager()->get('translate');
 
         return $translate($string);
     }
@@ -349,21 +347,21 @@ abstract class ProgramAbstractController extends AbstractActionController
     }
 
     /**
-     * @return EvaluationService
+     * @return HelperPluginManager
      */
-    public function getEvaluationService()
+    public function getViewHelperManager(): HelperPluginManager
     {
-        return $this->evaluationService;
+        return $this->viewHelperManager;
     }
 
     /**
-     * @param EvaluationService $evaluationService
+     * @param HelperPluginManager $viewHelperManager
      *
      * @return ProgramAbstractController
      */
-    public function setEvaluationService($evaluationService)
+    public function setViewHelperManager(HelperPluginManager $viewHelperManager): ProgramAbstractController
     {
-        $this->evaluationService = $evaluationService;
+        $this->viewHelperManager = $viewHelperManager;
 
         return $this;
     }

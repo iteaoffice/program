@@ -13,8 +13,10 @@ return [
             'idea' => [
                 'pages' => [
                     'upload-nda' => [
-                        'label' => _("txt-nav-upload-nda"),
-                        'route' => 'community/program/nda/upload',
+                        'label'     => _("txt-nav-upload-nda"),
+                        'route'     => 'community/program/nda/upload',
+                        'resource'  => 'route/community/program/nda/upload',
+                        'privilege' => 'upload',
                     ],
                     'view-nda'   => [
                         'label'   => _("txt-nav-view-nda"),

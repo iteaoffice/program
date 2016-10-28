@@ -18,7 +18,7 @@ use Affiliation\Service\AffiliationService;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Program\Service\ProgramService;
-use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**

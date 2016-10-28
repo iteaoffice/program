@@ -19,7 +19,7 @@ use Zend\Form\Annotation;
 /**
  * @ORM\Table(name="programcall_doa")
  * @ORM\Entity
- * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("programcall_doa")
  *
  * @category    Program

@@ -25,12 +25,12 @@ use Program\Options\ModuleOptions;
 use Program\Service\CallService;
 use Program\Service\FormService;
 use Program\Service\ProgramService;
-use Project\Service\EvaluationService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
 use Zend\Mvc\Controller\ControllerManager;
-use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\View\HelperPluginManager;
 
 /**
  * Class ControllerFactory
@@ -51,68 +51,54 @@ final class ControllerFactory implements FactoryInterface
         /** @var ProgramAbstractController $controller */
         $controller = new $requestedName($options);
 
-        $serviceManager = $container->getServiceLocator();
-
         /** @var EntityManager $entityManager */
-        $entityManager = $serviceManager->get(EntityManager::class);
+        $entityManager = $container->get(EntityManager::class);
         $controller->setEntityManager($entityManager);
 
         /** @var FormService $formService */
-        $formService = $serviceManager->get(FormService::class);
+        $formService = $container->get(FormService::class);
         $controller->setFormService($formService);
 
         /** @var ContactService $contactService */
-        $contactService = $serviceManager->get(ContactService::class);
+        $contactService = $container->get(ContactService::class);
         $controller->setContactService($contactService);
 
         /** @var GeneralService $generalService */
-        $generalService = $serviceManager->get(GeneralService::class);
+        $generalService = $container->get(GeneralService::class);
         $controller->setGeneralService($generalService);
 
         /** @var ProjectService $projectService */
-        $projectService = $serviceManager->get(ProjectService::class);
+        $projectService = $container->get(ProjectService::class);
         $controller->setProjectService($projectService);
 
         /** @var VersionService $versionService */
-        $versionService = $serviceManager->get(VersionService::class);
+        $versionService = $container->get(VersionService::class);
         $controller->setVersionService($versionService);
 
         /** @var OrganisationService $organisationService */
-        $organisationService = $serviceManager->get(OrganisationService::class);
+        $organisationService = $container->get(OrganisationService::class);
         $controller->setOrganisationService($organisationService);
 
         /** @var ProgramService $programService */
-        $programService = $serviceManager->get(ProgramService::class);
+        $programService = $container->get(ProgramService::class);
         $controller->setProgramService($programService);
 
         /** @var CallService $callService */
-        $callService = $serviceManager->get(CallService::class);
+        $callService = $container->get(CallService::class);
         $controller->setCallService($callService);
 
         /** @var AdminService $adminService */
-        $adminService = $serviceManager->get(AdminService::class);
+        $adminService = $container->get(AdminService::class);
         $controller->setAdminService($adminService);
 
         /** @var ModuleOptions $moduleOptions */
-        $moduleOptions = $serviceManager->get(ModuleOptions::class);
+        $moduleOptions = $container->get(ModuleOptions::class);
         $controller->setModuleOptions($moduleOptions);
 
-        /** @var EvaluationService $evaluationService */
-        $evaluationService = $serviceManager->get(EvaluationService::class);
-        $controller->setEvaluationService($evaluationService);
+        /** @var HelperPluginManager $viewHelperManager */
+        $viewHelperManager = $container->get('ViewHelperManager');
+        $controller->setViewHelperManager($viewHelperManager);
 
         return $controller;
-    }
-
-    /**
-     * @param ServiceLocatorInterface $container
-     * @param string                  $canonicalName
-     * @param string                  $requestedName
-     *
-     * @return ProgramAbstractController
-     */
-    public function createService(ServiceLocatorInterface $container, $canonicalName = null, $requestedName = null)
-    {
-        return $this($container, $requestedName);
     }
 }

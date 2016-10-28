@@ -24,7 +24,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
 /**
  * @ORM\Table(name="program")
  * @ORM\Entity(repositoryClass="Program\Repository\Program")
- * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("contact_contact")
  *
  * @category    Program

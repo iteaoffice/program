@@ -16,7 +16,7 @@ namespace Program\Factory;
 
 use Interop\Container\ContainerInterface;
 use Program\Options\ModuleOptions;
-use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**

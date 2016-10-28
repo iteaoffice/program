@@ -19,7 +19,7 @@ use Zend\Form\Annotation;
 /**
  * RoadmapLog.
  *
- * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("roadmap_log")
  * @ORM\Table(name="roadmap_log")
  * @ORM\Entity

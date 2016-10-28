@@ -23,7 +23,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
 /**
  * @ORM\Table(name="programcall")
  * @ORM\Entity(repositoryClass="Program\Repository\Call\Call")
- * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("program_call")
  *
  * @category    Program

@@ -23,7 +23,7 @@ use Program\Acl\Assertion\AssertionAbstract;
 use Program\Service\CallService;
 use Program\Service\ProgramService;
 use Zend\Authentication\AuthenticationService;
-use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**

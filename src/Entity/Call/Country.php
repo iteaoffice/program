@@ -26,7 +26,7 @@ use Zend\InputFilter\InputFilterInterface;
 /**
  * @ORM\Table(name="programcall_country")
  * @ORM\Entity
- * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("programcall_session")
  *
  * @category    Program
