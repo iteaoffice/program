@@ -24,7 +24,6 @@ use Program\Service\CallService;
 use Program\Service\ProgramService;
 use Zend\Authentication\AuthenticationService;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class AssertionFactory
@@ -78,17 +77,5 @@ class AssertionFactory implements FactoryInterface
         $assertion->setOrganisationAssertion($organisationAssertion);
 
         return $assertion;
-    }
-
-    /**
-     * @param ServiceLocatorInterface $container
-     * @param null|string             $canonicalName
-     * @param null|string             $requestedName
-     *
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $container, $canonicalName = null, $requestedName = null)
-    {
-        return $this($container, $requestedName);
     }
 }

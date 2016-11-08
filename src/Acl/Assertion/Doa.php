@@ -40,7 +40,7 @@ class Doa extends AssertionAbstract
         $this->setPrivilege($privilege);
         $id = $this->getId();
 
-        if (!$doa instanceof DoaEntity && !is_null($id)) {
+        if (! $doa instanceof DoaEntity && ! is_null($id)) {
             $doa = $this->getProgramService()->findEntityById(DoaEntity::class, $id);
         }
 
@@ -59,7 +59,7 @@ class Doa extends AssertionAbstract
                     /*
                      * The id can originate from two different params
                      */
-                    if (!is_null($this->getRouteMatch()->getParam('id'))) {
+                    if (! is_null($this->getRouteMatch()->getParam('id'))) {
                         $organisationId = $this->getRouteMatch()->getParam('id');
                     } else {
                         $organisationId = $this->getRouteMatch()->getParam('organisationId');
@@ -78,7 +78,7 @@ class Doa extends AssertionAbstract
                 }
 
                 return is_null($doa->getDateApproved())
-                && $doa->getContact()->getId() === $this->getContact()->getId();
+                    && $doa->getContact()->getId() === $this->getContact()->getId();
             case 'render':
                 return $this->hasContact();
             case 'download':
@@ -86,7 +86,7 @@ class Doa extends AssertionAbstract
                 if ($this->rolesHaveAccess(Access::ACCESS_OFFICE)) {
                     return true;
                 }
-            
+
                 return $doa->getContact()->getId() === $this->getContact()->getId();
         }
 

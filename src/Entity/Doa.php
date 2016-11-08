@@ -185,6 +185,26 @@ class Doa extends EntityAbstract implements ResourceInterface
     }
 
     /**
+     * @return Program
+     */
+    public function getProgram()
+    {
+        return $this->program;
+    }
+
+    /**
+     * @param Program $program
+     *
+     * @return Doa
+     */
+    public function setProgram($program)
+    {
+        $this->program = $program;
+
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getId()
@@ -380,26 +400,6 @@ class Doa extends EntityAbstract implements ResourceInterface
     public function setContact($contact)
     {
         $this->contact = $contact;
-
-        return $this;
-    }
-
-    /**
-     * @return Program
-     */
-    public function getProgram()
-    {
-        return $this->program;
-    }
-
-    /**
-     * @param Program $program
-     *
-     * @return Doa
-     */
-    public function setProgram($program)
-    {
-        $this->program = $program;
 
         return $this;
     }

@@ -210,23 +210,6 @@ abstract class ProgramAbstractController extends AbstractActionController
     }
 
     /**
-     * Proxy for the flash messenger helper to have the string translated earlier.
-     *
-     * @param $string
-     *
-     * @return string
-     */
-    protected function translate($string)
-    {
-        /**
-         * @var $translate Translate
-         */
-        $translate = $this->getViewHelperManager()->get('translate');
-
-        return $translate($string);
-    }
-
-    /**
      * @return ProjectService
      */
     public function getProjectService()
@@ -344,6 +327,23 @@ abstract class ProgramAbstractController extends AbstractActionController
         $this->versionService = $versionService;
 
         return $this;
+    }
+
+    /**
+     * Proxy for the flash messenger helper to have the string translated earlier.
+     *
+     * @param $string
+     *
+     * @return string
+     */
+    protected function translate($string)
+    {
+        /**
+         * @var $translate Translate
+         */
+        $translate = $this->getViewHelperManager()->get('translate');
+
+        return $translate($string);
     }
 
     /**

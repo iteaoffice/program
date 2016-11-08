@@ -85,8 +85,8 @@ class Roadmap extends EntityAbstract
      */
     public function __construct()
     {
-        $this->domain = new ArrayCollection();
-        $this->call = new ArrayCollection();
+        $this->domain     = new ArrayCollection();
+        $this->call       = new ArrayCollection();
         $this->technology = new ArrayCollection();
     }
 

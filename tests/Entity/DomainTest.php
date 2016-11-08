@@ -38,16 +38,16 @@ class DomainTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->serviceManager = Bootstrap::getServiceManager();
-        $this->entityManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
-        $roadmap = $this->entityManager->find("Program\Entity\Roadmap", 1);
-        $this->domainData = [
+        $this->entityManager  = $this->serviceManager->get('Doctrine\ORM\EntityManager');
+        $roadmap              = $this->entityManager->find("Program\Entity\Roadmap", 1);
+        $this->domainData     = [
             'domain'      => 'ITEA2',
             'roadmap'     => $roadmap,
             'description' => 'This is a second description',
             'color'       => '#abcdef',
-            'mainId'      => '2'
+            'mainId'      => '2',
         ];
-        $this->domain = new Domain();
+        $this->domain         = new Domain();
     }
 
     public function testCanCreateEntity()
@@ -75,12 +75,12 @@ class DomainTest extends \PHPUnit_Framework_TestCase
 
     public function testCanHydrateEntity()
     {
-        $hydrator = new DoctrineObject(
+        $hydrator     = new DoctrineObject(
             $this->entityManager,
             'Program\Entity\Domain'
         );
         $this->domain = $hydrator->hydrate($this->domainData, new Domain());
-        $dataArray = $hydrator->extract($this->domain);
+        $dataArray    = $hydrator->extract($this->domain);
         $this->assertSame($this->domainData['domain'], $dataArray['domain']);
         $this->assertSame($this->domainData['roadmap']->getId(), $dataArray['roadmap']->getId());
         $this->assertSame($this->domainData['description'], $dataArray['description']);
@@ -90,7 +90,7 @@ class DomainTest extends \PHPUnit_Framework_TestCase
 
     public function testCanSaveEntityInDatabase()
     {
-        $hydrator = new DoctrineObject(
+        $hydrator     = new DoctrineObject(
             $this->entityManager,
             'Program\Entity\Domain'
         );

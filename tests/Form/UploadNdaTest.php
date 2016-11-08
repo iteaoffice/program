@@ -55,7 +55,7 @@ class UploadNdaTest extends \PHPUnit_Framework_TestCase
     public function testUploadNdaFormHasCorrectInputFilter()
     {
         $uploadNdaForm = new UploadNda();
-        $inputFilter = $uploadNdaForm->getInputFilterSpecification();
+        $inputFilter   = $uploadNdaForm->getInputFilterSpecification();
         $this->assertTrue(is_array($inputFilter));
         $this->assertArrayHasKey('file', $inputFilter);
     }

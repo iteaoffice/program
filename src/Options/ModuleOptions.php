@@ -130,6 +130,14 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
     }
 
     /**
+     * @return String
+     */
+    public function getDisplayName()
+    {
+        return $this->displayName;
+    }
+
+    /**
      * @param $displayName
      *
      * @return $this
@@ -139,14 +147,6 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
         $this->displayName = $displayName;
 
         return $this;
-    }
-
-    /**
-     * @return String
-     */
-    public function getDisplayName()
-    {
-        return $this->displayName;
     }
 
     /**
@@ -190,6 +190,14 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
     }
 
     /**
+     * @return string
+     */
+    public function getCountryColor()
+    {
+        return $this->countryColor;
+    }
+
+    /**
      * @param $countryColor
      *
      * @return ModuleOptions
@@ -202,11 +210,13 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
     }
 
     /**
+     * Returns the assigned hex color of the country map.
+     *
      * @return string
      */
-    public function getCountryColor()
+    public function getCountryColorFaded()
     {
-        return $this->countryColor;
+        return $this->countryColorFaded;
     }
 
     /**
@@ -221,16 +231,6 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
         $this->countryColorFaded = $countryColorFaded;
 
         return $this;
-    }
-
-    /**
-     * Returns the assigned hex color of the country map.
-     *
-     * @return string
-     */
-    public function getCountryColorFaded()
-    {
-        return $this->countryColorFaded;
     }
 
     /**

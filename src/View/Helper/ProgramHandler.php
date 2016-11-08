@@ -84,7 +84,7 @@ class ProgramHandler extends AbstractViewHelper
      */
     public function extractContentParam(Content $content)
     {
-        if (!is_null($this->getRouteMatch()->getParam('docRef'))) {
+        if (! is_null($this->getRouteMatch()->getParam('docRef'))) {
             //First try to find the call via the docref
             /** @var Call $call */
             $call = $this->getCallService()
@@ -101,7 +101,7 @@ class ProgramHandler extends AbstractViewHelper
              */
             switch ($param->getParameter()->getParam()) {
                 case 'session':
-                    if (!is_null($sessionId = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
+                    if (! is_null($sessionId = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
                         $this->setSessionById($sessionId);
                     } else {
                         $this->setSessionById($param->getParameterId());
@@ -109,13 +109,13 @@ class ProgramHandler extends AbstractViewHelper
                     break;
 
                 case 'call':
-                    if (!is_null($callId = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
+                    if (! is_null($callId = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
                         $this->setCallById($callId);
                     }
                     break;
 
                 case 'program':
-                    if (!is_null($programId = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
+                    if (! is_null($programId = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
                         $this->setProgramById($programId);
                     }
                     break;
@@ -124,22 +124,11 @@ class ProgramHandler extends AbstractViewHelper
     }
 
     /**
-     * @param $callId
+     * @return CallService
      */
-    public function setCallById($callId)
+    public function getCallService()
     {
-        $call = $this->getCallService()->findCallById($callId);
-        $this->setCall($call);
-    }
-
-
-    /**
-     * @param $programId
-     */
-    public function setProgramById($programId)
-    {
-        $program = $this->getProgramService()->findProgramById($programId);
-        $this->setProgram($program);
+        return $this->getServiceManager()->get(CallService::class);
     }
 
     /**
@@ -153,21 +142,22 @@ class ProgramHandler extends AbstractViewHelper
     }
 
     /**
-     * @return CallService
+     * @param $callId
      */
-    public function getCallService()
+    public function setCallById($callId)
     {
-        return $this->getServiceManager()->get(CallService::class);
+        $call = $this->getCallService()->findCallById($callId);
+        $this->setCall($call);
     }
 
     /**
-     * @return AffiliationService
+     * @param $programId
      */
-    public function getAffiliationService()
+    public function setProgramById($programId)
     {
-        return $this->getServiceManager()->get(AffiliationService::class);
+        $program = $this->getProgramService()->findProgramById($programId);
+        $this->setProgram($program);
     }
-
 
     /**
      * @return ProgramService
@@ -178,26 +168,6 @@ class ProgramHandler extends AbstractViewHelper
     }
 
     /**
-     * @return ModuleOptions
-     */
-    public function getModuleOptions()
-    {
-        return $this->getServiceManager()->get(ModuleOptions::class);
-    }
-
-    /**
-     * @param Call $call
-     *
-     * @return string
-     */
-    public function parseCallTitle(Call $call)
-    {
-        return $this->getRenderer()->render('program/partial/entity/programcall-title', [
-            'call' => $call,
-        ]);
-    }
-
-    /**
      * @param Call    $call
      * @param Program $program
      *
@@ -205,111 +175,33 @@ class ProgramHandler extends AbstractViewHelper
      */
     public function parseCallSelector(Call $call = null, Program $program = null)
     {
-        return $this->getRenderer()->render('program/partial/call-selector', [
+        return $this->getRenderer()->render(
+            'program/partial/call-selector',
+            [
             'displayNameCall'   => 'name',
             'calls'             => $this->getCallService()->findNonEmptyCalls($program),
-            'callId'            => !is_null($call) ? $call->getId() : null,
-            'selectedProgramId' => !is_null($program) ? $program->getId() : null,
-        ]);
+            'callId'            => ! is_null($call) ? $call->getId() : null,
+            'selectedProgramId' => ! is_null($program) ? $program->getId() : null,
+            ]
+        );
+    }
+
+    /**
+     * @return Call
+     */
+    public function getCall()
+    {
+        return $this->call;
     }
 
     /**
      * @param Call $call
      *
-     * @return mixed
+     * @return ProgramHandler
      */
-    public function parseProgramcallMap(Call $call)
+    public function setCall($call)
     {
-        $countries = $this->getCallService()->findCountryByCall($call);
-        $options = $this->getModuleOptions();
-        $mapOptions = [
-            'clickable' => true,
-            'colorMin'  => $options->getCountryColorFaded(),
-            'colorMax'  => $options->getCountryColor(),
-            'focusOn'   => ['x' => 0.5, 'y' => 0.5, 'scale' => 1.1], // Slight zoom
-            'height'    => '400px',
-        ];
-
-        foreach ($countries as $country) {
-            $affiliations = $this->getAffiliationService()->findAmountOfAffiliationByCountryAndCall($country, $call);
-            $mapOptions['tipData'][$country->getCd()] = [
-                'title' => $country->getCountry(),
-                'data'  => [
-                    [$this->translate('txt-partners') => $affiliations],
-                ],
-            ];
-        }
-
-        /**
-         * @var $countryMap CountryMap
-         */
-        $countryMap = $this->getHelperPluginManager()->get('countryMap');
-
-        return $countryMap($countries, null, $mapOptions);
-    }
-
-    /**
-     * @param Call $call
-     *
-     * @return null|string
-     */
-    public function parseProgramcallProjectList(Call $call)
-    {
-        $whichProjects
-            = $this->getProjectModuleOptions()->getProjectHasVersions() ? ProjectService::WHICH_ONLY_ACTIVE
-            : ProjectService::WHICH_ALL;
-
-        return $this->getRenderer()->render('program/partial/list/project', [
-            'call'     => $this->getCallService(),
-            'projects' => $this->getCallService()->getProjectService()->findProjectsByCall($call, $whichProjects)
-                ->getQuery()->getResult(),
-        ]);
-    }
-
-    /**
-     * @return string
-     */
-    public function parseProgramcallTitle()
-    {
-        return $this->getRenderer()->render('program/partial/entity/programcall-title', [
-            'call' => $this->getCallService(),
-        ]);
-    }
-
-    /**
-     * @param Session $session
-     *
-     * @return string
-     */
-    public function parseSessionOverview(Session $session)
-    {
-        return $this->getRenderer()->render('program/partial/entity/session', ['session' => $session]);
-    }
-
-    /**
-     * @return \Project\Options\ModuleOptions
-     */
-    public function getProjectModuleOptions()
-    {
-        return $this->getServiceManager()->get(\Project\Options\ModuleOptions::class);
-    }
-
-    /**
-     * @return Session
-     */
-    public function getSession()
-    {
-        return $this->session;
-    }
-
-    /**
-     * @param Session $session
-     *
-     * @return $this;
-     */
-    public function setSession($session)
-    {
-        $this->session = $session;
+        $this->call = $call;
 
         return $this;
     }
@@ -335,22 +227,141 @@ class ProgramHandler extends AbstractViewHelper
     }
 
     /**
-     * @return Call
+     * @return string
      */
-    public function getCall()
+    public function parseProgramcallTitle()
     {
-        return $this->call;
+        return $this->getRenderer()->render(
+            'program/partial/entity/programcall-title',
+            [
+            'call' => $this->getCallService(),
+            ]
+        );
     }
 
     /**
      * @param Call $call
      *
-     * @return ProgramHandler
+     * @return null|string
      */
-    public function setCall($call)
+    public function parseProgramcallProjectList(Call $call)
     {
-        $this->call = $call;
+        $whichProjects
+            = $this->getProjectModuleOptions()->getProjectHasVersions() ? ProjectService::WHICH_ONLY_ACTIVE
+            : ProjectService::WHICH_ALL;
+
+        return $this->getRenderer()->render(
+            'program/partial/list/project',
+            [
+            'call'     => $this->getCallService(),
+            'projects' => $this->getCallService()->getProjectService()->findProjectsByCall($call, $whichProjects)
+                ->getQuery()->getResult(),
+            ]
+        );
+    }
+
+    /**
+     * @return \Project\Options\ModuleOptions
+     */
+    public function getProjectModuleOptions()
+    {
+        return $this->getServiceManager()->get(\Project\Options\ModuleOptions::class);
+    }
+
+    /**
+     * @param Session $session
+     *
+     * @return string
+     */
+    public function parseSessionOverview(Session $session)
+    {
+        return $this->getRenderer()->render('program/partial/entity/session', ['session' => $session]);
+    }
+
+    /**
+     * @return Session
+     */
+    public function getSession()
+    {
+        return $this->session;
+    }
+
+    /**
+     * @param Session $session
+     *
+     * @return $this;
+     */
+    public function setSession($session)
+    {
+        $this->session = $session;
 
         return $this;
+    }
+
+    /**
+     * @param Call $call
+     *
+     * @return mixed
+     */
+    public function parseProgramcallMap(Call $call)
+    {
+        $countries  = $this->getCallService()->findCountryByCall($call);
+        $options    = $this->getModuleOptions();
+        $mapOptions = [
+            'clickable' => true,
+            'colorMin'  => $options->getCountryColorFaded(),
+            'colorMax'  => $options->getCountryColor(),
+            'focusOn'   => ['x' => 0.5, 'y' => 0.5, 'scale' => 1.1], // Slight zoom
+            'height'    => '400px',
+        ];
+
+        foreach ($countries as $country) {
+            $affiliations                             = $this->getAffiliationService()
+                ->findAmountOfAffiliationByCountryAndCall($country, $call);
+            $mapOptions['tipData'][$country->getCd()] = [
+                'title' => $country->getCountry(),
+                'data'  => [
+                    [$this->translate('txt-partners') => $affiliations],
+                ],
+            ];
+        }
+
+        /**
+         * @var $countryMap CountryMap
+         */
+        $countryMap = $this->getHelperPluginManager()->get('countryMap');
+
+        return $countryMap($countries, null, $mapOptions);
+    }
+
+    /**
+     * @return ModuleOptions
+     */
+    public function getModuleOptions()
+    {
+        return $this->getServiceManager()->get(ModuleOptions::class);
+    }
+
+    /**
+     * @return AffiliationService
+     */
+    public function getAffiliationService()
+    {
+        return $this->getServiceManager()->get(AffiliationService::class);
+    }
+
+    /**
+     * @param Call $call
+     *
+     * @return string
+     */
+    public function parseCallTitle(Call $call)
+    {
+        return $this->getRenderer()->render(
+            'program/partial/entity/programcall-title',
+            [
+            'call' => $call,
+            ]
+        );
     }
 }

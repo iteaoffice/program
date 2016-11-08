@@ -175,6 +175,75 @@ class CallService extends ServiceAbstract
     }
 
     /**
+     * Return the current status of the given all with given the current date
+     * Return a status and the relevant date.
+     *
+     * @param Call         $call
+     *
+     * @return ArrayObject
+     *
+     * @property \DateTime $result
+     * @method \DateTime $referenceDate
+     */
+    public function getCallStatus(Call $call)
+    {
+        $callStatus = new ArrayObject();
+        /*
+         * Go over the dates and find the most suited date.
+         */
+        $type                 = null;
+        $today                = new \DateTime();
+        $dateTime             = new \DateTime();
+        $notificationDeadline = $dateTime->sub(new \DateInterval("P1W"));
+
+        if ($call->getPoOpenDate() > $today) {
+            $referenceDate = $call->getPoOpenDate();
+            $result        = self::PO_NOT_OPEN;
+            $type          = Type::TYPE_PO;
+        } elseif ($call->getPoCloseDate() > $today) {
+            $referenceDate = $call->getPoCloseDate();
+            $result        = self::PO_OPEN;
+            $type          = Type::TYPE_PO;
+        } elseif ($call->getPoGraceDate() > $today) {
+            $referenceDate = $call->getPoCloseDate();
+            $result        = self::PO_GRACE;
+            $type          = Type::TYPE_PO;
+        } elseif ($call->getPoCloseDate() > $notificationDeadline
+            && $call->getFppOpenDate() > $today
+        ) {
+            $referenceDate = $call->getPoCloseDate();
+            $result        = self::PO_CLOSED;
+            $type          = Type::TYPE_PO;
+        } elseif ($call->getFppOpenDate() > $today) {
+            $referenceDate = $call->getFppOpenDate();
+            $result        = self::FPP_NOT_OPEN;
+            $type          = Type::TYPE_FPP;
+        } elseif ($call->getFppCloseDate() > $today) {
+            $referenceDate = $call->getFppCloseDate();
+            $result        = self::FPP_OPEN;
+            $type          = Type::TYPE_FPP;
+        } elseif ($call->getPoGraceDate() > $today) {
+            $referenceDate = $call->getFppCloseDate();
+            $result        = self::FPP_GRACE;
+            $type          = Type::TYPE_FPP;
+        } elseif ($call->getFppCloseDate() > $notificationDeadline) {
+            $referenceDate = $call->getFppCloseDate();
+            $result        = self::FPP_CLOSED;
+            $type          = Type::TYPE_FPP;
+        } else {
+            $referenceDate = null;
+            $result        = self::UNDEFINED;
+            $type          = Type::TYPE_CR;
+        }
+
+        $callStatus->result        = $result;
+        $callStatus->type          = $this->getVersionService()->findEntityById(Type::class, $type);
+        $callStatus->referenceDate = $referenceDate;
+
+        return $callStatus;
+    }
+
+    /**
      * Return true when the call is in grace mode.
      *
      * @param Call $call
@@ -248,75 +317,6 @@ class CallService extends ServiceAbstract
         $repository = $this->getEntityManager()->getRepository(Call::class);
 
         return $repository->findProjectAndPartners($call);
-    }
-
-    /**
-     * Return the current status of the given all with given the current date
-     * Return a status and the relevant date.
-     *
-     * @param Call         $call
-     *
-     * @return ArrayObject
-     *
-     * @property \DateTime $result
-     * @method \DateTime $referenceDate
-     */
-    public function getCallStatus(Call $call)
-    {
-        $callStatus = new ArrayObject();
-        /*
-         * Go over the dates and find the most suited date.
-         */
-        $type                 = null;
-        $today                = new \DateTime();
-        $dateTime             = new \DateTime();
-        $notificationDeadline = $dateTime->sub(new \DateInterval("P1W"));
-
-        if ($call->getPoOpenDate() > $today) {
-            $referenceDate = $call->getPoOpenDate();
-            $result        = self::PO_NOT_OPEN;
-            $type          = Type::TYPE_PO;
-        } elseif ($call->getPoCloseDate() > $today) {
-            $referenceDate = $call->getPoCloseDate();
-            $result        = self::PO_OPEN;
-            $type          = Type::TYPE_PO;
-        } elseif ($call->getPoGraceDate() > $today) {
-            $referenceDate = $call->getPoCloseDate();
-            $result        = self::PO_GRACE;
-            $type          = Type::TYPE_PO;
-        } elseif ($call->getPoCloseDate() > $notificationDeadline
-            && $call->getFppOpenDate() > $today
-        ) {
-            $referenceDate = $call->getPoCloseDate();
-            $result        = self::PO_CLOSED;
-            $type          = Type::TYPE_PO;
-        } elseif ($call->getFppOpenDate() > $today) {
-            $referenceDate = $call->getFppOpenDate();
-            $result        = self::FPP_NOT_OPEN;
-            $type          = Type::TYPE_FPP;
-        } elseif ($call->getFppCloseDate() > $today) {
-            $referenceDate = $call->getFppCloseDate();
-            $result        = self::FPP_OPEN;
-            $type          = Type::TYPE_FPP;
-        } elseif ($call->getPoGraceDate() > $today) {
-            $referenceDate = $call->getFppCloseDate();
-            $result        = self::FPP_GRACE;
-            $type          = Type::TYPE_FPP;
-        } elseif ($call->getFppCloseDate() > $notificationDeadline) {
-            $referenceDate = $call->getFppCloseDate();
-            $result        = self::FPP_CLOSED;
-            $type          = Type::TYPE_FPP;
-        } else {
-            $referenceDate = null;
-            $result        = self::UNDEFINED;
-            $type          = Type::TYPE_CR;
-        }
-
-        $callStatus->result        = $result;
-        $callStatus->type          = $this->getVersionService()->findEntityById(Type::class, $type);
-        $callStatus->referenceDate = $referenceDate;
-
-        return $callStatus;
     }
 
     /**

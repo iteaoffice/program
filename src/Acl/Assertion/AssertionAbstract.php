@@ -83,40 +83,6 @@ abstract class AssertionAbstract implements AssertionInterface
     protected $accessRoles = [];
 
     /**
-     * @return RouteMatch
-     */
-    public function getRouteMatch()
-    {
-        return $this->getServiceLocator()->get("Application")->getMvcEvent()->getRouteMatch();
-    }
-
-    /**
-     * Proxy to the original request object to handle form.
-     *
-     * @return Request
-     */
-    public function getRequest()
-    {
-        return $this->getServiceLocator()->get('application')->getMvcEvent()->getRequest();
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasContact()
-    {
-        return !$this->getContact()->isEmpty();
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasRouteMatch()
-    {
-        return !is_null($this->getRouteMatch());
-    }
-
-    /**
      * @return array
      */
     public function getAccessRoles()
@@ -126,6 +92,58 @@ abstract class AssertionAbstract implements AssertionInterface
         }
 
         return $this->accessRoles;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasContact()
+    {
+        return ! $this->getContact()->isEmpty();
+    }
+
+    /**
+     * @return Contact
+     */
+    public function getContact()
+    {
+        if (is_null($this->contact)) {
+            $this->contact = new Contact();
+        }
+
+        return $this->contact;
+    }
+
+    /**
+     * @param Contact $contact
+     *
+     * @return AssertionAbstract
+     */
+    public function setContact($contact)
+    {
+        $this->contact = $contact;
+
+        return $this;
+    }
+
+    /**
+     * @return AdminService
+     */
+    public function getAdminService()
+    {
+        return $this->adminService;
+    }
+
+    /**
+     * @param AdminService $adminService
+     *
+     * @return AssertionAbstract
+     */
+    public function setAdminService($adminService)
+    {
+        $this->adminService = $adminService;
+
+        return $this;
     }
 
     /**
@@ -165,7 +183,7 @@ abstract class AssertionAbstract implements AssertionInterface
      */
     protected function prepareAccessRoles($access)
     {
-        if (!$access instanceof PersistentCollection) {
+        if (! $access instanceof PersistentCollection) {
             /*
              * We only have a string, so we need to lookup the role
              */
@@ -206,21 +224,19 @@ abstract class AssertionAbstract implements AssertionInterface
     }
 
     /**
-     * @return int|null
+     * @return bool
      */
-    public function getId()
+    public function hasRouteMatch()
     {
-        if (!is_null($id = $this->getRequest()->getPost('id'))) {
-            return (int)$id;
-        }
-        if (is_null($this->getRouteMatch())) {
-            return null;
-        }
-        if (!is_null($id = $this->getRouteMatch()->getParam('id'))) {
-            return (int)$id;
-        }
+        return ! is_null($this->getRouteMatch());
+    }
 
-        return null;
+    /**
+     * @return RouteMatch
+     */
+    public function getRouteMatch()
+    {
+        return $this->getServiceLocator()->get("Application")->getMvcEvent()->getRouteMatch();
     }
 
     /**
@@ -244,27 +260,31 @@ abstract class AssertionAbstract implements AssertionInterface
     }
 
     /**
-     * @return Contact
+     * @return int|null
      */
-    public function getContact()
+    public function getId()
     {
-        if (is_null($this->contact)) {
-            $this->contact = new Contact();
+        if (! is_null($id = $this->getRequest()->getPost('id'))) {
+            return (int)$id;
+        }
+        if (is_null($this->getRouteMatch())) {
+            return null;
+        }
+        if (! is_null($id = $this->getRouteMatch()->getParam('id'))) {
+            return (int)$id;
         }
 
-        return $this->contact;
+        return null;
     }
 
     /**
-     * @param Contact $contact
+     * Proxy to the original request object to handle form.
      *
-     * @return AssertionAbstract
+     * @return Request
      */
-    public function setContact($contact)
+    public function getRequest()
     {
-        $this->contact = $contact;
-
-        return $this;
+        return $this->getServiceLocator()->get('application')->getMvcEvent()->getRequest();
     }
 
     /**
@@ -303,26 +323,6 @@ abstract class AssertionAbstract implements AssertionInterface
     public function setOrganisationService($organisationService)
     {
         $this->organisationService = $organisationService;
-
-        return $this;
-    }
-
-    /**
-     * @return AdminService
-     */
-    public function getAdminService()
-    {
-        return $this->adminService;
-    }
-
-    /**
-     * @param AdminService $adminService
-     *
-     * @return AssertionAbstract
-     */
-    public function setAdminService($adminService)
-    {
-        $this->adminService = $adminService;
 
         return $this;
     }

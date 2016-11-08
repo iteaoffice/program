@@ -44,8 +44,8 @@ class FundingFilter extends Form implements InputFilterProviderInterface
         $callSelector->setName('call');
         $callSelector->setOptions(
             [
-                'label'          => _("txt-program-call"),
-                'target_class'   => 'Program\Entity\Call\Call',
+                'label'        => _("txt-program-call"),
+                'target_class' => 'Program\Entity\Call\Call',
 
                 'object_manager' => $entityManager,
             ]

@@ -88,7 +88,7 @@ class Session extends EntityAbstract
      */
     public function __construct()
     {
-        $this->track = new Collections\ArrayCollection();
+        $this->track       = new Collections\ArrayCollection();
         $this->ideaSession = new Collections\ArrayCollection();
     }
 

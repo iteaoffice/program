@@ -56,9 +56,11 @@ class CallCountryLink extends LinkAbstract
         /*
          * Set the non-standard options needed to give an other link value
          */
-        $this->setShowOptions([
-            'name' => $this->getCountry()->getId(),
-        ]);
+        $this->setShowOptions(
+            [
+                'name' => $this->getCountry()->getId(),
+            ]
+        );
 
 //        if (!$this->hasAccess($this->getCountry(), CountryAssertion::class, $this->getAction())) {
 //            return '';
@@ -80,34 +82,42 @@ class CallCountryLink extends LinkAbstract
         switch ($this->getAction()) {
             case 'new-admin':
                 $this->setRouter('zfcadmin/call/country/new');
-                $this->setText(sprintf(
-                    $this->translate("txt-add-country-information-for-for-%s-in-%s"),
-                    $this->getCallCountry()->getCountry(),
-                    $this->getCallCountry()->getCall()
-                ));
+                $this->setText(
+                    sprintf(
+                        $this->translate("txt-add-country-information-for-for-%s-in-%s"),
+                        $this->getCallCountry()->getCountry(),
+                        $this->getCallCountry()->getCall()
+                    )
+                );
                 break;
             case 'view-admin':
                 $this->setRouter('zfcadmin/call/country/view');
-                $this->setText(sprintf(
-                    $this->translate("txt-view-country-information-for-for-%s-in-%s"),
-                    $this->getCallCountry()->getCountry(),
-                    $this->getCallCountry()->getCall()
-                ));
+                $this->setText(
+                    sprintf(
+                        $this->translate("txt-view-country-information-for-for-%s-in-%s"),
+                        $this->getCallCountry()->getCountry(),
+                        $this->getCallCountry()->getCall()
+                    )
+                );
                 break;
             case 'edit-admin':
                 $this->setRouter('zfcadmin/call/country/edit');
-                $this->setText(sprintf(
-                    $this->translate("txt-edit-country-information-for-for-%s-in-%s"),
-                    $this->getCallCountry()->getCountry(),
-                    $this->getCallCountry()->getCall()
-                ));
+                $this->setText(
+                    sprintf(
+                        $this->translate("txt-edit-country-information-for-for-%s-in-%s"),
+                        $this->getCallCountry()->getCountry(),
+                        $this->getCallCountry()->getCall()
+                    )
+                );
                 break;
             default:
-                throw new \InvalidArgumentException(sprintf(
-                    "%s is an incorrect action for %s",
-                    $this->getAction(),
-                    __CLASS__
-                ));
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        "%s is an incorrect action for %s",
+                        $this->getAction(),
+                        __CLASS__
+                    )
+                );
         }
     }
 }

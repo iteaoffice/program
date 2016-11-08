@@ -132,6 +132,14 @@ class Funder extends EntityAbstract implements ResourceInterface
     }
 
     /**
+     * @return array
+     */
+    public static function getShowOnWebsiteTemplates()
+    {
+        return self::$showOnWebsiteTemplates;
+    }
+
+    /**
      * Magic Getter.
      *
      * @param $property
@@ -170,14 +178,6 @@ class Funder extends EntityAbstract implements ResourceInterface
     public function getResourceId()
     {
         return sprintf("%s:%s", __CLASS__, $this->id);
-    }
-
-    /**
-     * @return array
-     */
-    public static function getShowOnWebsiteTemplates()
-    {
-        return self::$showOnWebsiteTemplates;
     }
 
     /**

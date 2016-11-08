@@ -38,9 +38,14 @@ class CallLabel extends AbstractNavigationInvokable
         if ($this->getEntities()->containsKey(Call::class)) {
             /** @var Call $call */
             $call = $this->getEntities()->get(Call::class);
-            $page->setParams(array_merge($page->getParams(), [
-                'id' => $call->getId(),
-            ]));
+            $page->setParams(
+                array_merge(
+                    $page->getParams(),
+                    [
+                    'id' => $call->getId(),
+                    ]
+                )
+            );
             $label = (string)$call;
         } else {
             $label = $this->translate('txt-nav-view');

@@ -15,11 +15,9 @@
 
 namespace Program\View\Factory;
 
-use Program\View\Helper\AbstractViewHelper;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Exception\InvalidServiceException;
+use Program\View\Helper\AbstractViewHelper;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\HelperPluginManager;
 
 /**

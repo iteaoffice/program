@@ -90,8 +90,8 @@ class Program extends EntityAbstract implements ResourceInterface
      */
     public function __construct()
     {
-        $this->call = new Collections\ArrayCollection();
-        $this->doa = new Collections\ArrayCollection();
+        $this->call          = new Collections\ArrayCollection();
+        $this->doa           = new Collections\ArrayCollection();
         $this->invoiceMethod = new Collections\ArrayCollection();
     }
 
@@ -155,10 +155,10 @@ class Program extends EntityAbstract implements ResourceInterface
      */
     public function getInputFilter()
     {
-        if (!$this->inputFilter) {
+        if (! $this->inputFilter) {
             $inputFilter = new InputFilter();
-            $factory = new InputFactory();
-            
+            $factory     = new InputFactory();
+
             $this->inputFilter = $inputFilter;
         }
 
@@ -223,6 +223,14 @@ class Program extends EntityAbstract implements ResourceInterface
     }
 
     /**
+     * @param string $program
+     */
+    public function setProgram($program)
+    {
+        $this->program = $program;
+    }
+
+    /**
      * @return string
      */
     public function getNumber()
@@ -236,14 +244,6 @@ class Program extends EntityAbstract implements ResourceInterface
     public function setNumber($number)
     {
         $this->number = $number;
-    }
-
-    /**
-     * @param string $program
-     */
-    public function setProgram($program)
-    {
-        $this->program = $program;
     }
 
     /**

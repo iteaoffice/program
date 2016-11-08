@@ -40,13 +40,15 @@ class NdaManagerController extends ProgramAbstractController
      */
     public function approvalAction()
     {
-        $nda = $this->getCallService()->findNotApprovedNda();
+        $nda  = $this->getCallService()->findNotApprovedNda();
         $form = new NdaApproval($nda, $this->getContactService());
 
-        return new ViewModel([
-            'nda'  => $nda,
-            'form' => $form,
-        ]);
+        return new ViewModel(
+            [
+                'nda'  => $nda,
+                'form' => $form,
+            ]
+        );
     }
 
     /**
@@ -80,9 +82,11 @@ class NdaManagerController extends ProgramAbstractController
 
         $form = $this->getFormService()->prepare(Nda::class, $nda, $data);
 
-        $form->get($nda->get('underscore_entity_name'))->get('contact')->setValueOptions([
-            $nda->getContact()->getId() => $nda->getContact()->getFormName(),
-        ]);
+        $form->get($nda->get('underscore_entity_name'))->get('contact')->setValueOptions(
+            [
+                $nda->getContact()->getId() => $nda->getContact()->getFormName(),
+            ]
+        );
         $form->get($nda->get('underscore_entity_name'))->get('programCall')->setValue($nda->getCall());
 
         //Get contacts in an organisation
@@ -93,10 +97,12 @@ class NdaManagerController extends ProgramAbstractController
 
             if (isset($data['delete'])) {
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf(
-                        $this->translate("txt-nda-for-contact-%s-has-been-removed"),
-                        $nda->getContact()->getDisplayName()
-                    ));
+                    ->addMessage(
+                        sprintf(
+                            $this->translate("txt-nda-for-contact-%s-has-been-removed"),
+                            $nda->getContact()->getDisplayName()
+                        )
+                    );
 
                 $this->getCallService()->removeEntity($nda);
 
@@ -115,8 +121,10 @@ class NdaManagerController extends ProgramAbstractController
                     /*
                      * Replace the content of the object
                      */
-                    if (!$nda->getObject()->isEmpty()) {
-                        $nda->getObject()->first()->setObject(file_get_contents($fileData['program_entity_nda']['file']['tmp_name']));
+                    if (! $nda->getObject()->isEmpty()) {
+                        $nda->getObject()->first()->setObject(
+                            file_get_contents($fileData['program_entity_nda']['file']['tmp_name'])
+                        );
                     } else {
                         $ndaObject = new NdaObject();
                         $ndaObject->setObject(file_get_contents($fileData['program_entity_nda']['file']['tmp_name']));
@@ -128,14 +136,16 @@ class NdaManagerController extends ProgramAbstractController
                     $fileSizeValidator = new FilesSize(PHP_INT_MAX);
                     $fileSizeValidator->isValid($fileData['program_entity_nda']['file']);
                     $nda->setSize($fileSizeValidator->size);
-                    $nda->setContentType($this->getGeneralService()
-                        ->findContentTypeByContentTypeName($fileData['program_entity_nda']['file']['type']));
+                    $nda->setContentType(
+                        $this->getGeneralService()
+                            ->findContentTypeByContentTypeName($fileData['program_entity_nda']['file']['type'])
+                    );
                 }
 
                 /*
                  * The programme call needs to have a dedicated treatment
                  */
-                if (!empty($data['program_entity_nda']['programCall'])) {
+                if (! empty($data['program_entity_nda']['programCall'])) {
                     $nda->setCall([$this->getCallService()->findCallById($data['program_entity_nda']['programCall'])]);
                 } else {
                     $nda->setCall([]);
@@ -144,19 +154,23 @@ class NdaManagerController extends ProgramAbstractController
                 $this->getCallService()->updateEntity($nda);
 
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf(
-                        _("txt-nda-for-contact-%s-has-been-updated"),
-                        $nda->getContact()->getDisplayName()
-                    ));
+                    ->addMessage(
+                        sprintf(
+                            _("txt-nda-for-contact-%s-has-been-updated"),
+                            $nda->getContact()->getDisplayName()
+                        )
+                    );
 
                 return $this->redirect()->toRoute('zfcadmin/nda/view', ['id' => $nda->getId()]);
             }
         }
 
-        return new ViewModel([
-            'nda'  => $nda,
-            'form' => $form,
-        ]);
+        return new ViewModel(
+            [
+                'nda'  => $nda,
+                'form' => $form,
+            ]
+        );
     }
 
     /**
@@ -166,21 +180,25 @@ class NdaManagerController extends ProgramAbstractController
      */
     public function approveAction()
     {
-        $nda = $this->params()->fromPost('nda');
+        $nda        = $this->params()->fromPost('nda');
         $dateSigned = $this->params()->fromPost('dateSigned');
 
         if (empty($dateSigned)) {
-            return new JsonModel([
-                'result' => 'error',
-                'error'  => $this->translate("txt-date-signed-is-empty"),
-            ]);
+            return new JsonModel(
+                [
+                    'result' => 'error',
+                    'error'  => $this->translate("txt-date-signed-is-empty"),
+                ]
+            );
         }
 
-        if (!\DateTime::createFromFormat('Y-h-d', $dateSigned)) {
-            return new JsonModel([
-                'result' => 'error',
-                'error'  => $this->translate("txt-incorrect-date-format-should-be-yyyy-mm-dd"),
-            ]);
+        if (! \DateTime::createFromFormat('Y-h-d', $dateSigned)) {
+            return new JsonModel(
+                [
+                    'result' => 'error',
+                    'error'  => $this->translate("txt-incorrect-date-format-should-be-yyyy-mm-dd"),
+                ]
+            );
         }
 
         /*
@@ -195,8 +213,10 @@ class NdaManagerController extends ProgramAbstractController
         $this->getAdminService()->flushPermitsByContact($nda->getContact());
 
         //Update the
-        return new JsonModel([
-            'result' => 'success',
-        ]);
+        return new JsonModel(
+            [
+                'result' => 'success',
+            ]
+        );
     }
 }

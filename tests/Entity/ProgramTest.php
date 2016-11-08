@@ -32,7 +32,7 @@ class ProgramTest extends \PHPUnit_Framework_TestCase
         $program->setProgram('PROGRAM1');
 
         return [
-            [$program]
+            [$program],
         ];
     }
 
@@ -42,7 +42,7 @@ class ProgramTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->serviceManager = Bootstrap::getServiceManager();
-        $this->entityManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
+        $this->entityManager  = $this->serviceManager->get('Doctrine\ORM\EntityManager');
 
     }
 
@@ -61,7 +61,7 @@ class ProgramTest extends \PHPUnit_Framework_TestCase
 
     public function testMagicGettersAndSetters()
     {
-        $program = new Program();
+        $program          = new Program();
         $program->program = 'test';
         $this->assertEquals('test', $program->program);
     }

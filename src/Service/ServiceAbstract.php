@@ -63,6 +63,26 @@ abstract class ServiceAbstract implements ServiceInterface
     }
 
     /**
+     * @return \Doctrine\ORM\EntityManager
+     */
+    public function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
+    /**
+     * @param \Doctrine\ORM\EntityManager $entityManager
+     *
+     * @return ServiceAbstract
+     */
+    public function setEntityManager($entityManager)
+    {
+        $this->entityManager = $entityManager;
+
+        return $this;
+    }
+
+    /**
      * @param $entity
      * @param $id
      *
@@ -120,46 +140,6 @@ abstract class ServiceAbstract implements ServiceInterface
         $this->getEntityManager()->flush();
 
         return true;
-    }
-
-    /**
-     * @return \Doctrine\ORM\EntityManager
-     */
-    public function getEntityManager()
-    {
-        return $this->entityManager;
-    }
-
-    /**
-     * @param \Doctrine\ORM\EntityManager $entityManager
-     *
-     * @return ServiceAbstract
-     */
-    public function setEntityManager($entityManager)
-    {
-        $this->entityManager = $entityManager;
-
-        return $this;
-    }
-
-    /**
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param ServiceLocatorInterface|ContainerInterface $serviceLocator
-     *
-     * @return ServiceAbstract
-     */
-    public function setServiceLocator($serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-
-        return $this;
     }
 
     /**
@@ -242,6 +222,26 @@ abstract class ServiceAbstract implements ServiceInterface
     public function setProjectService($projectService)
     {
         $this->projectService = $projectService;
+
+        return $this;
+    }
+
+    /**
+     * @return ServiceLocatorInterface
+     */
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator;
+    }
+
+    /**
+     * @param ServiceLocatorInterface|ContainerInterface $serviceLocator
+     *
+     * @return ServiceAbstract
+     */
+    public function setServiceLocator($serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
 
         return $this;
     }

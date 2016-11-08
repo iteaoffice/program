@@ -18,7 +18,6 @@ namespace Program\Factory;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class InputFilterFactory
@@ -39,17 +38,5 @@ final class InputFilterFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         return new $requestedName($container->get(EntityManager::class), $options);
-    }
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param null|string             $canonicalName
-     * @param null|string             $requestedName
-     *
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $canonicalName = null, $requestedName = null)
-    {
-        return $this($serviceLocator, $requestedName);
     }
 }

@@ -37,16 +37,26 @@ class NdaLabel extends AbstractNavigationInvokable
             /** @var Nda $nda */
             $nda = $this->getEntities()->get(Nda::class);
 
-            if (!is_null($nda->getCall())) {
-                $page->setParams(array_merge($page->getParams(), [
-                    'id'     => $nda->getId(),
-                    'callId' => !is_null($nda->getCall()) ?: $nda->getCall()->getId(),
-                ]));
+            if (! is_null($nda->getCall())) {
+                $page->setParams(
+                    array_merge(
+                        $page->getParams(),
+                        [
+                        'id'     => $nda->getId(),
+                        'callId' => ! is_null($nda->getCall()) ?: $nda->getCall()->getId(),
+                        ]
+                    )
+                );
                 $label = (string)$nda;
             } else {
-                $page->setParams(array_merge($page->getParams(), [
-                    'id' => $nda->getId(),
-                ]));
+                $page->setParams(
+                    array_merge(
+                        $page->getParams(),
+                        [
+                        'id' => $nda->getId(),
+                        ]
+                    )
+                );
                 $label = (string)$nda;
             }
         } else {

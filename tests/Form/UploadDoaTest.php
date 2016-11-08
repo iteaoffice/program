@@ -55,7 +55,7 @@ class UploadDoaTest extends \PHPUnit_Framework_TestCase
     public function testUploadDoaFormHasCorrectInputFilter()
     {
         $uploadDoaForm = new UploadDoa();
-        $inputFilter = $uploadDoaForm->getInputFilterSpecification();
+        $inputFilter   = $uploadDoaForm->getInputFilterSpecification();
         $this->assertTrue(is_array($inputFilter));
         $this->assertArrayHasKey('file', $inputFilter);
     }

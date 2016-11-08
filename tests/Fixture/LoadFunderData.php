@@ -24,7 +24,7 @@ class LoadFunderData extends AbstractFixture implements DependentFixtureInterfac
     {
         $country = $manager->find("General\Entity\Country", 1);
         $contact = $manager->find("Contact\Entity\Contact", 1);
-        $funder = new \Program\Entity\Funder();
+        $funder  = new \Program\Entity\Funder();
         $funder->setContact($contact);
         $funder->setCountry($country);
         $funder->setInfoOffice('This is the info of the office');

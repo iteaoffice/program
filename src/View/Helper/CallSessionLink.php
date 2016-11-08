@@ -55,11 +55,13 @@ class CallSessionLink extends LinkAbstract
         /*
          * Set the non-standard options needed to give an other link value
          */
-        $this->setShowOptions([
+        $this->setShowOptions(
+            [
                 'name' => $this->getSession(),
-            ]);
-        
-        if (!is_null($this->getSession()->getId())) {
+            ]
+        );
+
+        if (! is_null($this->getSession()->getId())) {
             $this->addRouterParam('id', $this->getSession()->getId());
         }
 
@@ -90,11 +92,13 @@ class CallSessionLink extends LinkAbstract
         switch ($this->getAction()) {
             case 'view':
                 $this->addRouterParam('session', $this->getSession()->getId());
-                $this->setRouter('route-' . str_replace(
-                    'doctrineormmodule_proxy___cg___',
-                    '',
-                    $this->getSession()->get("underscore_entity_name")
-                ));
+                $this->setRouter(
+                    'route-' . str_replace(
+                        'doctrineormmodule_proxy___cg___',
+                        '',
+                        $this->getSession()->get("underscore_entity_name")
+                    )
+                );
                 $this->setText(sprintf($this->translate("txt-view-session-%s"), $this->getSession()->getSession()));
                 break;
             case 'download':
@@ -102,11 +106,13 @@ class CallSessionLink extends LinkAbstract
                 $this->setText(sprintf($this->translate("txt-download-session-%s"), $this->getSession()->getSession()));
                 break;
             default:
-                throw new \InvalidArgumentException(sprintf(
-                    "%s is an incorrect action for %s",
-                    $this->getAction(),
-                    __CLASS__
-                ));
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        "%s is an incorrect action for %s",
+                        $this->getAction(),
+                        __CLASS__
+                    )
+                );
         }
     }
 }

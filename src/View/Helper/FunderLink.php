@@ -49,62 +49,30 @@ class FunderLink extends LinkAbstract
         $this->setShow($show);
         $this->setPage($page);
 
-        if (!$this->hasAccess($this->getFunder(), FunderAssertion::class, $this->getAction())) {
+        if (! $this->hasAccess($this->getFunder(), FunderAssertion::class, $this->getAction())) {
             return '';
         }
 
         /*
          * If the alternativeShow is not null, use it an otherwise take the page
          */
-        if (!is_null($alternativeShow)) {
+        if (! is_null($alternativeShow)) {
             $this->setAlternativeShow($alternativeShow);
         } else {
             $this->setAlternativeShow($page);
         }
 
-        if (!is_null($this->getFunder()->getContact())) {
-            $this->setShowOptions([
+        if (! is_null($this->getFunder()->getContact())) {
+            $this->setShowOptions(
+                [
                     'name' => $this->getFunder()->getContact()->getDisplayName(),
-                ]);
+                ]
+            );
         }
 
         $this->addRouterParam('id', $this->getFunder()->getId());
 
         return $this->createLink();
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function parseAction()
-    {
-        switch ($this->getAction()) {
-            case 'new':
-                $this->setRouter('zfcadmin/funder/new');
-                $this->setText($this->translate("txt-new-funder"));
-                break;
-            case 'list':
-                $this->setRouter('zfcadmin/funder/list');
-                $this->setText($this->translate("txt-list-funders"));
-
-                break;
-            case 'edit':
-                $this->setRouter('zfcadmin/funder/edit');
-                $this->setText(sprintf(
-                    $this->translate("txt-edit-funder-%s"),
-                    $this->getFunder()->getContact()->getDisplayName()
-                ));
-                break;
-            case 'view-admin':
-                $this->setRouter('zfcadmin/funder/view');
-                $this->setText(sprintf(
-                    $this->translate("txt-view-funder-%s"),
-                    $this->getFunder()->getContact()->getDisplayName()
-                ));
-                break;
-            default:
-                throw new \Exception(sprintf("%s is an incorrect action for %s", $this->getAction(), __CLASS__));
-        }
     }
 
     /**
@@ -125,5 +93,43 @@ class FunderLink extends LinkAbstract
     public function setFunder($funder)
     {
         $this->funder = $funder;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function parseAction()
+    {
+        switch ($this->getAction()) {
+            case 'new':
+                $this->setRouter('zfcadmin/funder/new');
+                $this->setText($this->translate("txt-new-funder"));
+                break;
+            case 'list':
+                $this->setRouter('zfcadmin/funder/list');
+                $this->setText($this->translate("txt-list-funders"));
+
+                break;
+            case 'edit':
+                $this->setRouter('zfcadmin/funder/edit');
+                $this->setText(
+                    sprintf(
+                        $this->translate("txt-edit-funder-%s"),
+                        $this->getFunder()->getContact()->getDisplayName()
+                    )
+                );
+                break;
+            case 'view-admin':
+                $this->setRouter('zfcadmin/funder/view');
+                $this->setText(
+                    sprintf(
+                        $this->translate("txt-view-funder-%s"),
+                        $this->getFunder()->getContact()->getDisplayName()
+                    )
+                );
+                break;
+            default:
+                throw new \Exception(sprintf("%s is an incorrect action for %s", $this->getAction(), __CLASS__));
+        }
     }
 }

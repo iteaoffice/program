@@ -20,7 +20,6 @@ use Interop\Container\ContainerInterface;
 use Program\Service\CallService;
 use Project\Service\VersionService;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class FormFactory
@@ -36,11 +35,12 @@ final class CallServiceFactory implements FactoryInterface
      * @param string             $requestedName
      * @param null|array         $options
      *
-     * @return object
+     * @return CallService
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): CallService
     {
-        $callService = new CallService($options);
+        /** @var CallService $callService */
+        $callService = new $requestedName($options);
         $callService->setServiceLocator($container);
 
         /** @var EntityManager $entityManager */
@@ -56,17 +56,5 @@ final class CallServiceFactory implements FactoryInterface
         $callService->setVersionService($versionService);
 
         return $callService;
-    }
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param string|null             $canonicalName
-     * @param string|null             $requestedName
-     *
-     * @return CallService
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $canonicalName = null, $requestedName = null)
-    {
-        return $this($serviceLocator, $requestedName);
     }
 }

@@ -89,8 +89,8 @@ class DoaObject extends EntityAbstract
      */
     public function getInputFilter()
     {
-        if (!$this->inputFilter) {
-            $inputFilter = new InputFilter();
+        if (! $this->inputFilter) {
+            $inputFilter       = new InputFilter();
             $this->inputFilter = $inputFilter;
         }
 

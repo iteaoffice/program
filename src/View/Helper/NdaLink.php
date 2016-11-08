@@ -16,7 +16,6 @@ namespace Program\View\Helper;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Program\Acl\Assertion\Nda as NdaAssertion;
-use Program\Entity;
 use Program\Entity\Call\Call;
 use Program\Entity\Nda;
 
@@ -55,11 +54,11 @@ class NdaLink extends LinkAbstract
         $this->setCall($call);
         $this->setAction($action);
         $this->setShow($show);
-        if (!$this->hasAccess($this->getNda(), NdaAssertion::class, $this->getAction())) {
+        if (! $this->hasAccess($this->getNda(), NdaAssertion::class, $this->getAction())) {
             return '';
         }
 
-        if (!is_null($this->getNda())) {
+        if (! is_null($this->getNda())) {
             $this->addRouterParam('id', $this->getNda()->getId());
         }
 
@@ -75,7 +74,7 @@ class NdaLink extends LinkAbstract
             $this->nda = new Nda();
         }
 
-        if (!is_null($this->getCall())) {
+        if (! is_null($this->getCall())) {
             $arrayCollection = new ArrayCollection([$this->getCall()]);
             $this->nda->setCall($arrayCollection);
         }
@@ -120,14 +119,16 @@ class NdaLink extends LinkAbstract
         switch ($this->getAction()) {
             case 'upload':
                 $this->setRouter('community/program/nda/upload');
-                if (!is_null($this->getCall())) {
+                if (! is_null($this->getCall())) {
                     $this->setText(sprintf($this->translate("txt-upload-nda-for-call-%s-title"), $this->getCall()));
                     $this->addRouterParam('id', $this->getCall()->getId());
-                } elseif (!is_null($this->getNda()->getCall())) {
-                    $this->setText(sprintf(
-                        $this->translate("txt-upload-nda-for-call-%s-title"),
-                        $this->getNda()->getCall()
-                    ));
+                } elseif (! is_null($this->getNda()->getCall())) {
+                    $this->setText(
+                        sprintf(
+                            $this->translate("txt-upload-nda-for-call-%s-title"),
+                            $this->getNda()->getCall()
+                        )
+                    );
                     $this->addRouterParam('id', $this->getNda()->getCall()->getId());
                 } else {
                     $this->setText(sprintf($this->translate("txt-upload-nda-title")));
@@ -146,7 +147,7 @@ class NdaLink extends LinkAbstract
                 if ($call = $this->getNda()->getCall()) {
                     $this->setText(sprintf($this->translate("txt-render-nda-for-call-%s-title"), $call));
                     $this->addRouterParam('callId', $call->getId());
-                } elseif (!is_null($this->getCall())) {
+                } elseif (! is_null($this->getCall())) {
                     $this->setText(sprintf($this->translate("txt-render-nda-for-call-%s-title"), $this->getCall()));
                     $this->addRouterParam('callId', $this->getCall()->getId());
                 }
@@ -161,27 +162,33 @@ class NdaLink extends LinkAbstract
                 break;
             case 'view-admin':
                 $this->setRouter('zfcadmin/nda/view');
-                $this->setText(sprintf(
-                    $this->translate("txt-view-nda-for-%s-for-%s-title"),
-                    !is_null($this->getNda()->getCall()) ? $this->getNda()->getCall() : 'LR',
-                    $this->getNda()->getContact()->getDisplayName()
-                ));
+                $this->setText(
+                    sprintf(
+                        $this->translate("txt-view-nda-for-%s-for-%s-title"),
+                        ! is_null($this->getNda()->getCall()) ? $this->getNda()->getCall() : 'LR',
+                        $this->getNda()->getContact()->getDisplayName()
+                    )
+                );
                 break;
             case 'edit-admin':
                 $this->setRouter('zfcadmin/nda/edit');
-                $this->setText(sprintf(
-                    $this->translate("txt-edit-nda-for-%s-for-%s-link-title"),
-                    !is_null($this->getNda()->getCall()) ? $this->getNda()->getCall() : 'LR',
-                    $this->getNda()->getContact()->getDisplayName()
-                ));
+                $this->setText(
+                    sprintf(
+                        $this->translate("txt-edit-nda-for-%s-for-%s-link-title"),
+                        ! is_null($this->getNda()->getCall()) ? $this->getNda()->getCall() : 'LR',
+                        $this->getNda()->getContact()->getDisplayName()
+                    )
+                );
                 break;
 
             default:
-                throw new \InvalidArgumentException(sprintf(
-                    "%s is an incorrect action for %s",
-                    $this->getAction(),
-                    __CLASS__
-                ));
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        "%s is an incorrect action for %s",
+                        $this->getAction(),
+                        __CLASS__
+                    )
+                );
         }
     }
 }

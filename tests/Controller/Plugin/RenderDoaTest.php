@@ -55,7 +55,7 @@ class RenderDoaTest extends \PHPUnit_Framework_TestCase
         $serviceManager = Bootstrap::getServiceManager();
         $serviceManager->setAllowOverride(true);
 
-       $contactService = new ContactService();
+        $contactService = new ContactService();
 
         /** @var \PHPUnit_Framework_MockObject_MockObject $organisationServiceMock */
 

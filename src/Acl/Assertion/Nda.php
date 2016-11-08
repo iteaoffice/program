@@ -12,9 +12,7 @@ namespace Program\Acl\Assertion;
 
 use Admin\Entity\Access;
 use Program\Entity\Nda as NdaEntity;
-use Program\Service\CallService;
 use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Resource\GenericResource;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 use Zend\Permissions\Acl\Role\RoleInterface;
 
@@ -45,7 +43,7 @@ class Nda extends AssertionAbstract
         /*
          * @var $nda NdaEntity
          */
-        if ( ! $nda instanceof NdaEntity && ! is_null($id)) {
+        if (! $nda instanceof NdaEntity && ! is_null($id)) {
             /** @var NdaEntity $nda */
             $nda = $this->getProgramService()->findEntityById(NdaEntity::class, $id);
         }
@@ -62,7 +60,7 @@ class Nda extends AssertionAbstract
                 return is_null($nda->getDateApproved())
                     && $nda->getContact()->getId() === $this->getContact()->getId();
             case 'render':
-                if ( ! $this->hasContact() || is_null($this->getContact()->getContactOrganisation())) {
+                if (! $this->hasContact() || is_null($this->getContact()->getContactOrganisation())) {
                     return false;
                 }
                 /*
@@ -73,12 +71,12 @@ class Nda extends AssertionAbstract
                 $call = null;
                 if ($nda instanceof NdaEntity && ! is_null($nda->getCall())) {
                     $call = $nda->getCall();
-                } elseif ( ! is_null($callId = $this->getRouteMatch()->getParam('callId'))) {
+                } elseif (! is_null($callId = $this->getRouteMatch()->getParam('callId'))) {
                     $call = $this->getCallService()->findCallById($callId);
                 }
 
                 //We have no 2 methods to get the call, if the call is set check if the status is correct
-                if ( ! is_null($call)) {
+                if (! is_null($call)) {
                     return true;
 
                     //return $this->getCallService()->getCallStatus($call)->result !== CallService::UNDEFINED;
@@ -87,7 +85,7 @@ class Nda extends AssertionAbstract
                 return true;
             case 'download':
             case 'view':
-                if ( ! $this->hasContact()) {
+                if (! $this->hasContact()) {
                     return false;
                 }
 

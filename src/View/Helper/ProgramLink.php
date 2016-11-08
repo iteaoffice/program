@@ -45,12 +45,14 @@ class ProgramLink extends LinkAbstract
         /*
          * Set the non-standard options needed to give an other link value
          */
-        $this->setShowOptions([
-            'name' => $this->getProgram(),
+        $this->setShowOptions(
+            [
+                'name' => $this->getProgram(),
 
-        ]);
+            ]
+        );
 
-        if (!is_null($program)) {
+        if (! is_null($program)) {
             $this->addRouterParam('id', $this->getProgram()->getId());
         }
 
@@ -97,11 +99,13 @@ class ProgramLink extends LinkAbstract
                 $this->setText(sprintf(_("txt-view-program-%s"), $this->getProgram()));
                 break;
             default:
-                throw new \InvalidArgumentException(sprintf(
-                    "%s is an incorrect action for %s",
-                    $this->getAction(),
-                    __CLASS__
-                ));
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        "%s is an incorrect action for %s",
+                        $this->getAction(),
+                        __CLASS__
+                    )
+                );
         }
     }
 }

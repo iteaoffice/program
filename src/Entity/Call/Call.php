@@ -44,8 +44,12 @@ class Call extends EntityAbstract implements ResourceInterface
 
     const INACTIVE = 0;
     const ACTIVE = 1;
-
-
+    const DOA_REQUIREMENT_NOT_APPLICABLE = 1;
+    const DOA_REQUIREMENT_PER_PROGRAM = 2;
+    const DOA_REQUIREMENT_PER_PROJECT = 3;
+    const NDA_REQUIREMENT_NOT_APPLICABLE = 1;
+    const NDA_REQUIREMENT_PER_CALL = 2;
+    const NDA_REQUIREMENT_PER_PROJECT = 3;
     /**
      * @var array
      */
@@ -54,11 +58,6 @@ class Call extends EntityAbstract implements ResourceInterface
             self::INACTIVE => 'txt-inactive-for-projects',
             self::ACTIVE   => 'txt-active-for-projects',
         ];
-
-    const DOA_REQUIREMENT_NOT_APPLICABLE = 1;
-    const DOA_REQUIREMENT_PER_PROGRAM = 2;
-    const DOA_REQUIREMENT_PER_PROJECT = 3;
-
     /**
      * @var array
      */
@@ -68,11 +67,6 @@ class Call extends EntityAbstract implements ResourceInterface
             self::DOA_REQUIREMENT_PER_PROGRAM    => 'txt-doa-per-program-required',
             self::DOA_REQUIREMENT_PER_PROJECT    => 'txt-doa-per-project-required',
         ];
-
-    const NDA_REQUIREMENT_NOT_APPLICABLE = 1;
-    const NDA_REQUIREMENT_PER_CALL = 2;
-    const NDA_REQUIREMENT_PER_PROJECT = 3;
-
     /**
      * @var array
      */
@@ -312,6 +306,30 @@ class Call extends EntityAbstract implements ResourceInterface
     }
 
     /**
+     * @return array
+     */
+    public static function getDoaRequirementTemplates()
+    {
+        return self::$doaRequirementTemplates;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getNdaRequirementTemplates()
+    {
+        return self::$ndaRequirementTemplates;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getActiveTemplates()
+    {
+        return self::$activeTemplates;
+    }
+
+    /**
      * Magic Getter.
      *
      * @param $property
@@ -345,6 +363,22 @@ class Call extends EntityAbstract implements ResourceInterface
     }
 
     /**
+     * @return \Program\Entity\Program
+     */
+    public function getProgram()
+    {
+        return $this->program;
+    }
+
+    /**
+     * @param \Program\Entity\Program $program
+     */
+    public function setProgram($program)
+    {
+        $this->program = $program;
+    }
+
+    /**
      * Create a short name.
      *
      * @return string
@@ -367,46 +401,6 @@ class Call extends EntityAbstract implements ResourceInterface
     public function parseInvoiceName()
     {
         return sprintf("%s %s", $this->call, $this->program->getProgram());
-    }
-
-    /**
-     * @return \Program\Entity\Program
-     */
-    public function getProgram()
-    {
-        return $this->program;
-    }
-
-    /**
-     * @param \Program\Entity\Program $program
-     */
-    public function setProgram($program)
-    {
-        $this->program = $program;
-    }
-
-    /**
-     * @return array
-     */
-    public static function getDoaRequirementTemplates()
-    {
-        return self::$doaRequirementTemplates;
-    }
-
-    /**
-     * @return array
-     */
-    public static function getNdaRequirementTemplates()
-    {
-        return self::$ndaRequirementTemplates;
-    }
-
-    /**
-     * @return array
-     */
-    public static function getActiveTemplates()
-    {
-        return self::$activeTemplates;
     }
 
     /**

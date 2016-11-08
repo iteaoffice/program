@@ -37,7 +37,7 @@ class CallTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->serviceManager = Bootstrap::getServiceManager();
-        $this->entityManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
+        $this->entityManager  = $this->serviceManager->get('Doctrine\ORM\EntityManager');
     }
 
     public function provider()
@@ -50,7 +50,7 @@ class CallTest extends \PHPUnit_Framework_TestCase
         $call->setProgram($programTest->provider()[0][0]);
 
         return [
-            [$call]
+            [$call],
         ];
     }
 
@@ -75,7 +75,7 @@ class CallTest extends \PHPUnit_Framework_TestCase
 
     public function testMagicGettersAndSetters()
     {
-        $call = new Call();
+        $call       = new Call();
         $call->call = 'test';
         $this->assertEquals('test', $call->call);
     }

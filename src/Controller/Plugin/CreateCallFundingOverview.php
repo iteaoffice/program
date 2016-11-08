@@ -16,16 +16,9 @@
 namespace Program\Controller\Plugin;
 
 use Affiliation\Service\AffiliationService;
-use General\Entity\Country;
 use General\Service\GeneralService;
-use Project\Entity\Evaluation\Evaluation;
-use Project\Entity\Evaluation\Type;
-use Project\Entity\Funding\Funding;
 use Project\Entity\Funding\Source;
 use Project\Entity\Funding\Status;
-use Project\Entity\Project;
-use Project\Entity\Version\Type as VersionType;
-use Project\Form\MatrixFilter;
 use Project\Service\EvaluationService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
@@ -91,6 +84,36 @@ class CreateCallFundingOverview extends AbstractPlugin
         $evaluationResult['countries'] = $this->countries;
 
         return $evaluationResult;
+    }
+
+    /**
+     * Gateway to the General Service.
+     *
+     * @return GeneralService
+     */
+    public function getGeneralService()
+    {
+        return $this->getServiceLocator()->get(GeneralService::class);
+    }
+
+    /**
+     * @return ServiceLocatorInterface
+     */
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator;
+    }
+
+    /**
+     * @param ServiceLocatorInterface|PluginManager $serviceLocator
+     *
+     * @return $this
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+
+        return $this;
     }
 
     /**
@@ -173,33 +196,13 @@ class CreateCallFundingOverview extends AbstractPlugin
     }
 
     /**
-     * Gateway to the General Service.
+     * Gateway to the Project Service.
      *
-     * @return GeneralService
+     * @return ProjectService
      */
-    public function getGeneralService()
+    public function getProjectService()
     {
-        return $this->getServiceLocator()->get(GeneralService::class);
-    }
-
-    /**
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param ServiceLocatorInterface|PluginManager $serviceLocator
-     *
-     * @return $this
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-
-        return $this;
+        return $this->getServiceLocator()->get(ProjectService::class);
     }
 
     /**
@@ -213,13 +216,13 @@ class CreateCallFundingOverview extends AbstractPlugin
     }
 
     /**
-     * Gateway to the Project Service.
+     * Gateway to the Affiliation Service.
      *
-     * @return ProjectService
+     * @return AffiliationService
      */
-    public function getProjectService()
+    public function getAffiliationService()
     {
-        return $this->getServiceLocator()->get(ProjectService::class);
+        return $this->getServiceLocator()->get(AffiliationService::class);
     }
 
     /**
@@ -230,15 +233,5 @@ class CreateCallFundingOverview extends AbstractPlugin
     public function getVersionService()
     {
         return $this->getServiceLocator()->get(VersionService::class);
-    }
-
-    /**
-     * Gateway to the Affiliation Service.
-     *
-     * @return AffiliationService
-     */
-    public function getAffiliationService()
-    {
-        return $this->getServiceLocator()->get(AffiliationService::class);
     }
 }

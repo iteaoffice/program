@@ -83,11 +83,14 @@ class RenderNda extends AbstractPlugin
          * Use the NDA object to render the filename
          */
         $pdf->Write(0, $nda->parseFileName());
-        $ndaContent = $twig->render('program/pdf/nda-call', [
+        $ndaContent = $twig->render(
+            'program/pdf/nda-call',
+            [
             'contact'        => $nda->getContact(),
             'call'           => $nda->getCall(),
-            'contactService' => $this->getContactService()
-        ]);
+            'contactService' => $this->getContactService(),
+            ]
+        );
         $pdf->writeHTMLCell(0, 0, 14, 70, $ndaContent);
         /*
          * Signage block
@@ -192,10 +195,13 @@ class RenderNda extends AbstractPlugin
          */
         $pdf->SetXY(118, 55);
         $pdf->Write(0, $nda->parseFileName());
-        $ndaContent = $twig->render('program/pdf/nda-general', [
+        $ndaContent = $twig->render(
+            'program/pdf/nda-general',
+            [
             'contact'        => $nda->getContact(),
-            'contactService' => $this->getContactService()
-        ]);
+            'contactService' => $this->getContactService(),
+            ]
+        );
         $pdf->writeHTMLCell(0, 0, 14, 70, $ndaContent);
         /*
          * Signage block

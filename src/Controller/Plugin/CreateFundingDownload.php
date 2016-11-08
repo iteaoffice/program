@@ -16,17 +16,11 @@
 namespace Program\Controller\Plugin;
 
 use Affiliation\Service\AffiliationService;
-use General\Entity\Country;
 use General\Service\GeneralService;
 use Program\Entity\Call\Call;
-use Project\Entity\Evaluation\Evaluation;
-use Project\Entity\Evaluation\Type;
-use Project\Entity\Funding\Funding;
 use Project\Entity\Funding\Source;
 use Project\Entity\Funding\Status;
 use Project\Entity\Project;
-use Project\Entity\Version\Type as VersionType;
-use Project\Form\MatrixFilter;
 use Project\Service\EvaluationService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
@@ -137,15 +131,14 @@ class CreateFundingDownload extends AbstractPlugin
         return ob_get_clean();
     }
 
-
     /**
-     * Gateway to the General Service.
+     * Gateway to the Project Service.
      *
-     * @return GeneralService
+     * @return ProjectService
      */
-    public function getGeneralService()
+    public function getProjectService()
     {
-        return $this->getServiceLocator()->get(GeneralService::class);
+        return $this->getServiceLocator()->get(ProjectService::class);
     }
 
     /**
@@ -169,23 +162,13 @@ class CreateFundingDownload extends AbstractPlugin
     }
 
     /**
-     * Gateway to the Evaluation Service.
+     * Gateway to the Affiliation Service.
      *
-     * @return EvaluationService
+     * @return AffiliationService
      */
-    public function getEvaluationService()
+    public function getAffiliationService()
     {
-        return $this->getServiceLocator()->get(EvaluationService::class);
-    }
-
-    /**
-     * Gateway to the Project Service.
-     *
-     * @return ProjectService
-     */
-    public function getProjectService()
-    {
-        return $this->getServiceLocator()->get(ProjectService::class);
+        return $this->getServiceLocator()->get(AffiliationService::class);
     }
 
     /**
@@ -199,12 +182,22 @@ class CreateFundingDownload extends AbstractPlugin
     }
 
     /**
-     * Gateway to the Affiliation Service.
+     * Gateway to the General Service.
      *
-     * @return AffiliationService
+     * @return GeneralService
      */
-    public function getAffiliationService()
+    public function getGeneralService()
     {
-        return $this->getServiceLocator()->get(AffiliationService::class);
+        return $this->getServiceLocator()->get(GeneralService::class);
+    }
+
+    /**
+     * Gateway to the Evaluation Service.
+     *
+     * @return EvaluationService
+     */
+    public function getEvaluationService()
+    {
+        return $this->getServiceLocator()->get(EvaluationService::class);
     }
 }

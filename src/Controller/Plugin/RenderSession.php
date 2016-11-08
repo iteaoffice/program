@@ -40,11 +40,13 @@ class RenderSession extends AbstractPlugin
     protected $serviceLocator;
 
     /**
-     * @return ModuleOptions
+     * Gateway to the Contact Service.
+     *
+     * @return ContactService
      */
-    public function getModuleOptions()
+    public function getContactService()
     {
-        return $this->getServiceLocator()->get(ModuleOptions::class);
+        return $this->getServiceLocator()->get(ContactService::class);
     }
 
     /**
@@ -68,16 +70,6 @@ class RenderSession extends AbstractPlugin
     }
 
     /**
-     * Gateway to the Contact Service.
-     *
-     * @return ContactService
-     */
-    public function getContactService()
-    {
-        return $this->getServiceLocator()->get(ContactService::class);
-    }
-
-    /**
      * @return array|object
      */
     public function getIdeaService()
@@ -87,6 +79,7 @@ class RenderSession extends AbstractPlugin
 
     /**
      * @param Session $session
+     *
      * @return ProgramPdf
      */
     public function __invoke(Session $session)
@@ -146,7 +139,7 @@ class RenderSession extends AbstractPlugin
                 $ideaSession->getIdea()->getNumber(),
                 $ideaSession->getIdea()->getIdea(),
                 $ideaSession->getIdea()->getTitle(),
-                $ideaSession->getIdea()->getContact()->getDisplayName()
+                $ideaSession->getIdea()->getContact()->getDisplayName(),
             ];
         }
 
@@ -156,18 +149,16 @@ class RenderSession extends AbstractPlugin
     }
 
     /**
-     *
+     * @return ModuleOptions
      */
+    public function getModuleOptions()
+    {
+        return $this->getServiceLocator()->get(ModuleOptions::class);
+    }
 
     /**
-     * Gateway to the General Service.
      *
-     * @return GeneralService
      */
-    public function getGeneralService()
-    {
-        return $this->getServiceLocator()->get(GeneralService::class);
-    }
 
     /**
      * Proxy for the flash messenger helper to have the string translated earlier.
@@ -184,5 +175,15 @@ class RenderSession extends AbstractPlugin
         $translate = $this->getServiceLocator()->get('ViewHelperManager')->get('translate');
 
         return $translate($string);
+    }
+
+    /**
+     * Gateway to the General Service.
+     *
+     * @return GeneralService
+     */
+    public function getGeneralService()
+    {
+        return $this->getServiceLocator()->get(GeneralService::class);
     }
 }

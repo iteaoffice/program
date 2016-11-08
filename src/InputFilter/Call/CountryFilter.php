@@ -30,22 +30,26 @@ class CountryFilter extends InputFilter
     public function __construct()
     {
         $inputFilter = new InputFilter();
-        $inputFilter->add([
-            'name'     => 'dateNationalApplication',
-            'required' => false,
-            'filters'  => [
-                ['name' => 'StripTags'],
-                ['name' => 'StringTrim'],
-            ],
-        ]);
-        $inputFilter->add([
-            'name'     => 'dateExpectedFundingDecision',
-            'required' => false,
-            'filters'  => [
-                ['name' => 'StripTags'],
-                ['name' => 'StringTrim'],
-            ],
-        ]);
+        $inputFilter->add(
+            [
+                'name'     => 'dateNationalApplication',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+            ]
+        );
+        $inputFilter->add(
+            [
+                'name'     => 'dateExpectedFundingDecision',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+            ]
+        );
         $this->add($inputFilter, 'program_entity_call_country');
     }
 }

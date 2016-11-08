@@ -29,7 +29,7 @@ class FunderManagerController extends ProgramAbstractController
      */
     public function listAction()
     {
-        $page = $this->params()->fromRoute('page', 1);
+        $page         = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getProgramFilter();
         $contactQuery = $this->getProgramService()->findEntitiesFiltered(Funder::class, $filterPlugin->getFilter());
 
@@ -42,13 +42,15 @@ class FunderManagerController extends ProgramAbstractController
         $form = new ProgramFilter();
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
-        return new ViewModel([
-            'paginator'     => $paginator,
-            'form'          => $form,
-            'encodedFilter' => urlencode($filterPlugin->getHash()),
-            'order'         => $filterPlugin->getOrder(),
-            'direction'     => $filterPlugin->getDirection(),
-        ]);
+        return new ViewModel(
+            [
+                'paginator'     => $paginator,
+                'form'          => $form,
+                'encodedFilter' => urlencode($filterPlugin->getHash()),
+                'order'         => $filterPlugin->getOrder(),
+                'direction'     => $filterPlugin->getDirection(),
+            ]
+        );
     }
 
     /**
@@ -61,9 +63,11 @@ class FunderManagerController extends ProgramAbstractController
          */
         $funder = $this->getProgramService()->findEntityById(Funder::class, $this->params('id'));
 
-        return new ViewModel([
-            'funder' => $funder,
-        ]);
+        return new ViewModel(
+            [
+                'funder' => $funder,
+            ]
+        );
     }
 
     /**
@@ -79,8 +83,8 @@ class FunderManagerController extends ProgramAbstractController
         );
 
         $funder = new Funder();
-        $form = $this->getFormService()->prepare($funder, null, $data);
-        
+        $form   = $this->getFormService()->prepare($funder, null, $data);
+
         $form->remove('delete');
 
         if ($this->getRequest()->isPost() && $form->isValid()) {
@@ -115,9 +119,11 @@ class FunderManagerController extends ProgramAbstractController
 
         $form = $this->getFormService()->prepare($funder, $funder, $data);
 
-        $form->get($funder->get('underscore_entity_name'))->get('contact')->setValueOptions([
-            $funder->getContact()->getId() => $funder->getContact()->getDisplayName()
-        ])->setDisableInArrayValidator(true);
+        $form->get($funder->get('underscore_entity_name'))->get('contact')->setValueOptions(
+            [
+                $funder->getContact()->getId() => $funder->getContact()->getDisplayName(),
+            ]
+        )->setDisableInArrayValidator(true);
 
         if ($this->getRequest()->isPost() && $form->isValid()) {
             if (isset($data['delete'])) {
@@ -133,7 +139,7 @@ class FunderManagerController extends ProgramAbstractController
                 return $this->redirect()->toRoute('zfcadmin/funder/list');
             }
 
-            if (!isset($data['cancel'])) {
+            if (! isset($data['cancel'])) {
                 $funder = $this->getProgramService()->updateEntity($funder);
             }
 

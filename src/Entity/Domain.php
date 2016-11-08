@@ -115,10 +115,10 @@ class Domain extends EntityAbstract
      */
     public function __construct()
     {
-        $this->project = new Collections\ArrayCollection();
+        $this->project      = new Collections\ArrayCollection();
         $this->organisation = new Collections\ArrayCollection();
-        $this->contact = new Collections\ArrayCollection();
-        $this->idea = new Collections\ArrayCollection();
+        $this->contact      = new Collections\ArrayCollection();
+        $this->idea         = new Collections\ArrayCollection();
     }
 
     /**
@@ -147,7 +147,7 @@ class Domain extends EntityAbstract
      */
     public function getResourceId()
     {
-        return __NAMESPACE__.':'.__CLASS__.':'.$this->id;
+        return __NAMESPACE__ . ':' . __CLASS__ . ':' . $this->id;
     }
 
     /**
@@ -200,9 +200,9 @@ class Domain extends EntityAbstract
      */
     public function getInputFilter()
     {
-        if (!$this->inputFilter) {
+        if (! $this->inputFilter) {
             $inputFilter = new InputFilter();
-            $factory = new InputFactory();
+            $factory     = new InputFactory();
             $inputFilter->add(
                 $factory->createInput(
                     [

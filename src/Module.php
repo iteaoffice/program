@@ -15,7 +15,6 @@
 
 namespace Program;
 
-use Program\Controller\Plugin;
 use Zend\ModuleManager\Feature;
 
 /**

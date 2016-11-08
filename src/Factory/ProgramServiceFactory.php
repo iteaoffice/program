@@ -19,7 +19,6 @@ use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Program\Service\ProgramService;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class ProgramServiceFactory
@@ -49,17 +48,5 @@ final class ProgramServiceFactory implements FactoryInterface
         $programService->setAffiliationService($affiliationService);
 
         return $programService;
-    }
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param string|null             $canonicalName
-     * @param string|null             $requestedName
-     *
-     * @return ProgramService
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $canonicalName = null, $requestedName = null)
-    {
-        return $this($serviceLocator, $requestedName);
     }
 }

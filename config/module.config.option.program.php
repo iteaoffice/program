@@ -16,12 +16,12 @@ $options = [
         . '/template/pdf/nda-template.pdf',
     'blank_template'      => __DIR__ . '/../../../../styles/' . (defined("ITEAOFFICE_HOST") ? ITEAOFFICE_HOST : 'test')
         . '/template/pdf/blank-template-firstpage.pdf',
-    'has_nda'             => !(defined("ITEAOFFICE_HOST")
+    'has_nda'             => ! (defined("ITEAOFFICE_HOST")
         && (defined("ITEAOFFICE_HOST") ? ITEAOFFICE_HOST : 'test') === 'artemisia'),
     'country_color'       => '#00a651',
     'country_color_faded' => '#005C00',
-    'require_partnership'  => (defined("ITEAOFFICE_HOST")
-        && (defined("ITEAOFFICE_HOST") ? ITEAOFFICE_HOST : 'test') === 'penta'),
+    'require_partnership' => (defined("ITEAOFFICE_HOST")
+        && (defined("ITEAOFFICE_HOST") ? ITEAOFFICE_HOST : 'test') === 'aeneas'),
 ];
 /**
  * You do not need to edit below this line

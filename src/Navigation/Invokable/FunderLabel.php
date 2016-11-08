@@ -38,9 +38,14 @@ class FunderLabel extends AbstractNavigationInvokable
         if ($this->getEntities()->containsKey(Funder::class)) {
             /** @var Funder $funder */
             $funder = $this->getEntities()->get(Funder::class);
-            $page->setParams(array_merge($page->getParams(), [
-                'id' => $funder->getId(),
-            ]));
+            $page->setParams(
+                array_merge(
+                    $page->getParams(),
+                    [
+                    'id' => $funder->getId(),
+                    ]
+                )
+            );
             $label = (string)$funder;
         } else {
             $label = $this->translate('txt-nav-view');

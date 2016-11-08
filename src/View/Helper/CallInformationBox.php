@@ -39,7 +39,7 @@ class CallInformationBox extends AbstractViewHelper
      */
     public function __invoke(Call $call)
     {
-        $contents = [
+        $contents   = [
             CallService::PO_NOT_OPEN  => "%call% for Project Outlines will open %diff% from now (%time%)",
             CallService::PO_OPEN      => "%call% for Project Outlines will close %diff% from now (deadline: %time%)",
             CallService::PO_GRACE     => "%call% for Project Outlines closed %diff% ago (deadline: %time%), but a grace period for accepting Project Outlines is still open",
@@ -58,8 +58,8 @@ class CallInformationBox extends AbstractViewHelper
         }
         $result = $callStatus->result;
         /** @var \DateTime $referenceDate */
-        $referenceDate = $callStatus->referenceDate;
-        $today = new \DateTime();
+        $referenceDate  = $callStatus->referenceDate;
+        $today          = new \DateTime();
         $dateDifference = $referenceDate->diff($today);
         if ($dateDifference->days > 7) {
             $format = '%a days';
@@ -70,16 +70,20 @@ class CallInformationBox extends AbstractViewHelper
         } else {
             $format = '%i minutes';
         }
-        $content = str_replace([
-            '%call%',
-            '%diff%',
-            '%time%',
-        ], [
+        $content = str_replace(
+            [
+                '%call%',
+                '%diff%',
+                '%time%',
+            ],
+            [
             $call,
             $dateDifference->format($format),
             $referenceDate->format('l, d F Y H:i:s T'),
-        ], $contents[$result]);
-        $alert = '<div class="alert alert-%s"><strong>%s</strong><br>%s</div>';
+            ],
+            $contents[$result]
+        );
+        $alert   = '<div class="alert alert-%s"><strong>%s</strong><br>%s</div>';
 
         switch ($callStatus->result) {
             case CallService::PO_GRACE:

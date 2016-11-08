@@ -29,7 +29,6 @@ use Project\Service\ProjectService;
 use Project\Service\VersionService;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\HelperPluginManager;
 
 /**

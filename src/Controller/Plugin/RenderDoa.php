@@ -69,11 +69,14 @@ class RenderDoa extends AbstractPlugin
          * Use the NDA object to render the filename
          */
         $pdf->Write(0, $doa->parseFileName());
-        $ndaContent = $twig->render('program/pdf/doa-program', [
+        $ndaContent = $twig->render(
+            'program/pdf/doa-program',
+            [
             'contact'        => $doa->getContact(),
             'program'        => $doa->getProgram(),
             'contactService' => $this->getContactService(),
-        ]);
+            ]
+        );
         $pdf->writeHTMLCell(0, 0, 14, 70, $ndaContent);
         /*
          * Signage block

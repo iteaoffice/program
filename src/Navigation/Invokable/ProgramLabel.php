@@ -38,9 +38,14 @@ class ProgramLabel extends AbstractNavigationInvokable
         if ($this->getEntities()->containsKey(Program::class)) {
             /** @var Program $program */
             $program = $this->getEntities()->get(Program::class);
-            $page->setParams(array_merge($page->getParams(), [
-                'id' => $program->getId(),
-            ]));
+            $page->setParams(
+                array_merge(
+                    $page->getParams(),
+                    [
+                    'id' => $program->getId(),
+                    ]
+                )
+            );
             $label = (string)$program;
         } else {
             $label = $this->translate('txt-nav-view');

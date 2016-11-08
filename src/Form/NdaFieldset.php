@@ -30,7 +30,7 @@ class NdaFieldset extends Fieldset implements InputFilterProviderInterface
     public function __construct(EntityManager $entityManager)
     {
         parent::__construct('program_entity_nda');
-        $nda = new Entity\Nda();
+        $nda              = new Entity\Nda();
         $doctrineHydrator = new DoctrineHydrator($entityManager, Entity\Nda::class);
         $this->setHydrator($doctrineHydrator)->setObject($nda);
 

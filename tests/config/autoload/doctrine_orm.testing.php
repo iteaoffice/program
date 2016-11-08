@@ -12,10 +12,10 @@ return [
                     'password'      => '',
                     'dbname'        => 'myapp_test',
                     'driverOptions' => [
-                        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'"
-                    ]
-                ]
-            ]
+                        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
+                    ],
+                ],
+            ],
         ],
     ],
 ];

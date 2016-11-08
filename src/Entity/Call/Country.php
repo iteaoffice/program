@@ -15,13 +15,9 @@
 
 namespace Program\Entity\Call;
 
-use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Program\Entity\EntityAbstract;
 use Zend\Form\Annotation;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
 
 /**
  * @ORM\Table(name="programcall_country")
@@ -110,7 +106,27 @@ class Country extends EntityAbstract
      */
     public function __toString()
     {
-        return (string) $this->getCountry();
+        return (string)$this->getCountry();
+    }
+
+    /**
+     * @return Country
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    /**
+     * @param Country $country
+     *
+     * @return Country
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
+
+        return $this;
     }
 
     /**
@@ -149,26 +165,6 @@ class Country extends EntityAbstract
     public function setCall($call)
     {
         $this->call = $call;
-
-        return $this;
-    }
-
-    /**
-     * @return Country
-     */
-    public function getCountry()
-    {
-        return $this->country;
-    }
-
-    /**
-     * @param Country $country
-     *
-     * @return Country
-     */
-    public function setCountry($country)
-    {
-        $this->country = $country;
 
         return $this;
     }

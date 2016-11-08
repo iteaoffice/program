@@ -40,35 +40,41 @@ class CallFilter extends Form
 
         $filterFieldset = new Fieldset('filter');
 
-        $filterFieldset->add([
-            'type'       => 'Zend\Form\Element\Text',
-            'name'       => 'search',
-            'attributes' => [
-                'class'       => 'form-control',
-                'placeholder' => _('txt-search'),
-            ],
-        ]);
+        $filterFieldset->add(
+            [
+                'type'       => 'Zend\Form\Element\Text',
+                'name'       => 'search',
+                'attributes' => [
+                    'class'       => 'form-control',
+                    'placeholder' => _('txt-search'),
+                ],
+            ]
+        );
 
         $this->add($filterFieldset);
 
-        $this->add([
-            'type'       => 'Zend\Form\Element\Submit',
-            'name'       => 'submit',
-            'attributes' => [
-                'id'    => 'submit',
-                'class' => 'btn btn-primary',
-                'value' => _('txt-filter'),
-            ],
-        ]);
+        $this->add(
+            [
+                'type'       => 'Zend\Form\Element\Submit',
+                'name'       => 'submit',
+                'attributes' => [
+                    'id'    => 'submit',
+                    'class' => 'btn btn-primary',
+                    'value' => _('txt-filter'),
+                ],
+            ]
+        );
 
-        $this->add([
-            'type'       => 'Zend\Form\Element\Submit',
-            'name'       => 'clear',
-            'attributes' => [
-                'id'    => 'cancel',
-                'class' => 'btn btn-warning',
-                'value' => _('txt-cancel'),
-            ],
-        ]);
+        $this->add(
+            [
+                'type'       => 'Zend\Form\Element\Submit',
+                'name'       => 'clear',
+                'attributes' => [
+                    'id'    => 'cancel',
+                    'class' => 'btn btn-warning',
+                    'value' => _('txt-cancel'),
+                ],
+            ]
+        );
     }
 }

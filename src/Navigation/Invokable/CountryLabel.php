@@ -40,9 +40,14 @@ class CountryLabel extends AbstractNavigationInvokable
             /** @var Country $country */
             $country = $this->getEntities()->get(Country::class);
             $this->getEntities()->set(Call::class, $country->getCall());
-            $page->setParams(array_merge($page->getParams(), [
-                'id' => $country->getId(),
-            ]));
+            $page->setParams(
+                array_merge(
+                    $page->getParams(),
+                    [
+                    'id' => $country->getId(),
+                    ]
+                )
+            );
             $label = (string)sprintf("txt-country-%s", $country);
         } else {
             $label = $this->translate('txt-nav-view');

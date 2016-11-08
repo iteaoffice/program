@@ -35,21 +35,52 @@ class ProgramFilter extends InputFilter
     public function __construct(EntityManager $entityManager)
     {
         $inputFilter = new InputFilter();
-        $inputFilter->add([
-            'name'       => 'program',
-            'required'   => true,
-            'filters'    => [
-                ['name' => 'StripTags'],
-                ['name' => 'StringTrim'],
-            ],
-            'validators' => [
-                [
-                    'name'    => UniqueObject::class,
-                    'options' => [
-                        'object_repository' => $entityManager->getRepository(Program::class),
-                        'object_manager'    => $entityManager,
-                        'use_context'       => true,
-                        'fields'            => 'program',
+        $inputFilter->add(
+            [
+                'name'       => 'program',
+                'required'   => true,
+                'filters'    => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+                'validators' => [
+                    [
+                        'name'    => UniqueObject::class,
+                        'options' => [
+                            'object_repository' => $entityManager->getRepository(Program::class),
+                            'object_manager'    => $entityManager,
+                            'use_context'       => true,
+                            'fields'            => 'program',
+                        ],
+                        [
+                            'name'    => 'StringLength',
+                            'options' => [
+                                'encoding' => 'UTF-8',
+                                'min'      => 1,
+                                'max'      => 100,
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+        $inputFilter->add(
+            [
+                'name'       => 'number',
+                'required'   => true,
+                'filters'    => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+                'validators' => [
+                    [
+                        'name'    => UniqueObject::class,
+                        'options' => [
+                            'object_repository' => $entityManager->getRepository(Program::class),
+                            'object_manager'    => $entityManager,
+                            'use_context'       => true,
+                            'fields'            => 'number',
+                        ],
                     ],
                     [
                         'name'    => 'StringLength',
@@ -60,35 +91,8 @@ class ProgramFilter extends InputFilter
                         ],
                     ],
                 ],
-            ],
-        ]);
-        $inputFilter->add([
-            'name'       => 'number',
-            'required'   => true,
-            'filters'    => [
-                ['name' => 'StripTags'],
-                ['name' => 'StringTrim'],
-            ],
-            'validators' => [
-                [
-                    'name'    => UniqueObject::class,
-                    'options' => [
-                        'object_repository' => $entityManager->getRepository(Program::class),
-                        'object_manager'    => $entityManager,
-                        'use_context'       => true,
-                        'fields'            => 'number',
-                    ],
-                ],
-                [
-                    'name'    => 'StringLength',
-                    'options' => [
-                        'encoding' => 'UTF-8',
-                        'min'      => 1,
-                        'max'      => 100,
-                    ],
-                ],
-            ],
-        ]);
+            ]
+        );
         $this->add($inputFilter, 'program_entity_program');
     }
 }
