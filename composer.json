@@ -18,8 +18,8 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "php": ">=5.6",
-    "zendframework/zendframework": "~2.5 || ~3.0"
+    "php": "^7",
+    "zendframework/zendframework": "~3.0"
   },
   "require-dev": {
     "phpunit/phpunit": "@stable",
@@ -29,11 +29,16 @@
     "squizlabs/php_codesniffer": "@stable",
     "friendsofphp/php-cs-fixer": "@stable",
     "jakub-onderka/php-parallel-lint": "@stable",
-    "jakub-onderka/php-console-highlighter": "@stable"
+    "jakub-onderka/php-console-highlighter": "@stable",
+    "doctrine/doctrine-orm-module": "~1.1"
   },
   "autoload": {
     "psr-4": {
-      "Program\\": "src/",
+      "Program\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
       "ProgramTest\\": "tests/"
     }
   },

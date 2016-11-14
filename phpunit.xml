@@ -1,16 +1,16 @@
-<phpunit bootstrap="tests/Bootstrap.php"
-         colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         verbose="true"
-         stopOnFailure="false"
-         processIsolation="false"
-         backupGlobals="false"
-         syntaxCheck="true"
+<phpunit
+        colors="true"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        verbose="true"
+        stopOnFailure="false"
+        processIsolation="false"
+        backupGlobals="false"
+        syntaxCheck="true"
 >
     <testsuite name="iteaoffice/program">
-        <directory>./tests/ProgramTest</directory>
+        <directory>./tests</directory>
     </testsuite>
     <filter>
         <whitelist>
