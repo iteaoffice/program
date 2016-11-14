@@ -206,7 +206,7 @@ class RenderNda extends AbstractPlugin
         /*
          * Signage block
          */
-        $pdf->SetXY(14, 250);
+        $pdf->SetXY(14, 255);
         $pdf->Write(0, 'Undersigned');
         $pdf->SetXY(14, 260);
         $pdf->Write(0, 'Name:');
