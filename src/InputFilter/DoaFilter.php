@@ -17,11 +17,12 @@ namespace Program\InputFilter;
 
 use Zend\InputFilter\FileInput;
 use Zend\InputFilter\InputFilter;
+use Zend\Validator\File\Size;
 
 /**
- * Class ArticleFilter
+ * Class DoaFilter
  *
- * @package Content\InputFilter
+ * @package Program\InputFilter
  */
 class DoaFilter extends InputFilter
 {
@@ -70,10 +71,10 @@ class DoaFilter extends InputFilter
         $fileUpload = new FileInput('file');
         $fileUpload->setRequired(true);
         $fileUpload->getValidatorChain()->attachByName(
-            'File\Size',
+            Size::class,
             [
-            'min' => '20kB',
-            'max' => '8MB',
+                'min' => '20kB',
+                'max' => '8MB',
             ]
         );
         $inputFilter->add($fileUpload);
