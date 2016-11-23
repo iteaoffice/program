@@ -140,6 +140,21 @@ class Call extends EntityRepository
     }
 
     /**
+     * @return CallEntity[]
+     */
+    public function findWithAchievement()
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('program_entity_call_call');
+        $queryBuilder->from(CallEntity::class, 'program_entity_call_call');
+        $queryBuilder->join('program_entity_call_call.project', 'project_entity_project');
+        $queryBuilder->join('project_entity_project.achievement', 'project_entityachievement');
+
+        return $queryBuilder->getQuery()->useQueryCache(true)->getResult();
+    }
+
+
+    /**
      * @return array
      */
     public function findLastCallAndActiveVersionType()
