@@ -233,7 +233,7 @@ class Call extends EntityRepository
         $queryBuilder->orderBy('program_entity_call_call.fppCloseDate', 'DESC');
         $queryBuilder->andWhere('program_entity_call_call.active = :active');
         $queryBuilder->setParameter('active', \Program\Entity\Call\Call::ACTIVE);
-
+        $queryBuilder->setMaxResults(1);
 
         return [
             'call'        => $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult(),

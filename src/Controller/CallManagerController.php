@@ -147,6 +147,8 @@ class CallManagerController extends ProgramAbstractController
                         'id' => $call->getId(),
                     ]
                 );
+            } else {
+                var_dump($form->getInputFilter()->getMessages());
             }
         }
 
