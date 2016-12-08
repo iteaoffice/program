@@ -13,26 +13,18 @@
 
 namespace Program\View\Helper;
 
-use Affiliation\Service\AffiliationService;
 use Content\Entity\Content;
-use General\View\Helper\CountryMap;
+use Content\Entity\Param;
 use Program\Entity\Call\Call;
 use Program\Entity\Call\Session;
 use Program\Entity\Program;
 use Program\Options\ModuleOptions;
 use Program\Service\CallService;
-use Program\Service\ProgramService;
-use Project\Service\ProjectService;
 
 /**
- * Create a link to an project.
+ * Class ProgramHandler
  *
- * @category   Program
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    https://itea3.org/licence.txt proprietary
- *
- * @link       https://itea3.org
+ * @package Program\View\Helper
  */
 class ProgramHandler extends AbstractViewHelper
 {
@@ -40,10 +32,6 @@ class ProgramHandler extends AbstractViewHelper
      * @var Session
      */
     protected $session;
-    /**
-     * @var Program
-     */
-    protected $program;
     /**
      * @var Call
      */
@@ -60,15 +48,9 @@ class ProgramHandler extends AbstractViewHelper
 
         switch ($content->getHandler()->getHandler()) {
             case 'programcall_selector':
-                return $this->parseCallSelector($this->getCall(), $this->getProgram());
-            case 'programcall_title':
-                return $this->parseProgramcallTitle();
-            case 'programcall_project':
-                return $this->parseProgramcallProjectList($this->getCall());
+                return $this->parseCallSelector($this->getCall());
             case 'programcall_session':
                 return $this->parseSessionOverview($this->getSession());
-            case 'programcall_map':
-                return $this->parseProgramcallMap($this->getCall());
             default:
                 return sprintf(
                     "No handler available for <code>%s</code> in class <code>%s</code>",
@@ -78,58 +60,60 @@ class ProgramHandler extends AbstractViewHelper
         }
     }
 
-
     /**
      * @param Content $content
      */
     public function extractContentParam(Content $content)
     {
-        if (! is_null($this->getRouteMatch()->getParam('docRef'))) {
-            //First try to find the call via the docref
-            /** @var Call $call */
-            $call = $this->getCallService()
-                ->findEntityByDocRef(Call::class, $this->getRouteMatch()->getParam('docRef'));
+        /**
+         * Go over the handler params and try to see if it is hardcoded or just set via the route
+         */
+        foreach ($content->getHandler()->getParam() as $parameter) {
+            switch ($parameter->getParam()) {
 
-            if (is_null($call)) {
-                $this->setCall($call);
-            }
-        }
-
-        foreach ($content->getContentParam() as $param) {
-            /*
-             * When the parameterId is 0 (so we want to get the article from the URL
-             */
-            switch ($param->getParameter()->getParam()) {
                 case 'session':
-                    if (! is_null($sessionId = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
-                        $this->setSessionById($sessionId);
-                    } else {
-                        $this->setSessionById($param->getParameterId());
+                    $session = $this->findParamValueFromContent($content, $parameter);
+
+                    if ( ! is_null($session)) {
+                        $this->setsessionById($session);
                     }
                     break;
-
                 case 'call':
-                    if (! is_null($callId = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
-                        $this->setCallById($callId);
+                    $call = $this->findParamValueFromContent($content, $parameter);
+
+                    if ( ! is_null($call)) {
+                        $this->setCallById($call);
                     }
                     break;
 
-                case 'program':
-                    if (! is_null($programId = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
-                        $this->setProgramById($programId);
-                    }
-                    break;
             }
         }
     }
 
     /**
-     * @return CallService
+     * @param Content $content
+     * @param Param   $param
+     *
+     * @return null|string
      */
-    public function getCallService()
+    private function findParamValueFromContent(Content $content, Param $param)
     {
-        return $this->getServiceManager()->get(CallService::class);
+        //Hardcoded is always first,If it cannot be found, try to find it from the docref (rule 2)
+        foreach ($content->getContentParam() as $contentParam) {
+            if ($contentParam->getParameter() === $param && ! empty($contentParam->getParameterId())) {
+                return $contentParam->getParameterId();
+            }
+        }
+
+        //Try first to see if the param can be found from the route (rule 1)
+        if ( ! is_null($this->getRouteMatch()->getParam($param->getParam()))) {
+            return $this->getRouteMatch()->getParam($param->getParam());
+        }
+
+        //If not found, take rule 3
+        return null;
     }
+
 
     /**
      * @param $sessionId
@@ -150,22 +134,6 @@ class ProgramHandler extends AbstractViewHelper
         $this->setCall($call);
     }
 
-    /**
-     * @param $programId
-     */
-    public function setProgramById($programId)
-    {
-        $program = $this->getProgramService()->findProgramById($programId);
-        $this->setProgram($program);
-    }
-
-    /**
-     * @return ProgramService
-     */
-    public function getProgramService()
-    {
-        return $this->getServiceManager()->get(ProgramService::class);
-    }
 
     /**
      * @param Call    $call
@@ -173,17 +141,35 @@ class ProgramHandler extends AbstractViewHelper
      *
      * @return string
      */
-    public function parseCallSelector(Call $call = null, Program $program = null)
+    public function parseCallSelector(Call $call = null, Program $program = null): string
     {
         return $this->getRenderer()->render(
             'program/partial/call-selector',
             [
-            'displayNameCall'   => 'name',
-            'calls'             => $this->getCallService()->findNonEmptyCalls($program),
-            'callId'            => ! is_null($call) ? $call->getId() : null,
-            'selectedProgramId' => ! is_null($program) ? $program->getId() : null,
+                'displayNameCall' => 'name',
+                'calls'           => $this->getCallService()->findNonEmptyCalls($program),
+                'callId'          => ! is_null($call) ? $call->getId() : null,
             ]
         );
+    }
+
+
+    /**
+     * @param Session $session
+     *
+     * @return string
+     */
+    public function parseSessionOverview(Session $session): string
+    {
+        return $this->getRenderer()->render('program/partial/entity/session', ['session' => $session]);
+    }
+
+    /**
+     * @return Session
+     */
+    public function getSession()
+    {
+        return $this->session;
     }
 
     /**
@@ -207,86 +193,6 @@ class ProgramHandler extends AbstractViewHelper
     }
 
     /**
-     * @return Program
-     */
-    public function getProgram()
-    {
-        return $this->program;
-    }
-
-    /**
-     * @param Program $program
-     *
-     * @return ProgramHandler
-     */
-    public function setProgram($program)
-    {
-        $this->program = $program;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function parseProgramcallTitle()
-    {
-        return $this->getRenderer()->render(
-            'program/partial/entity/programcall-title',
-            [
-            'call' => $this->getCallService(),
-            ]
-        );
-    }
-
-    /**
-     * @param Call $call
-     *
-     * @return null|string
-     */
-    public function parseProgramcallProjectList(Call $call)
-    {
-        $whichProjects
-            = $this->getProjectModuleOptions()->getProjectHasVersions() ? ProjectService::WHICH_ONLY_ACTIVE
-            : ProjectService::WHICH_ALL;
-
-        return $this->getRenderer()->render(
-            'program/partial/list/project',
-            [
-            'call'     => $this->getCallService(),
-            'projects' => $this->getCallService()->getProjectService()->findProjectsByCall($call, $whichProjects)
-                ->getQuery()->getResult(),
-            ]
-        );
-    }
-
-    /**
-     * @return \Project\Options\ModuleOptions
-     */
-    public function getProjectModuleOptions()
-    {
-        return $this->getServiceManager()->get(\Project\Options\ModuleOptions::class);
-    }
-
-    /**
-     * @param Session $session
-     *
-     * @return string
-     */
-    public function parseSessionOverview(Session $session)
-    {
-        return $this->getRenderer()->render('program/partial/entity/session', ['session' => $session]);
-    }
-
-    /**
-     * @return Session
-     */
-    public function getSession()
-    {
-        return $this->session;
-    }
-
-    /**
      * @param Session $session
      *
      * @return $this;
@@ -299,69 +205,18 @@ class ProgramHandler extends AbstractViewHelper
     }
 
     /**
-     * @param Call $call
-     *
-     * @return mixed
-     */
-    public function parseProgramcallMap(Call $call)
-    {
-        $countries  = $this->getCallService()->findCountryByCall($call);
-        $options    = $this->getModuleOptions();
-        $mapOptions = [
-            'clickable' => true,
-            'colorMin'  => $options->getCountryColorFaded(),
-            'colorMax'  => $options->getCountryColor(),
-            'focusOn'   => ['x' => 0.5, 'y' => 0.5, 'scale' => 1.1], // Slight zoom
-            'height'    => '400px',
-        ];
-
-        foreach ($countries as $country) {
-            $affiliations                             = $this->getAffiliationService()
-                ->findAmountOfAffiliationByCountryAndCall($country, $call);
-            $mapOptions['tipData'][$country->getCd()] = [
-                'title' => $country->getCountry(),
-                'data'  => [
-                    [$this->translate('txt-partners') => $affiliations],
-                ],
-            ];
-        }
-
-        /**
-         * @var $countryMap CountryMap
-         */
-        $countryMap = $this->getHelperPluginManager()->get('countryMap');
-
-        return $countryMap($countries, null, $mapOptions);
-    }
-
-    /**
      * @return ModuleOptions
      */
-    public function getModuleOptions()
+    public function getModuleOptions(): ModuleOptions
     {
         return $this->getServiceManager()->get(ModuleOptions::class);
     }
 
     /**
-     * @return AffiliationService
+     * @return CallService
      */
-    public function getAffiliationService()
+    public function getCallService(): CallService
     {
-        return $this->getServiceManager()->get(AffiliationService::class);
-    }
-
-    /**
-     * @param Call $call
-     *
-     * @return string
-     */
-    public function parseCallTitle(Call $call)
-    {
-        return $this->getRenderer()->render(
-            'program/partial/entity/programcall-title',
-            [
-            'call' => $call,
-            ]
-        );
+        return $this->getServiceManager()->get(CallService::class);
     }
 }

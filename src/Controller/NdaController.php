@@ -39,7 +39,7 @@ class NdaController extends ProgramAbstractController
     public function viewAction()
     {
         $nda = $this->getProgramService()->findEntityById(Nda::class, $this->params('id'));
-        if (is_null($nda) || sizeof($nda->getObject()) === 0) {
+        if (is_null($nda) || count($nda->getObject()) === 0) {
             return $this->notFoundAction();
         }
 
@@ -55,18 +55,18 @@ class NdaController extends ProgramAbstractController
         $call = $this->getCallService()->findLastActiveCall();
 
         //When the call requires no NDA, remove it form the form
-        if (! is_null($call) && $call->getNdaRequirement() !== Call::NDA_REQUIREMENT_PER_CALL) {
+        if ( ! is_null($call) && $call->getNdaRequirement() !== Call::NDA_REQUIREMENT_PER_CALL) {
             $call = null;
         }
 
-        if (! is_null($callId = $this->params('callId'))) {
+        if ( ! is_null($callId = $this->params('callId'))) {
             $call = $this->getCallService()->findCallById($callId);
             if (is_null($call)) {
                 return $this->notFoundAction();
             }
             $nda = $this->getCallService()
                 ->findNdaByCallAndContact($call, $this->zfcUserAuthentication()->getIdentity());
-        } elseif (! is_null($call)) {
+        } elseif ( ! is_null($call)) {
             $nda = $this->getCallService()
                 ->findNdaByCallAndContact($call, $this->zfcUserAuthentication()->getIdentity());
         } else {
@@ -110,7 +110,7 @@ class NdaController extends ProgramAbstractController
     public function replaceAction()
     {
         $nda = $this->getProgramService()->findEntityById(Nda::class, $this->params('id'));
-        if (is_null($nda) || sizeof($nda->getObject()) === 0) {
+        if (is_null($nda) || count($nda->getObject()) === 0) {
             return $this->notFoundAction();
         }
         $data = array_merge_recursive(
@@ -120,7 +120,7 @@ class NdaController extends ProgramAbstractController
         $form = new UploadNda();
         $form->setData($data);
         if ($this->getRequest()->isPost()) {
-            if (! isset($data['cancel']) && $form->isValid()) {
+            if ( ! isset($data['cancel']) && $form->isValid()) {
                 $fileData = $this->params()->fromFiles();
                 /*
                  * Remove the current entity
@@ -171,7 +171,7 @@ class NdaController extends ProgramAbstractController
         /*
          * Add the call when a id is given
          */
-        if (! is_null($this->params('callId'))) {
+        if ( ! is_null($this->params('callId'))) {
             $call = $this->getCallService()->findCallById($this->params('callId'));
             if (is_null($call)) {
                 return $this->notFoundAction();
@@ -199,7 +199,7 @@ class NdaController extends ProgramAbstractController
     public function downloadAction()
     {
         $nda = $this->getProgramService()->findEntityById(Nda::class, $this->params('id'));
-        if (is_null($nda) || sizeof($nda->getObject()) === 0) {
+        if (is_null($nda) || count($nda->getObject()) === 0) {
             return $this->notFoundAction();
         }
         /*

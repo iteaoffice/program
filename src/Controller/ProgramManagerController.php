@@ -41,9 +41,9 @@ class ProgramManagerController extends ProgramAbstractController
 
         $paginator
             = new Paginator(new PaginatorAdapter(new ORMPaginator($contactQuery, false)));
-        $paginator->setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 20);
+        $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 20);
         $paginator->setCurrentPageNumber($page);
-        $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator->getDefaultItemCountPerPage()));
+        $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
         $form = new ProgramFilter();
         $form->setData(['filter' => $filterPlugin->getFilter()]);
@@ -161,7 +161,7 @@ class ProgramManagerController extends ProgramAbstractController
 
         $program = $this->getProgramService()->findLastProgram();
 
-        if (! is_null($this->params('id'))) {
+        if ( ! is_null($this->params('id'))) {
             $program = $this->getProgramService()->findProgramById($this->params('id'));
         }
 
@@ -191,7 +191,7 @@ class ProgramManagerController extends ProgramAbstractController
             foreach ($activeProjects->getQuery()->getResult() as $project) {
                 foreach ($yearSpan as $year) {
                     //Skip the years which are not in the call
-                    if (! in_array($year, $yearSpanCall)) {
+                    if ( ! in_array($year, $yearSpanCall)) {
                         continue;
                     }
 
@@ -205,7 +205,7 @@ class ProgramManagerController extends ProgramAbstractController
                         $dateSubmitted->modify('last day of december ' . $year)
                     );
 
-                    if (! is_null($activeVersion)) {
+                    if ( ! is_null($activeVersion)) {
                         //We have the version now, add the total cost of that version to the cost of that year
                         $projectOverview[$call->getId()][$year][$project->getDocRef()] = $this->getVersionService()
                             ->findTotalCostVersionByProjectVersion($activeVersion);

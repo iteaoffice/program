@@ -35,9 +35,9 @@ class FunderManagerController extends ProgramAbstractController
 
         $paginator
             = new Paginator(new PaginatorAdapter(new ORMPaginator($contactQuery, false)));
-        $paginator->setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 20);
+        $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 20);
         $paginator->setCurrentPageNumber($page);
-        $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator->getDefaultItemCountPerPage()));
+        $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
         $form = new ProgramFilter();
         $form->setData(['filter' => $filterPlugin->getFilter()]);
@@ -139,7 +139,7 @@ class FunderManagerController extends ProgramAbstractController
                 return $this->redirect()->toRoute('zfcadmin/funder/list');
             }
 
-            if (! isset($data['cancel'])) {
+            if ( ! isset($data['cancel'])) {
                 $funder = $this->getProgramService()->updateEntity($funder);
             }
 

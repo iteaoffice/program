@@ -146,7 +146,7 @@ class CallService extends ServiceAbstract
 
         $notEmptyCalls = $repository->findNonEmptyCalls();
 
-        if (sizeof($notEmptyCalls) > 0) {
+        if (count($notEmptyCalls) > 0) {
             return end($notEmptyCalls);
         }
 
@@ -411,7 +411,7 @@ class CallService extends ServiceAbstract
         $ndaObject->setObject(file_get_contents($file['tmp_name']));
         $nda = new Nda();
         $nda->setContact($contact);
-        if (! is_null($call)) {
+        if ( ! is_null($call)) {
             $nda->setCall([$call]);
         }
         $nda->setSize($file['size']);

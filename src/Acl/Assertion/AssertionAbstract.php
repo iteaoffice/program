@@ -156,7 +156,7 @@ abstract class AssertionAbstract implements AssertionInterface
     public function rolesHaveAccess($access)
     {
         $accessRoles = $this->prepareAccessRoles($access);
-        if (sizeof($accessRoles) === 0) {
+        if (count($accessRoles) === 0) {
             return true;
         }
         foreach ($accessRoles as $accessRole) {
@@ -183,7 +183,7 @@ abstract class AssertionAbstract implements AssertionInterface
      */
     protected function prepareAccessRoles($access)
     {
-        if (! $access instanceof PersistentCollection) {
+        if ( ! $access instanceof PersistentCollection) {
             /*
              * We only have a string, so we need to lookup the role
              */
@@ -264,13 +264,13 @@ abstract class AssertionAbstract implements AssertionInterface
      */
     public function getId()
     {
-        if (! is_null($id = $this->getRequest()->getPost('id'))) {
+        if ( ! is_null($id = $this->getRequest()->getPost('id'))) {
             return (int)$id;
         }
         if (is_null($this->getRouteMatch())) {
             return null;
         }
-        if (! is_null($id = $this->getRouteMatch()->getParam('id'))) {
+        if ( ! is_null($id = $this->getRouteMatch()->getParam('id'))) {
             return (int)$id;
         }
 
