@@ -1,11 +1,11 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category   Program
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2015 ITEA Office
+ * @copyright  Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license    https://itea3.org/license.txt proprietary
  *
  * @link       https://itea3.org
@@ -40,7 +40,7 @@ class ProgramPdf extends \FPDI
     public function header()
     {
         if (is_null($this->_tplIdx)) {
-            if ( ! file_exists($this->template)) {
+            if (! file_exists($this->template)) {
                 throw new \InvalidArgumentException(sprintf("Template %s cannot be found", $this->template));
             }
             $this->setSourceFile($this->template);

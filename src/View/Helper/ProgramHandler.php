@@ -1,11 +1,11 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category   Program
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2015 ITEA Office
+ * @copyright  Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license    https://itea3.org/license.txt proprietary
  *
  * @link       https://itea3.org
@@ -70,22 +70,20 @@ class ProgramHandler extends AbstractViewHelper
          */
         foreach ($content->getHandler()->getParam() as $parameter) {
             switch ($parameter->getParam()) {
-
                 case 'session':
                     $session = $this->findParamValueFromContent($content, $parameter);
 
-                    if ( ! is_null($session)) {
+                    if (! is_null($session)) {
                         $this->setsessionById($session);
                     }
                     break;
                 case 'call':
                     $call = $this->findParamValueFromContent($content, $parameter);
 
-                    if ( ! is_null($call)) {
+                    if (! is_null($call)) {
                         $this->setCallById($call);
                     }
                     break;
-
             }
         }
     }
@@ -106,7 +104,7 @@ class ProgramHandler extends AbstractViewHelper
         }
 
         //Try first to see if the param can be found from the route (rule 1)
-        if ( ! is_null($this->getRouteMatch()->getParam($param->getParam()))) {
+        if (! is_null($this->getRouteMatch()->getParam($param->getParam()))) {
             return $this->getRouteMatch()->getParam($param->getParam());
         }
 
@@ -126,6 +124,14 @@ class ProgramHandler extends AbstractViewHelper
     }
 
     /**
+     * @return CallService
+     */
+    public function getCallService(): CallService
+    {
+        return $this->getServiceManager()->get(CallService::class);
+    }
+
+    /**
      * @param $callId
      */
     public function setCallById($callId)
@@ -133,7 +139,6 @@ class ProgramHandler extends AbstractViewHelper
         $call = $this->getCallService()->findCallById($callId);
         $this->setCall($call);
     }
-
 
     /**
      * @param Call    $call
@@ -151,25 +156,6 @@ class ProgramHandler extends AbstractViewHelper
                 'callId'          => ! is_null($call) ? $call->getId() : null,
             ]
         );
-    }
-
-
-    /**
-     * @param Session $session
-     *
-     * @return string
-     */
-    public function parseSessionOverview(Session $session): string
-    {
-        return $this->getRenderer()->render('program/partial/entity/session', ['session' => $session]);
-    }
-
-    /**
-     * @return Session
-     */
-    public function getSession()
-    {
-        return $this->session;
     }
 
     /**
@@ -195,6 +181,24 @@ class ProgramHandler extends AbstractViewHelper
     /**
      * @param Session $session
      *
+     * @return string
+     */
+    public function parseSessionOverview(Session $session): string
+    {
+        return $this->getRenderer()->render('program/partial/entity/session', ['session' => $session]);
+    }
+
+    /**
+     * @return Session
+     */
+    public function getSession()
+    {
+        return $this->session;
+    }
+
+    /**
+     * @param Session $session
+     *
      * @return $this;
      */
     public function setSession($session)
@@ -210,13 +214,5 @@ class ProgramHandler extends AbstractViewHelper
     public function getModuleOptions(): ModuleOptions
     {
         return $this->getServiceManager()->get(ModuleOptions::class);
-    }
-
-    /**
-     * @return CallService
-     */
-    public function getCallService(): CallService
-    {
-        return $this->getServiceManager()->get(CallService::class);
     }
 }

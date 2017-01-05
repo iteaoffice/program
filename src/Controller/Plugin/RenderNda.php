@@ -1,11 +1,11 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category   Program
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2015 ITEA Office
+ * @copyright  Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license    https://itea3.org/license.txt proprietary
  *
  * @link       https://itea3.org
@@ -86,9 +86,9 @@ class RenderNda extends AbstractPlugin
         $ndaContent = $twig->render(
             'program/pdf/nda-call',
             [
-            'contact'        => $nda->getContact(),
-            'call'           => $nda->getCall(),
-            'contactService' => $this->getContactService(),
+                'contact'        => $nda->getContact(),
+                'call'           => $nda->getCall(),
+                'contactService' => $this->getContactService(),
             ]
         );
         $pdf->writeHTMLCell(0, 0, 14, 70, $ndaContent);
@@ -198,8 +198,8 @@ class RenderNda extends AbstractPlugin
         $ndaContent = $twig->render(
             'program/pdf/nda-general',
             [
-            'contact'        => $nda->getContact(),
-            'contactService' => $this->getContactService(),
+                'contact'        => $nda->getContact(),
+                'contactService' => $this->getContactService(),
             ]
         );
         $pdf->writeHTMLCell(0, 0, 14, 70, $ndaContent);

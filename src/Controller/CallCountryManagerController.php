@@ -1,13 +1,13 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @category    Program
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   2004-2016 ITEA Office
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/program for the canonical source repository
@@ -20,12 +20,12 @@ use Program\Entity\Call\Country as CallCountry;
 use Zend\View\Model\ViewModel;
 
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category  Program
  *
  * @author    Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 class CallCountryManagerController extends ProgramAbstractController
 {
@@ -74,7 +74,7 @@ class CallCountryManagerController extends ProgramAbstractController
                 return $this->redirect()->toRoute(
                     'zfcadmin/call/country/view',
                     [
-                    'id' => $callCountry->getId(),
+                        'id' => $callCountry->getId(),
                     ]
                 );
             }
@@ -82,17 +82,17 @@ class CallCountryManagerController extends ProgramAbstractController
             if (isset($data['delete'])) {
                 $this->getCallService()->removeEntity($callCountry);
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translate("txt-call-country-information-%s-has-successfully-been-removed"),
-                            $country
-                        )
-                    );
+                     ->addMessage(
+                         sprintf(
+                             $this->translate("txt-call-country-information-%s-has-successfully-been-removed"),
+                             $country
+                         )
+                     );
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/call/view',
                     [
-                    'id' => $callCountry->getCall()->getId(),
+                        'id' => $callCountry->getCall()->getId(),
                     ]
                 );
             }
@@ -106,17 +106,17 @@ class CallCountryManagerController extends ProgramAbstractController
 
                 $this->getCallService()->updateEntity($entity);
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translate("txt-call-country-information-%s-has-successfully-been-updated"),
-                            $callCountry->getCountry()
-                        )
-                    );
+                     ->addMessage(
+                         sprintf(
+                             $this->translate("txt-call-country-information-%s-has-successfully-been-updated"),
+                             $callCountry->getCountry()
+                         )
+                     );
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/call/country/view',
                     [
-                    'id' => $entity->getId(),
+                        'id' => $entity->getId(),
                     ]
                 );
             }
@@ -161,7 +161,7 @@ class CallCountryManagerController extends ProgramAbstractController
                 return $this->redirect()->toRoute(
                     'zfcadmin/call/country/view',
                     [
-                    'id' => $callCountry->getId(),
+                        'id' => $callCountry->getId(),
                     ]
                 );
             }
@@ -176,17 +176,17 @@ class CallCountryManagerController extends ProgramAbstractController
 
                 $this->getCallService()->updateEntity($callCountry);
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translate("txt-call-country-information-%s-has-successfully-been-updated"),
-                            $country
-                        )
-                    );
+                     ->addMessage(
+                         sprintf(
+                             $this->translate("txt-call-country-information-%s-has-successfully-been-updated"),
+                             $country
+                         )
+                     );
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/call/country/view',
                     [
-                    'id' => $callCountry->getId(),
+                        'id' => $callCountry->getId(),
                     ]
                 );
             }

@@ -1,11 +1,11 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category    Program
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
 namespace Program\Service;
@@ -119,7 +119,7 @@ class CallService extends ServiceAbstract
         $lastCallAndActiveVersionType              = new \stdClass();
         $lastCallAndActiveVersionType->call        = $result['call'];
         $lastCallAndActiveVersionType->versionType = $this->getVersionService()
-            ->findEntityById(Type::class, $result['versionType']);
+                                                          ->findEntityById(Type::class, $result['versionType']);
 
         return $lastCallAndActiveVersionType;
     }
@@ -209,7 +209,7 @@ class CallService extends ServiceAbstract
             $result        = self::PO_GRACE;
             $type          = Type::TYPE_PO;
         } elseif ($call->getPoCloseDate() > $notificationDeadline
-            && $call->getFppOpenDate() > $today
+                  && $call->getFppOpenDate() > $today
         ) {
             $referenceDate = $call->getPoCloseDate();
             $result        = self::PO_CLOSED;
@@ -411,7 +411,7 @@ class CallService extends ServiceAbstract
         $ndaObject->setObject(file_get_contents($file['tmp_name']));
         $nda = new Nda();
         $nda->setContact($contact);
-        if ( ! is_null($call)) {
+        if (! is_null($call)) {
             $nda->setCall([$call]);
         }
         $nda->setSize($file['size']);

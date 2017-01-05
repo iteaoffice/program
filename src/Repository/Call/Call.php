@@ -1,11 +1,11 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category    Program
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (program_entity_call_call) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (program_entity_call_call) Copyright (c) 2004-2017 ITEA Office (https://itea3.org) (https://itea3.org)
  */
 
 namespace Program\Repository\Call;
@@ -93,15 +93,15 @@ class Call extends EntityRepository
         switch ($type) {
             case Type::TYPE_PO:
                 $queryBuilder->andWhere('program_entity_call_call.poOpenDate < :today')
-                    ->andWhere(
-                        'program_entity_call_call.poCloseDate > :today OR program_entity_call_call.poGraceDate > :today'
-                    )->setParameter('today', $today);
+                             ->andWhere(
+                                 'program_entity_call_call.poCloseDate > :today OR program_entity_call_call.poGraceDate > :today'
+                             )->setParameter('today', $today);
                 break;
             case Type::TYPE_FPP:
                 $queryBuilder->andWhere('program_entity_call_call.fppOpenDate < :today')
-                    ->andWhere(
-                        'program_entity_call_call.fppCloseDate > :today OR program_entity_call_call.fppGraceDate > :today'
-                    )->setParameter('today', $today);
+                             ->andWhere(
+                                 'program_entity_call_call.fppCloseDate > :today OR program_entity_call_call.fppGraceDate > :today'
+                             )->setParameter('today', $today);
                 break;
             default:
                 throw new \InvalidArgumentException(sprintf("This selected type %s is invalid", $type));
@@ -166,7 +166,7 @@ class Call extends EntityRepository
         $queryBuilder->where('program_entity_call_call.poOpenDate < :today')->andWhere(
             'program_entity_call_call.poCloseDate > :today OR program_entity_call_call.poGraceDate > :today'
         )
-            ->setParameter('today', $today);
+                     ->setParameter('today', $today);
         //Filter here on the active calls @todo: see if this makes sense here
         $queryBuilder->andWhere('program_entity_call_call.active = :active');
         $queryBuilder->setParameter('active', \Program\Entity\Call\Call::ACTIVE);
@@ -189,7 +189,7 @@ class Call extends EntityRepository
         $queryBuilder->andWhere('program_entity_call_call.fppOpenDate < :today')->andWhere(
             'program_entity_call_call.fppCloseDate > :today OR program_entity_call_call.fppGraceDate > :today'
         )
-            ->setParameter('today', $today);
+                     ->setParameter('today', $today);
         /*
          * Check first if we find an open FPP
          */

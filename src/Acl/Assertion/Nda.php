@@ -1,11 +1,11 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category    Program
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
 namespace Program\Acl\Assertion;
@@ -58,7 +58,7 @@ class Nda extends AssertionAbstract
                  */
 
                 return is_null($nda->getDateApproved())
-                    && $nda->getContact()->getId() === $this->getContact()->getId();
+                       && $nda->getContact()->getId() === $this->getContact()->getId();
             case 'render':
                 if (! $this->hasContact() || is_null($this->getContact()->getContactOrganisation())) {
                     return false;

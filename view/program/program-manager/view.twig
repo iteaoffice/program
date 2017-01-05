@@ -14,6 +14,13 @@
     <dt>{{ translate("txt-program-number") }}</dt>
     <dd>{{ program.number }}</dd>
 
+    <dt>{{ translate("txt-invoice-method") }}</dt>
+    {% for method in program.invoiceMethod %}
+        <dd>{{ method }}</dd>
+    {% else %}
+        <dd>{{ translate("txt-no-invoice-method-found") }}</dd>
+    {% endfor %}
+
     <dt>{{ translate("txt-amount-of-calls") }}</dt>
     <dd>{{ program.call.count }}</dd>
 

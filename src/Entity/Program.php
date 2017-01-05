@@ -1,11 +1,11 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category   Project
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2015 ITEA Office
+ * @copyright  Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license    https://itea3.org/license.txt proprietary
  *
  * @link       https://itea3.org
@@ -16,9 +16,6 @@ namespace Program\Entity;
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
@@ -43,7 +40,7 @@ class Program extends EntityAbstract implements ResourceInterface
     /**
      * @ORM\Column(name="program", type="string", length=10, nullable=false)
      * @Annotation\Type("\Zend\Form\Element\Text")
-     * @Annotation\Options({"label":"txt-program-name"})
+     * @Annotation\Options({"label":"txt-program-name-label","help-block":"txt-program-name-help-block"})
      *
      * @var string
      */
@@ -51,7 +48,7 @@ class Program extends EntityAbstract implements ResourceInterface
     /**
      * @ORM\Column(name="number", type="string", length=10, nullable=true)
      * @Annotation\Type("\Zend\Form\Element\Text")
-     * @Annotation\Options({"label":"txt-program-number"})
+     * @Annotation\Options({"label":"txt-program-number-label","help-block":"txt-program-label-help-block"})
      *
      * @var string
      */
@@ -71,6 +68,13 @@ class Program extends EntityAbstract implements ResourceInterface
      */
     private $doa;
     /**
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\Parent\Doa", cascade={"persist"}, mappedBy="program")
+     * @Annotation\Exclude()
+     *
+     * @var \Organisation\Entity\Parent\Doa[]|Collections\ArrayCollection
+     */
+    private $parentDoa;
+    /**
      * @ORM\OneToMany(targetEntity="\Contact\Entity\Dnd", cascade={"persist"}, mappedBy="program")
      * @Annotation\Exclude()
      *
@@ -78,8 +82,25 @@ class Program extends EntityAbstract implements ResourceInterface
      */
     private $contactDnd;
     /**
-     * @ORM\ManyToMany(targetEntity="Invoice\Entity\Method", cascade={"persist"}, mappedBy="program")
-     * @Annotation\Exclude()
+     * @ORM\ManyToMany(targetEntity="Invoice\Entity\Method", cascade={"persist"}, inversedBy="program")
+     * @ORM\JoinTable(name="invoice_method_program",
+     *            joinColumns={@ORM\JoinColumn(name="program_id", referencedColumnName="program_id", unique=true)},
+     *            inverseJoinColumns={@ORM\JoinColumn(name="method_id", referencedColumnName="method_id")}
+     * )
+     * @Annotation\Type("DoctrineORMModule\Form\Element\EntityMultiCheckbox")
+     * @Annotation\Options({
+     *      "target_class":"Invoice\Entity\Method",
+     *      "find_method":{
+     *          "name":"findBy",
+     *          "params": {
+     *              "criteria":{},
+     *              "orderBy":{
+     *                  "method":"ASC"}
+     *              }
+     *          }
+     *      }
+     * )
+     * @Annotation\Attributes({"label":"txt-program-invoice-method-label","help-block":"txt-program-invoice-method-help-block"})
      *
      * @var \Invoice\Entity\Method[]|Collections\ArrayCollection
      */
@@ -92,17 +113,8 @@ class Program extends EntityAbstract implements ResourceInterface
     {
         $this->call          = new Collections\ArrayCollection();
         $this->doa           = new Collections\ArrayCollection();
+        $this->parentDoa     = new Collections\ArrayCollection();
         $this->invoiceMethod = new Collections\ArrayCollection();
-    }
-
-    /**
-     * Returns the string identifier of the Resource.
-     *
-     * @return string
-     */
-    public function getResourceId()
-    {
-        return sprintf("%s:%s", __CLASS__, $this->id);
     }
 
     /**
@@ -118,10 +130,10 @@ class Program extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * Magic Setter.
-     *
      * @param $property
      * @param $value
+     *
+     * @return void
      */
     public function __set($property, $value)
     {
@@ -129,61 +141,52 @@ class Program extends EntityAbstract implements ResourceInterface
     }
 
     /**
+     * @param $property
+     *
+     * @return bool
+     */
+    public function __isset($property)
+    {
+        return isset($this->$property);
+    }
+
+    /**
      * toString returns the name.
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->program;
+        return (string)$this->program;
     }
 
     /**
-     * Set input filter.
+     * New function needed to make the hydrator happy
      *
-     * @param InputFilterInterface $inputFilter
-     *
-     * @throws \Exception
+     * @param Collections\Collection $invoiceMethodCollection
      */
-    public function setInputFilter(InputFilterInterface $inputFilter)
+    public function addInvoiceMethod(Collections\Collection $invoiceMethodCollection)
     {
-        throw new \Exception("Setting an inputFilter is currently not supported");
-    }
-
-    /**
-     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
-     */
-    public function getInputFilter()
-    {
-        if (! $this->inputFilter) {
-            $inputFilter = new InputFilter();
-            $factory     = new InputFactory();
-
-            $this->inputFilter = $inputFilter;
+        foreach ($invoiceMethodCollection as $invoiceMethod) {
+            $this->invoiceMethod->add($invoiceMethod);
         }
-
-        return $this->inputFilter;
-    }
-
-    public function populate()
-    {
-        return $this->getArrayCopy();
     }
 
     /**
-     * Needed for the hydration of form elements.
+     * New function needed to make the hydrator happy
      *
-     * @return array
+     * @param Collections\Collection $invoiceMethodCollection
      */
-    public function getArrayCopy()
+    public function removeInvoiceMethod(Collections\Collection $invoiceMethodCollection)
     {
-        return [
-            'call' => $this->call,
-        ];
+        foreach ($invoiceMethodCollection as $single) {
+            $this->invoiceMethod->removeElement($single);
+        }
     }
 
     /**
-     * @return \Program\Entity\Call\Call[]
+     * @return \Program\Entity\Call\Call[]|Collections\ArrayCollection
+     *
      */
     public function getCall()
     {
@@ -292,5 +295,25 @@ class Program extends EntityAbstract implements ResourceInterface
     public function setInvoiceMethod($invoiceMethod)
     {
         $this->invoiceMethod = $invoiceMethod;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Organisation\Entity\Parent\Doa[]
+     */
+    public function getParentDoa()
+    {
+        return $this->parentDoa;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Organisation\Entity\Parent\Doa[] $parentDoa
+     *
+     * @return Program
+     */
+    public function setParentDoa($parentDoa)
+    {
+        $this->parentDoa = $parentDoa;
+
+        return $this;
     }
 }

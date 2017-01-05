@@ -1,13 +1,13 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @category    Affiliation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   2004-2015 ITEA Office
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        https://itea3.org
@@ -28,7 +28,7 @@ use Zend\View\Model\ViewModel;
  * @category   Affiliation
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2015 ITEA Office
+ * @copyright  Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license    https://itea3.org/license.txt proprietary
  *
  * @link       https://itea3.org
@@ -97,12 +97,12 @@ class NdaManagerController extends ProgramAbstractController
 
             if (isset($data['delete'])) {
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translate("txt-nda-for-contact-%s-has-been-removed"),
-                            $nda->getContact()->getDisplayName()
-                        )
-                    );
+                     ->addMessage(
+                         sprintf(
+                             $this->translate("txt-nda-for-contact-%s-has-been-removed"),
+                             $nda->getContact()->getDisplayName()
+                         )
+                     );
 
                 $this->getCallService()->removeEntity($nda);
 
@@ -138,7 +138,7 @@ class NdaManagerController extends ProgramAbstractController
                     $nda->setSize($fileSizeValidator->size);
                     $nda->setContentType(
                         $this->getGeneralService()
-                            ->findContentTypeByContentTypeName($fileData['program_entity_nda']['file']['type'])
+                             ->findContentTypeByContentTypeName($fileData['program_entity_nda']['file']['type'])
                     );
                 }
 
@@ -154,12 +154,12 @@ class NdaManagerController extends ProgramAbstractController
                 $this->getCallService()->updateEntity($nda);
 
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            _("txt-nda-for-contact-%s-has-been-updated"),
-                            $nda->getContact()->getDisplayName()
-                        )
-                    );
+                     ->addMessage(
+                         sprintf(
+                             _("txt-nda-for-contact-%s-has-been-updated"),
+                             $nda->getContact()->getDisplayName()
+                         )
+                     );
 
                 return $this->redirect()->toRoute('zfcadmin/nda/view', ['id' => $nda->getId()]);
             }

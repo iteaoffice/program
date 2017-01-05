@@ -1,11 +1,11 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category    Program
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
 namespace Program\Acl\Assertion;
@@ -78,7 +78,7 @@ class Doa extends AssertionAbstract
                 }
 
                 return is_null($doa->getDateApproved())
-                    && $doa->getContact()->getId() === $this->getContact()->getId();
+                       && $doa->getContact()->getId() === $this->getContact()->getId();
             case 'render':
                 return $this->hasContact();
             case 'download':

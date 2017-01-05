@@ -1,11 +1,11 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category   Program
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2015 ITEA Office
+ * @copyright  Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license    https://itea3.org/license.txt proprietary
  *
  * @link       https://itea3.org
@@ -71,7 +71,7 @@ class DoaController extends ProgramAbstractController
                 $doa->setSize($fileSizeValidator->size);
                 $doa->setContentType(
                     $this->getGeneralService()
-                        ->findContentTypeByContentTypeName($fileData['file']['type'])
+                         ->findContentTypeByContentTypeName($fileData['file']['type'])
                 );
                 $doa->setContact($this->zfcUserAuthentication()->getIdentity());
                 $doa->setOrganisation($organisation);
@@ -79,16 +79,16 @@ class DoaController extends ProgramAbstractController
                 $doaObject->setDoa($doa);
                 $this->getProgramService()->newEntity($doaObject);
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translate("txt-doa-for-organisation-%s-in-program-%s-has-been-uploaded"),
-                            $organisation,
-                            $program
-                        )
-                    );
+                     ->addMessage(
+                         sprintf(
+                             $this->translate("txt-doa-for-organisation-%s-in-program-%s-has-been-uploaded"),
+                             $organisation,
+                             $program
+                         )
+                     );
 
                 return $this->redirect()
-                    ->toRoute('community/program/doa/view', ['id' => $doaObject->getDoa()->getId()]);
+                            ->toRoute('community/program/doa/view', ['id' => $doaObject->getDoa()->getId()]);
             }
         }
 
@@ -140,18 +140,18 @@ class DoaController extends ProgramAbstractController
                 $doa->setContact($this->zfcUserAuthentication()->getIdentity());
                 $doa->setContentType(
                     $this->getGeneralService()
-                        ->findContentTypeByContentTypeName($fileData['file']['type'])
+                         ->findContentTypeByContentTypeName($fileData['file']['type'])
                 );
                 $programDoaObject->setDoa($doa);
                 $this->getProgramService()->newEntity($programDoaObject);
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            _("txt-doa-for-organisation-%s-in-program-%s-has-been-uploaded"),
-                            $doa->getOrganisation(),
-                            $doa->getProgram()
-                        )
-                    );
+                     ->addMessage(
+                         sprintf(
+                             _("txt-doa-for-organisation-%s-in-program-%s-has-been-uploaded"),
+                             $doa->getOrganisation(),
+                             $doa->getProgram()
+                         )
+                     );
 
                 return $this->redirect()->toRoute('program/doa/view', ['id' => $doa->getId()]);
             }
@@ -181,10 +181,13 @@ class DoaController extends ProgramAbstractController
         $renderProjectDoa = $this->renderDoa($programDoa);
         $response         = $this->getResponse();
         $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
-            ->addHeaderLine('Content-Disposition', 'attachment; filename="' . $programDoa->parseFileName() . '.pdf"')
-            ->addHeaderLine('Content-Type: application/pdf')
-            ->addHeaderLine('Content-Length', strlen($renderProjectDoa->getPDFData()));
+                 ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
+                 ->addHeaderLine(
+                     'Content-Disposition',
+                     'attachment; filename="' . $programDoa->parseFileName() . '.pdf"'
+                 )
+                 ->addHeaderLine('Content-Type: application/pdf')
+                 ->addHeaderLine('Content-Length', strlen($renderProjectDoa->getPDFData()));
         $response->setContent($renderProjectDoa->getPDFData());
 
         return $response;
@@ -207,14 +210,14 @@ class DoaController extends ProgramAbstractController
         $response = $this->getResponse();
         $response->setContent(stream_get_contents($object));
         $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine(
-                'Content-Disposition',
-                'attachment; filename="' . $doa->parseFileName() . '.' . $doa->getContentType()->getExtension() . '"'
-            )
-            ->addHeaderLine("Pragma: public")->addHeaderLine(
-                'Content-Type: ' . $doa->getContentType()
-                    ->getContentType()
-            )->addHeaderLine('Content-Length: ' . $doa->getSize());
+                 ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine(
+                     'Content-Disposition',
+                     'attachment; filename="' . $doa->parseFileName() . '.' . $doa->getContentType()->getExtension() . '"'
+                 )
+                 ->addHeaderLine("Pragma: public")->addHeaderLine(
+                     'Content-Type: ' . $doa->getContentType()
+                                       ->getContentType()
+                 )->addHeaderLine('Content-Length: ' . $doa->getSize());
 
         return $this->response;
     }

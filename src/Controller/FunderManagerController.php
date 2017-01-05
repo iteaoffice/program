@@ -1,11 +1,11 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category    Funder
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
 namespace Program\Controller;
@@ -134,12 +134,12 @@ class FunderManagerController extends ProgramAbstractController
 
                 $this->getProgramService()->removeEntity($funder);
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf($this->translate("txt-funder-has-successfully-been-deleted")));
+                     ->addMessage(sprintf($this->translate("txt-funder-has-successfully-been-deleted")));
 
                 return $this->redirect()->toRoute('zfcadmin/funder/list');
             }
 
-            if ( ! isset($data['cancel'])) {
+            if (! isset($data['cancel'])) {
                 $funder = $this->getProgramService()->updateEntity($funder);
             }
 

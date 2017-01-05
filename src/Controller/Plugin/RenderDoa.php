@@ -1,11 +1,11 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category   Program
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2015 ITEA Office
+ * @copyright  Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license    https://itea3.org/license.txt proprietary
  *
  * @link       https://itea3.org
@@ -72,9 +72,9 @@ class RenderDoa extends AbstractPlugin
         $ndaContent = $twig->render(
             'program/pdf/doa-program',
             [
-            'contact'        => $doa->getContact(),
-            'program'        => $doa->getProgram(),
-            'contactService' => $this->getContactService(),
+                'contact'        => $doa->getContact(),
+                'program'        => $doa->getProgram(),
+                'contactService' => $this->getContactService(),
             ]
         );
         $pdf->writeHTMLCell(0, 0, 14, 70, $ndaContent);

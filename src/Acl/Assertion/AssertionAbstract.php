@@ -1,11 +1,11 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category   Project
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2015 ITEA Office
+ * @copyright  Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license    https://itea3.org/license.txt proprietary
  *
  * @link       https://itea3.org
@@ -34,7 +34,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @category   Program
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  2004-2015 ITEA Office
+ * @copyright  Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license    https://itea3.org/license.txt proprietary
  *
  * @link       https://itea3.org
@@ -183,7 +183,7 @@ abstract class AssertionAbstract implements AssertionInterface
      */
     protected function prepareAccessRoles($access)
     {
-        if ( ! $access instanceof PersistentCollection) {
+        if (! $access instanceof PersistentCollection) {
             /*
              * We only have a string, so we need to lookup the role
              */
@@ -215,7 +215,7 @@ abstract class AssertionAbstract implements AssertionInterface
          */
         if (is_null($privilege) && $this->hasRouteMatch()) {
             $this->privilege = $this->getRouteMatch()
-                ->getParam('privilege', $this->getRouteMatch()->getParam('action'));
+                                    ->getParam('privilege', $this->getRouteMatch()->getParam('action'));
         } else {
             $this->privilege = $privilege;
         }
@@ -264,13 +264,13 @@ abstract class AssertionAbstract implements AssertionInterface
      */
     public function getId()
     {
-        if ( ! is_null($id = $this->getRequest()->getPost('id'))) {
+        if (! is_null($id = $this->getRequest()->getPost('id'))) {
             return (int)$id;
         }
         if (is_null($this->getRouteMatch())) {
             return null;
         }
-        if ( ! is_null($id = $this->getRouteMatch()->getParam('id'))) {
+        if (! is_null($id = $this->getRouteMatch()->getParam('id'))) {
             return (int)$id;
         }
 
