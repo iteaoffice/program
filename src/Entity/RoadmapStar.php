@@ -28,7 +28,7 @@ use Zend\Form\Annotation;
 class RoadmapStar
 {
     /**
-     * @ORM\Column(name="star_id", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="star_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
@@ -36,7 +36,7 @@ class RoadmapStar
      */
     private $id;
     /**
-     * @ORM\Column(name="contact_id", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="contact_id", type="integer", nullable=false)
      *
      * @var integer
      */
@@ -54,7 +54,7 @@ class RoadmapStar
      */
     private $entity;
     /**
-     * @ORM\Column(name="key_id", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="key_id", type="integer", nullable=false)
      *
      * @var integer
      */

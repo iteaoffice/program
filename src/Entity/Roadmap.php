@@ -28,7 +28,7 @@ use Zend\Form\Annotation;
 class Roadmap extends EntityAbstract
 {
     /**
-     * @ORM\Column(name="roadmap_id", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="roadmap_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Exclude()
@@ -37,7 +37,7 @@ class Roadmap extends EntityAbstract
      */
     private $id;
     /**
-     * @ORM\Column(name="roadmap", type="string", length=40, nullable=true)
+     * @ORM\Column(name="roadmap", type="string", nullable=true)
      * @Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-roadmap"})
      *

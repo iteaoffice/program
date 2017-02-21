@@ -20,8 +20,7 @@ $options = [
                                 && (defined("ITEAOFFICE_HOST") ? ITEAOFFICE_HOST : 'test') === 'artemisia'),
     'country_color'       => '#00a651',
     'country_color_faded' => '#005C00',
-    'require_partnership' => (defined("ITEAOFFICE_HOST")
-                              && (defined("ITEAOFFICE_HOST") ? ITEAOFFICE_HOST : 'test') === 'aeneas'),
+    'require_partnership' => (defined("ITEAOFFICE_HOST") && (defined("ITEAOFFICE_HOST") ? ITEAOFFICE_HOST : 'test') === '__aeneas'),
 ];
 /**
  * You do not need to edit below this line

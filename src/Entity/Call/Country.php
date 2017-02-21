@@ -30,7 +30,7 @@ use Zend\Form\Annotation;
 class Country extends EntityAbstract
 {
     /**
-     * @ORM\Column(name="programcall_country_id", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="programcall_country_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Exclude()

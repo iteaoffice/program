@@ -27,7 +27,7 @@ use Zend\Form\Annotation;
 class Doa
 {
     /**
-     * @ORM\Column(name="doa_id", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="doa_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
@@ -47,7 +47,7 @@ class Doa
      */
     private $dateSigned;
     /**
-     * @ORM\Column(name="branch", type="string", length=40, nullable=true)
+     * @ORM\Column(name="branch", type="string", nullable=true)
      *
      * @var string
      */

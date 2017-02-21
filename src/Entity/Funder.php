@@ -50,7 +50,7 @@ class Funder extends EntityAbstract implements ResourceInterface
     /**
      * @var integer
      *
-     * @ORM\Column(name="funder_id", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="funder_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */

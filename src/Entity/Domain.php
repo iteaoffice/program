@@ -31,7 +31,7 @@ use Zend\InputFilter\InputFilterInterface;
 class Domain extends EntityAbstract
 {
     /**
-     * @ORM\Column(name="domain_id", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="domain_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @Annotation\Exclude()
@@ -66,7 +66,7 @@ class Domain extends EntityAbstract
      */
     private $color;
     /**
-     * @ORM\Column(name="main_id", length=10, type="integer", nullable=true)
+     * @ORM\Column(name="main_id", type="integer", nullable=true)
      * @Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-mian_id"})
      *

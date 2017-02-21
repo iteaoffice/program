@@ -78,7 +78,7 @@ class Call extends EntityAbstract implements ResourceInterface
         ];
 
     /**
-     * @ORM\Column(name="programcall_id", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="programcall_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Type("\Zend\Form\Element\Hidden")
@@ -294,6 +294,7 @@ class Call extends EntityAbstract implements ResourceInterface
     {
         $this->publication      = new Collections\ArrayCollection();
         $this->meeting          = new Collections\ArrayCollection();
+        $this->project          = new Collections\ArrayCollection();
         $this->nda              = new Collections\ArrayCollection();
         $this->calendar         = new Collections\ArrayCollection();
         $this->doa              = new Collections\ArrayCollection();
@@ -303,6 +304,10 @@ class Call extends EntityAbstract implements ResourceInterface
         $this->ideaMessageBoard = new Collections\ArrayCollection();
         $this->session          = new Collections\ArrayCollection();
         $this->callCountry      = new Collections\ArrayCollection();
+
+        $this->doaRequirement = self::DOA_REQUIREMENT_PER_PROJECT;
+        $this->ndaRequirement = self::NDA_REQUIREMENT_PER_CALL;
+        $this->active         = self::ACTIVE;
     }
 
     /**
@@ -350,6 +355,16 @@ class Call extends EntityAbstract implements ResourceInterface
     public function __set($property, $value)
     {
         $this->$property = $value;
+    }
+
+    /**
+     * @param $property
+     *
+     * @return bool
+     */
+    public function __isset($property)
+    {
+        return isset($this->$property);
     }
 
     /**

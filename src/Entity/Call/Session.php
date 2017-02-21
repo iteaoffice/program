@@ -29,7 +29,7 @@ use Zend\Form\Annotation;
 class Session extends EntityAbstract
 {
     /**
-     * @ORM\Column(name="session_id", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="session_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Exclude()

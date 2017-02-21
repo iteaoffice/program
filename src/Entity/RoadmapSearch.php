@@ -27,7 +27,7 @@ use Zend\Form\Annotation;
 class RoadmapSearch
 {
     /**
-     * @ORM\Column(name="search_id", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="search_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
@@ -35,7 +35,7 @@ class RoadmapSearch
      */
     private $id;
     /**
-     * @ORM\Column(name="key_id", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="key_id", type="integer", nullable=false)
      *
      * @var integer
      */
