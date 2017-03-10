@@ -81,7 +81,7 @@ class Technology extends EntityAbstract
      * @ORM\ManyToMany(targetEntity="Organisation\Entity\Organisation", cascade={"persist"}, mappedBy="technology")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Organisation[]
+     * @var Collections\ArrayCollection|\Organisation\Entity\Organisation[]
      */
     private $organisation;
     /**
@@ -282,7 +282,7 @@ class Technology extends EntityAbstract
     }
 
     /**
-     * @return \Organisation\Entity\Organisation[]
+     * @return Collections\ArrayCollection|\Organisation\Entity\Organisation[]
      */
     public function getOrganisation()
     {
@@ -290,7 +290,7 @@ class Technology extends EntityAbstract
     }
 
     /**
-     * @param \Organisation\Entity\Organisation[] $organisation
+     * @param Collections\ArrayCollection|\Organisation\Entity\Organisation[] $organisation
      */
     public function setOrganisation($organisation)
     {
