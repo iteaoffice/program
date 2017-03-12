@@ -15,14 +15,8 @@
 namespace Program\Options;
 
 /**
- * Create a link to an project.
- *
- * @category   Program
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    https://itea3.org/licence.txt proprietary
- *
- * @link       https://itea3.org
+ * Interface ProgramOptionsInterface
+ * @package Program\Options
  */
 interface ProgramOptionsInterface
 {
@@ -73,48 +67,4 @@ interface ProgramOptionsInterface
      * @return string
      */
     public function getDisplayName();
-
-    /**
-     * @param $countryColor
-     *
-     * @return ModuleOptions
-     */
-    public function setCountryColor($countryColor);
-
-    /**
-     * @return string
-     */
-    public function getCountryColor();
-
-    /**
-     * Returns the assigned hex color of the country map.
-     *
-     * @param string $countryColorFaded
-     *
-     * @return ModuleOptions
-     */
-    public function setCountryColorFaded($countryColorFaded);
-
-    /**
-     * Returns the assigned hex color of the country map.
-     *
-     * @return string
-     */
-    public function getCountryColorFaded();
-
-    /**
-     * Returns the assigned hex color of the country map.
-     *
-     * @param string $requirePartnership
-     *
-     * @return ModuleOptions
-     */
-    public function setRequirePartnership($requirePartnership);
-
-    /**
-     * Returns the assigned hex color of the country map.
-     *
-     * @return string
-     */
-    public function getRequirePartnership();
 }

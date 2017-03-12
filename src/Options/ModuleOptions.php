@@ -17,14 +17,8 @@ namespace Program\Options;
 use Zend\Stdlib\AbstractOptions;
 
 /**
- * Create a link to an project.
- *
- * @category   Program
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    https://itea3.org/licence.txt proprietary
- *
- * @link       https://itea3.org
+ * Class ModuleOptions
+ * @package Program\Options
  */
 class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
 {
@@ -32,7 +26,6 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
      * Turn off strict options mode.
      */
     protected $__strictMode__ = false;
-
     /**
      * Location of the PDF having the NDA template.
      *
@@ -60,34 +53,12 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
      * @var string
      */
     protected $blankTemplate = '';
-
-
     /**
      * How program calls to be displayed.
      *
      * @var String
      */
     protected $displayName = 'name';
-
-    /**
-     * Color to use on country map.
-     *
-     * @var string
-     */
-    protected $countryColor = '#00a651';
-
-    /**
-     * Color to use on country map for faded countries.
-     *
-     * @var string
-     */
-    protected $countryColorFaded = '#005C00';
-    /**
-     * Trigger to see if you need to be partner before applying for a project
-     *
-     * @var string
-     */
-    protected $requirePartnership = false;
 
     /**
      * @return string
@@ -185,70 +156,6 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
     public function setBlankTemplate($blankTemplate)
     {
         $this->blankTemplate = $blankTemplate;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCountryColor()
-    {
-        return $this->countryColor;
-    }
-
-    /**
-     * @param $countryColor
-     *
-     * @return ModuleOptions
-     */
-    public function setCountryColor($countryColor)
-    {
-        $this->countryColor = $countryColor;
-
-        return $this;
-    }
-
-    /**
-     * Returns the assigned hex color of the country map.
-     *
-     * @return string
-     */
-    public function getCountryColorFaded()
-    {
-        return $this->countryColorFaded;
-    }
-
-    /**
-     * Returns the assigned hex color of the country map.
-     *
-     * @param string $countryColorFaded
-     *
-     * @return ModuleOptions
-     */
-    public function setCountryColorFaded($countryColorFaded)
-    {
-        $this->countryColorFaded = $countryColorFaded;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRequirePartnership()
-    {
-        return $this->requirePartnership;
-    }
-
-    /**
-     * @param string $requirePartnership
-     *
-     * @return ModuleOptions
-     */
-    public function setRequirePartnership($requirePartnership)
-    {
-        $this->requirePartnership = $requirePartnership;
 
         return $this;
     }

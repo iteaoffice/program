@@ -24,7 +24,7 @@ use Organisation\Service\OrganisationService;
 use Program\Service\CallService;
 use Program\Service\ProgramService;
 use Zend\Http\PhpEnvironment\Request;
-use Zend\Mvc\Router\Http\RouteMatch;
+use Zend\Router\Http\RouteMatch;
 use Zend\Permissions\Acl\Assertion\AssertionInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
