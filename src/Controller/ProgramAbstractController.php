@@ -17,6 +17,7 @@ use Admin\Service\AdminService;
 use BjyAuthorize\Controller\Plugin\IsAllowed;
 use Contact\Service\ContactService;
 use Doctrine\ORM\EntityManager;
+use General\Service\EmailService;
 use General\Service\GeneralService;
 use Organisation\Service\OrganisationService;
 use Program\Controller\Plugin;
@@ -101,6 +102,10 @@ abstract class ProgramAbstractController extends AbstractActionController
      * @var HelperPluginManager
      */
     protected $viewHelperManager;
+    /**
+     * @var EmailService;
+     */
+    protected $emailService;
 
     /**
      * @return FormService
@@ -362,6 +367,25 @@ abstract class ProgramAbstractController extends AbstractActionController
     public function setViewHelperManager(HelperPluginManager $viewHelperManager): ProgramAbstractController
     {
         $this->viewHelperManager = $viewHelperManager;
+
+        return $this;
+    }
+
+    /**
+     * @return EmailService
+     */
+    public function getEmailService(): ?EmailService
+    {
+        return $this->emailService;
+    }
+
+    /**
+     * @param EmailService $emailService
+     * @return ProgramAbstractController
+     */
+    public function setEmailService(EmailService $emailService): ProgramAbstractController
+    {
+        $this->emailService = $emailService;
 
         return $this;
     }

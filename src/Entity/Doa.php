@@ -151,9 +151,18 @@ class Doa extends EntityAbstract implements ResourceInterface
     }
 
     /**
+     * @param $property
+     * @return bool
+     */
+    public function __isset($property)
+    {
+        return isset($this->$property);
+    }
+
+    /**
      * @return mixed
      */
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf("Doa: %s", $this->id);
     }
@@ -163,7 +172,7 @@ class Doa extends EntityAbstract implements ResourceInterface
      *
      * @return string
      */
-    public function parseFileName()
+    public function parseFileName(): string
     {
         return str_replace(' ', '_', sprintf("DOA_%s_%s", $this->getOrganisation(), $this->getProgram()));
     }

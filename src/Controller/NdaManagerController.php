@@ -23,15 +23,8 @@ use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 /**
- * Affiliation controller.
- *
- * @category   Affiliation
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
- * @license    https://itea3.org/license.txt proprietary
- *
- * @link       https://itea3.org
+ * Class NdaManagerController
+ * @package Program\Controller
  */
 class NdaManagerController extends ProgramAbstractController
 {
@@ -40,7 +33,7 @@ class NdaManagerController extends ProgramAbstractController
      */
     public function approvalAction()
     {
-        $nda  = $this->getCallService()->findNotApprovedNda();
+        $nda = $this->getCallService()->findNotApprovedNda();
         $form = new NdaApproval($nda, $this->getContactService());
 
         return new ViewModel(
@@ -52,7 +45,7 @@ class NdaManagerController extends ProgramAbstractController
     }
 
     /**
-     * @return \Zend\View\Model\ViewModel
+     * @return array|ViewModel
      */
     public function viewAction()
     {
@@ -65,7 +58,7 @@ class NdaManagerController extends ProgramAbstractController
     }
 
     /**
-     * @return \Zend\View\Model\ViewModel
+     * @return array|\Zend\Http\Response|ViewModel
      */
     public function editAction()
     {
@@ -97,12 +90,12 @@ class NdaManagerController extends ProgramAbstractController
 
             if (isset($data['delete'])) {
                 $this->flashMessenger()->setNamespace('success')
-                     ->addMessage(
-                         sprintf(
-                             $this->translate("txt-nda-for-contact-%s-has-been-removed"),
-                             $nda->getContact()->getDisplayName()
-                         )
-                     );
+                    ->addMessage(
+                        sprintf(
+                            $this->translate("txt-nda-for-contact-%s-has-been-removed"),
+                            $nda->getContact()->getDisplayName()
+                        )
+                    );
 
                 $this->getCallService()->removeEntity($nda);
 
@@ -121,7 +114,7 @@ class NdaManagerController extends ProgramAbstractController
                     /*
                      * Replace the content of the object
                      */
-                    if (! $nda->getObject()->isEmpty()) {
+                    if (!$nda->getObject()->isEmpty()) {
                         $nda->getObject()->first()->setObject(
                             file_get_contents($fileData['program_entity_nda']['file']['tmp_name'])
                         );
@@ -138,14 +131,14 @@ class NdaManagerController extends ProgramAbstractController
                     $nda->setSize($fileSizeValidator->size);
                     $nda->setContentType(
                         $this->getGeneralService()
-                             ->findContentTypeByContentTypeName($fileData['program_entity_nda']['file']['type'])
+                            ->findContentTypeByContentTypeName($fileData['program_entity_nda']['file']['type'])
                     );
                 }
 
                 /*
                  * The programme call needs to have a dedicated treatment
                  */
-                if (! empty($data['program_entity_nda']['programCall'])) {
+                if (!empty($data['program_entity_nda']['programCall'])) {
                     $nda->setCall([$this->getCallService()->findCallById($data['program_entity_nda']['programCall'])]);
                 } else {
                     $nda->setCall([]);
@@ -154,12 +147,12 @@ class NdaManagerController extends ProgramAbstractController
                 $this->getCallService()->updateEntity($nda);
 
                 $this->flashMessenger()->setNamespace('success')
-                     ->addMessage(
-                         sprintf(
-                             _("txt-nda-for-contact-%s-has-been-updated"),
-                             $nda->getContact()->getDisplayName()
-                         )
-                     );
+                    ->addMessage(
+                        sprintf(
+                            _("txt-nda-for-contact-%s-has-been-updated"),
+                            $nda->getContact()->getDisplayName()
+                        )
+                    );
 
                 return $this->redirect()->toRoute('zfcadmin/nda/view', ['id' => $nda->getId()]);
             }
@@ -174,14 +167,13 @@ class NdaManagerController extends ProgramAbstractController
     }
 
     /**
-     * Dedicated action to approve NDAs via an AJAX call.
-     *
      * @return JsonModel
      */
     public function approveAction()
     {
-        $nda        = $this->params()->fromPost('nda');
+        $nda = $this->params()->fromPost('nda');
         $dateSigned = $this->params()->fromPost('dateSigned');
+        $sendEmail = $this->params()->fromPost('sendEmail', 0);
 
         if (empty($dateSigned)) {
             return new JsonModel(
@@ -192,7 +184,7 @@ class NdaManagerController extends ProgramAbstractController
             );
         }
 
-        if (! \DateTime::createFromFormat('Y-h-d', $dateSigned)) {
+        if (!\DateTime::createFromFormat('Y-h-d', $dateSigned)) {
             return new JsonModel(
                 [
                     'result' => 'error',
@@ -201,9 +193,7 @@ class NdaManagerController extends ProgramAbstractController
             );
         }
 
-        /*
-         * @var Nda
-         */
+        /** @var Nda $nda */
         $nda = $this->getCallService()->findEntityById(Nda::class, $nda);
         $nda->setDateSigned(\DateTime::createFromFormat('Y-h-d', $dateSigned));
         $nda->setDateApproved(new \DateTime());
@@ -211,6 +201,23 @@ class NdaManagerController extends ProgramAbstractController
 
         //Flush the rights of the NDA guy
         $this->getAdminService()->flushPermitsByContact($nda->getContact());
+
+        /**
+         * Send the email tot he user
+         */
+        if ($sendEmail === 'true') {
+            $email = $this->getEmailService()->create();
+            $this->getEmailService()->setTemplate("/program/nda/approved");
+            $email->setFilename($nda->parseFileName());
+            $email->setDateSigned($nda->getDateSigned()->format('d-m-Y'));
+            if (!$nda->getCall()->isEmpty()) {
+                $email->setCall((string)$nda->getCall());
+            }
+
+            //$email->addTo($nda->getContact());
+            $email->addTo('info@jield.nl');
+            $this->getEmailService()->send();
+        }
 
         //Update the
         return new JsonModel(

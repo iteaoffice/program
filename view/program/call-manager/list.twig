@@ -28,8 +28,8 @@
                 <thead>
                 <tr>
                     <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'id', 'text': translate('txt-id')} %}</th>
-                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'program', 'text': translate('txt-program')} %}</th>
                     <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'call', 'text': translate('txt-call-name')} %}</th>
+                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'program', 'text': translate('txt-program')} %}</th>
                     <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'po-open-date', 'text': translate('txt-call-po-open')} %}</th>
                     <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'po-close-date', 'text': translate('txt-call-po-close')} %}</th>
                     <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'fpp-open-date', 'text': translate('txt-call-fpp-open')} %}</th>
@@ -43,8 +43,8 @@
                 {% for call in paginator.getCurrentItems() %}
                     <tr>
                         <td>{{ call.id }} {{ callLink(call,'edit', 'icon') }}</td>
-                        <td>{{ programLink(call.program,'view-admin','name') }}</td>
                         <td>{{ callLink(call,'view-admin','name') }}</td>
+                        <td>{{ programLink(call.program,'view-admin','name') }}</td>
                         <td>{% if call.poOpenDate %}{{ call.poOpenDate|string_date }}{% endif %}</td>
                         <td>{% if call.poCloseDate %}{{ call.poCloseDate|string_date }}{% endif %}</td>
                         <td>{% if call.fppOpenDate %}{{ call.fppOpenDate|string_date }}{% endif %}</td>

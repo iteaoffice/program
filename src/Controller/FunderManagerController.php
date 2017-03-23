@@ -13,7 +13,7 @@ namespace Program\Controller;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use Program\Entity\Funder;
-use Program\Form\ProgramFilter;
+use Program\Form\FunderFilter;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 
@@ -29,7 +29,7 @@ class FunderManagerController extends ProgramAbstractController
      */
     public function listAction()
     {
-        $page         = $this->params()->fromRoute('page', 1);
+        $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getProgramFilter();
         $contactQuery = $this->getProgramService()->findEntitiesFiltered(Funder::class, $filterPlugin->getFilter());
 
@@ -39,7 +39,7 @@ class FunderManagerController extends ProgramAbstractController
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
-        $form = new ProgramFilter();
+        $form = new FunderFilter();
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
         return new ViewModel(
@@ -83,7 +83,7 @@ class FunderManagerController extends ProgramAbstractController
         );
 
         $funder = new Funder();
-        $form   = $this->getFormService()->prepare($funder, null, $data);
+        $form = $this->getFormService()->prepare($funder, null, $data);
 
         $form->remove('delete');
 
@@ -134,12 +134,12 @@ class FunderManagerController extends ProgramAbstractController
 
                 $this->getProgramService()->removeEntity($funder);
                 $this->flashMessenger()->setNamespace('success')
-                     ->addMessage(sprintf($this->translate("txt-funder-has-successfully-been-deleted")));
+                    ->addMessage(sprintf($this->translate("txt-funder-has-successfully-been-deleted")));
 
                 return $this->redirect()->toRoute('zfcadmin/funder/list');
             }
 
-            if (! isset($data['cancel'])) {
+            if (!isset($data['cancel'])) {
                 $funder = $this->getProgramService()->updateEntity($funder);
             }
 

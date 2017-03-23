@@ -6,9 +6,21 @@
 '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css'
 ) %}
 
+
 <h1>{{ translate("txt-unapproved-nda") }}</h1>
 
 {% if nda|length > 0 %}
+
+
+    {% do form.prepare() %}
+
+    {{ form().openTag(form)|raw }}
+
+    <label>
+        {{ formelement(form.get('sendMail')) }}
+        {{ translate("txt-send-email-on-approval") }}
+    </label>
+
     <table class="table table-hover table-consended table-striped">
         <thead>
         <tr>
@@ -44,9 +56,13 @@
         {% endfor %}
         </tbody>
     </table>
+
+
+    {{ form().closeTag()|raw }}
 {% else %}
     {{ ztbalert().info(translate("txt-no-nda-are-waiting-for-approval"))|raw }}
 {% endif %}
+
 
 <script type="text/javascript">
 
@@ -67,7 +83,8 @@
             data: {
                 'nda': ndaId,
                 'contact': $("#contact-" + ndaId).val(),
-                'dateSigned': $("#dateSigned-" + ndaId).val()
+                'dateSigned': $("#dateSigned-" + ndaId).val(),
+                'sendEmail': $("#send-mail-checkbox").prop("checked")
             },
             success: function (response) {
                 if (response.result == 'success') {

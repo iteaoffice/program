@@ -5173,7 +5173,7 @@
         <line num="109" type="stmt" count="0"/>
         <line num="111" type="stmt" count="0"/>
         <line num="112" type="stmt" count="0"/>
-        <line num="119" type="method" name="findNonEmptyCalls" visibility="public" complexity="2" crap="6" count="0"/>
+        <line num="119" type="method" name="findNonEmptyAndActiveCalls" visibility="public" complexity="2" crap="6" count="0"/>
         <line num="120" type="stmt" count="0"/>
         <line num="121" type="stmt" count="0"/>
         <line num="122" type="stmt" count="0"/>
@@ -5545,7 +5545,7 @@
         <line num="291" type="stmt" count="0"/>
         <line num="293" type="stmt" count="0"/>
         <line num="294" type="stmt" count="0"/>
-        <line num="301" type="method" name="findNonEmptyCalls" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="301" type="method" name="findNonEmptyAndActiveCalls" visibility="public" complexity="1" crap="2" count="0"/>
         <line num="302" type="stmt" count="0"/>
         <line num="304" type="stmt" count="0"/>
         <line num="306" type="stmt" count="0"/>

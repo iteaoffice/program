@@ -23,14 +23,24 @@ class NdaApproval extends Form implements InputFilterProviderInterface
 {
     /**
      * @param ArrayCollection $ndas
-     * @param ContactService  $contactService
+     * @param ContactService $contactService
      */
     public function __construct(ArrayCollection $ndas, ContactService $contactService)
     {
         parent::__construct();
         $this->setAttribute('method', 'post');
-        $this->setAttribute('class', 'form-horizontal');
+
         $this->setAttribute('action', '');
+
+        $this->add(
+            [
+                'type'       => 'Zend\Form\Element\Checkbox',
+                'name'       => 'sendMail',
+                'attributes' => [
+                    'id' => 'send-mail-checkbox',
+                ]
+            ]
+        );
 
         /*
          * Create a fieldSet per NDA (and program)

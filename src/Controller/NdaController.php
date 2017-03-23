@@ -22,19 +22,13 @@ use Zend\Validator\File\FilesSize;
 use Zend\View\Model\ViewModel;
 
 /**
- * Create a link to an project.
- *
- * @category   Program
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    https://itea3.org/licence.txt proprietary
- *
- * @link       https://itea3.org
+ * Class NdaController
+ * @package Program\Controller
  */
 class NdaController extends ProgramAbstractController
 {
     /**
-     * @return ViewModel
+     * @return array|ViewModel
      */
     public function viewAction()
     {
@@ -47,7 +41,7 @@ class NdaController extends ProgramAbstractController
     }
 
     /**
-     * @return ViewModel
+     * @return array|\Zend\Http\Response|ViewModel
      */
     public function uploadAction()
     {
@@ -55,20 +49,20 @@ class NdaController extends ProgramAbstractController
         $call = $this->getCallService()->findLastActiveCall();
 
         //When the call requires no NDA, remove it form the form
-        if (! is_null($call) && $call->getNdaRequirement() !== Call::NDA_REQUIREMENT_PER_CALL) {
+        if (!is_null($call) && $call->getNdaRequirement() !== Call::NDA_REQUIREMENT_PER_CALL) {
             $call = null;
         }
 
-        if (! is_null($callId = $this->params('callId'))) {
+        if (!is_null($callId = $this->params('callId'))) {
             $call = $this->getCallService()->findCallById($callId);
             if (is_null($call)) {
                 return $this->notFoundAction();
             }
             $nda = $this->getCallService()
-                        ->findNdaByCallAndContact($call, $this->zfcUserAuthentication()->getIdentity());
-        } elseif (! is_null($call)) {
+                ->findNdaByCallAndContact($call, $this->zfcUserAuthentication()->getIdentity());
+        } elseif (!is_null($call)) {
             $nda = $this->getCallService()
-                        ->findNdaByCallAndContact($call, $this->zfcUserAuthentication()->getIdentity());
+                ->findNdaByCallAndContact($call, $this->zfcUserAuthentication()->getIdentity());
         } else {
             $nda = $this->getCallService()->findNdaByContact($this->zfcUserAuthentication()->getIdentity());
         }
@@ -83,7 +77,7 @@ class NdaController extends ProgramAbstractController
             $this->getCallService()->uploadNda($fileData['file'], $this->zfcUserAuthentication()->getIdentity(), $call);
 
             $this->flashMessenger()->setNamespace('success')
-                 ->addMessage(sprintf($this->translate("txt-nda-has-been-uploaded-successfully")));
+                ->addMessage(sprintf($this->translate("txt-nda-has-been-uploaded-successfully")));
 
             return $this->redirect()->toRoute('community');
         }
@@ -98,14 +92,7 @@ class NdaController extends ProgramAbstractController
     }
 
     /**
-     * Action to replace an mis-uploaded DoA.
-     *
-     * @return ViewModel
-     *
-     * @throws \Zend\Form\Exception\InvalidArgumentException
-     * @throws \InvalidArgumentException
-     * @throws \Zend\Mvc\Exception\DomainException
-     * @throws \Zend\Form\Exception\DomainException
+     * @return array|\Zend\Http\Response|ViewModel
      */
     public function replaceAction()
     {
@@ -120,7 +107,7 @@ class NdaController extends ProgramAbstractController
         $form = new UploadNda();
         $form->setData($data);
         if ($this->getRequest()->isPost()) {
-            if (! isset($data['cancel']) && $form->isValid()) {
+            if (!isset($data['cancel']) && $form->isValid()) {
                 $fileData = $this->params()->fromFiles();
                 /*
                  * Remove the current entity
@@ -136,12 +123,12 @@ class NdaController extends ProgramAbstractController
                 $nda->setSize($fileSizeValidator->size);
                 $nda->setContentType(
                     $this->getGeneralService()
-                         ->findContentTypeByContentTypeName($fileData['file']['type'])
+                        ->findContentTypeByContentTypeName($fileData['file']['type'])
                 );
                 $ndaObject->setNda($nda);
                 $this->getProgramService()->newEntity($ndaObject);
                 $this->flashMessenger()->setNamespace('success')
-                     ->addMessage(sprintf($this->translate("txt-nda-has-been-replaced-successfully")));
+                    ->addMessage(sprintf($this->translate("txt-nda-has-been-replaced-successfully")));
 
                 return $this->redirect()->toRoute('community/program/nda/view', ['id' => $nda->getId()]);
             }
@@ -161,7 +148,7 @@ class NdaController extends ProgramAbstractController
     }
 
     /**
-     * @return \Zend\Stdlib\ResponseInterface
+     * @return array|\Zend\Stdlib\ResponseInterface
      */
     public function renderAction()
     {
@@ -171,7 +158,7 @@ class NdaController extends ProgramAbstractController
         /*
          * Add the call when a id is given
          */
-        if (! is_null($this->params('callId'))) {
+        if (!is_null($this->params('callId'))) {
             $call = $this->getCallService()->findCallById($this->params('callId'));
             if (is_null($call)) {
                 return $this->notFoundAction();
@@ -184,17 +171,17 @@ class NdaController extends ProgramAbstractController
         }
         $response = $this->getResponse();
         $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-                 ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
-                 ->addHeaderLine('Content-Disposition', 'attachment; filename="' . $nda->parseFileName() . '.pdf"')
-                 ->addHeaderLine('Content-Type: application/pdf')
-                 ->addHeaderLine('Content-Length', strlen($renderNda->getPDFData()));
+            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
+            ->addHeaderLine('Content-Disposition', 'attachment; filename="' . $nda->parseFileName() . '.pdf"')
+            ->addHeaderLine('Content-Type: application/pdf')
+            ->addHeaderLine('Content-Length', strlen($renderNda->getPDFData()));
         $response->setContent($renderNda->getPDFData());
 
         return $response;
     }
 
     /**
-     * @return \Zend\Stdlib\ResponseInterface
+     * @return array|\Zend\Stdlib\ResponseInterface
      */
     public function downloadAction()
     {
@@ -205,18 +192,18 @@ class NdaController extends ProgramAbstractController
         /*
          * Due to the BLOB issue, we treat this as an array and we need to capture the first element
          */
-        $object   = $nda->getObject()->first()->getObject();
+        $object = $nda->getObject()->first()->getObject();
         $response = $this->getResponse();
         $response->setContent(stream_get_contents($object));
         $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-                 ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine(
-                     'Content-Disposition',
-                     'attachment; filename="' . $nda->parseFileName() . '.' . $nda->getContentType()->getExtension() . '"'
-                 )
-                 ->addHeaderLine("Pragma: public")->addHeaderLine(
-                     'Content-Type: ' . $nda->getContentType()
-                                       ->getContentType()
-                 )->addHeaderLine('Content-Length: ' . $nda->getSize());
+            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine(
+                'Content-Disposition',
+                'attachment; filename="' . $nda->parseFileName() . '.' . $nda->getContentType()->getExtension() . '"'
+            )
+            ->addHeaderLine("Pragma: public")->addHeaderLine(
+                'Content-Type: ' . $nda->getContentType()
+                    ->getContentType()
+            )->addHeaderLine('Content-Length: ' . $nda->getSize());
 
         return $this->response;
     }

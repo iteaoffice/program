@@ -8,8 +8,21 @@
     <dt>{{ translate("txt-call-id") }}</dt>
     <dd>{{ call.id }}</dd>
 
+    <dt>{{ translate("txt-program") }}</dt>
+    <dd>{{ programLink(call.program,'view-admin','name') }}</dd>
+
     <dt>{{ translate("txt-call") }}</dt>
     <dd>{{ call }}</dd>
+
+    <dt>{{ translate("txt-po-open-date") }}</dt>
+    <dd>{{ call.poOpenDate|string_date }} ({{ call.poOpenDate|date('d-m-Y H:i:s') }})</dd>
+    <dt>{{ translate("txt-po-close-date") }}</dt>
+    <dd>{{ call.poCloseDate|string_date }} ({{ call.poCloseDate|date('d-m-Y H:i:s') }})</dd>
+    <dt>{{ translate("txt-fpp-open-date") }}</dt>
+    <dd>{{ call.fppOpenDate|string_date }} ({{ call.fppOpenDate|date('d-m-Y H:i:s') }})</dd>
+    <dt>{{ translate("txt-fpp-close-date") }}</dt>
+    <dd>{{ call.fppCloseDate|string_date }} ({{ call.fppCloseDate|date('d-m-Y H:i:s') }})</dd>
+
 
     <dt>{{ translate("txt-active") }}</dt>
     <dd>{{ translate(call.getActive(true)) }}</dd>
@@ -20,9 +33,36 @@
     <dt>{{ translate("txt-nda-requirement") }}</dt>
     <dd>{{ translate(call.getNdaRequirement(true)) }}</dd>
 
-    <dt>{{ translate("txt-program") }}</dt>
-    <dd>{{ programLink(call.program,'view-admin','name') }}</dd>
+    <dt>{{ translate("txt-loi-requirement") }}</dt>
+    <dd>{{ translate(call.getLoiRequirement(true)) }}</dd>
+
+
 </dl>
+
+<h2>{{ translate("txt-projects-in-call-%s")|format(call) }}</h2>
+
+{% if call.project|length > 0 %}
+    <table class="table table-hover table-striped table-condensed">
+        <thead>
+        <tr>
+            <th>{{ translate("txt-project") }}</th>
+            <th>{{ translate("txt-project-leader") }}</th>
+            <th>{{ translate("txt-project-partners") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for project in call.project %}
+            <tr>
+                <td>{{ projectLink(project,'view-admin','name') }}</td>
+                <td>{{ contactLink(project.contact, 'view-admin','name') }}</td>
+                <td>{{ project.affiliation.count() }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    {{ ztbalert().info(translate("txt-there-are-currently-no-projects-active-in-this-call"))|raw }}
+{% endif %}
 
 <h2>{{ translate("txt-countries-active-in-call-%s")|format(call) }}</h2>
 

@@ -16,4 +16,9 @@
     <dd>{{ funder.infoOffice|default(translate("txt-not-provided")) }}</dd>
     <dt>{{ translate("txt-info-public") }}</dt>
     <dd>{{ funder.infoPublic|default(translate("txt-not-provided")) }}</dd>
+    {% if funder.website %}
+        <dt>{{ translate("txt-website") }}</dt>
+        {# show only the first result#}
+        <dd><a href="{{ funder.website }}">{{ funder.website }}</a></dd>
+    {% endif %}
 </dl>

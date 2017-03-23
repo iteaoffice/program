@@ -24,9 +24,11 @@
                     <dt>{{ translate("txt-phone") }}</dt>
                     <dd>{{ contactService.getDirectPhone(funder.contact) }}</dd>
 
-                    <dt>{{ translate("txt-website") }}</dt>
-                    {# show only the first result#}
-                    <dd>{{ organisation.web[0]|raw }}</dd>
+                    {% if funder.website %}
+                        <dt>{{ translate("txt-website") }}</dt>
+                        {# show only the first result#}
+                        <dd><a href="{{ funder.website }}">{{ funder.website }}</a></dd>
+                    {% endif %}
 
                     <dt>{{ translate("txt-extra-information") }}</dt>
                     <dd>{{ funder.infoPublic|nl2br }}</dd>

@@ -73,6 +73,7 @@ class Funder extends EntityAbstract implements ResourceInterface
      * })
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
      * @Annotation\Options({
+     *      "help-block":"txt-funder-country-help-block",
      *      "target_class":"General\Entity\Country",
      *      "find_method":{
      *          "name":"findForForm",
@@ -90,8 +91,8 @@ class Funder extends EntityAbstract implements ResourceInterface
     /**
      * @ORM\Column(name="info_office", type="text", nullable=true)
      * @Annotation\Type("\Zend\Form\Element\Textarea")
-     * @Annotation\Options({"label":"txt-info-office"})
-     * @Annotation\Attributes({"rows":20})
+     * @Annotation\Attributes({"rows":20,"label":"txt-funder-info-office-label","placeholder":"txt-funder-info-office-placeholder"})
+     * @Annotation\Options({"help-block":"txt-funder-info-office-help-block"})
      *
      * @var string
      */
@@ -99,8 +100,8 @@ class Funder extends EntityAbstract implements ResourceInterface
     /**
      * @ORM\Column(name="info_public", type="text", nullable=true)
      * @Annotation\Type("\Zend\Form\Element\Textarea")
-     * @Annotation\Options({"label":"txt-info-public"})
-     * @Annotation\Attributes({"rows":20})
+     * @Annotation\Attributes({"rows":20,"label":"txt-funder-info-public-label","placeholder":"txt-funder-info-public-placeholder"})
+     * @Annotation\Options({"help-block":"txt-funder-info-public-help-block"})
      *
      * @var string
      */
@@ -110,6 +111,7 @@ class Funder extends EntityAbstract implements ResourceInterface
      * @Annotation\Type("Zend\Form\Element\Radio")
      * @Annotation\Attributes({"array":"showOnWebsiteTemplates"})
      * @Annotation\Attributes({"label":"txt-show-on-website"})
+     * @Annotation\Options({"help-block":"txt-funder-show-on-website-help-block"})
      *
      * @var \int
      */
@@ -117,11 +119,21 @@ class Funder extends EntityAbstract implements ResourceInterface
     /**
      * @ORM\Column(name="position", type="smallint", nullable=false)
      * @Annotation\Type("\Zend\Form\Element\Number")
-     * @Annotation\Options({"label":"txt-sorting-position"})
+     * @Annotation\Attributes({"label":"txt-funder-sorting-position-label"})
+     * @Annotation\Options({"help-block":"txt-funder-sorting-position-help-block"})
      *
      * @var int
      */
     private $position;
+    /**
+     * @ORM\Column(name="website",type="text",nullable=true)
+     * @Annotation\Type("Zend\Form\Element\Url")
+     * @Annotation\Attributes({"label":"txt-funder-website-label","placeholder":"txt-funder-website-placeholder"})
+     * @Annotation\Options({"help-block":"txt-funder-website-help-block"})
+     *
+     * @var string
+     */
+    private $website;
 
     /**
      * Class constructor
@@ -134,7 +146,7 @@ class Funder extends EntityAbstract implements ResourceInterface
     /**
      * @return array
      */
-    public static function getShowOnWebsiteTemplates()
+    public static function getShowOnWebsiteTemplates(): array
     {
         return self::$showOnWebsiteTemplates;
     }
@@ -163,21 +175,22 @@ class Funder extends EntityAbstract implements ResourceInterface
     }
 
     /**
+     * @param $property
+     * @return bool
+     */
+    public function __isset($property)
+    {
+        return isset($this->$property);
+    }
+
+    /**
      * toString returns the name.
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return (string)$this->contact->getDisplayName();
-    }
-
-    /**
-     * @return string
-     */
-    public function getResourceId()
-    {
-        return sprintf('%s:%s', __CLASS__, $this->id);
     }
 
     /**
@@ -253,7 +266,7 @@ class Funder extends EntityAbstract implements ResourceInterface
      *
      * @return Funder
      */
-    public function setInfoOffice($infoOffice)
+    public function setInfoOffice(string $infoOffice = null)
     {
         $this->infoOffice = $infoOffice;
 
@@ -273,7 +286,7 @@ class Funder extends EntityAbstract implements ResourceInterface
      *
      * @return Funder
      */
-    public function setInfoPublic($infoPublic)
+    public function setInfoPublic(string $infoPublic = null)
     {
         $this->infoPublic = $infoPublic;
 
@@ -318,6 +331,25 @@ class Funder extends EntityAbstract implements ResourceInterface
     public function setPosition($position)
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWebsite(): ?string
+    {
+        return $this->website;
+    }
+
+    /**
+     * @param string $website
+     * @return Funder
+     */
+    public function setWebsite(string $website = null): Funder
+    {
+        $this->website = $website;
 
         return $this;
     }

@@ -83,6 +83,7 @@ $config = [
             InputFilter\Call\CallFilter::class         => Factory\InputFilterFactory::class,
             InputFilter\Call\CountryFilter::class      => Factory\InputFilterFactory::class,
             InputFilter\DoaFilter::class               => Factory\InputFilterFactory::class,
+            InputFilter\FunderFilter::class            => Factory\InputFilterFactory::class,
             InputFilter\ProgramFilter::class           => Factory\InputFilterFactory::class,
             Options\ModuleOptions::class               => Factory\ModuleOptionsFactory::class,
             Acl\Assertion\Doa::class                   => Acl\Factory\AssertionFactory::class,

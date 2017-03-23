@@ -12,11 +12,13 @@
  *
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
+
 namespace Program\Controller\Factory;
 
 use Admin\Service\AdminService;
 use Contact\Service\ContactService;
 use Doctrine\ORM\EntityManager;
+use General\Service\EmailService;
 use General\Service\GeneralService;
 use Interop\Container\ContainerInterface;
 use Organisation\Service\OrganisationService;
@@ -40,13 +42,16 @@ final class ControllerFactory implements FactoryInterface
 {
     /**
      * @param ContainerInterface|ControllerManager $container
-     * @param string                               $requestedName
-     * @param array|null                           $options
+     * @param string $requestedName
+     * @param array|null $options
      *
      * @return ProgramAbstractController
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
-    {
+    public function __invoke(
+        ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ): ProgramAbstractController {
         /** @var ProgramAbstractController $controller */
         $controller = new $requestedName($options);
 
@@ -93,6 +98,10 @@ final class ControllerFactory implements FactoryInterface
         /** @var ModuleOptions $moduleOptions */
         $moduleOptions = $container->get(ModuleOptions::class);
         $controller->setModuleOptions($moduleOptions);
+
+        /** @var EmailService $emailService */
+        $emailService = $container->get(EmailService::class);
+        $controller->setEmailService($emailService);
 
         /** @var HelperPluginManager $viewHelperManager */
         $viewHelperManager = $container->get('ViewHelperManager');

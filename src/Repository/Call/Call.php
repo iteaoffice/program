@@ -32,13 +32,14 @@ class Call extends EntityRepository
         $queryBuilder->select('program_entity_call_call');
         $queryBuilder->from(CallEntity::class, 'program_entity_call_call');
         $queryBuilder->join("program_entity_call_call.program", 'p');
+
         //Filter here on the active calls @todo: see if this makes sense here
-        $queryBuilder->andWhere('program_entity_call_call.active = :active');
-        $queryBuilder->setParameter('active', \Program\Entity\Call\Call::ACTIVE);
+//        $queryBuilder->andWhere('program_entity_call_call.active = :active');
+//        $queryBuilder->setParameter('active', \Program\Entity\Call\Call::ACTIVE);
 
         $direction = 'DESC';
         if (isset($filter['direction'])
-            && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'])
+            && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)
         ) {
             $direction = strtoupper($filter['direction']);
         }
@@ -84,8 +85,8 @@ class Call extends EntityRepository
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('program_entity_call_call');
         $queryBuilder->from(CallEntity::class, 'program_entity_call_call');
-        //Filter here on the active calls @todo: see if this makes sense here
 
+        //Filter here on the active calls
         $queryBuilder->andWhere('program_entity_call_call.active = :active');
         $queryBuilder->setParameter('active', \Program\Entity\Call\Call::ACTIVE);
 
@@ -93,15 +94,15 @@ class Call extends EntityRepository
         switch ($type) {
             case Type::TYPE_PO:
                 $queryBuilder->andWhere('program_entity_call_call.poOpenDate < :today')
-                             ->andWhere(
-                                 'program_entity_call_call.poCloseDate > :today OR program_entity_call_call.poGraceDate > :today'
-                             )->setParameter('today', $today);
+                    ->andWhere(
+                        'program_entity_call_call.poCloseDate > :today OR program_entity_call_call.poGraceDate > :today'
+                    )->setParameter('today', $today);
                 break;
             case Type::TYPE_FPP:
                 $queryBuilder->andWhere('program_entity_call_call.fppOpenDate < :today')
-                             ->andWhere(
-                                 'program_entity_call_call.fppCloseDate > :today OR program_entity_call_call.fppGraceDate > :today'
-                             )->setParameter('today', $today);
+                    ->andWhere(
+                        'program_entity_call_call.fppCloseDate > :today OR program_entity_call_call.fppGraceDate > :today'
+                    )->setParameter('today', $today);
                 break;
             default:
                 throw new \InvalidArgumentException(sprintf("This selected type %s is invalid", $type));
@@ -116,7 +117,7 @@ class Call extends EntityRepository
      *
      * @return array
      */
-    public function findNonEmptyCalls(ProgramEntity $program = null)
+    public function findNonEmptyAndActiveCalls(ProgramEntity $program = null)
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('program_entity_call_call');
@@ -128,7 +129,7 @@ class Call extends EntityRepository
         $subSelect->join('project.call', 'call');
         $queryBuilder->andWhere($queryBuilder->expr()->in('program_entity_call_call.id', $subSelect->getDQL()));
 
-        //Filter here on the active calls @todo: see if this makes sense here
+        //Filter here on the active calls
         $queryBuilder->andWhere('program_entity_call_call.active = :active');
         $queryBuilder->setParameter('active', \Program\Entity\Call\Call::ACTIVE);
 
@@ -166,8 +167,9 @@ class Call extends EntityRepository
         $queryBuilder->where('program_entity_call_call.poOpenDate < :today')->andWhere(
             'program_entity_call_call.poCloseDate > :today OR program_entity_call_call.poGraceDate > :today'
         )
-                     ->setParameter('today', $today);
-        //Filter here on the active calls @todo: see if this makes sense here
+            ->setParameter('today', $today);
+
+        //Filter here on the active calls
         $queryBuilder->andWhere('program_entity_call_call.active = :active');
         $queryBuilder->setParameter('active', \Program\Entity\Call\Call::ACTIVE);
 
@@ -176,7 +178,7 @@ class Call extends EntityRepository
         /**
          * Check first if we find an open PO
          */
-        if (! is_null($queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult())) {
+        if (!is_null($queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult())) {
             /*
              * We have found an open PO and call, return the result
              */
@@ -189,11 +191,11 @@ class Call extends EntityRepository
         $queryBuilder->andWhere('program_entity_call_call.fppOpenDate < :today')->andWhere(
             'program_entity_call_call.fppCloseDate > :today OR program_entity_call_call.fppGraceDate > :today'
         )
-                     ->setParameter('today', $today);
+            ->setParameter('today', $today);
         /*
          * Check first if we find an open FPP
          */
-        if (! is_null($queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult())) {
+        if (!is_null($queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult())) {
             /*
              * We have found an open PO and call, return the result
              */
@@ -217,7 +219,7 @@ class Call extends EntityRepository
         $queryBuilder->setParameter('active', \Program\Entity\Call\Call::ACTIVE);
         $queryBuilder->setMaxResults(1);
 
-        if (! is_null($queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult())) {
+        if (!is_null($queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult())) {
             return [
                 'call'        => $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult(),
                 'versionType' => Type::TYPE_PO,
@@ -252,7 +254,7 @@ class Call extends EntityRepository
         $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
 
         $dql
-                = 'SELECT
+            = 'SELECT
                         MIN(YEAR(project_entity_version_version.dateSubmitted)) AS minYear,
                         MAX(YEAR(project_entity_project.dateEnd)) AS maxYear
                    FROM Project\Entity\Project project_entity_project

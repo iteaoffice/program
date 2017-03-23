@@ -152,7 +152,7 @@ class ProgramHandler extends AbstractViewHelper
             'program/partial/call-selector',
             [
                 'displayNameCall' => 'name',
-                'calls'           => $this->getCallService()->findNonEmptyCalls($program),
+                'calls'           => $this->getCallService()->findNonEmptyAndActiveCalls($program),
                 'callId'          => ! is_null($call) ? $call->getId() : null,
             ]
         );

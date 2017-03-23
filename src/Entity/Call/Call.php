@@ -50,6 +50,9 @@ class Call extends EntityAbstract implements ResourceInterface
     const NDA_REQUIREMENT_NOT_APPLICABLE = 1;
     const NDA_REQUIREMENT_PER_CALL = 2;
     const NDA_REQUIREMENT_PER_PROJECT = 3;
+    const LOI_NOI_REQUIRED = 0;
+    const LOI_REQUIRED = 1;
+
     /**
      * @var array
      */
@@ -75,6 +78,14 @@ class Call extends EntityAbstract implements ResourceInterface
             self::NDA_REQUIREMENT_NOT_APPLICABLE => 'txt-no-dna-required',
             self::NDA_REQUIREMENT_PER_CALL       => 'txt-nda-per-call-required',
             self::NDA_REQUIREMENT_PER_PROJECT    => 'txt-nda-per-project-required',
+        ];
+    /**
+     * @var array
+     */
+    protected static $loiRequirementTemplates
+        = [
+            self::LOI_NOI_REQUIRED => 'txt-no-loi-required',
+            self::LOI_REQUIRED     => 'txt-loi-required',
         ];
 
     /**
@@ -165,6 +176,15 @@ class Call extends EntityAbstract implements ResourceInterface
      * @var int
      */
     private $doaRequirement;
+    /**
+     * @ORM\Column(name="loi_requirement", type="smallint", nullable=false)
+     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Attributes({"array":"loiRequirementTemplates"})
+     * @Annotation\Options({"label":"txt-loi-requirements","help-block":"txt-loi-requirements-inline-help"})
+     *
+     * @var int
+     */
+    private $loiRequirement;
     /**
      * @ORM\Column(name="nda_requirement", type="smallint", nullable=false)
      * @Annotation\Type("Zend\Form\Element\Radio")
@@ -292,28 +312,29 @@ class Call extends EntityAbstract implements ResourceInterface
      */
     public function __construct()
     {
-        $this->publication      = new Collections\ArrayCollection();
-        $this->meeting          = new Collections\ArrayCollection();
-        $this->project          = new Collections\ArrayCollection();
-        $this->nda              = new Collections\ArrayCollection();
-        $this->calendar         = new Collections\ArrayCollection();
-        $this->doa              = new Collections\ArrayCollection();
-        $this->image            = new Collections\ArrayCollection();
-        $this->idea             = new Collections\ArrayCollection();
-        $this->ideaTool         = new Collections\ArrayCollection();
+        $this->publication = new Collections\ArrayCollection();
+        $this->meeting = new Collections\ArrayCollection();
+        $this->project = new Collections\ArrayCollection();
+        $this->nda = new Collections\ArrayCollection();
+        $this->calendar = new Collections\ArrayCollection();
+        $this->doa = new Collections\ArrayCollection();
+        $this->image = new Collections\ArrayCollection();
+        $this->idea = new Collections\ArrayCollection();
+        $this->ideaTool = new Collections\ArrayCollection();
         $this->ideaMessageBoard = new Collections\ArrayCollection();
-        $this->session          = new Collections\ArrayCollection();
-        $this->callCountry      = new Collections\ArrayCollection();
+        $this->session = new Collections\ArrayCollection();
+        $this->callCountry = new Collections\ArrayCollection();
 
         $this->doaRequirement = self::DOA_REQUIREMENT_PER_PROJECT;
         $this->ndaRequirement = self::NDA_REQUIREMENT_PER_CALL;
-        $this->active         = self::ACTIVE;
+        $this->loiRequirement = self::LOI_REQUIRED;
+        $this->active = self::ACTIVE;
     }
 
     /**
      * @return array
      */
-    public static function getDoaRequirementTemplates()
+    public static function getDoaRequirementTemplates(): array
     {
         return self::$doaRequirementTemplates;
     }
@@ -321,15 +342,23 @@ class Call extends EntityAbstract implements ResourceInterface
     /**
      * @return array
      */
-    public static function getNdaRequirementTemplates()
+    public static function getNdaRequirementTemplates(): array
     {
         return self::$ndaRequirementTemplates;
     }
 
     /**
+     * @return mixed
+     */
+    public static function getLoiRequirementTemplates()
+    {
+        return self::$loiRequirementTemplates;
+    }
+
+    /**
      * @return array
      */
-    public static function getActiveTemplates()
+    public static function getActiveTemplates(): array
     {
         return self::$activeTemplates;
     }
@@ -372,7 +401,7 @@ class Call extends EntityAbstract implements ResourceInterface
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf("%s Call %s", $this->getProgram()->getProgram(), $this->call);
     }
@@ -400,7 +429,7 @@ class Call extends EntityAbstract implements ResourceInterface
      */
     public function shortName()
     {
-        $words   = explode(" ", $this->getProgram()->getProgram());
+        $words = explode(" ", $this->getProgram()->getProgram());
         $acronym = "";
 
         foreach ($words as $w) {
@@ -924,6 +953,30 @@ class Call extends EntityAbstract implements ResourceInterface
     public function setActive($active)
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * @param bool $textual
+     * @return int|string
+     */
+    public function getLoiRequirement(bool $textual = false)
+    {
+        if ($textual) {
+            return self::$loiRequirementTemplates[$this->loiRequirement];
+        }
+
+        return $this->loiRequirement;
+    }
+
+    /**
+     * @param int $loiRequirement
+     * @return Call
+     */
+    public function setLoiRequirement($loiRequirement): Call
+    {
+        $this->loiRequirement = $loiRequirement;
 
         return $this;
     }
