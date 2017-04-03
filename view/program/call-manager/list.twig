@@ -9,9 +9,8 @@
 <input type="hidden" name="filter[direction]" value="{{ direction }}">
 
 <div class="row">
-
     <div class="col-md-10">
-        <h1>{{ translate("txt-call-list") }}</h1>
+        <h1>{{ translate("txt-call-list") }} {{ callLink(null, 'new','button') }}</h1>
 
         <div class="row">
             <div class="col-md-6">
@@ -25,11 +24,12 @@
         </div>
 
         {% if paginator.pageRange > 0 %}
-            <table class="table table-hover table-striped">
+            <table class="table table-hover table-striped table-condensed">
                 <thead>
                 <tr>
                     <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'id', 'text': translate('txt-id')} %}</th>
                     <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'call', 'text': translate('txt-call-name')} %}</th>
+                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'program', 'text': translate('txt-program')} %}</th>
                     <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'po-open-date', 'text': translate('txt-call-po-open')} %}</th>
                     <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'po-close-date', 'text': translate('txt-call-po-close')} %}</th>
                     <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'fpp-open-date', 'text': translate('txt-call-fpp-open')} %}</th>
@@ -44,6 +44,7 @@
                     <tr>
                         <td>{{ call.id }} {{ callLink(call,'edit', 'icon') }}</td>
                         <td>{{ callLink(call,'view-admin','name') }}</td>
+                        <td>{{ programLink(call.program,'view-admin','name') }}</td>
                         <td>{% if call.poOpenDate %}{{ call.poOpenDate|string_date }}{% endif %}</td>
                         <td>{% if call.poCloseDate %}{{ call.poCloseDate|string_date }}{% endif %}</td>
                         <td>{% if call.fppOpenDate %}{{ call.fppOpenDate|string_date }}{% endif %}</td>
@@ -75,4 +76,3 @@
 
 {{ form().closeTag()|raw }}
 
-{{ callLink(null, 'new','button') }}

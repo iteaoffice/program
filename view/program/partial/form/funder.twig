@@ -2,11 +2,12 @@
 
 {{ form().openTag(form)|raw }}
 
-{% set funder = form.get('funder') %}
+{% set funder = form.get('program_entity_funder') %}
 
  {{ contactformelement(funder.get('contact')) }}
 {{ ztbformelement(funder.get('country')) }}
 {{ ztbformelement(funder.get('showOnWebsite')) }}
+{{ ztbformelement(funder.get('website')) }}
 {{ ztbformelement(funder.get('position')) }}
 {{ ztbformelement(funder.get('infoOffice')) }}
 {{ ztbformelement(funder.get('infoPublic')) }}

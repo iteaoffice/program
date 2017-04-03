@@ -1,0 +1,41 @@
+{% do headTitle().append(translate("txt-program-size")) %}
+<h1>{{ translate("txt-program-size-%s")|format(program) }}</h1>
+
+{% do form.prepare() %}
+
+{{ form().openTag(form)|raw }}
+
+
+<table class="table table-condensed table-striped table-hover">
+    <thead>
+    <tr>
+        <th>{{ programLink(program,'view-admin','name') }}</th>
+        {% for year in yearSpan %}
+            <th>{{ year }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tfoot>
+
+    </tfoot>
+    <tbody>
+
+    {% for call in program.call %}
+        <tr>
+            <td>{{ callLink(call,'size','name') }} {{ callLink(call, 'funding', 'icon') }}</td>
+            {% for year in yearSpan %}
+                <td {% if projectOverview[call.id][year] %}title="{% for project, amount in projectOverview[call.id][year] %}{{ project }}: {{ amount|parse_funding }}  &middot; {% endfor %}"{% endif %}>{% if totals[call.id][year] %}{{ totals[call.id][year]|parse_cost }}{% endif %}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% set filter = form.get('filter') %}
+            {{ ztbformelement(filter.get('program')) }}
+
+            {{ ztbformelement(form.get('submit')) }}
+            {{ ztbformelement(form.get('clear')) }}
+
+
+{{ form().closeTag()|raw }}

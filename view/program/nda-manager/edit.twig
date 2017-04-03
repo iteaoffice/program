@@ -11,7 +11,7 @@
 
     {{ form().openTag(form)|raw }}
 
-    {% set ndaForm = form.get('nda') %}
+    {% set ndaForm = form.get('program_entity_nda') %}
 
     {{ contactformelement(ndaForm.get('contact')) }}
     {{ ztbformelement(ndaForm.get('dateSigned')) }}

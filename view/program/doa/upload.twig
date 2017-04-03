@@ -1,10 +1,10 @@
 {% do headTitle().append(translate("txt-upload-doa-title")) %}
 
 <h1>{{ translate("txt-upload-doa-for-organisation-%s-for-program-%s")|
-    format(organisationService.organisation, program)|raw }}</h1>
+    format(organisation, program)|raw }}</h1>
 
 <p class="lead">{{ translate("txt-upload-doa-for-organisation-%s-for-program-%s-explanation")|
-    format(affiliationService.affiliation.organisation, program)|raw }}</p>
+    format(affiliation.organisation, program)|raw }}</p>
 
 
 {{ form().openTag(form)|raw }}
@@ -21,7 +21,7 @@
     <label class="col-sm-3 control-label">{{ translate("txt-organisation") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static">{{ organisationService.organisation }}</p>
+        <p class="form-control-static">{{ organisation }}</p>
     </div>
 </div>
 

@@ -2,10 +2,12 @@
 
 {{ form().openTag(form)|raw }}
 
-{% set program = form.get('program') %}
+{% set program = form.get('program_entity_program') %}
 
+{{ ztbformelement(program.get('id')) }}
 {{ ztbformelement(program.get('program')) }}
 {{ ztbformelement(program.get('number')) }}
+{{ ztbformelement(program.get('invoiceMethod')) }}
 
 <div class="form-group">
     <div class="col-sm-offset-3 col-sm-9">

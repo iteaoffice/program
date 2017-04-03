@@ -1,0 +1,52 @@
+{% do headTitle().append(translate("txt-call-funded-cost")) %}
+{% do headLink().appendStylesheet(url('assets/funding-status-css')) %}
+
+<h1>{{ translate("txt-call-funded-cost-%s-year-%s")|format(call,year) }} {{ callLink(call, 'size', 'button') }} {{ callLink(call, 'download-funding', 'button') }}</h1>
+
+
+<table class="table table-condensed table-striped table-hover table-bordered">
+    <thead>
+    <tr>
+        <th colspan="2">{{ programLink(program,'view-admin','name') }}</th>
+        {% for country in fundingResult['countries'] %}
+            <th colspan="3"><abbr title="{{ country.country }}" class="country">{{ country.iso3 }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for project in projects %}
+        <tr>
+            <td>{{ projectStatusIcon(project) }}</td>
+            <td>{{ projectLink(project,'view-admin','name') }}</td>
+            {% for country in fundingResult['countries'] %}
+                {% for value in fundingResult[country.id][project.id]['value'] %}
+                    <td class="funding-status {{ value.status.parseCssName() }}">
+                        <small>{{ value['value']|parse_cost }}</small>
+                    </td>
+                {% else %}
+                    <td colspan="3"></td>
+                {% endfor %}
+
+
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+{% do form.prepare() %}
+
+        {{ form().openTag(form)|raw }}
+
+        {{ ztbformelement(form.get('call')) }}
+        {{ ztbformelement(form.get('year')) }}
+
+<div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+        {{ formelement(form.get('submit')) }}
+    </div>
+</div>
+
+
+{{ form().closeTag()|raw }}

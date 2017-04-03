@@ -5,7 +5,7 @@
  * @category    Program
  * @package     Config
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c] 2004-2015 ITEA Office (https://itea3.org]
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 use Program\Controller;
 
@@ -49,7 +49,7 @@ return [
                                             ],
                                         ],
                                     ],
-                                ]
+                                ],
                             ],
                             'nda'     => [
                                 'type'         => 'Literal',
@@ -67,11 +67,11 @@ return [
                                         'options' => [
                                             'route'       => '/upload[/call-:callId].html',
                                             'constraints' => [
-                                                'id' => '\d+'
+                                                'id' => '\d+',
                                             ],
                                             'defaults'    => [
                                                 'action'    => 'upload',
-                                                'privilege' => 'upload'
+                                                'privilege' => 'upload',
                                             ],
                                         ],
                                     ],
@@ -80,11 +80,11 @@ return [
                                         'options' => [
                                             'route'       => '/render[/call-:callId].pdf',
                                             'constraints' => [
-                                                'id' => '\d+'
+                                                'id' => '\d+',
                                             ],
                                             'defaults'    => [
                                                 'action'    => 'render',
-                                                'privilege' => 'render'
+                                                'privilege' => 'render',
                                             ],
                                         ],
                                     ],
@@ -94,7 +94,7 @@ return [
                                             'route'    => '/view/nda-[:id].html',
                                             'defaults' => [
                                                 'action'    => 'view',
-                                                'privilege' => 'view'
+                                                'privilege' => 'view',
                                             ],
                                         ],
                                     ],
@@ -103,11 +103,11 @@ return [
                                         'options' => [
                                             'route'       => '/replace/nda-[:id].html',
                                             'constraints' => [
-                                                'id' => '\d+'
+                                                'id' => '\d+',
                                             ],
                                             'defaults'    => [
                                                 'action'    => 'replace',
-                                                'privilege' => 'replace'
+                                                'privilege' => 'replace',
                                             ],
                                         ],
                                     ],
@@ -116,11 +116,11 @@ return [
                                         'options' => [
                                             'route'       => '/download/nda-[:id].pdf',
                                             'constraints' => [
-                                                'id' => '\d+'
+                                                'id' => '\d+',
                                             ],
                                             'defaults'    => [
                                                 'action'    => 'download',
-                                                'privilege' => 'download'
+                                                'privilege' => 'download',
                                             ],
                                         ],
                                     ],
@@ -139,20 +139,20 @@ return [
                                     'render'   => [
                                         'type'    => 'Segment',
                                         'options' => [
-                                            'route'    => '/render/organisation-[:organisation-id]/program-[:program-id].pdf',
+                                            'route'    => '/render/organisation-[:organisationId]/program-[:programId].pdf',
                                             'defaults' => [
                                                 'action'    => 'render',
-                                                'privilege' => 'render'
+                                                'privilege' => 'render',
                                             ],
                                         ],
                                     ],
                                     'upload'   => [
                                         'type'    => 'Segment',
                                         'options' => [
-                                            'route'    => '/upload/organisation-[:organisation-id]/program-[:program-id].html',
+                                            'route'    => '/upload/organisation-[:organisationId]/program-[:programId].html',
                                             'defaults' => [
                                                 'action'    => 'upload',
-                                                'privilege' => 'upload'
+                                                'privilege' => 'upload',
                                             ],
                                         ],
                                     ],
@@ -162,7 +162,7 @@ return [
                                             'route'    => '/view/[:id].html',
                                             'defaults' => [
                                                 'action'    => 'view',
-                                                'privilege' => 'view'
+                                                'privilege' => 'view',
                                             ],
                                         ],
                                     ],
@@ -172,7 +172,7 @@ return [
                                             'route'    => '/replace/[:id].html',
                                             'defaults' => [
                                                 'action'    => 'replace',
-                                                'privilege' => 'replace'
+                                                'privilege' => 'replace',
                                             ],
                                         ],
                                     ],
@@ -182,11 +182,11 @@ return [
                                             'route'    => '/download/[:id].pdf',
                                             'defaults' => [
                                                 'action'    => 'download',
-                                                'privilege' => 'download'
+                                                'privilege' => 'download',
                                             ],
                                         ],
                                     ],
-                                ]
+                                ],
                             ],
                         ],
                     ],
@@ -242,6 +242,15 @@ return [
                                     ],
                                 ],
                             ],
+                            'size' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/size[/program-:id].html',
+                                    'defaults' => [
+                                        'action' => 'size',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                     'call'    => [
@@ -256,7 +265,7 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes'  => [
-                            'list'    => [
+                            'list'             => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/list[/f-:encodedFilter][/page-:page].html',
@@ -265,7 +274,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'new'     => [
+                            'new'              => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/new.html',
@@ -274,7 +283,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'edit'    => [
+                            'edit'             => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/edit/[:id].html',
@@ -283,7 +292,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'view'    => [
+                            'view'             => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/view/[:id].html',
@@ -292,7 +301,34 @@ return [
                                     ],
                                 ],
                             ],
-                            'country' => [
+                            'size'             => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/size/call-[:id].html',
+                                    'defaults' => [
+                                        'action' => 'size',
+                                    ],
+                                ],
+                            ],
+                            'funding'          => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/funding/call-[:id][/year-:year].html',
+                                    'defaults' => [
+                                        'action' => 'funding',
+                                    ],
+                                ],
+                            ],
+                            'download-funding' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/funding/download/call-[:id].csv',
+                                    'defaults' => [
+                                        'action' => 'download-funding',
+                                    ],
+                                ],
+                            ],
+                            'country'          => [
                                 'type'          => 'Segment',
                                 'priority'      => 1000,
                                 'options'       => [
@@ -414,11 +450,11 @@ return [
                                 'type'     => 'Segment',
                                 'priority' => 1000,
                                 'options'  => [
-                                    'route'    => '/list.html',
+                                    'route'    => '/list[/f-:encodedFilter][/page-:page].html',
                                     'defaults' => [
                                         'action' => 'list',
                                     ],
-                                ]
+                                ],
                             ],
                             'new'  => [
                                 'type'     => 'Literal',
