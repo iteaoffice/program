@@ -144,7 +144,7 @@ class CallService extends ServiceAbstract
         /** @var \Program\Repository\Call\Call $repository */
         $repository = $this->getEntityManager()->getRepository(Call::class);
 
-        $notEmptyCalls = $repository->findNonEmptyAndActiveCalls();
+        $notEmptyCalls = $repository->findActiveCalls();
 
         if (count($notEmptyCalls) > 0) {
             return end($notEmptyCalls);

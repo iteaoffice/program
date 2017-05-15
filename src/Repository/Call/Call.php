@@ -141,6 +141,28 @@ class Call extends EntityRepository
     }
 
     /**
+     * @param ProgramEntity|null $program
+     *
+     * @return array
+     */
+    public function findActiveCalls(ProgramEntity $program = null)
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('program_entity_call_call');
+        $queryBuilder->from(CallEntity::class, 'program_entity_call_call');
+
+        //Filter here on the active calls
+        $queryBuilder->andWhere('program_entity_call_call.active = :active');
+        $queryBuilder->setParameter('active', \Program\Entity\Call\Call::ACTIVE);
+
+        if ($program !== null) {
+            $queryBuilder->andWhere('program_entity_call_call.program = :program')->setParameter('program', $program);
+        }
+
+        return $queryBuilder->getQuery()->useQueryCache(true)->getResult();
+    }
+
+    /**
      * @return CallEntity[]
      */
     public function findWithAchievement()
