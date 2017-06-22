@@ -1,0 +1,110 @@
+{% do headTitle().append(translate("txt-upload-nda-title")) %}
+
+{% if call %}
+    <h1>{{ translate("txt-submit-non-disclosure-agreement-for-call-%s")|format(call) }}</h1>
+{% else %}
+    <h1>{{ translate("txt-submit-a-general-non-disclosure-agreement") }}</h1>
+{% endif %}
+
+{% if not nda %}
+    <div class="alert alert-block alert-info">
+
+        <p>In order to gain access to
+            {% if call %}
+                {{ translate("txt-%s-project-outline-days-and-%s-project-idea-tool")|format(call, call) }}
+            {% endif %}
+            the {{ translate("txt-general-nda-purpose") }}, you will have to bind yourself and your organisation to the
+            terms and conditions set out in our Declaration of Non-Disclosure ("NDA"). You can do this in two different
+            ways, as both provided here below. Please be aware that in both cases you must be authorised to bind not
+            only yourself but also your organisation to our NDA.
+    </div>
+
+    <p>You can agree with the NDA, also on behalf of your organisation, in two different ways:</p>
+
+    <ul>
+        <li>Sign the PDF version and upload it below</li>
+        <li>Sign the online version by ticking the box below</li>
+    </ul>
+
+    {% do form.prepare() %}
+    {{ form().openTag(form)|raw }}
+
+    <fieldset>
+        <legend>{{ translate("txt-sign-and-upload-pdf-version") }}</legend>
+
+        {{ ztbformelement(form.get('file')) }}
+
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                {{ ndaLink(nda, 'render', 'button', call ) }} {{ formelement(form.get('submit')) }}
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>{{ translate("txt-sign-online-version") }}</legend>
+
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                <p>{{ translate("txt-please-read-the-text-below-before-signing-the-nda") }}</p>
+                <div style="max-height: 400px; overflow-y: scroll; background-color: #f8f8f8; padding: 10px;">
+                    {{ ndaContent|raw }}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group {% if form.get('selfApprove').getMessages() %}has-error{% endif %}">
+            <div class="col-sm-offset-3 col-sm-9">
+                <div class="checkbox">
+                    <label>
+                        {{ formelement(form.get('selfApprove')) }} {{ translate("txt-self-approve-nda-checkbox-help-text") }}
+                    </label>
+                </div>
+                <p class="help-block">Signing the online NDA will be regarded as you binding
+                    yourself as well as your organisation to the terms and conditions of the NDA</p>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                {{ formelement(form.get('approve')) }}
+            </div>
+        </div>
+    </fieldset>
+
+
+    {{ form().closeTag()|raw }}
+
+{% else %}
+
+    {% if nda.dateApproved %}
+        <div class="alert alert-block alert-success">
+            <div class="alert-heading"><h4>{{ translate("txt-nda-already-approved") }}</h4></div>
+            <p>{{ translate("txt-nda-for-call-%s-has-already-been-approved-on-%s")|format(
+                call, nda.dateApproved|date("d-m-Y")) }}</p>
+        </div>
+    {% else %}
+        <div class="alert alert-block alert-warning">
+            <div class="alert-heading"><h4>{{ translate("txt-nda-waiting-for-approval") }}</h4></div>
+            <p>{{ translate("txt-nda-for-call-%s-has-already-been-submitted-on-%s-and-is-waiting-for-approval")|format(
+                call, nda.dateSigned|date("d-m-Y")) }}</p>
+        </div>
+    {% endif %}
+
+    <dl class="dl-horizontal">
+        {% if call %}
+            <dt>{{ translate("txt-program-call") }}</dt>
+            <dd>{{ call }}</dd>
+        {% endif %}
+        <dt>{{ translate("txt-contact") }}</dt>
+        <dd>{{ zfcUserIdentity().displayName() }}</dd>
+        {% if not nda.object.isEmpty() %}
+            <dt>{{ translate("txt-download-nda") }}</dt>
+            <dd>{{ ndaLink(nda,'download', 'text') }}</dd>
+        {% endif %}
+    </dl>
+
+    {{ ndaLink(nda,'replace','button') }}
+
+{% endif %}

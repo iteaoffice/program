@@ -12,20 +12,16 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\View\Helper;
 
 use Program\Entity\Call\Call;
 use Program\Service\CallService;
 
 /**
- * Create a link to an project.
- *
- * @category   Program
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    https://itea3.org/licence.txt proprietary
- *
- * @link       https://itea3.org
+ * Class CallInformationBox
+ * @package Program\View\Helper
  */
 class CallInformationBox extends AbstractViewHelper
 {

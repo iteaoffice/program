@@ -19,6 +19,7 @@ use Program\Entity\Nda;
 use Program\Entity\NdaObject;
 use Program\Form\UploadNda;
 use Zend\Validator\File\FilesSize;
+use Zend\Validator\File\MimeType;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -94,8 +95,97 @@ class NdaController extends ProgramAbstractController
     /**
      * @return array|\Zend\Http\Response|ViewModel
      */
+    public function submitAction()
+    {
+        //We only want the active call, having the requirement that this call also requires an NDA
+        $call = $this->getCallService()->findLastActiveCall();
+        $contact = $this->zfcUserAuthentication()->getIdentity();
+
+        //When the call requires no NDA, remove it form the form
+        if (!is_null($call) && $call->getNdaRequirement() !== Call::NDA_REQUIREMENT_PER_CALL) {
+            $call = null;
+        }
+
+        if (!is_null($callId = $this->params('callId'))) {
+            $call = $this->getCallService()->findCallById($callId);
+
+            //Return a 404 when we cannot find the call provided
+            if (null === $call) {
+                return $this->notFoundAction();
+            }
+            $nda = $this->getCallService()->findNdaByCallAndContact($call, $contact);
+        } elseif (!is_null($call)) {
+            $nda = $this->getCallService()->findNdaByCallAndContact($call, $contact);
+        } else {
+            $nda = $this->getCallService()->findNdaByContact($contact);
+        }
+
+        $data = array_merge_recursive(
+            $this->getRequest()->getPost()->toArray(),
+            $this->getRequest()->getFiles()->toArray()
+        );
+
+        $form = new UploadNda();
+        $form->setData($data);
+
+        if ($this->getRequest()->isPost() && !isset($data['approve']) && $form->isValid()) {
+            if (isset($data['submit'])) {
+                $fileData = $form->getData('file');
+                $this->getCallService()->uploadNda($fileData['file'], $contact, $call);
+
+                $this->flashMessenger()->setNamespace('success')
+                    ->addMessage(sprintf($this->translate("txt-nda-has-been-uploaded-successfully")));
+            }
+
+
+            return $this->redirect()->toRoute('community');
+        }
+
+        if ($this->getRequest()->isPost()) {
+            if (isset($data['approve'])) {
+                if ($data['selfApprove'] === '0') {
+                    $form->getInputFilter()->get('selfApprove')->setErrorMessage('Error');
+                    $form->get('selfApprove')->setMessages(['Error']);
+                }
+
+                if ($data['selfApprove'] === '1') {
+                    $this->getCallService()->submitNda($contact, $call);
+
+                    $this->flashMessenger()->setNamespace('success')
+                        ->addMessage(sprintf($this->translate("txt-nda-has-been-submitted-and-approved-successfully")));
+
+                    return $this->redirect()->toRoute('community');
+                }
+            }
+        }
+
+        //We use the same code as the Helper to render the content of the NDA
+        $twigRenderer = $this->getProgramService()->getServiceLocator()->get('ZfcTwigRenderer');
+        $ndaContent = $twigRenderer->render(
+            'program/pdf/nda-call',
+            [
+                'contact'        => $contact,
+                'call'           => $call,
+                'contactService' => $this->getContactService(),
+            ]
+        );
+
+        return new ViewModel(
+            [
+                'call'       => $call,
+                'nda'        => $nda,
+                'form'       => $form,
+                'ndaContent' => $ndaContent
+            ]
+        );
+    }
+
+    /**
+     * @return array|\Zend\Http\Response|ViewModel
+     */
     public function replaceAction()
     {
+        /** @var Nda $nda */
         $nda = $this->getProgramService()->findEntityById(Nda::class, $this->params('id'));
         if (is_null($nda) || count($nda->getObject()) === 0) {
             return $this->notFoundAction();
@@ -121,10 +211,11 @@ class NdaController extends ProgramAbstractController
                 $fileSizeValidator = new FilesSize(PHP_INT_MAX);
                 $fileSizeValidator->isValid($fileData['file']);
                 $nda->setSize($fileSizeValidator->size);
-                $nda->setContentType(
-                    $this->getGeneralService()
-                        ->findContentTypeByContentTypeName($fileData['file']['type'])
-                );
+
+                $fileTypeValidator = new MimeType();
+                $fileTypeValidator->isValid($fileData['file']);
+                $nda->setContentType($this->getGeneralService()->findContentTypeByContentTypeName($fileTypeValidator->type));
+
                 $ndaObject->setNda($nda);
                 $this->getProgramService()->newEntity($ndaObject);
                 $this->flashMessenger()->setNamespace('success')
@@ -148,7 +239,7 @@ class NdaController extends ProgramAbstractController
     }
 
     /**
-     * @return array|\Zend\Stdlib\ResponseInterface
+     * @return \Zend\Stdlib\ResponseInterface|ViewModel
      */
     public function renderAction()
     {
@@ -181,7 +272,7 @@ class NdaController extends ProgramAbstractController
     }
 
     /**
-     * @return array|\Zend\Stdlib\ResponseInterface
+     * @return \Zend\Stdlib\ResponseInterface|ViewModel
      */
     public function downloadAction()
     {

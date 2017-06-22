@@ -13,10 +13,13 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Program\Controller\Plugin;
 
 use Affiliation\Service\AffiliationService;
 use General\Service\GeneralService;
+use Interop\Container\ContainerInterface;
 use Project\Entity\Funding\Source;
 use Project\Entity\Funding\Status;
 use Project\Service\EvaluationService;
@@ -44,17 +47,17 @@ class CreateCallFundingOverview extends AbstractPlugin
 
     /**
      * @param array $projects
-     * @param null  $year
+     * @param null $year
      *
      * @return array
      */
-    public function create(array $projects, $year)
+    public function create(array $projects, $year): array
     {
         $evaluationResult = [];
 
         foreach ($projects as $project) {
             $countries = $this->getGeneralService()
-                              ->findCountryByProject($project, AffiliationService::WHICH_ONLY_ACTIVE);
+                ->findCountryByProject($project, AffiliationService::WHICH_ONLY_ACTIVE);
             foreach ($countries as $country) {
                 /*
                  * Create an array of countries to serialize it normally
@@ -63,7 +66,7 @@ class CreateCallFundingOverview extends AbstractPlugin
                     'id'      => $country->getId(),
                     'country' => $country->getCountry(),
                     'object'  => $country,
-                    'iso3'    => ucwords($country->getIso3()),
+                    'iso3'    => ucwords((string)$country->getIso3()),
 
                 ];
 
@@ -87,42 +90,12 @@ class CreateCallFundingOverview extends AbstractPlugin
     }
 
     /**
-     * Gateway to the General Service.
-     *
-     * @return GeneralService
-     */
-    public function getGeneralService()
-    {
-        return $this->getServiceLocator()->get(GeneralService::class);
-    }
-
-    /**
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param ServiceLocatorInterface|PluginManager $serviceLocator
-     *
-     * @return $this
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-
-        return $this;
-    }
-
-    /**
      * @param $project
      * @param $country
-     *
-     * @return float
+     * @param $year
+     * @return array
      */
-    private function getValue($project, $country, $year)
+    private function getValue($project, $country, $year): array
     {
         $version = $this->getProjectService()->getLatestProjectVersion($project);
 
@@ -134,13 +107,13 @@ class CreateCallFundingOverview extends AbstractPlugin
         /** @var Status $default */
         $default = $this->getEvaluationService()->findEntityById(Status::class, Status::STATUS_DEFAULT);
 
-        $costAllGood    = 0;
+        $costAllGood = 0;
         $costSelfFunded = 0;
-        $otherCost      = 0;
+        $otherCost = 0;
 
         //Go over the partners in the project and calculate the cost, group it by funding status
         foreach ($this->getAffiliationService()->findAffiliationByProjectAndCountryAndWhich($project, $country) as
-            $affiliation) {
+                 $affiliation) {
             //Find the costs of this affiliation (in the given year)
             $costsPerYear = $this->getVersionService()->findTotalCostVersionByAffiliationAndVersionPerYear(
                 $affiliation,
@@ -157,7 +130,7 @@ class CreateCallFundingOverview extends AbstractPlugin
                         $costs = $costsPerYear[$year];
                     }
 
-                    if (! is_null($affiliation->getDateSelfFunded())) {
+                    if (!is_null($affiliation->getDateSelfFunded())) {
                         $costSelfFunded += $costs;
                     } else {
                         //We have now the funding in the given year (office version)
@@ -178,7 +151,7 @@ class CreateCallFundingOverview extends AbstractPlugin
         }
 
 
-        $value['allGood']    = [
+        $value['allGood'] = [
             'status' => $allGood,
             'value'  => $costAllGood,
         ];
@@ -186,7 +159,7 @@ class CreateCallFundingOverview extends AbstractPlugin
             'status' => $selfFunded,
             'value'  => $costSelfFunded,
         ];
-        $value['other']      = [
+        $value['other'] = [
             'status' => $default,
             'value'  => $otherCost,
         ];
@@ -200,7 +173,7 @@ class CreateCallFundingOverview extends AbstractPlugin
      *
      * @return ProjectService
      */
-    public function getProjectService()
+    public function getProjectService(): ProjectService
     {
         return $this->getServiceLocator()->get(ProjectService::class);
     }
@@ -210,7 +183,7 @@ class CreateCallFundingOverview extends AbstractPlugin
      *
      * @return EvaluationService
      */
-    public function getEvaluationService()
+    public function getEvaluationService(): EvaluationService
     {
         return $this->getServiceLocator()->get(EvaluationService::class);
     }
@@ -220,7 +193,7 @@ class CreateCallFundingOverview extends AbstractPlugin
      *
      * @return AffiliationService
      */
-    public function getAffiliationService()
+    public function getAffiliationService(): AffiliationService
     {
         return $this->getServiceLocator()->get(AffiliationService::class);
     }
@@ -230,8 +203,38 @@ class CreateCallFundingOverview extends AbstractPlugin
      *
      * @return VersionService
      */
-    public function getVersionService()
+    public function getVersionService(): VersionService
     {
         return $this->getServiceLocator()->get(VersionService::class);
+    }
+
+    /**
+     * Gateway to the General Service.
+     *
+     * @return GeneralService
+     */
+    public function getGeneralService(): GeneralService
+    {
+        return $this->getServiceLocator()->get(GeneralService::class);
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    public function getServiceLocator(): ContainerInterface
+    {
+        return $this->serviceLocator;
+    }
+
+    /**
+     * @param ServiceLocatorInterface|PluginManager $serviceLocator
+     *
+     * @return CreateCallFundingOverview
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator): CreateCallFundingOverview
+    {
+        $this->serviceLocator = $serviceLocator;
+
+        return $this;
     }
 }

@@ -15,10 +15,13 @@
 
 namespace Program\Controller;
 
+use Program\Entity\Call\Call;
 use Program\Entity\Nda;
 use Program\Entity\NdaObject;
+use Program\Form\AdminUploadNda;
 use Program\Form\NdaApproval;
 use Zend\Validator\File\FilesSize;
+use Zend\Validator\File\MimeType;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
@@ -62,6 +65,7 @@ class NdaManagerController extends ProgramAbstractController
      */
     public function editAction()
     {
+        /** @var Nda $nda */
         $nda = $this->getCallService()->findEntityById(Nda::class, $this->params('id'));
 
         if (is_null($nda)) {
@@ -80,7 +84,7 @@ class NdaManagerController extends ProgramAbstractController
                 $nda->getContact()->getId() => $nda->getContact()->getFormName(),
             ]
         );
-        $form->get($nda->get('underscore_entity_name'))->get('programCall')->setValue($nda->getCall());
+        $form->get($nda->get('underscore_entity_name'))->get('programCall')->setValue($nda->parseCall());
 
         //Get contacts in an organisation
         if ($this->getRequest()->isPost()) {
@@ -129,10 +133,10 @@ class NdaManagerController extends ProgramAbstractController
                     $fileSizeValidator = new FilesSize(PHP_INT_MAX);
                     $fileSizeValidator->isValid($fileData['program_entity_nda']['file']);
                     $nda->setSize($fileSizeValidator->size);
-                    $nda->setContentType(
-                        $this->getGeneralService()
-                            ->findContentTypeByContentTypeName($fileData['program_entity_nda']['file']['type'])
-                    );
+
+                    $fileTypeValidator = new MimeType();
+                    $fileTypeValidator->isValid($fileData['program_entity_nda']['file']);
+                    $nda->setContentType($this->getGeneralService()->findContentTypeByContentTypeName($fileTypeValidator->type));
                 }
 
                 /*
@@ -162,6 +166,63 @@ class NdaManagerController extends ProgramAbstractController
             [
                 'nda'  => $nda,
                 'form' => $form,
+            ]
+        );
+    }
+
+    /**
+     * @return array|\Zend\Http\Response|ViewModel
+     */
+    public function uploadAction()
+    {
+        $contact = $this->getContactService()->findContactById($this->params('contactId'));
+        $calls = $this->getProgramService()->findAll(Call::class);
+
+        if (is_null($contact)) {
+            return $this->notFoundAction();
+        }
+
+        $data = array_merge_recursive(
+            $this->getRequest()->getPost()->toArray(),
+            $this->getRequest()->getFiles()->toArray()
+        );
+
+        $form = new AdminUploadNda($this->getEntityManager());
+        $form->setData($data);
+        if ($this->getRequest()->isPost() && $form->isValid()) {
+            if (isset($data['submit'])) {
+                $fileData = $form->getData('file');
+
+                $call = $this->getCallService()->findCallById($data['call']);
+                $nda = $this->getCallService()->uploadNda($fileData['file'], $contact, $call);
+
+                //if the date-signed is set, arrange that
+                $dateSigned = \DateTime::createFromFormat('Y-m-d', $data['dateSigned']);
+
+                if ($dateSigned) {
+                    $nda->setDateSigned($dateSigned);
+                }
+
+                if ($data['approve'] === '1') {
+                    $nda->setDateApproved(new \DateTime());
+                    $nda->setApprover($this->zfcUserAuthentication()->getIdentity());
+
+                    $this->getAdminService()->flushPermitsByContact($contact);
+                }
+
+                $this->flashMessenger()->setNamespace('success')
+                    ->addMessage(sprintf($this->translate("txt-nda-has-been-uploaded-successfully")));
+            }
+
+
+            return $this->redirect()->toRoute('zfcadmin/contact-admin/view', ['id' => $contact->getId()]);
+        }
+
+        return new ViewModel(
+            [
+                'form'    => $form,
+                'contact' => $contact,
+                'calls'   => $calls
             ]
         );
     }
@@ -197,6 +258,7 @@ class NdaManagerController extends ProgramAbstractController
         $nda = $this->getCallService()->findEntityById(Nda::class, $nda);
         $nda->setDateSigned(\DateTime::createFromFormat('Y-h-d', $dateSigned));
         $nda->setDateApproved(new \DateTime());
+        $nda->setApprover($this->zfcUserAuthentication()->getIdentity());
         $this->getCallService()->updateEntity($nda);
 
         //Flush the rights of the NDA guy

@@ -11,10 +11,11 @@
  * @link       https://itea3.org
  */
 
-namespace Program\Controller\Plugin;
+declare(strict_types=1); namespace Program\Controller\Plugin;
 
 use Contact\Service\ContactService;
 use General\Service\GeneralService;
+use Interop\Container\ContainerInterface;
 use Program\Entity\Nda;
 use Program\Options\ModuleOptions;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
@@ -22,14 +23,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcTwig\View\TwigRenderer;
 
 /**
- * Create a link to an project.
- *
- * @category   Program
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    https://itea3.org/licence.txt proprietary
- *
- * @link       https://itea3.org
+ * Class RenderNda
+ * @package Program\Controller\Plugin
  */
 class RenderNda extends AbstractPlugin
 {
@@ -43,7 +38,7 @@ class RenderNda extends AbstractPlugin
      *
      * @return ProgramPdf
      */
-    public function renderForCall(Nda $nda)
+    public function renderForCall(Nda $nda): ProgramPdf
     {
         /**
          * @var $pdf \TCPDF
@@ -87,7 +82,7 @@ class RenderNda extends AbstractPlugin
             'program/pdf/nda-call',
             [
                 'contact'        => $nda->getContact(),
-                'call'           => $nda->getCall(),
+                'call'           => $nda->parseCall(),
                 'contactService' => $this->getContactService(),
             ]
         );
@@ -112,43 +107,6 @@ class RenderNda extends AbstractPlugin
         return $pdf;
     }
 
-    /**
-     * @return ModuleOptions
-     */
-    public function getModuleOptions()
-    {
-        return $this->getServiceLocator()->get(ModuleOptions::class);
-    }
-
-    /**
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return $this
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-
-        return $this;
-    }
-
-    /**
-     * Gateway to the Contact Service.
-     *
-     * @return ContactService
-     */
-    public function getContactService()
-    {
-        return $this->getServiceLocator()->get(ContactService::class);
-    }
 
     /**
      * Render a NDA not bound to a call.
@@ -157,7 +115,7 @@ class RenderNda extends AbstractPlugin
      *
      * @return ProgramPdf
      */
-    public function render(Nda $nda)
+    public function render(Nda $nda): ProgramPdf
     {
         $pdf = new ProgramPdf();
         $pdf->setTemplate($this->getModuleOptions()->getNdaTemplate());
@@ -225,11 +183,49 @@ class RenderNda extends AbstractPlugin
     }
 
     /**
+     * @return ModuleOptions
+     */
+    public function getModuleOptions(): ModuleOptions
+    {
+        return $this->getServiceLocator()->get(ModuleOptions::class);
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    public function getServiceLocator(): ContainerInterface
+    {
+        return $this->serviceLocator;
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     *
+     * @return $this
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+
+        return $this;
+    }
+
+    /**
+     * Gateway to the Contact Service.
+     *
+     * @return ContactService
+     */
+    public function getContactService(): ContactService
+    {
+        return $this->getServiceLocator()->get(ContactService::class);
+    }
+
+    /**
      * Gateway to the General Service.
      *
      * @return GeneralService
      */
-    public function getGeneralService()
+    public function getGeneralService(): GeneralService
     {
         return $this->getServiceLocator()->get(GeneralService::class);
     }

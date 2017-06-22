@@ -7,6 +7,7 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
+
 use Admin\Entity\Access;
 use BjyAuthorize\Guard\Route;
 use Program\Acl\Assertion\Doa as DoaAssertion;
@@ -34,32 +35,18 @@ return [
                 ['route' => 'zfcadmin/call/country/edit', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/call/country/view', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/call/country/new', 'roles' => [Access::ACCESS_OFFICE]],
-                [
-                    'route'     => 'zfcadmin/nda/approval',
-                    'roles'     => [Access::ACCESS_OFFICE],
-                    'assertion' => NdaAssertion::class,
-                ],
-                [
-                    'route'     => 'zfcadmin/nda/view',
-                    'roles'     => [Access::ACCESS_OFFICE],
-                    'assertion' => NdaAssertion::class,
-                ],
-                [
-                    'route'     => 'zfcadmin/nda/edit',
-                    'roles'     => [Access::ACCESS_OFFICE],
-                    'assertion' => NdaAssertion::class,
-                ],
-                [
-                    'route'     => 'zfcadmin/nda/approve',
-                    'roles'     => [Access::ACCESS_OFFICE],
-                    'assertion' => NdaAssertion::class,
-                ],
+                ['route' => 'zfcadmin/nda/approval', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/nda/view', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/nda/edit', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/nda/approve', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/nda/upload', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/funder/view', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/funder/new', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/funder/list', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/funder/edit', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'community/program/session/download', 'roles' => [strtolower(Access::ACCESS_USER)],],
                 ['route' => 'community/program/nda/upload', 'roles' => [], 'assertion' => NdaAssertion::class],
+                ['route' => 'community/program/nda/submit', 'roles' => [], 'assertion' => NdaAssertion::class],
                 ['route' => 'community/program/nda/view', 'roles' => [], 'assertion' => NdaAssertion::class],
                 ['route' => 'community/program/nda/render', 'roles' => [], 'assertion' => NdaAssertion::class],
                 ['route' => 'community/program/nda/replace', 'roles' => [], 'assertion' => NdaAssertion::class],

@@ -11,6 +11,8 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\Entity\Call;
 
 use Doctrine\Common\Collections;
@@ -265,13 +267,6 @@ class Call extends EntityAbstract implements ResourceInterface
      */
     private $doa;
     /**
-     * @ORM\OneToMany(targetEntity="Program\Entity\Call\Image", cascade={"persist"}, mappedBy="call")
-     * @Annotation\Exclude()
-     *
-     * @var \Program\Entity\Call\Image[]|Collections\ArrayCollection
-     */
-    private $image;
-    /**
      * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Idea", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
@@ -318,7 +313,6 @@ class Call extends EntityAbstract implements ResourceInterface
         $this->nda = new Collections\ArrayCollection();
         $this->calendar = new Collections\ArrayCollection();
         $this->doa = new Collections\ArrayCollection();
-        $this->image = new Collections\ArrayCollection();
         $this->idea = new Collections\ArrayCollection();
         $this->ideaTool = new Collections\ArrayCollection();
         $this->ideaMessageBoard = new Collections\ArrayCollection();
@@ -427,7 +421,7 @@ class Call extends EntityAbstract implements ResourceInterface
      *
      * @return string
      */
-    public function shortName()
+    public function shortName(): string
     {
         $words = explode(" ", $this->getProgram()->getProgram());
         $acronym = "";
@@ -763,26 +757,6 @@ class Call extends EntityAbstract implements ResourceInterface
     public function setDoa($doa)
     {
         $this->doa = $doa;
-
-        return $this;
-    }
-
-    /**
-     * @return Collections\ArrayCollection|Image[]
-     */
-    public function getImage()
-    {
-        return $this->image;
-    }
-
-    /**
-     * @param Collections\ArrayCollection|Image[] $image
-     *
-     * @return Call
-     */
-    public function setImage($image)
-    {
-        $this->image = $image;
 
         return $this;
     }

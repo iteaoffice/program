@@ -28,14 +28,14 @@ class Nda extends AssertionAbstract
      * $role, $nda, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
      * privileges, respectively.
      *
-     * @param Acl               $acl
-     * @param RoleInterface     $role
+     * @param Acl $acl
+     * @param RoleInterface $role
      * @param ResourceInterface $nda
-     * @param string            $privilege
+     * @param string $privilege
      *
      * @return bool
      */
-    public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $nda = null, $privilege = null)
+    public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $nda = null, $privilege = null): bool
     {
         $this->setPrivilege($privilege);
         $id = $this->getId();
@@ -43,14 +43,15 @@ class Nda extends AssertionAbstract
         /*
          * @var $nda NdaEntity
          */
-        if (! $nda instanceof NdaEntity && ! is_null($id)) {
+        if (!$nda instanceof NdaEntity && !is_null($id)) {
             /** @var NdaEntity $nda */
             $nda = $this->getProgramService()->findEntityById(NdaEntity::class, $id);
         }
 
         switch ($this->getPrivilege()) {
             case 'upload':
-                return $this->hasContact() && ! is_null($this->getContact()->getContactOrganisation());
+            case 'submit':
+                return $this->hasContact() && !is_null($this->getContact()->getContactOrganisation());
             case 'replace':
                 /*
                  * For the replace we need to see if the user has access on the editing of the program
@@ -58,9 +59,9 @@ class Nda extends AssertionAbstract
                  */
 
                 return is_null($nda->getDateApproved())
-                       && $nda->getContact()->getId() === $this->getContact()->getId();
+                    && $nda->getContact()->getId() === $this->getContact()->getId();
             case 'render':
-                if (! $this->hasContact() || is_null($this->getContact()->getContactOrganisation())) {
+                if (!$this->hasContact() || is_null($this->getContact()->getContactOrganisation())) {
                     return false;
                 }
                 /*
@@ -69,14 +70,14 @@ class Nda extends AssertionAbstract
                  * The resource has goes first
                  */
                 $call = null;
-                if ($nda instanceof NdaEntity && ! is_null($nda->getCall())) {
+                if ($nda instanceof NdaEntity && !is_null($nda->getCall())) {
                     $call = $nda->getCall();
-                } elseif (! is_null($callId = $this->getRouteMatch()->getParam('callId'))) {
+                } elseif (!is_null($callId = $this->getRouteMatch()->getParam('callId'))) {
                     $call = $this->getCallService()->findCallById($callId);
                 }
 
                 //We have no 2 methods to get the call, if the call is set check if the status is correct
-                if (! is_null($call)) {
+                if (!is_null($call)) {
                     return true;
 
                     //return $this->getCallService()->getCallStatus($call)->result !== CallService::UNDEFINED;
@@ -85,7 +86,7 @@ class Nda extends AssertionAbstract
                 return true;
             case 'download':
             case 'view':
-                if (! $this->hasContact()) {
+                if (!$this->hasContact()) {
                     return false;
                 }
 
@@ -97,6 +98,7 @@ class Nda extends AssertionAbstract
             case 'view-admin':
             case 'edit-admin':
             case 'approval-admin':
+            case 'upload-admin':
                 return $this->rolesHaveAccess([Access::ACCESS_OFFICE]);
         }
 

@@ -14,8 +14,6 @@
 namespace Program\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
 
 /**
  * @ORM\Table(name="nda_object")
@@ -69,55 +67,12 @@ class NdaObject extends EntityAbstract
     }
 
     /**
-     * ToString.
-     *
-     * @return string
+     * @param $property
+     * @return bool
      */
-    public function __toString()
+    public function __isset($property)
     {
-        return $this->domain;
-    }
-
-    public function populate()
-    {
-        return $this->getArrayCopy();
-    }
-
-    /**
-     * Needed for the hydration of form elements.
-     *
-     * @return array
-     */
-    public function getArrayCopy()
-    {
-        return [
-            'id'     => $this->id,
-            'object' => $this->object,
-            'nda'    => $this->nda,
-        ];
-    }
-
-    /**
-     * @param InputFilterInterface $inputFilter
-     *
-     * @throws \Exception
-     */
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
-        throw new \Exception(sprintf("This class %s is unused", __CLASS__));
-    }
-
-    /**
-     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
-     */
-    public function getInputFilter()
-    {
-        if (! $this->inputFilter) {
-            $inputFilter       = new InputFilter();
-            $this->inputFilter = $inputFilter;
-        }
-
-        return $this->inputFilter;
+        return isset($this->$property);
     }
 
     /**

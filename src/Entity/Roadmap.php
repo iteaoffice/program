@@ -11,6 +11,8 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -85,8 +87,8 @@ class Roadmap extends EntityAbstract
      */
     public function __construct()
     {
-        $this->domain     = new ArrayCollection();
-        $this->call       = new ArrayCollection();
+        $this->domain = new ArrayCollection();
+        $this->call = new ArrayCollection();
         $this->technology = new ArrayCollection();
     }
 
@@ -113,12 +115,14 @@ class Roadmap extends EntityAbstract
         $this->$property = $value;
     }
 
+
+
     /**
      * toString returns the name.
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->roadmap;
     }

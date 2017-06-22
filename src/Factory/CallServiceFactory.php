@@ -12,8 +12,10 @@
  *
  * @link        http://github.com/iteaoffice/main for the canonical source repository
  */
+
 namespace Program\Factory;
 
+use Admin\Service\AdminService;
 use Doctrine\ORM\EntityManager;
 use General\Service\GeneralService;
 use Interop\Container\ContainerInterface;
@@ -32,8 +34,8 @@ final class CallServiceFactory implements FactoryInterface
      * Create an instance of the requested class name.
      *
      * @param ContainerInterface $container
-     * @param string             $requestedName
-     * @param null|array         $options
+     * @param string $requestedName
+     * @param null|array $options
      *
      * @return CallService
      */
@@ -54,6 +56,10 @@ final class CallServiceFactory implements FactoryInterface
         /** @var VersionService $versionService */
         $versionService = $container->get(VersionService::class);
         $callService->setVersionService($versionService);
+
+        /** @var AdminService $adminService */
+        $adminService = $container->get(AdminService::class);
+        $callService->setAdminService($adminService);
 
         return $callService;
     }

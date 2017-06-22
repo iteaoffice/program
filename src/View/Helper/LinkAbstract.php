@@ -12,31 +12,30 @@
  * @link        https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\View\Helper;
 
 use BjyAuthorize\Service\Authorize;
 use BjyAuthorize\View\Helper\IsAllowed;
+use Contact\Entity\Contact;
 use General\Entity\Country;
 use Organisation\Entity\Organisation;
 use Program\Entity\Call\Call;
 use Program\Entity\Call\Country as CallCountry;
+use Program\Entity\Call\Session;
 use Program\Entity\Doa;
 use Program\Entity\EntityAbstract;
+use Program\Entity\Funder;
+use Program\Entity\Nda;
 use Program\Entity\Program;
-use Zend\Mvc\Router\RouteMatch;
+use Zend\Router\Http\RouteMatch;
 use Zend\View\Helper\ServerUrl;
 use Zend\View\Helper\Url;
 
 /**
- * Create a link to an document.
- *
- * @category   Program
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
- * @license    https://itea3.org/license.txt proprietary
- *
- * @link       https://itea3.org
+ * Class LinkAbstract
+ * @package Program\View\Helper
  */
 abstract class LinkAbstract extends AbstractViewHelper
 {
@@ -85,6 +84,22 @@ abstract class LinkAbstract extends AbstractViewHelper
      */
     protected $doa;
     /**
+     * @var Nda
+     */
+    protected $nda;
+    /**
+     * @var Contact
+     */
+    protected $contact;
+    /**
+     * @var Funder
+     */
+    protected $funder;
+    /**
+     * @var Session
+     */
+    protected $session;
+    /**
      * @var Organisation
      */
     protected $organisation;
@@ -114,7 +129,7 @@ abstract class LinkAbstract extends AbstractViewHelper
      *
      * @return string
      */
-    public function createLink()
+    public function createLink(): string
     {
         /**
          * @var $url Url
@@ -124,9 +139,9 @@ abstract class LinkAbstract extends AbstractViewHelper
         /**
          * @var $serverUrl ServerUrl
          */
-        $serverUrl         = $this->getHelperPluginManager()->get('serverUrl');
+        $serverUrl = $this->getHelperPluginManager()->get('serverUrl');
         $this->linkContent = [];
-        $this->classes     = [];
+        $this->classes = [];
         $this->parseAction();
         $this->parseShow();
 
@@ -148,7 +163,7 @@ abstract class LinkAbstract extends AbstractViewHelper
     /**
      * Default version of the action.
      */
-    public function parseAction()
+    public function parseAction(): void
     {
         $this->action = null;
     }
@@ -156,7 +171,7 @@ abstract class LinkAbstract extends AbstractViewHelper
     /**
      * @throws \Exception
      */
-    public function parseShow()
+    public function parseShow(): void
     {
         switch ($this->getShow()) {
             case 'icon':
@@ -181,6 +196,7 @@ abstract class LinkAbstract extends AbstractViewHelper
                         $this->addLinkContent('<i class="fa fa-download" aria-hidden="true"></i>');
                         break;
                     case 'upload':
+                    case 'upload-admin':
                         $this->addLinkContent('<i class="fa fa-upload" aria-hidden="true"></i>');
                         break;
                     case 'render':
@@ -230,7 +246,7 @@ abstract class LinkAbstract extends AbstractViewHelper
 
                 return;
             default:
-                if (! array_key_exists($this->getShow(), $this->showOptions)) {
+                if (!array_key_exists($this->getShow(), $this->showOptions)) {
                     throw new \InvalidArgumentException(
                         sprintf(
                             "The option \"%s\" should be available in the showOptions array, only \"%s\" are available",
@@ -283,7 +299,7 @@ abstract class LinkAbstract extends AbstractViewHelper
      */
     public function addLinkContent($linkContent)
     {
-        if (! is_array($linkContent)) {
+        if (!is_array($linkContent)) {
             $linkContent = [$linkContent];
         }
         foreach ($linkContent as $content) {
@@ -316,7 +332,7 @@ abstract class LinkAbstract extends AbstractViewHelper
      */
     public function addClasses($classes)
     {
-        if (! is_array($classes)) {
+        if (!is_array($classes)) {
             $classes = [$classes];
         }
         foreach ($classes as $class) {
@@ -352,19 +368,19 @@ abstract class LinkAbstract extends AbstractViewHelper
 
     /**
      * @param EntityAbstract $entity
-     * @param string         $assertion
-     * @param string         $action
+     * @param string $assertion
+     * @param string $action
      *
      * @return bool
      */
     public function hasAccess(EntityAbstract $entity, $assertion, $action)
     {
         $assertion = $this->getAssertion($assertion);
-        if (! is_null($entity) && ! $this->getAuthorizeService()->getAcl()->hasResource($entity)) {
+        if (!is_null($entity) && !$this->getAuthorizeService()->getAcl()->hasResource($entity)) {
             $this->getAuthorizeService()->getAcl()->addResource($entity);
             $this->getAuthorizeService()->getAcl()->allow([], $entity, [], $assertion);
         }
-        if (! $this->isAllowed($entity, $action)) {
+        if (!$this->isAllowed($entity, $action)) {
             return false;
         }
 
@@ -391,11 +407,11 @@ abstract class LinkAbstract extends AbstractViewHelper
 
     /**
      * @param null|EntityAbstract $resource
-     * @param string              $privilege
+     * @param string $privilege
      *
      * @return bool
      */
-    public function isAllowed($resource, $privilege = null)
+    public function isAllowed($resource, $privilege = null): bool
     {
         /**
          * @var $isAllowed IsAllowed
@@ -410,14 +426,14 @@ abstract class LinkAbstract extends AbstractViewHelper
      *
      * @param string $key
      * @param        $value
-     * @param bool   $allowNull
+     * @param bool $allowNull
      */
     public function addRouterParam($key, $value, $allowNull = true)
     {
-        if (! $allowNull && is_null($value)) {
+        if (!$allowNull && is_null($value)) {
             throw new \InvalidArgumentException(sprintf("null is not allowed for %s", $key));
         }
-        if (! is_null($value)) {
+        if (!is_null($value)) {
             $this->routerParams[$key] = $value;
         }
     }
@@ -466,6 +482,54 @@ abstract class LinkAbstract extends AbstractViewHelper
     public function setDoa($doa)
     {
         $this->doa = $doa;
+
+        return $this;
+    }
+
+    /**
+     * @return Nda
+     */
+    public function getNda(): Nda
+    {
+        if (is_null($this->nda)) {
+            $this->nda = new Nda();
+        }
+
+        return $this->nda;
+    }
+
+    /**
+     * @param  Nda $nda
+     *
+     * @return LinkAbstract
+     */
+    public function setNda($nda): LinkAbstract
+    {
+        $this->nda = $nda;
+
+        return $this;
+    }
+
+    /**
+     * @return Funder
+     */
+    public function getFunder()
+    {
+        if (is_null($this->funder)) {
+            $this->funder = new Funder();
+        }
+
+        return $this->funder;
+    }
+
+    /**
+     * @param  Funder $funder
+     *
+     * @return LinkAbstract
+     */
+    public function setFunder($funder)
+    {
+        $this->funder = $funder;
 
         return $this;
     }
@@ -579,6 +643,30 @@ abstract class LinkAbstract extends AbstractViewHelper
     }
 
     /**
+     * @return Session
+     */
+    public function getSession()
+    {
+        if (is_null($this->session)) {
+            $this->session = new Session();
+        }
+
+        return $this->session;
+    }
+
+    /**
+     * @param Session $session
+     *
+     * @return LinkAbstract
+     */
+    public function setSession($session)
+    {
+        $this->session = $session;
+
+        return $this;
+    }
+
+    /**
      * @return CallCountry
      */
     public function getCallCountry()
@@ -598,6 +686,30 @@ abstract class LinkAbstract extends AbstractViewHelper
     public function setCallCountry($callCountry)
     {
         $this->callCountry = $callCountry;
+
+        return $this;
+    }
+
+    /**
+     * @return Contact
+     */
+    public function getContact()
+    {
+        if (is_null($this->contact)) {
+            $this->contact = new Contact();
+        }
+
+        return $this->contact;
+    }
+
+    /**
+     * @param Contact $contact
+     *
+     * @return LinkAbstract
+     */
+    public function setContact($contact)
+    {
+        $this->contact = $contact;
 
         return $this;
     }

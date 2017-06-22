@@ -12,6 +12,8 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\View\Helper;
 
 use Organisation\Entity\Organisation;
@@ -20,27 +22,18 @@ use Program\Entity\Doa;
 use Program\Entity\Program;
 
 /**
- * Create a link to an project.
- *
- * @category   Program
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    https://itea3.org/licence.txt proprietary
- *
- * @link       https://itea3.org
+ * Class DoaLink
+ * @package Program\View\Helper
  */
 class DoaLink extends LinkAbstract
 {
     /**
-     * @param Doa          $doa
-     * @param string       $action
-     * @param string       $show
-     * @param Organisation $organisation
-     * @param Program      $program
-     *
-     * @return string
-     *
-     * @throws \Exception
+     * @param Doa|null $doa
+     * @param string $action
+     * @param string $show
+     * @param Organisation|null $organisation
+     * @param Program|null $program
+     * @return bool
      */
     public function __invoke(
         Doa $doa = null,
@@ -48,13 +41,13 @@ class DoaLink extends LinkAbstract
         $show = 'text',
         Organisation $organisation = null,
         Program $program = null
-    ) {
+    ): bool {
         $this->setDoa($doa);
         $this->setOrganisation($organisation);
         $this->setProgram($program);
         $this->setAction($action);
         $this->setShow($show);
-        if (! $this->hasAccess($this->getDoa(), DoaAssertion::class, $this->getAction())) {
+        if (!$this->hasAccess($this->getDoa(), DoaAssertion::class, $this->getAction())) {
             return 'Access denied';
         }
 
@@ -67,7 +60,7 @@ class DoaLink extends LinkAbstract
             ]
         );
 
-        if (! is_null($this->getDoa())) {
+        if (!is_null($this->getDoa())) {
             $this->addRouterParam('id', $this->getDoa()->getId());
         }
 
@@ -78,7 +71,7 @@ class DoaLink extends LinkAbstract
     /**
      * Extract the relevant parameters based on the action.
      */
-    public function parseAction()
+    public function parseAction(): void
     {
         switch ($this->getAction()) {
             case 'upload':

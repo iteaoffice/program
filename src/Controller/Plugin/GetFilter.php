@@ -14,11 +14,11 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
-namespace Program\Controller\Plugin;
+declare(strict_types=1); namespace Program\Controller\Plugin;
 
 use Zend\Http\Request;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\Mvc\Router\RouteMatch;
+use Zend\Router\Http\RouteMatch;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -42,7 +42,7 @@ class GetFilter extends AbstractPlugin
      */
     public function __invoke()
     {
-        $encodedFilter = urldecode($this->getRouteMatch()->getParam('encodedFilter'));
+        $encodedFilter = urldecode((string) $this->getRouteMatch()->getParam('encodedFilter'));
 
         $order     = $this->getRequest()->getQuery('order');
         $direction = $this->getRequest()->getQuery('direction');

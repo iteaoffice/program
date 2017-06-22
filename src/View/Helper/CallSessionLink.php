@@ -14,31 +14,22 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\View\Helper;
 
 use Program\Entity\Call\Session;
 
 /**
- * Create a link to an project.
- *
- * @category   Project
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    https://itea3.org/licence.txt proprietary
- *
- * @link       https://itea3.org
+ * Class CallSessionLink
+ * @package Program\View\Helper
  */
 class CallSessionLink extends LinkAbstract
 {
     /**
-     * @var Session
-     */
-    protected $session;
-
-    /**
      * @param Session $session
-     * @param string  $action
-     * @param string  $show
+     * @param string $action
+     * @param string $show
      *
      * @return string
      *
@@ -48,7 +39,7 @@ class CallSessionLink extends LinkAbstract
         Session $session = null,
         $action = 'view',
         $show = 'text'
-    ) {
+    ): string {
         $this->setSession($session);
         $this->setAction($action);
         $this->setShow($show);
@@ -61,33 +52,15 @@ class CallSessionLink extends LinkAbstract
             ]
         );
 
-        if (! is_null($this->getSession()->getId())) {
-            $this->addRouterParam('id', $this->getSession()->getId());
-        }
+        $this->addRouterParam('id', $this->getSession()->getId());
 
         return $this->createLink();
     }
 
     /**
-     * @return Session
-     */
-    public function getSession()
-    {
-        return $this->session;
-    }
-
-    /**
-     * @param Session $session
-     */
-    public function setSession($session)
-    {
-        $this->session = $session;
-    }
-
-    /**
      * Extract the relevant parameters based on the action.
      */
-    public function parseAction()
+    public function parseAction(): void
     {
         switch ($this->getAction()) {
             case 'view':

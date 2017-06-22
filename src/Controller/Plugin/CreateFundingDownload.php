@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Program\Controller\Plugin;
 
 use Affiliation\Service\AffiliationService;
@@ -45,7 +47,7 @@ class CreateFundingDownload extends AbstractPlugin
      *
      * @return string
      */
-    public function create(Call $call)
+    public function create(Call $call): string
     {
         // Open the output stream
         $fh = fopen('php://output', 'w');
@@ -88,7 +90,7 @@ class CreateFundingDownload extends AbstractPlugin
 
                     $year = $funding->getDateStart()->format('Y');
 
-                    if (! is_null($affiliation->getDateSelfFunded())) {
+                    if (!is_null($affiliation->getDateSelfFunded())) {
                         $globalStatus = "Self Funded";
                     } else {
                         $globalStatus = null;

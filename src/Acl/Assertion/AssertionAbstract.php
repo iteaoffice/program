@@ -24,8 +24,8 @@ use Organisation\Service\OrganisationService;
 use Program\Service\CallService;
 use Program\Service\ProgramService;
 use Zend\Http\PhpEnvironment\Request;
-use Zend\Router\Http\RouteMatch;
 use Zend\Permissions\Acl\Assertion\AssertionInterface;
+use Zend\Router\Http\RouteMatch;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -99,7 +99,7 @@ abstract class AssertionAbstract implements AssertionInterface
      */
     public function hasContact()
     {
-        return ! $this->getContact()->isEmpty();
+        return !$this->getContact()->isEmpty();
     }
 
     /**
@@ -149,11 +149,11 @@ abstract class AssertionAbstract implements AssertionInterface
     /**
      * Returns true when a role or roles have access.
      *
-     * @param string|PersistentCollection $access
+     * @param string|PersistentCollection|array $access
      *
      * @return boolean
      */
-    public function rolesHaveAccess($access)
+    public function rolesHaveAccess($access): bool
     {
         $accessRoles = $this->prepareAccessRoles($access);
         if (count($accessRoles) === 0) {
@@ -163,13 +163,12 @@ abstract class AssertionAbstract implements AssertionInterface
             if (strtolower($accessRole->getAccess()) === strtolower(Access::ACCESS_PUBLIC)) {
                 return true;
             }
-            if ($this->hasContact()) {
-                if (in_array(
+            if ($this->hasContact() && in_array(
                     strtolower($accessRole->getAccess()),
-                    $this->getAdminService()->findAccessRolesByContactAsArray($this->getContact())
+                    $this->getAdminService()->findAccessRolesByContactAsArray($this->getContact()),
+                    true
                 )) {
-                    return true;
-                }
+                return true;
             }
         }
 
@@ -183,7 +182,7 @@ abstract class AssertionAbstract implements AssertionInterface
      */
     protected function prepareAccessRoles($access)
     {
-        if (! $access instanceof PersistentCollection) {
+        if (!$access instanceof PersistentCollection) {
             /*
              * We only have a string, so we need to lookup the role
              */
@@ -215,7 +214,7 @@ abstract class AssertionAbstract implements AssertionInterface
          */
         if (is_null($privilege) && $this->hasRouteMatch()) {
             $this->privilege = $this->getRouteMatch()
-                                    ->getParam('privilege', $this->getRouteMatch()->getParam('action'));
+                ->getParam('privilege', $this->getRouteMatch()->getParam('action'));
         } else {
             $this->privilege = $privilege;
         }
@@ -228,7 +227,7 @@ abstract class AssertionAbstract implements AssertionInterface
      */
     public function hasRouteMatch()
     {
-        return ! is_null($this->getRouteMatch());
+        return !is_null($this->getRouteMatch());
     }
 
     /**
@@ -264,13 +263,13 @@ abstract class AssertionAbstract implements AssertionInterface
      */
     public function getId()
     {
-        if (! is_null($id = $this->getRequest()->getPost('id'))) {
+        if (!is_null($id = $this->getRequest()->getPost('id'))) {
             return (int)$id;
         }
         if (is_null($this->getRouteMatch())) {
             return null;
         }
-        if (! is_null($id = $this->getRouteMatch()->getParam('id'))) {
+        if (!is_null($id = $this->getRouteMatch()->getParam('id'))) {
             return (int)$id;
         }
 

@@ -11,19 +11,15 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\View\Helper;
 
 use Program\Entity\Program;
 
 /**
- * Create a link to an project.
- *
- * @category   Program
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    https://itea3.org/licence.txt proprietary
- *
- * @link       https://itea3.org
+ * Class ProgramLink
+ * @package Program\View\Helper
  */
 class ProgramLink extends LinkAbstract
 {
@@ -37,7 +33,7 @@ class ProgramLink extends LinkAbstract
      * @throws \RuntimeException
      * @throws \Exception
      */
-    public function __invoke(Program $program = null, $action = 'view', $show = 'name')
+    public function __invoke(Program $program = null, $action = 'view', $show = 'name'): string
     {
         $this->setProgram($program);
         $this->setAction($action);
@@ -52,7 +48,7 @@ class ProgramLink extends LinkAbstract
             ]
         );
 
-        if (! is_null($program)) {
+        if (!is_null($program)) {
             $this->addRouterParam('id', $this->getProgram()->getId());
         }
 
@@ -62,7 +58,7 @@ class ProgramLink extends LinkAbstract
     /**
      * Parse te action and fill the correct parameters.
      */
-    public function parseAction()
+    public function parseAction(): void
     {
         switch ($this->getAction()) {
             case 'new':

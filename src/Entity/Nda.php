@@ -11,6 +11,8 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -46,6 +48,15 @@ class Nda extends EntityAbstract implements ResourceInterface
      */
     private $dateApproved;
     /**
+     * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", cascade={"persist"}, inversedBy="ndaApprover")
+     * @ORM\JoinColumns({
+     * @ORM\JoinColumn(name="approve_contact_id", referencedColumnName="contact_id")
+     * })
+     *
+     * @var \Contact\Entity\Contact
+     */
+    private $approver;
+    /**
      * @ORM\Column(name="date_signed", type="date", nullable=true)
      * @Gedmo\Timestampable(on="create")
      *
@@ -54,15 +65,15 @@ class Nda extends EntityAbstract implements ResourceInterface
     private $dateSigned;
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\ContentType", cascade={"persist"}, inversedBy="programNna")
-     * @ORM\JoinColumn(name="contenttype_id", referencedColumnName="contenttype_id", nullable=false)
+     * @ORM\JoinColumn(name="contenttype_id", referencedColumnName="contenttype_id", nullable=true)
      *
      * @var \General\Entity\ContentType
      */
     private $contentType;
     /**
-     * @ORM\Column(name="size", type="integer", nullable=false)
+     * @ORM\Column(name="size", type="integer", nullable=true)
      *
-     * @var integer
+     * @var integer|null
      */
     private $size;
     /**
@@ -106,12 +117,13 @@ class Nda extends EntityAbstract implements ResourceInterface
      */
     private $object;
 
+
     /**
      * Class constructor.
      */
     public function __construct()
     {
-        $this->version = new ArrayCollection();
+        $this->call = new ArrayCollection();
     }
 
     /**
@@ -134,11 +146,40 @@ class Nda extends EntityAbstract implements ResourceInterface
     }
 
     /**
+     * @param $property
+     * @return bool
+     */
+    public function __isset($property)
+    {
+        return isset($this->$property);
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasCall(): bool
+    {
+        return !$this->getCall()->isEmpty();
+    }
+
+    /**
+     * @return null|Call\Call
+     */
+    public function parseCall(): ?Call\Call
+    {
+        if (!$this->hasCall()) {
+            return null;
+        }
+
+        return $this->getCall()->first();
+    }
+
+    /**
      * ToString.
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         /*
          * Return an empty value when no id is known
@@ -155,34 +196,34 @@ class Nda extends EntityAbstract implements ResourceInterface
      *
      * @return string
      */
-    public function parseFileName()
+    public function parseFileName(): string
     {
-        if (is_null($this->getCall())) {
+        if ($this->getCall()->isEmpty()) {
             return sprintf("NDA_SEQ_%s", $this->getContact()->getId());
         }
 
-        return str_replace(' ', '_', sprintf("NDA_%s_SEQ_%s", $this->getCall(), $this->getContact()->getId()));
+        return str_replace(' ', '_', sprintf("NDA_%s_SEQ_%s", $this->parseCall(), $this->getContact()->getId()));
     }
 
     /**
-     * @return null|\Program\Entity\Call\Call
+     * @return ArrayCollection|Call\Call[]
      */
     public function getCall()
     {
-        if (is_null($this->call)) {
-            return null;
-        }
-
-        return $this->call->first();
+        return $this->call;
     }
 
     /**
-     * @param \Program\Entity\Call\Call[]|ArrayCollection $call
+     * @param ArrayCollection|Call\Call[] $call
+     * @return Nda
      */
     public function setCall($call)
     {
         $this->call = $call;
+
+        return $this;
     }
+
 
     /**
      * @return \Contact\Entity\Contact
@@ -198,16 +239,6 @@ class Nda extends EntityAbstract implements ResourceInterface
     public function setContact($contact)
     {
         $this->contact = $contact;
-    }
-
-    /**
-     * Returns the string identifier of the Resource.
-     *
-     * @return string
-     */
-    public function getResourceId()
-    {
-        return sprintf('%s:%s', __CLASS__, $this->id);
     }
 
     /**
@@ -240,6 +271,25 @@ class Nda extends EntityAbstract implements ResourceInterface
     public function setDateApproved($dateApproved)
     {
         $this->dateApproved = $dateApproved;
+    }
+
+    /**
+     * @return \Contact\Entity\Contact
+     */
+    public function getApprover(): ?\Contact\Entity\Contact
+    {
+        return $this->approver;
+    }
+
+    /**
+     * @param \Contact\Entity\Contact $approver
+     * @return Nda
+     */
+    public function setApprover(\Contact\Entity\Contact $approver): Nda
+    {
+        $this->approver = $approver;
+
+        return $this;
     }
 
     /**

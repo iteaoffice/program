@@ -11,6 +11,8 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\View\Helper;
 
 use Content\Entity\Content;
@@ -73,14 +75,14 @@ class ProgramHandler extends AbstractViewHelper
                 case 'session':
                     $session = $this->findParamValueFromContent($content, $parameter);
 
-                    if (! is_null($session)) {
+                    if (!is_null($session)) {
                         $this->setsessionById($session);
                     }
                     break;
                 case 'call':
                     $call = $this->findParamValueFromContent($content, $parameter);
 
-                    if (! is_null($call)) {
+                    if (!is_null($call)) {
                         $this->setCallById($call);
                     }
                     break;
@@ -90,7 +92,7 @@ class ProgramHandler extends AbstractViewHelper
 
     /**
      * @param Content $content
-     * @param Param   $param
+     * @param Param $param
      *
      * @return null|string
      */
@@ -98,13 +100,13 @@ class ProgramHandler extends AbstractViewHelper
     {
         //Hardcoded is always first,If it cannot be found, try to find it from the docref (rule 2)
         foreach ($content->getContentParam() as $contentParam) {
-            if ($contentParam->getParameter() === $param && ! empty($contentParam->getParameterId())) {
+            if ($contentParam->getParameter() === $param && !empty($contentParam->getParameterId())) {
                 return $contentParam->getParameterId();
             }
         }
 
         //Try first to see if the param can be found from the route (rule 1)
-        if (! is_null($this->getRouteMatch()->getParam($param->getParam()))) {
+        if (!is_null($this->getRouteMatch()->getParam($param->getParam()))) {
             return $this->getRouteMatch()->getParam($param->getParam());
         }
 
@@ -141,7 +143,7 @@ class ProgramHandler extends AbstractViewHelper
     }
 
     /**
-     * @param Call    $call
+     * @param Call $call
      * @param Program $program
      *
      * @return string
@@ -153,7 +155,7 @@ class ProgramHandler extends AbstractViewHelper
             [
                 'displayNameCall' => 'name',
                 'calls'           => $this->getCallService()->findNonEmptyAndActiveCalls($program),
-                'callId'          => ! is_null($call) ? $call->getId() : null,
+                'callId'          => !is_null($call) ? $call->getId() : null,
             ]
         );
     }

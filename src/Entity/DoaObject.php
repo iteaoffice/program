@@ -14,8 +14,6 @@
 namespace Program\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
 
 /**
  * @ORM\Table(name="program_doa_object")
@@ -73,28 +71,12 @@ class DoaObject extends EntityAbstract
     }
 
     /**
-     * Set input filter.
-     *
-     * @param InputFilterInterface $inputFilter
-     *
-     * @throws \Exception
+     * @param $property
+     * @return bool
      */
-    public function setInputFilter(InputFilterInterface $inputFilter)
+    public function __isset($property)
     {
-        throw new \Exception("Setting an inputFilter is currently not supported");
-    }
-
-    /**
-     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
-     */
-    public function getInputFilter()
-    {
-        if (! $this->inputFilter) {
-            $inputFilter       = new InputFilter();
-            $this->inputFilter = $inputFilter;
-        }
-
-        return $this->inputFilter;
+        return isset($this->$property);
     }
 
     /**

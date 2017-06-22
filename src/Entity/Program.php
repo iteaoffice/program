@@ -11,6 +11,8 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\Entity;
 
 use Doctrine\Common\Collections;
@@ -111,9 +113,9 @@ class Program extends EntityAbstract implements ResourceInterface
      */
     public function __construct()
     {
-        $this->call          = new Collections\ArrayCollection();
-        $this->doa           = new Collections\ArrayCollection();
-        $this->parentDoa     = new Collections\ArrayCollection();
+        $this->call = new Collections\ArrayCollection();
+        $this->doa = new Collections\ArrayCollection();
+        $this->parentDoa = new Collections\ArrayCollection();
         $this->invoiceMethod = new Collections\ArrayCollection();
     }
 

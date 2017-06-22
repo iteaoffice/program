@@ -11,14 +11,13 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\Entity;
 
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
 
 /**
  * Technology.
@@ -104,10 +103,10 @@ class Technology extends EntityAbstract
      */
     public function __construct()
     {
-        $this->contact      = new Collections\ArrayCollection();
+        $this->contact = new Collections\ArrayCollection();
         $this->organisation = new Collections\ArrayCollection();
-        $this->project      = new Collections\ArrayCollection();
-        $this->idea         = new Collections\ArrayCollection();
+        $this->project = new Collections\ArrayCollection();
+        $this->idea = new Collections\ArrayCollection();
     }
 
     /**
@@ -130,107 +129,12 @@ class Technology extends EntityAbstract
     }
 
     /**
-     * Returns the string identifier of the Resource.
-     *
-     * @return string
+     * @param $property
+     * @return bool
      */
-    public function getResourceId()
+    public function __isset($property)
     {
-        return __NAMESPACE__ . ':' . __CLASS__ . ':' . $this->id;
-    }
-
-    /**
-     * ToString.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return (string)$this->technology;
-    }
-
-    /**
-     * @param InputFilterInterface $inputFilter
-     *
-     * @throws \Exception
-     */
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
-        throw new \Exception(sprintf("This class %s is unused", __CLASS__));
-    }
-
-    /**
-     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
-     */
-    public function getInputFilter()
-    {
-        if (! $this->inputFilter) {
-            $inputFilter = new InputFilter();
-            $factory     = new InputFactory();
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'       => 'technology',
-                        'required'   => true,
-                        'filters'    => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
-                        ],
-                        'validators' => [
-                            [
-                                'name'    => 'StringLength',
-                                'options' => [
-                                    'encoding' => 'UTF-8',
-                                    'min'      => 1,
-                                    'max'      => 255,
-                                ],
-                            ],
-                        ],
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'description',
-                        'required' => true,
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'roadmap',
-                        'required' => true,
-                    ]
-                )
-            );
-            $this->inputFilter = $inputFilter;
-        }
-
-        return $this->inputFilter;
-    }
-
-    /**
-     * @return array
-     */
-    public function populate()
-    {
-        return $this->getArrayCopy();
-    }
-
-    /**
-     * Needed for the hydration of form elements.
-     *
-     * @return array
-     */
-    public function getArrayCopy()
-    {
-        return [
-            'technology'  => $this->technology,
-            'roadmap'     => $this->roadmap,
-            'description' => $this->description,
-        ];
+        return isset($this->$property);
     }
 
     /**

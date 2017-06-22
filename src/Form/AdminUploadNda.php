@@ -10,21 +10,28 @@
 
 namespace Program\Form;
 
+use Doctrine\ORM\EntityManager;
+use DoctrineORMModule\Form\Element\EntitySelect;
+use Program\Entity\Call\Call;
 use Zend\Form;
 use Zend\InputFilter\InputFilterProviderInterface;
 use Zend\Validator\File\Extension;
 use Zend\Validator\File\Size;
 
 /**
- * Class UploadNda
+ * Special NDA upload form to handle NDAs in the backend
+ *
+ *
+ * Class AdminUploadNda
  * @package Program\Form
  */
-class UploadNda extends Form\Form implements InputFilterProviderInterface
+class AdminUploadNda extends Form\Form implements InputFilterProviderInterface
 {
     /**
-     * Class constructor.
+     * AdminUploadNda constructor.
+     * @param EntityManager $entityManager
      */
-    public function __construct()
+    public function __construct(EntityManager $entityManager)
     {
         parent::__construct();
         $this->setAttribute('method', 'post');
@@ -35,22 +42,54 @@ class UploadNda extends Form\Form implements InputFilterProviderInterface
                 'type'    => Form\Element\File::class,
                 'name'    => 'file',
                 'options' => [
-                    "label"      => "txt-file",
+                    "label"      => _("txt-file"),
                     "help-block" => _("txt-a-signed-nda-in-pdf-format-or-image-is-required"),
                 ],
             ]
         );
         $this->add(
             [
-                'type'       => Form\Element\Checkbox::class,
-                'name'       => 'selfApprove',
-                'options'    => [
-                    'inline'     => true,
-                    "help-block" => _("txt-self-approve-nda-checkbox-help-text"),
-                ],
+                'type'       => Form\Element\Date::class,
+                'name'       => 'dateSigned',
                 'attributes' => [
-
-                ]
+                    "label"      => _("txt-date-signed"),
+                    "help-block" => _("txt-nda-date-signed-help-block"),
+                ],
+            ]
+        );
+        $this->add(
+            [
+                'type'       => EntitySelect::class,
+                'name'       => 'call',
+                'attributes' => [
+                    'label' => _("txt-program-call"),
+                ],
+                'options'    => [
+                    'object_manager'     => $entityManager,
+                    'target_class'       => Call::class,
+                    'display_empty_item' => true,
+                    'empty_item_label'   => "-- " . _("txt-not-connected-to-a-call"),
+                    "help-block"         => _("txt-nda-program-call-help-block"),
+                    'find_method'        => [
+                        'name'   => 'findBy',
+                        'params' => [
+                            'criteria' => [],
+                            'orderBy'  => [
+                                'id' => 'DESC',
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+        $this->add(
+            [
+                'type'    => Form\Element\Checkbox::class,
+                'name'    => 'approve',
+                'options' => [
+                    "label"      => "txt-approve",
+                    "help-block" => _("txt-admin-upload-nda-approve-text"),
+                ],
             ]
         );
         $this->add(
@@ -60,16 +99,6 @@ class UploadNda extends Form\Form implements InputFilterProviderInterface
                 'attributes' => [
                     'class' => "btn btn-primary",
                     'value' => _("txt-upload-nda-title"),
-                ],
-            ]
-        );
-        $this->add(
-            [
-                'type'       => Form\Element\Submit::class,
-                'name'       => 'approve',
-                'attributes' => [
-                    'class' => "btn btn-primary",
-                    'value' => _("txt-approve-nda-title"),
                 ],
             ]
         );
@@ -99,7 +128,7 @@ class UploadNda extends Form\Form implements InputFilterProviderInterface
                 'validators' => [
                     new Size(
                         [
-                            'min' => '5kB',
+                            'min' => '1kB',
                             'max' => '8MB',
                         ]
                     ),

@@ -11,6 +11,8 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\Entity\Call;
 
 use Doctrine\Common\Collections;
@@ -88,7 +90,7 @@ class Session extends EntityAbstract
      */
     public function __construct()
     {
-        $this->track       = new Collections\ArrayCollection();
+        $this->track = new Collections\ArrayCollection();
         $this->ideaSession = new Collections\ArrayCollection();
     }
 

@@ -12,7 +12,6 @@ namespace Program\Service;
 
 use Contact\Entity\Contact;
 use Doctrine\Common\Collections\ArrayCollection;
-use General\Entity\ContentType;
 use General\Entity\Country;
 use Program\Entity\Call\Call;
 use Program\Entity\EntityAbstract;
@@ -21,6 +20,7 @@ use Program\Entity\NdaObject;
 use Program\Entity\Program;
 use Project\Entity\Version\Type;
 use Zend\Stdlib\ArrayObject;
+use Zend\Validator\File\MimeType;
 
 /**
  * Class CallService
@@ -44,7 +44,7 @@ class CallService extends ServiceAbstract
      *
      * @return null|Call|object
      */
-    public function findCallById($id)
+    public function findCallById($id): ?Call
     {
         return $this->getEntityManager()->getRepository(Call::class)->find($id);
     }
@@ -335,9 +335,9 @@ class CallService extends ServiceAbstract
      * @param Call $call
      * @param Contact $contact
      *
-     * @return null|\Program\Entity\Nda
+     * @return null|Nda
      */
-    public function findNdaByCallAndContact(Call $call, Contact $contact)
+    public function findNdaByCallAndContact(Call $call, Contact $contact): ?Nda
     {
         /** @var \Program\Repository\Nda $repository */
         $repository = $this->getEntityManager()->getRepository(Nda::class);
@@ -391,21 +391,11 @@ class CallService extends ServiceAbstract
      *
      * @throws \InvalidArgumentException
      *
-     * @return EntityAbstract
+     * @return EntityAbstract|object
      */
-    public function findEntityByDocRef($entity, $docRef)
+    public function findEntityByDocRef($entity, $docRef): ?EntityAbstract
     {
         return $this->getEntityManager()->getRepository($entity)->findOneBy(['docRef' => $docRef]);
-    }
-
-    /**
-     * @param Call $call
-     *
-     * @return mixed
-     */
-    public function findProjectByCall(Call $call, $which)
-    {
-        return $this->getProjectService()->findProjectsByCall($call, $which);
     }
 
     /**
@@ -417,7 +407,7 @@ class CallService extends ServiceAbstract
      *
      * @return Nda
      */
-    public function uploadNda(array $file, Contact $contact, Call $call = null)
+    public function uploadNda(array $file, Contact $contact, Call $call = null): Nda
     {
         $ndaObject = new NdaObject();
         $ndaObject->setObject(file_get_contents($file['tmp_name']));
@@ -427,14 +417,37 @@ class CallService extends ServiceAbstract
             $nda->setCall([$call]);
         }
         $nda->setSize($file['size']);
-        $contentType = $this->getGeneralService()->findContentTypeByContentTypeName($file['type']);
-        if (is_null($contentType)) {
-            $contentType = $this->getGeneralService()->findEntityById(ContentType::class, 0);
-        }
-        $nda->setContentType($contentType);
+
+        $fileTypeValidator = new MimeType();
+        $fileTypeValidator->isValid($file);
+        $nda->setContentType($this->getGeneralService()->findContentTypeByContentTypeName($fileTypeValidator->type));
+
         $ndaObject->setNda($nda);
         $this->newEntity($ndaObject);
 
         return $ndaObject->getNda();
+    }
+
+    /**
+     * @param Contact $contact
+     * @param Call|null $call
+     * @return Nda
+     */
+    public function submitNda(Contact $contact, Call $call = null): Nda
+    {
+        $nda = new Nda();
+        $nda->setContact($contact);
+        $nda->setApprover($contact);
+        $nda->setDateSigned(new \DateTime());
+        $nda->setDateApproved(new \DateTime());
+        if (!is_null($call)) {
+            $nda->setCall([$call]);
+        }
+
+        $this->newEntity($nda);
+
+        $this->getAdminService()->flushPermitsByContact($contact);
+
+        return $nda;
     }
 }

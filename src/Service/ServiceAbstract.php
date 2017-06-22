@@ -10,6 +10,7 @@
 
 namespace Program\Service;
 
+use Admin\Service\AdminService;
 use Affiliation\Service\AffiliationService;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
@@ -50,6 +51,10 @@ abstract class ServiceAbstract implements ServiceInterface
      * @var ProjectService
      */
     protected $projectService;
+    /**
+     * @var AdminService
+     */
+    protected $adminService;
 
     /**
      * @param      $entity
@@ -65,7 +70,7 @@ abstract class ServiceAbstract implements ServiceInterface
     /**
      * @return \Doctrine\ORM\EntityManager
      */
-    public function getEntityManager()
+    public function getEntityManager(): \Doctrine\ORM\EntityManager
     {
         return $this->entityManager;
     }
@@ -86,9 +91,9 @@ abstract class ServiceAbstract implements ServiceInterface
      * @param $entity
      * @param $id
      *
-     * @return null|Entity\Doa|Entity\Call\Call|Entity\Nda|Entity\Program
+     * @return null|EntityAbstract|object
      */
-    public function findEntityById($entity, $id)
+    public function findEntityById($entity, $id):?EntityAbstract
     {
         return $this->getEntityManager()->getRepository($entity)->find($id);
     }
@@ -96,14 +101,14 @@ abstract class ServiceAbstract implements ServiceInterface
     /**
      * @param string $entity
      * @param        $filter
-     * @param array  $ignoreFilter
+     * @param array $ignoreFilter
      *
      * @return Query
      */
     public function findEntitiesFiltered($entity, $filter, $ignoreFilter = [])
     {
         return $this->getEntityManager()->getRepository($entity)
-                    ->findFiltered($filter, $ignoreFilter, AbstractQuery::HYDRATE_SIMPLEOBJECT);
+            ->findFiltered($filter, $ignoreFilter, AbstractQuery::HYDRATE_SIMPLEOBJECT);
     }
 
     /**
@@ -145,7 +150,7 @@ abstract class ServiceAbstract implements ServiceInterface
     /**
      * @return AffiliationService
      */
-    public function getAffiliationService()
+    public function getAffiliationService(): AffiliationService
     {
         return $this->affiliationService;
     }
@@ -165,7 +170,7 @@ abstract class ServiceAbstract implements ServiceInterface
     /**
      * @return GeneralService
      */
-    public function getGeneralService()
+    public function getGeneralService(): GeneralService
     {
         return $this->generalService;
     }
@@ -185,7 +190,7 @@ abstract class ServiceAbstract implements ServiceInterface
     /**
      * @return VersionService
      */
-    public function getVersionService()
+    public function getVersionService(): VersionService
     {
         return $this->versionService;
     }
@@ -205,7 +210,7 @@ abstract class ServiceAbstract implements ServiceInterface
     /**
      * @return ProjectService
      */
-    public function getProjectService()
+    public function getProjectService(): ProjectService
     {
         if (is_null($this->projectService)) {
             $this->projectService = $this->getServiceLocator()->get(ProjectService::class);
@@ -229,7 +234,7 @@ abstract class ServiceAbstract implements ServiceInterface
     /**
      * @return ServiceLocatorInterface
      */
-    public function getServiceLocator()
+    public function getServiceLocator(): ServiceLocatorInterface
     {
         return $this->serviceLocator;
     }
@@ -242,6 +247,25 @@ abstract class ServiceAbstract implements ServiceInterface
     public function setServiceLocator($serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
+
+        return $this;
+    }
+
+    /**
+     * @return AdminService
+     */
+    public function getAdminService(): AdminService
+    {
+        return $this->adminService;
+    }
+
+    /**
+     * @param AdminService $adminService
+     * @return ServiceAbstract
+     */
+    public function setAdminService(AdminService $adminService): ServiceAbstract
+    {
+        $this->adminService = $adminService;
 
         return $this;
     }

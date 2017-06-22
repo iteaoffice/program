@@ -12,24 +12,20 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\View\Helper;
 
 use Program\Entity\Call\Call;
 
 /**
- * Create a link to an project.
- *
- * @category   Program
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    https://itea3.org/licence.txt proprietary
- *
- * @link       https://itea3.org
+ * Class CallLink
+ * @package Program\View\Helper
  */
 class CallLink extends LinkAbstract
 {
     /**
-     * @param Call   $call
+     * @param Call $call
      * @param string $action
      * @param string $show
      *
@@ -37,7 +33,7 @@ class CallLink extends LinkAbstract
      *
      * @throws \Exception
      */
-    public function __invoke(Call $call = null, $action = 'view', $show = 'name')
+    public function __invoke(Call $call = null, $action = 'view', $show = 'name'): string
     {
         $this->setCall($call);
         $this->setAction($action);
@@ -46,7 +42,7 @@ class CallLink extends LinkAbstract
         /*
          * Set the non-standard options needed to give an other link value
          */
-        if (! is_null($call)) {
+        if (!is_null($call)) {
             $this->addRouterParam('id', $this->getCall()->getId());
 
             $this->setShowOptions(
@@ -64,7 +60,7 @@ class CallLink extends LinkAbstract
     /**
      * Parse te action and fill the correct parameters.
      */
-    public function parseAction()
+    public function parseAction(): void
     {
         switch ($this->getAction()) {
             case 'new':

@@ -18,6 +18,12 @@ return [
                         'resource'  => 'route/community/program/nda/upload',
                         'privilege' => 'upload',
                     ],
+                    'submit-nda' => [
+                        'label'     => _("txt-nav-submit-nda"),
+                        'route'     => 'community/program/nda/submit',
+                        'resource'  => 'route/community/program/nda/submit',
+                        'privilege' => 'submit',
+                    ],
                     'view-nda'   => [
                         'label'   => _("txt-nav-view-nda"),
                         'route'   => 'community/program/nda/view',

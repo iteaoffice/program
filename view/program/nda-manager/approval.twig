@@ -21,7 +21,7 @@
         {{ translate("txt-send-email-on-approval") }}
     </label>
 
-    <table class="table table-hover table-consended table-striped">
+    <table class="table table-hover table-condensed table-striped">
         <thead>
         <tr>
             <th>{{ translate("txt-contact") }}</th>
@@ -41,7 +41,7 @@
                     </div>
                 </td>
                 <td>{{ nda.contact.contactOrganisation.organisation }}</td>
-                <td>{{ nda.call }}</td>
+                <td>{{ nda.parseCall }}</td>
                 <td>{{ contentTypeIcon(nda.contentType) }} {{ nda.contentType.description }} ({{ nda.size|parse_size }}
                     )
                 </td>

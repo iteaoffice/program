@@ -7,6 +7,7 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
+
 use Program\Controller;
 
 return [
@@ -75,6 +76,19 @@ return [
                                             ],
                                         ],
                                     ],
+                                    'submit'   => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'       => '/submit[/call-:callId].html',
+                                            'constraints' => [
+                                                'id' => '\d+',
+                                            ],
+                                            'defaults'    => [
+                                                'action'    => 'submit',
+                                                'privilege' => 'submit',
+                                            ],
+                                        ],
+                                    ],
                                     'render'   => [
                                         'type'    => 'Segment',
                                         'options' => [
@@ -114,7 +128,7 @@ return [
                                     'download' => [
                                         'type'    => 'Segment',
                                         'options' => [
-                                            'route'       => '/download/nda-[:id].pdf',
+                                            'route'       => '/download/nda-[:id].[:ext]',
                                             'constraints' => [
                                                 'id' => '\d+',
                                             ],
@@ -429,6 +443,20 @@ return [
                                     'defaults' => [
                                         'action'    => 'approve',
                                         'privilege' => 'edit-admin',
+                                    ],
+                                ],
+                            ],
+                            'upload'   => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'priority'    => 100,
+                                    'route'       => '/upload/contact-[:contactId].html',
+                                    'constraints' => [
+                                        'contactId' => '[0-9_-]+',
+                                    ],
+                                    'defaults'    => [
+                                        'action'    => 'upload',
+                                        'privilege' => 'upload-admin',
                                     ],
                                 ],
                             ],

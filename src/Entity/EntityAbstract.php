@@ -23,7 +23,7 @@ abstract class EntityAbstract implements EntityInterface
     /**
      * @return string
      */
-    public function getResourceId()
+    public function getResourceId(): string
     {
         return sprintf('%s:%s', $this->get('full_entity_name'), $this->getId());
     }
@@ -33,7 +33,7 @@ abstract class EntityAbstract implements EntityInterface
      *
      * @return null|string
      */
-    public function get($switch)
+    public function get($switch): ?string
     {
         switch ($switch) {
             case 'full_entity_name':
@@ -50,7 +50,7 @@ abstract class EntityAbstract implements EntityInterface
     /**
      * @inheritDoc
      */
-    public function __toString()
+    public function __toString(): string
     {
         return (string)sprintf('%s:%s', $this->get('full_entity_name'), $this->getId());
     }
@@ -58,7 +58,7 @@ abstract class EntityAbstract implements EntityInterface
     /**
      * @return bool
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return is_null($this->getId());
     }
@@ -68,7 +68,7 @@ abstract class EntityAbstract implements EntityInterface
      *
      * @return bool
      */
-    public function has($prop)
+    public function has($prop): bool
     {
         $getter = 'get' . ucfirst($prop);
         if (method_exists($this, $getter)) {

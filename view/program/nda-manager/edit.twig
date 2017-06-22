@@ -18,14 +18,15 @@
     {{ ztbformelement(ndaForm.get('dateApproved')) }}
     {{ ztbformelement(ndaForm.get('programCall')) }}
 
+{% if not nda.object.isEmpty() %}
+    <div class="form-group">
+        <label class="col-sm-3 control-label">{{ translate("txt-download-current-nda") }}</label>
 
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{ translate("txt-download-current-nda") }}</label>
-
-    <div class="col-sm-9">
-        <p class="form-control-static">{{ ndaLink(nda,'download','text') }}</p>
+        <div class="col-sm-9">
+            <p class="form-control-static">{{ ndaLink(nda,'download','text') }}</p>
+        </div>
     </div>
-</div>
+{% endif %}
 
 {{ ztbformelement(ndaForm.get('file')) }}
 
