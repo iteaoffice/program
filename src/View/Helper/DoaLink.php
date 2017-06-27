@@ -33,7 +33,7 @@ class DoaLink extends LinkAbstract
      * @param string $show
      * @param Organisation|null $organisation
      * @param Program|null $program
-     * @return bool
+     * @return string
      */
     public function __invoke(
         Doa $doa = null,
@@ -41,7 +41,7 @@ class DoaLink extends LinkAbstract
         $show = 'text',
         Organisation $organisation = null,
         Program $program = null
-    ): bool {
+    ): string {
         $this->setDoa($doa);
         $this->setOrganisation($organisation);
         $this->setProgram($program);

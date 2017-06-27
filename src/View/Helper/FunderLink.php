@@ -28,7 +28,7 @@ class FunderLink extends LinkAbstract
      * @param string $show
      * @param null $page
      * @param null $alternativeShow
-     * @return bool
+     * @return string
      */
     public function __invoke(
         Funder $funder = null,
@@ -36,7 +36,7 @@ class FunderLink extends LinkAbstract
         $show = 'name',
         $page = null,
         $alternativeShow = null
-    ): bool {
+    ): string {
         $this->setFunder($funder);
         $this->setAction($action);
         $this->setShow($show);
