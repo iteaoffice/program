@@ -58,10 +58,6 @@ class CallCountryLink extends LinkAbstract
             ]
         );
 
-//        if (!$this->hasAccess($this->getCountry(), CountryAssertion::class, $this->getAction())) {
-//            return '';
-//        }
-
         $this->addRouterParam('id', $this->getCallCountry()->getId());
         $this->addRouterParam('country', $this->getCountry()->getId());
         $this->addRouterParam('call', $this->getCall()->getId());
