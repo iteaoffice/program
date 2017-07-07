@@ -33,7 +33,8 @@ class DoaLink extends LinkAbstract
      * @param string $show
      * @param Organisation|null $organisation
      * @param Program|null $program
-     * @return bool
+     *
+     * @return string
      */
     public function __invoke(
         Doa $doa = null,
@@ -41,7 +42,7 @@ class DoaLink extends LinkAbstract
         $show = 'text',
         Organisation $organisation = null,
         Program $program = null
-    ): bool {
+    ): string {
         $this->setDoa($doa);
         $this->setOrganisation($organisation);
         $this->setProgram($program);
@@ -51,14 +52,10 @@ class DoaLink extends LinkAbstract
             return 'Access denied';
         }
 
-        /*
-        * Set the non-standard options needed to give an other link value
-        */
-        $this->setShowOptions(
-            [
-                'name' => $this->getDoa(),
-            ]
-        );
+        // Set the non-standard options needed to give an other link value
+        $this->setShowOptions([
+            'name' => $this->getDoa(),
+        ]);
 
         if (!is_null($this->getDoa())) {
             $this->addRouterParam('id', $this->getDoa()->getId());
