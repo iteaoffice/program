@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Program\Controller;
 
 use Affiliation\Service\AffiliationService;
@@ -37,7 +39,7 @@ class CallManagerController extends ProgramAbstractController
      */
     public function listAction()
     {
-        $page         = $this->params()->fromRoute('page', 1);
+        $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getProgramFilter();
         $contactQuery = $this->getProgramService()->findEntitiesFiltered(Call::class, $filterPlugin->getFilter());
 
@@ -119,9 +121,7 @@ class CallManagerController extends ProgramAbstractController
     }
 
     /**
-     * Edit an template by finding it and call the corresponding form.
-     *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Zend\Http\Response|ViewModel
      */
     public function editAction()
     {
@@ -147,8 +147,6 @@ class CallManagerController extends ProgramAbstractController
                         'id' => $call->getId(),
                     ]
                 );
-            } else {
-                var_dump($form->getInputFilter()->getMessages());
             }
         }
 
@@ -166,11 +164,11 @@ class CallManagerController extends ProgramAbstractController
 
         //Only add the active projects
         $activeProjects = $this->getProjectService()->findProjectsByCall($call, ProjectService::WHICH_LABELLED);
-        $projects       = $activeProjects->getQuery()->getResult();
+        $projects = $activeProjects->getQuery()->getResult();
 
         //Find the span of the call, because otherwise the matrix will be filled with numbers of year before the call
         $minMaxYearCall = $this->getCallService()->findMinAndMaxYearInCall($call);
-        $yearSpan       = range($minMaxYearCall->minYear, $minMaxYearCall->maxYear);
+        $yearSpan = range($minMaxYearCall->minYear, $minMaxYearCall->maxYear);
 
 
         $versionOverview = [];
@@ -207,7 +205,7 @@ class CallManagerController extends ProgramAbstractController
         $callId = $this->params('id', $this->getCallService()->findFirstAndLastCall()->lastCall->getId());
 
 
-        $call       = $this->getCallService()->findCallById($callId);
+        $call = $this->getCallService()->findCallById($callId);
         $minMaxYear = $this->getCallService()->findMinAndMaxYearInCall($call);
 
         $year = $this->params('year', $minMaxYear->maxYear);
@@ -258,7 +256,7 @@ class CallManagerController extends ProgramAbstractController
     public function downloadFundingAction()
     {
         $callId = $this->params('id');
-        $call   = $this->getCallService()->findCallById($callId);
+        $call = $this->getCallService()->findCallById($callId);
 
         $string = $this->createFundingDownload()->create($call);
 
@@ -266,7 +264,7 @@ class CallManagerController extends ProgramAbstractController
         $string = mb_convert_encoding($string, 'UTF-16LE', 'UTF8');
 
         $response = $this->getResponse();
-        $headers  = $response->getHeaders();
+        $headers = $response->getHeaders();
         $headers->addHeaderLine('Content-Type', 'text/csv');
         $headers->addHeaderLine(
             'Content-Disposition',

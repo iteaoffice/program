@@ -13,6 +13,8 @@
  * @link        https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\Controller;
 
 use Program\Entity\Call\Call;
@@ -34,10 +36,10 @@ class NdaManagerController extends ProgramAbstractController
     /**
      * @return ViewModel
      */
-    public function approvalAction()
+    public function approvalAction(): ViewModel
     {
         $nda = $this->getCallService()->findNotApprovedNda();
-        $form = new NdaApproval($nda, $this->getContactService());
+        $form = new NdaApproval($nda);
 
         return new ViewModel(
             [

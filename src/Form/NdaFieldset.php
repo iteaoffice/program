@@ -8,6 +8,8 @@
  * @copyright Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Program\Form;
 
 use Doctrine\ORM\EntityManager;
@@ -30,7 +32,7 @@ class NdaFieldset extends Fieldset implements InputFilterProviderInterface
     public function __construct(EntityManager $entityManager)
     {
         parent::__construct('program_entity_nda');
-        $nda              = new Entity\Nda();
+        $nda = new Entity\Nda();
         $doctrineHydrator = new DoctrineHydrator($entityManager, Entity\Nda::class);
         $this->setHydrator($doctrineHydrator)->setObject($nda);
 

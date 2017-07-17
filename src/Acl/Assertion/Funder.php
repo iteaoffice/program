@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Program\Acl\Assertion;
 
 use Admin\Entity\Access;
@@ -27,10 +29,10 @@ class Funder extends AssertionAbstract
      * $role, $resource, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
      * privileges, respectively.
      *
-     * @param Acl               $acl
-     * @param RoleInterface     $role
+     * @param Acl $acl
+     * @param RoleInterface $role
      * @param ResourceInterface $resource
-     * @param string            $privilege
+     * @param string $privilege
      *
      * @return bool
      */

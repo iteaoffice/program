@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Program\Navigation\Invokable;
 
 use Admin\Navigation\Invokable\AbstractNavigationInvokable;
@@ -31,19 +33,19 @@ class NdaLabel extends AbstractNavigationInvokable
      *
      * @return void;
      */
-    public function __invoke(Mvc $page)
+    public function __invoke(Mvc $page): void
     {
         if ($this->getEntities()->containsKey(Nda::class)) {
             /** @var Nda $nda */
             $nda = $this->getEntities()->get(Nda::class);
 
-            if (! is_null($nda->getCall())) {
+            if (!is_null($nda->getCall())) {
                 $page->setParams(
                     array_merge(
                         $page->getParams(),
                         [
                             'id'     => $nda->getId(),
-                            'callId' => ! is_null($nda->getCall()) ?: $nda->getCall()->getId(),
+                            'callId' => !is_null($nda->getCall()) ?: $nda->getCall()->getId(),
                         ]
                     )
                 );

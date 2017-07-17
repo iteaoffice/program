@@ -90,6 +90,36 @@ class CreateCallFundingOverview extends AbstractPlugin
     }
 
     /**
+     * Gateway to the General Service.
+     *
+     * @return GeneralService
+     */
+    public function getGeneralService(): GeneralService
+    {
+        return $this->getServiceLocator()->get(GeneralService::class);
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    public function getServiceLocator(): ContainerInterface
+    {
+        return $this->serviceLocator;
+    }
+
+    /**
+     * @param ServiceLocatorInterface|PluginManager $serviceLocator
+     *
+     * @return CreateCallFundingOverview
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator): CreateCallFundingOverview
+    {
+        $this->serviceLocator = $serviceLocator;
+
+        return $this;
+    }
+
+    /**
      * @param $project
      * @param $country
      * @param $year
@@ -206,35 +236,5 @@ class CreateCallFundingOverview extends AbstractPlugin
     public function getVersionService(): VersionService
     {
         return $this->getServiceLocator()->get(VersionService::class);
-    }
-
-    /**
-     * Gateway to the General Service.
-     *
-     * @return GeneralService
-     */
-    public function getGeneralService(): GeneralService
-    {
-        return $this->getServiceLocator()->get(GeneralService::class);
-    }
-
-    /**
-     * @return ContainerInterface
-     */
-    public function getServiceLocator(): ContainerInterface
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param ServiceLocatorInterface|PluginManager $serviceLocator
-     *
-     * @return CreateCallFundingOverview
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator): CreateCallFundingOverview
-    {
-        $this->serviceLocator = $serviceLocator;
-
-        return $this;
     }
 }

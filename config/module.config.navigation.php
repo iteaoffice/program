@@ -12,13 +12,8 @@ return [
         'community' => [
             'idea' => [
                 'pages' => [
-                    'upload-nda' => [
-                        'label'     => _("txt-nav-upload-nda"),
-                        'route'     => 'community/program/nda/upload',
-                        'resource'  => 'route/community/program/nda/upload',
-                        'privilege' => 'upload',
-                    ],
                     'submit-nda' => [
+                        'order'     => 20,
                         'label'     => _("txt-nav-submit-nda"),
                         'route'     => 'community/program/nda/submit',
                         'resource'  => 'route/community/program/nda/submit',

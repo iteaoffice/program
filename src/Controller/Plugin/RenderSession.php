@@ -11,7 +11,9 @@
  * @link       https://itea3.org
  */
 
-declare(strict_types=1); namespace Program\Controller\Plugin;
+declare(strict_types=1);
+
+namespace Program\Controller\Plugin;
 
 use Contact\Service\ContactService;
 use General\Service\GeneralService;

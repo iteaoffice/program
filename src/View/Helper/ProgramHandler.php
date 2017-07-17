@@ -44,7 +44,7 @@ class ProgramHandler extends AbstractViewHelper
      *
      * @return string
      */
-    public function __invoke(Content $content)
+    public function __invoke(Content $content): string
     {
         $this->extractContentParam($content);
 
@@ -65,7 +65,7 @@ class ProgramHandler extends AbstractViewHelper
     /**
      * @param Content $content
      */
-    public function extractContentParam(Content $content)
+    public function extractContentParam(Content $content): void
     {
         /**
          * Go over the handler params and try to see if it is hardcoded or just set via the route
@@ -76,7 +76,7 @@ class ProgramHandler extends AbstractViewHelper
                     $session = $this->findParamValueFromContent($content, $parameter);
 
                     if (!is_null($session)) {
-                        $this->setsessionById($session);
+                        $this->setSessionById($session);
                     }
                     break;
                 case 'call':
@@ -96,7 +96,7 @@ class ProgramHandler extends AbstractViewHelper
      *
      * @return null|string
      */
-    private function findParamValueFromContent(Content $content, Param $param)
+    private function findParamValueFromContent(Content $content, Param $param):?string
     {
         //Hardcoded is always first,If it cannot be found, try to find it from the docref (rule 2)
         foreach ($content->getContentParam() as $contentParam) {
@@ -118,7 +118,7 @@ class ProgramHandler extends AbstractViewHelper
     /**
      * @param $sessionId
      */
-    public function setSessionById($sessionId)
+    public function setSessionById($sessionId): void
     {
         /** @var Session $session */
         $session = $this->getCallService()->findEntityById(Session::class, $sessionId);
@@ -136,7 +136,7 @@ class ProgramHandler extends AbstractViewHelper
     /**
      * @param $callId
      */
-    public function setCallById($callId)
+    public function setCallById($callId): void
     {
         $call = $this->getCallService()->findCallById($callId);
         $this->setCall($call);

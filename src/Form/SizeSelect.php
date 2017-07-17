@@ -14,12 +14,13 @@
  * @link        http://github.com/iteaoffice/program for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Program\Form;
 
 use Doctrine\ORM\EntityManager;
 use DoctrineORMModule\Form\Element\EntitySelect;
 use Program\Entity\Program;
-use Program\Service\CallService;
 use Zend\Form\Fieldset;
 use Zend\Form\Form;
 
@@ -32,11 +33,9 @@ class SizeSelect extends Form
 {
     /**
      * SizeSelect constructor.
-     *
      * @param EntityManager $entityManager
-     * @param CallService   $callService
      */
-    public function __construct(EntityManager $entityManager, CallService $callService)
+    public function __construct(EntityManager $entityManager)
     {
         parent::__construct();
 

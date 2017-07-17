@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Program\Navigation\Invokable;
 
 use Admin\Navigation\Invokable\AbstractNavigationInvokable;
@@ -34,7 +36,7 @@ class CountryLabel extends AbstractNavigationInvokable
      *
      * @return void;
      */
-    public function __invoke(Mvc $page)
+    public function __invoke(Mvc $page): void
     {
         if ($this->getEntities()->containsKey(Country::class)) {
             /** @var Country $country */

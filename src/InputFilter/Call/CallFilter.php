@@ -13,9 +13,13 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Program\InputFilter\Call;
 
 use Doctrine\ORM\EntityManager;
+use DoctrineModule\Validator\UniqueObject;
+use Program\Entity\Call\Call;
 use Zend\InputFilter\InputFilter;
 
 /**
@@ -48,6 +52,15 @@ class CallFilter extends InputFilter
                             'encoding' => 'UTF-8',
                             'min'      => 1,
                             'max'      => 100,
+                        ],
+                    ],
+                    [
+                        'name'    => UniqueObject::class,
+                        'options' => [
+                            'object_repository' => $entityManager->getRepository(Call::class),
+                            'object_manager'    => $entityManager,
+                            'use_context'       => true,
+                            'fields'            => 'call',
                         ],
                     ],
                 ],

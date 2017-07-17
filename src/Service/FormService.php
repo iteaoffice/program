@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/program for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Program\Service;
 
 use Program\Entity\EntityAbstract;
@@ -28,9 +30,9 @@ use Zend\InputFilter\InputFilter;
 class FormService extends ServiceAbstract
 {
     /**
-     * @param string         $className
+     * @param string $className
      * @param EntityAbstract $entity
-     * @param array          $data
+     * @param array $data
      *
      * @return Form
      */
@@ -43,30 +45,30 @@ class FormService extends ServiceAbstract
     }
 
     /**
-     * @param null           $className
+     * @param null $className
      * @param EntityAbstract $entity
-     * @param bool           $bind
+     * @param bool $bind
      *
      * @return Form
      */
     public function getForm($className = null, EntityAbstract $entity = null, bool $bind = true): Form
     {
-        if (! is_null($className) && is_null($entity)) {
+        if (!is_null($className) && is_null($entity)) {
             $entity = new $className();
         }
 
-        if (! is_object($entity)) {
+        if (!is_object($entity)) {
             throw new \InvalidArgumentException("No entity created given");
         }
 
-        $formName   = 'Program\\Form\\' . $entity->get('entity_name') . 'Form';
+        $formName = 'Program\\Form\\' . $entity->get('entity_name') . 'Form';
         $filterName = 'Program\\InputFilter\\' . $entity->get('entity_name') . 'Filter';
 
         /*
          * The filter and the form can dynamically be created by pulling the form from the serviceManager
          * if the form or filter is not give in the serviceManager we will create it by default
          */
-        if (! $this->getServiceLocator()->has($formName)) {
+        if (!$this->getServiceLocator()->has($formName)) {
             $form = new CreateObject($this->getEntityManager(), new $entity());
         } else {
             $form = $this->getServiceLocator()->get($formName);

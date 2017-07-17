@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Program\Service;
 
 use General\Entity\Country;
@@ -68,8 +70,8 @@ class ProgramService extends ServiceAbstract
         /** @var \Program\Repository\Program $repository */
         $repository = $this->getEntityManager()->getRepository(Program::class);
 
-        $yearSpanResult    = $repository->findMinAndMaxYearInProgram($program);
-        $yearSpan          = new \stdClass();
+        $yearSpanResult = $repository->findMinAndMaxYearInProgram($program);
+        $yearSpan = new \stdClass();
         $yearSpan->minYear = (int)$yearSpanResult['minYear'];
         $yearSpan->maxYear = (int)$yearSpanResult['maxYear'];
 
@@ -84,11 +86,11 @@ class ProgramService extends ServiceAbstract
     public function findFunderByCountry(Country $country)
     {
         return $this->getEntityManager()->getRepository(Funder::class)
-                    ->findBy(['country' => $country], ['position' => 'ASC']);
+            ->findBy(['country' => $country], ['position' => 'ASC']);
     }
 
     /**
-     * @param Program      $program
+     * @param Program $program
      * @param Organisation $organisation
      *
      * @return null|Doa

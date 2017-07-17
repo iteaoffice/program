@@ -11,6 +11,8 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\Acl\Assertion;
 
 use Admin\Entity\Access;
@@ -164,10 +166,10 @@ abstract class AssertionAbstract implements AssertionInterface
                 return true;
             }
             if ($this->hasContact() && in_array(
-                    strtolower($accessRole->getAccess()),
-                    $this->getAdminService()->findAccessRolesByContactAsArray($this->getContact()),
-                    true
-                )) {
+                strtolower($accessRole->getAccess()),
+                $this->getAdminService()->findAccessRolesByContactAsArray($this->getContact()),
+                true
+            )) {
                 return true;
             }
         }

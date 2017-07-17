@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/program for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Program\Navigation\Factory;
 
 use Admin\Navigation\Invokable\AbstractNavigationInvokable;
@@ -28,8 +30,8 @@ final class NavigationInvokableFactory implements FactoryInterface
 {
     /**
      * @param ContainerInterface $container
-     * @param string             $requestedName
-     * @param array|null         $options
+     * @param string $requestedName
+     * @param array|null $options
      *
      * @return AbstractNavigationInvokable
      */

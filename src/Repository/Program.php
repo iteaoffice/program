@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Program\Repository;
 
 use Doctrine\ORM\EntityRepository;
@@ -67,7 +69,7 @@ class Program extends EntityRepository
         $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
 
         $dql
-                = 'SELECT
+            = 'SELECT
                         MIN(YEAR(project_entity_version_version.dateSubmitted)) AS minYear,
                         MAX(YEAR(project_entity_project.dateEndActual)) AS maxYear
                    FROM Project\Entity\Project project_entity_project

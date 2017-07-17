@@ -11,7 +11,9 @@
  * @link       https://itea3.org
  */
 
-declare(strict_types=1); namespace Program\Controller\Plugin;
+declare(strict_types=1);
+
+namespace Program\Controller\Plugin;
 
 use Contact\Service\ContactService;
 use General\Service\GeneralService;
@@ -107,6 +109,43 @@ class RenderNda extends AbstractPlugin
         return $pdf;
     }
 
+    /**
+     * @return ModuleOptions
+     */
+    public function getModuleOptions(): ModuleOptions
+    {
+        return $this->getServiceLocator()->get(ModuleOptions::class);
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    public function getServiceLocator(): ContainerInterface
+    {
+        return $this->serviceLocator;
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     *
+     * @return $this
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+
+        return $this;
+    }
+
+    /**
+     * Gateway to the Contact Service.
+     *
+     * @return ContactService
+     */
+    public function getContactService(): ContactService
+    {
+        return $this->getServiceLocator()->get(ContactService::class);
+    }
 
     /**
      * Render a NDA not bound to a call.
@@ -180,44 +219,6 @@ class RenderNda extends AbstractPlugin
         $pdf->Line(30, 275, 90, 275);
 
         return $pdf;
-    }
-
-    /**
-     * @return ModuleOptions
-     */
-    public function getModuleOptions(): ModuleOptions
-    {
-        return $this->getServiceLocator()->get(ModuleOptions::class);
-    }
-
-    /**
-     * @return ContainerInterface
-     */
-    public function getServiceLocator(): ContainerInterface
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return $this
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-
-        return $this;
-    }
-
-    /**
-     * Gateway to the Contact Service.
-     *
-     * @return ContactService
-     */
-    public function getContactService(): ContactService
-    {
-        return $this->getServiceLocator()->get(ContactService::class);
     }
 
     /**

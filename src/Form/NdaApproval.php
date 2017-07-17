@@ -8,9 +8,10 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Program\Form;
 
-use Contact\Service\ContactService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Zend\Form\Fieldset;
 use Zend\Form\Form;
@@ -22,10 +23,10 @@ use Zend\InputFilter\InputFilterProviderInterface;
 class NdaApproval extends Form implements InputFilterProviderInterface
 {
     /**
+     * NdaApproval constructor.
      * @param ArrayCollection $ndas
-     * @param ContactService $contactService
      */
-    public function __construct(ArrayCollection $ndas, ContactService $contactService)
+    public function __construct(ArrayCollection $ndas)
     {
         parent::__construct();
         $this->setAttribute('method', 'post');
@@ -91,7 +92,7 @@ class NdaApproval extends Form implements InputFilterProviderInterface
      *
      * @return array
      */
-    public function getInputFilterSpecification()
+    public function getInputFilterSpecification(): array
     {
         return [];
     }

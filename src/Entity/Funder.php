@@ -11,6 +11,8 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -113,7 +115,7 @@ class Funder extends EntityAbstract implements ResourceInterface
      * @Annotation\Attributes({"label":"txt-show-on-website"})
      * @Annotation\Options({"help-block":"txt-funder-show-on-website-help-block"})
      *
-     * @var \int
+     * @var int
      */
     private $showOnWebsite;
     /**

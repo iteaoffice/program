@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Program;
 
 use Zend\ModuleManager\Feature;
@@ -25,7 +27,7 @@ class Module implements Feature\AutoloaderProviderInterface, Feature\ConfigProvi
     /**
      * @return array
      */
-    public function getAutoloaderConfig()
+    public function getAutoloaderConfig(): array
     {
         return [
             'Zend\Loader\ClassMapAutoloader' => [
@@ -37,7 +39,7 @@ class Module implements Feature\AutoloaderProviderInterface, Feature\ConfigProvi
     /**
      * @return array
      */
-    public function getConfig()
+    public function getConfig(): array
     {
         return include __DIR__ . '/../config/module.config.php';
     }

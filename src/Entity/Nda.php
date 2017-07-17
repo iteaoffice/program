@@ -155,26 +155,6 @@ class Nda extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return bool
-     */
-    public function hasCall(): bool
-    {
-        return !$this->getCall()->isEmpty();
-    }
-
-    /**
-     * @return null|Call\Call
-     */
-    public function parseCall(): ?Call\Call
-    {
-        if (!$this->hasCall()) {
-            return null;
-        }
-
-        return $this->getCall()->first();
-    }
-
-    /**
      * ToString.
      *
      * @return string
@@ -224,7 +204,6 @@ class Nda extends EntityAbstract implements ResourceInterface
         return $this;
     }
 
-
     /**
      * @return \Contact\Entity\Contact
      */
@@ -239,6 +218,26 @@ class Nda extends EntityAbstract implements ResourceInterface
     public function setContact($contact)
     {
         $this->contact = $contact;
+    }
+
+    /**
+     * @return null|Call\Call
+     */
+    public function parseCall(): ?Call\Call
+    {
+        if (!$this->hasCall()) {
+            return null;
+        }
+
+        return $this->getCall()->first();
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasCall(): bool
+    {
+        return !$this->getCall()->isEmpty();
     }
 
     /**

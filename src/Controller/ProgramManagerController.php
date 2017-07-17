@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Program\Controller;
 
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -35,7 +37,7 @@ class ProgramManagerController extends ProgramAbstractController
      */
     public function listAction()
     {
-        $page         = $this->params()->fromRoute('page', 1);
+        $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getProgramFilter();
         $contactQuery = $this->getProgramService()->findEntitiesFiltered(Program::class, $filterPlugin->getFilter());
 
@@ -82,7 +84,7 @@ class ProgramManagerController extends ProgramAbstractController
         $data = array_merge($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
 
         $program = new Program();
-        $form    = $this->getFormService()->prepare($program, null, $data);
+        $form = $this->getFormService()->prepare($program, null, $data);
         $form->remove('delete');
 
         $form->setAttribute('class', 'form-horizontal');
@@ -110,9 +112,7 @@ class ProgramManagerController extends ProgramAbstractController
     }
 
     /**
-     * Edit an template by finding it and program the corresponding form.
-     *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Zend\Http\Response|ViewModel
      */
     public function editAction()
     {
@@ -156,12 +156,12 @@ class ProgramManagerController extends ProgramAbstractController
     {
         $filter = $this->getRequest()->getPost()->toArray();
 
-        $form = new SizeSelect($this->getEntityManager(), $this->getCallService());
+        $form = new SizeSelect($this->getEntityManager());
         $form->setData($filter);
 
         $program = $this->getProgramService()->findLastProgram();
 
-        if (! is_null($this->params('id'))) {
+        if (!is_null($this->params('id'))) {
             $program = $this->getProgramService()->findProgramById($this->params('id'));
         }
 
@@ -172,7 +172,7 @@ class ProgramManagerController extends ProgramAbstractController
         $form->get('filter')->get('program')->setValue($program->getId());
 
         $minMaxYear = $this->getProgramService()->findMinAndMaxYearInProgram($program);
-        $yearSpan   = range($minMaxYear->minYear, $minMaxYear->maxYear);
+        $yearSpan = range($minMaxYear->minYear, $minMaxYear->maxYear);
 
 
         //Go over the projects and add the evaluationTypes in a dedicated matrix
@@ -184,14 +184,14 @@ class ProgramManagerController extends ProgramAbstractController
 
             //Find the span of the call, because otherwise the matrix will be filled with numbers of year before the call
             $minMaxYearCall = $this->getCallService()->findMinAndMaxYearInCall($call);
-            $yearSpanCall   = range($minMaxYearCall->minYear, $minMaxYearCall->maxYear);
+            $yearSpanCall = range($minMaxYearCall->minYear, $minMaxYearCall->maxYear);
 
 
             /** @var Project $project */
             foreach ($activeProjects->getQuery()->getResult() as $project) {
                 foreach ($yearSpan as $year) {
                     //Skip the years which are not in the call
-                    if (! in_array($year, $yearSpanCall)) {
+                    if (!in_array($year, $yearSpanCall)) {
                         continue;
                     }
 
@@ -205,10 +205,10 @@ class ProgramManagerController extends ProgramAbstractController
                         $dateSubmitted->modify('last day of december ' . $year)
                     );
 
-                    if (! is_null($activeVersion)) {
+                    if (!is_null($activeVersion)) {
                         //We have the version now, add the total cost of that version to the cost of that year
                         $projectOverview[$call->getId()][$year][$project->getDocRef()] = $this->getVersionService()
-                                                                                              ->findTotalCostVersionByProjectVersion($activeVersion);
+                            ->findTotalCostVersionByProjectVersion($activeVersion);
                     }
                 }
             };

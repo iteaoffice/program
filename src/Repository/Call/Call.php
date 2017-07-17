@@ -8,6 +8,8 @@
  * @copyright   Copyright (program_entity_call_call) Copyright (c) 2004-2017 ITEA Office (https://itea3.org) (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Program\Repository\Call;
 
 use Doctrine\ORM\EntityRepository;

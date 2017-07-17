@@ -11,6 +11,8 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\Controller;
 
 use Admin\Service\AdminService;
@@ -51,6 +53,8 @@ use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
  * @method      Plugin\GetFilter getProgramFilter()
  * @method      Plugin\RenderDoa renderDoa($doa)
  * @method      Plugin\RenderNda renderNda()
+ * @method      Plugin\CreateCallFundingOverview createCallFundingOverview()
+ * @method      Plugin\CreateFundingDownload createFundingDownload()
  */
 abstract class ProgramAbstractController extends AbstractActionController
 {
@@ -335,13 +339,32 @@ abstract class ProgramAbstractController extends AbstractActionController
     }
 
     /**
+     * @return EmailService
+     */
+    public function getEmailService(): ?EmailService
+    {
+        return $this->emailService;
+    }
+
+    /**
+     * @param EmailService $emailService
+     * @return ProgramAbstractController
+     */
+    public function setEmailService(EmailService $emailService): ProgramAbstractController
+    {
+        $this->emailService = $emailService;
+
+        return $this;
+    }
+
+    /**
      * Proxy for the flash messenger helper to have the string translated earlier.
      *
      * @param $string
      *
      * @return string
      */
-    protected function translate($string)
+    protected function translate($string): string
     {
         /**
          * @var $translate Translate
@@ -367,25 +390,6 @@ abstract class ProgramAbstractController extends AbstractActionController
     public function setViewHelperManager(HelperPluginManager $viewHelperManager): ProgramAbstractController
     {
         $this->viewHelperManager = $viewHelperManager;
-
-        return $this;
-    }
-
-    /**
-     * @return EmailService
-     */
-    public function getEmailService(): ?EmailService
-    {
-        return $this->emailService;
-    }
-
-    /**
-     * @param EmailService $emailService
-     * @return ProgramAbstractController
-     */
-    public function setEmailService(EmailService $emailService): ProgramAbstractController
-    {
-        $this->emailService = $emailService;
 
         return $this;
     }

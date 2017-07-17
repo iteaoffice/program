@@ -15,6 +15,8 @@
 
 declare(strict_types=1);
 
+declare(strict_types=1);
+
 namespace Program\View\Factory;
 
 use Interop\Container\ContainerInterface;

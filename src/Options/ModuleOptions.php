@@ -12,6 +12,8 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\Options;
 
 use Zend\Stdlib\AbstractOptions;

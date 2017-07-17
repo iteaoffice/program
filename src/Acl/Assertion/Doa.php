@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Program\Acl\Assertion;
 
 use Admin\Entity\Access;
@@ -28,10 +30,10 @@ class Doa extends AssertionAbstract
      * $role, $doa, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
      * privileges, respectively.
      *
-     * @param Acl               $acl
-     * @param RoleInterface     $role
+     * @param Acl $acl
+     * @param RoleInterface $role
      * @param ResourceInterface $doa
-     * @param string            $privilege
+     * @param string $privilege
      *
      * @return bool
      */
@@ -40,7 +42,7 @@ class Doa extends AssertionAbstract
         $this->setPrivilege($privilege);
         $id = $this->getId();
 
-        if (! $doa instanceof DoaEntity && ! is_null($id)) {
+        if (!$doa instanceof DoaEntity && !is_null($id)) {
             $doa = $this->getProgramService()->findEntityById(DoaEntity::class, $id);
         }
 
@@ -59,7 +61,7 @@ class Doa extends AssertionAbstract
                     /*
                      * The id can originate from two different params
                      */
-                    if (! is_null($this->getRouteMatch()->getParam('id'))) {
+                    if (!is_null($this->getRouteMatch()->getParam('id'))) {
                         $organisationId = $this->getRouteMatch()->getParam('id');
                     } else {
                         $organisationId = $this->getRouteMatch()->getParam('organisationId');
@@ -78,7 +80,7 @@ class Doa extends AssertionAbstract
                 }
 
                 return is_null($doa->getDateApproved())
-                       && $doa->getContact()->getId() === $this->getContact()->getId();
+                    && $doa->getContact()->getId() === $this->getContact()->getId();
             case 'render':
                 return $this->hasContact();
             case 'download':

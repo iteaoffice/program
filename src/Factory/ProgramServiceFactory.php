@@ -12,6 +12,8 @@
  *
  * @link        http://github.com/iteaoffice/main for the canonical source repository
  */
+declare(strict_types=1);
+
 namespace Program\Factory;
 
 use Affiliation\Service\AffiliationService;
@@ -29,14 +31,15 @@ final class ProgramServiceFactory implements FactoryInterface
 {
     /**
      * @param ContainerInterface $container
-     * @param string             $requestedName
-     * @param array|null         $options
+     * @param string $requestedName
+     * @param array|null $options
      *
      * @return ProgramService
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ProgramService
     {
-        $programService = new ProgramService($options);
+        /** @var ProgramService $programService */
+        $programService = new $requestedName($options);
         $programService->setServiceLocator($container);
 
         /** @var EntityManager $entityManager */
