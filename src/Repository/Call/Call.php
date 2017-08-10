@@ -36,8 +36,8 @@ class Call extends EntityRepository
         $queryBuilder->join("program_entity_call_call.program", 'p');
 
         //Filter here on the active calls @todo: see if this makes sense here
-//        $queryBuilder->andWhere('program_entity_call_call.active = :active');
-//        $queryBuilder->setParameter('active', \Program\Entity\Call\Call::ACTIVE);
+        //        $queryBuilder->andWhere('program_entity_call_call.active = :active');
+        //        $queryBuilder->setParameter('active', \Program\Entity\Call\Call::ACTIVE);
 
         $direction = 'DESC';
         if (isset($filter['direction'])
