@@ -77,7 +77,7 @@ class UploadDoa extends Form implements InputFilterProviderInterface
      *
      * @return array
      */
-    public function getInputFilterSpecification()
+    public function getInputFilterSpecification(): array
     {
         return [
             'file' => [

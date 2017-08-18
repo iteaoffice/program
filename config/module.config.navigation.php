@@ -182,6 +182,11 @@ return [
                         ],
                     ],
 
+
+                ],
+            ],
+            'tools'   => [
+                'pages' => [
                     'nda-approval' => [
                         'label' => _("txt-nav-nda-approval"),
                         'route' => 'zfcadmin/nda/approval',
@@ -214,7 +219,11 @@ return [
                             ],
                         ],
                     ],
-                    'funder'       => [
+                ]
+            ],
+            'config'  => [
+                'pages' => [
+                    'funder' => [
                         'label' => _("txt-nav-funder-list"),
                         'route' => 'zfcadmin/funder/list',
                         'pages' => [
@@ -254,8 +263,8 @@ return [
                             ],
                         ],
                     ],
-                ],
-            ],
+                ]
+            ]
         ],
     ],
 ];

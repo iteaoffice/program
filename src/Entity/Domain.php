@@ -151,6 +151,14 @@ class Domain extends EntityAbstract
     /**
      * @return string
      */
+    public function __toString(): string
+    {
+        return $this->domain;
+    }
+
+    /**
+     * @return string
+     */
     public function getColor()
     {
         return $this->color;

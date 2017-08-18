@@ -22,20 +22,8 @@ use Zend\ModuleManager\Feature;
 /**
  *
  */
-class Module implements Feature\AutoloaderProviderInterface, Feature\ConfigProviderInterface
+class Module implements Feature\ConfigProviderInterface
 {
-    /**
-     * @return array
-     */
-    public function getAutoloaderConfig(): array
-    {
-        return [
-            'Zend\Loader\ClassMapAutoloader' => [
-                __DIR__ . '/../autoload_classmap.php',
-            ],
-        ];
-    }
-
     /**
      * @return array
      */
