@@ -15,17 +15,13 @@ declare(strict_types=1);
 
 namespace Program\Controller\Plugin;
 
+use setasign\Fpdi\TcpdfFpdi;
+
 /**
- * Create a link to an project.
- *
- * @category   Program
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    https://itea3.org/licence.txt proprietary
- *
- * @link       https://itea3.org
+ * Class ProgramPdf
+ * @package Program\Controller\Plugin
  */
-class ProgramPdf extends \FPDI
+class ProgramPdf extends TcpdfFpdi
 {
     /**
      * "Remembers" the template id of the imported page.

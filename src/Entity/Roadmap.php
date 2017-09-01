@@ -13,8 +13,6 @@
 
 declare(strict_types=1);
 
-declare(strict_types=1);
-
 namespace Program\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;

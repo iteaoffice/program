@@ -58,6 +58,17 @@ class Session extends EntityAbstract
      */
     private $call;
     /**
+     * @ORM\ManyToOne(targetEntity="Project\Entity\Idea\Tool", cascade={"persist"}, inversedBy="session")
+     * @ORM\JoinColumn(name="tool_id", referencedColumnName="tool_id", nullable=true)
+     * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
+     * @Annotation\Options({"target_class":"Project\Entity\Idea\Tool"})
+     * @Annotation\Attributes({"label":"txt-program-session-idea-tool-label"})
+     * @Annotation\Options({"help-block":"txt-program-session-idea-tool-help-block"})
+     *
+     * @var \Project\Entity\Idea\Tool|null
+     */
+    private $tool;
+    /**
      * @ORM\Column(name="date", type="datetime", nullable=false)
      * @Annotation\Type("\Zend\Form\Element\Date")
      * @Annotation\Options({"label":"txt-date"})
@@ -118,19 +129,27 @@ class Session extends EntityAbstract
     }
 
     /**
+     * @param $property
+     * @return bool
+     */
+    public function __isset($property)
+    {
+        return isset($this->$property);
+    }
+
+    /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
     /**
      * @param int $id
-     *
      * @return Session
      */
-    public function setId($id)
+    public function setId(int $id): Session
     {
         $this->id = $id;
 
@@ -140,17 +159,16 @@ class Session extends EntityAbstract
     /**
      * @return string
      */
-    public function getSession()
+    public function getSession(): string
     {
         return $this->session;
     }
 
     /**
      * @param string $session
-     *
      * @return Session
      */
-    public function setSession($session)
+    public function setSession(string $session): Session
     {
         $this->session = $session;
 
@@ -160,17 +178,16 @@ class Session extends EntityAbstract
     /**
      * @return Call
      */
-    public function getCall()
+    public function getCall(): ?Call
     {
         return $this->call;
     }
 
     /**
      * @param Call $call
-     *
      * @return Session
      */
-    public function setCall($call)
+    public function setCall(Call $call): Session
     {
         $this->call = $call;
 
@@ -178,19 +195,37 @@ class Session extends EntityAbstract
     }
 
     /**
+     * @return null|\Project\Entity\Idea\Tool
+     */
+    public function getTool(): ?\Project\Entity\Idea\Tool
+    {
+        return $this->tool;
+    }
+
+    /**
+     * @param null|\Project\Entity\Idea\Tool $tool
+     * @return Session
+     */
+    public function setTool($tool): Session
+    {
+        $this->tool = $tool;
+
+        return $this;
+    }
+
+    /**
      * @return \DateTime
      */
-    public function getDate()
+    public function getDate(): ?\DateTime
     {
         return $this->date;
     }
 
     /**
      * @param \DateTime $date
-     *
      * @return Session
      */
-    public function setDate($date)
+    public function setDate(\DateTime $date): Session
     {
         $this->date = $date;
 
@@ -207,10 +242,9 @@ class Session extends EntityAbstract
 
     /**
      * @param Collections\ArrayCollection|\Event\Entity\Track[] $track
-     *
      * @return Session
      */
-    public function setTrack($track)
+    public function setTrack($track): Session
     {
         $this->track = $track;
 
@@ -227,7 +261,6 @@ class Session extends EntityAbstract
 
     /**
      * @param Collections\ArrayCollection|\Project\Entity\Idea\Session[] $ideaSession
-     *
      * @return Session
      */
     public function setIdeaSession($ideaSession)

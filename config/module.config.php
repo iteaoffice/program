@@ -90,6 +90,7 @@ $config = [
             Acl\Assertion\Doa::class                   => Acl\Factory\AssertionFactory::class,
             Acl\Assertion\Funder::class                => Acl\Factory\AssertionFactory::class,
             Acl\Assertion\Nda::class                   => Acl\Factory\AssertionFactory::class,
+            Acl\Assertion\Call\Country::class          => Acl\Factory\AssertionFactory::class,
             Navigation\Invokable\CallLabel::class      => Navigation\Factory\NavigationInvokableFactory::class,
             Navigation\Invokable\CountryLabel::class   => Navigation\Factory\NavigationInvokableFactory::class,
             Navigation\Invokable\FunderLabel::class    => Navigation\Factory\NavigationInvokableFactory::class,

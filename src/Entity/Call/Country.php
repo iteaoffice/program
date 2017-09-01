@@ -20,6 +20,7 @@ namespace Program\Entity\Call;
 use Doctrine\ORM\Mapping as ORM;
 use Program\Entity\EntityAbstract;
 use Zend\Form\Annotation;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * @ORM\Table(name="programcall_country")
@@ -29,7 +30,7 @@ use Zend\Form\Annotation;
  *
  * @category    Program
  */
-class Country extends EntityAbstract
+class Country extends EntityAbstract implements ResourceInterface
 {
     /**
      * @ORM\Column(name="programcall_country_id", type="integer", nullable=false)

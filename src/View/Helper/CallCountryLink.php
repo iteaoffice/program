@@ -49,6 +49,14 @@ class CallCountryLink extends LinkAbstract
         $this->setCall($call);
         $this->setAction($action);
         $this->setShow($show);
+
+        if (!$this->hasAccess(
+            $this->getCallCountry(),
+            \Program\Acl\Assertion\Call\Country::class,
+            $this->getAction()
+        )) {
+            return '';
+        }
         /*
          * Set the non-standard options needed to give an other link value
          */

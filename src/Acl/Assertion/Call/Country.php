@@ -10,9 +10,10 @@
 
 declare(strict_types=1);
 
-namespace Program\Acl\Assertion;
+namespace Program\Acl\Assertion\Call;
 
 use Admin\Entity\Access;
+use Program\Acl\Assertion\AssertionAbstract;
 use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 use Zend\Permissions\Acl\Role\RoleInterface;
@@ -20,7 +21,7 @@ use Zend\Permissions\Acl\Role\RoleInterface;
 /**
  * Class Program.
  */
-class Funder extends AssertionAbstract
+class Country extends AssertionAbstract
 {
     /**
      * Returns true if and only if the assertion conditions are met.
@@ -36,8 +37,12 @@ class Funder extends AssertionAbstract
      *
      * @return bool
      */
-    public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null): bool
-    {
+    public function assert(
+        Acl $acl,
+        RoleInterface $role = null,
+        ResourceInterface $resource = null,
+        $privilege = null
+    ): bool {
         return $this->rolesHaveAccess([Access::ACCESS_OFFICE]);
     }
 }
