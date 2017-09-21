@@ -81,16 +81,6 @@ class NdaLink extends LinkAbstract
     public function parseAction(): void
     {
         switch ($this->getAction()) {
-            case 'upload':
-                $this->setRouter('community/program/nda/upload');
-                $this->setText(sprintf($this->translate("txt-upload-nda-title")));
-
-
-                if (!is_null($this->getCall()->getId())) {
-                    $this->setText(sprintf($this->translate("txt-upload-nda-for-call-%s-title"), $this->getCall()));
-                }
-
-                break;
             case 'submit':
                 $this->setRouter('community/program/nda/submit');
                 $this->setText(sprintf($this->translate("txt-submit-nda-title")));

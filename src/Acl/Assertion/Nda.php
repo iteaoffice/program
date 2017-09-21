@@ -51,7 +51,6 @@ class Nda extends AssertionAbstract
         }
 
         switch ($this->getPrivilege()) {
-            case 'upload':
             case 'submit':
                 return $this->hasContact() && !is_null($this->getContact()->getContactOrganisation());
             case 'replace':

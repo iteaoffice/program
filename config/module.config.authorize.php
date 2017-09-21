@@ -45,7 +45,6 @@ return [
                 ['route' => 'zfcadmin/funder/list', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/funder/edit', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'community/program/session/download', 'roles' => [strtolower(Access::ACCESS_USER)],],
-                ['route' => 'community/program/nda/upload', 'roles' => [], 'assertion' => NdaAssertion::class],
                 ['route' => 'community/program/nda/submit', 'roles' => [], 'assertion' => NdaAssertion::class],
                 ['route' => 'community/program/nda/view', 'roles' => [], 'assertion' => NdaAssertion::class],
                 ['route' => 'community/program/nda/render', 'roles' => [], 'assertion' => NdaAssertion::class],

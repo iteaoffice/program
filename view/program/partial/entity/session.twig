@@ -27,17 +27,17 @@
         <tr>
             <td>{{ ideaSession.schedule }}</td>
             <td>{{ ideaLink(ideaSession.idea,'view','name') }}
-                {% if session.id in [25,28] %}
+                {% if session.id in [37,40] %}
                     {% for document in ideaSession.idea.document if 'pitch' in document.document and document.contentType.id == 1 %}
                         {{ ideaDocumentLink(document,'download','icon') }}
                     {% endfor %}
                 {% endif %}
-                {% if session.id in [31] %}
+                {% if session.id in [43] %}
                     {% for document in ideaSession.idea.document if 'day1' in document.document and document.contentType.id == 1 %}
                         {{ ideaDocumentLink(document,'download','icon') }}
                     {% endfor %}
                 {% endif %}
-                {% if session.id in [34] %}
+                {% if session.id in [46] %}
                     {% for document in ideaSession.idea.document if 'day2' in document.document and document.contentType.id == 1 %}
                         {{ ideaDocumentLink(document,'download','icon') }}
                     {% endfor %}

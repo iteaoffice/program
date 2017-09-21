@@ -44,58 +44,9 @@ class NdaController extends ProgramAbstractController
     }
 
     /**
-     * @return array|\Zend\Http\Response|ViewModel
-     */
-    public function uploadAction()
-    {
-        //We only want the active call, having the requirement that this call also requires an NDA
-        $call = $this->getCallService()->findLastActiveCall();
-
-        //When the call requires no NDA, remove it form the form
-        if (!is_null($call) && $call->getNdaRequirement() !== Call::NDA_REQUIREMENT_PER_CALL) {
-            $call = null;
-        }
-
-        if (!is_null($callId = $this->params('callId'))) {
-            $call = $this->getCallService()->findCallById($callId);
-            if (is_null($call)) {
-                return $this->notFoundAction();
-            }
-            $nda = $this->getCallService()
-                ->findNdaByCallAndContact($call, $this->zfcUserAuthentication()->getIdentity());
-        } elseif (!is_null($call)) {
-            $nda = $this->getCallService()
-                ->findNdaByCallAndContact($call, $this->zfcUserAuthentication()->getIdentity());
-        } else {
-            $nda = $this->getCallService()->findNdaByContact($this->zfcUserAuthentication()->getIdentity());
-        }
-        $data = array_merge_recursive(
-            $this->getRequest()->getPost()->toArray(),
-            $this->getRequest()->getFiles()->toArray()
-        );
-        $form = new UploadNda();
-        $form->setData($data);
-        if ($this->getRequest()->isPost() && $form->isValid()) {
-            $fileData = $form->getData('file');
-            $this->getCallService()->uploadNda($fileData['file'], $this->zfcUserAuthentication()->getIdentity(), $call);
-
-            $this->flashMessenger()->setNamespace('success')
-                ->addMessage(sprintf($this->translate("txt-nda-has-been-uploaded-successfully")));
-
-            return $this->redirect()->toRoute('community');
-        }
-
-        return new ViewModel(
-            [
-                'call' => $call,
-                'nda'  => $nda,
-                'form' => $form,
-            ]
-        );
-    }
-
-    /**
-     * @return array|\Zend\Http\Response|ViewModel
+     * @return \Zend\Http\Response|ViewModel
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function submitAction()
     {
