@@ -48,3 +48,8 @@ _("txt-loi-requirements");
 _("txt-no-loi-required");
 _("txt-loi-required");
 _("txt-loi-requirements-inline-help");
+
+_("txt-project-report-single");
+_("txt-project-report-double");
+_("txt-call-project-report-label");
+_("txt-call-project-report-help-block");

@@ -55,6 +55,9 @@ class Call extends EntityAbstract implements ResourceInterface
     const LOI_NOI_REQUIRED = 0;
     const LOI_REQUIRED = 1;
 
+    const PROJECT_REPORT_SINGLE = 1;
+    const PROJECT_REPORT_DOUBLE = 2;
+
     /**
      * @var array
      */
@@ -81,6 +84,7 @@ class Call extends EntityAbstract implements ResourceInterface
             self::NDA_REQUIREMENT_PER_CALL       => 'txt-nda-per-call-required',
             self::NDA_REQUIREMENT_PER_PROJECT    => 'txt-nda-per-project-required',
         ];
+
     /**
      * @var array
      */
@@ -88,6 +92,15 @@ class Call extends EntityAbstract implements ResourceInterface
         = [
             self::LOI_NOI_REQUIRED => 'txt-no-loi-required',
             self::LOI_REQUIRED     => 'txt-loi-required',
+        ];
+
+    /**
+     * @var array
+     */
+    protected static $projectReportTemplates
+        = [
+            self::PROJECT_REPORT_SINGLE => 'txt-project-report-single',
+            self::PROJECT_REPORT_DOUBLE => 'txt-project-report-double',
         ];
 
     /**
@@ -187,6 +200,15 @@ class Call extends EntityAbstract implements ResourceInterface
      * @var int
      */
     private $loiRequirement;
+    /**
+     * @ORM\Column(name="project_report", type="smallint", nullable=false)
+     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Attributes({"array":"projectReportTemplates"})
+     * @Annotation\Options({"label":"txt-call-project-report-label","help-block":"txt-call-project-report-help-block"})
+     *
+     * @var int
+     */
+    private $projectReport;
     /**
      * @ORM\Column(name="nda_requirement", type="smallint", nullable=false)
      * @Annotation\Type("Zend\Form\Element\Radio")
@@ -342,9 +364,9 @@ class Call extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public static function getLoiRequirementTemplates()
+    public static function getLoiRequirementTemplates(): array
     {
         return self::$loiRequirementTemplates;
     }
@@ -355,6 +377,14 @@ class Call extends EntityAbstract implements ResourceInterface
     public static function getActiveTemplates(): array
     {
         return self::$activeTemplates;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getProjectReportTemplates(): array
+    {
+        return self::$projectReportTemplates;
     }
 
     /**
@@ -951,6 +981,25 @@ class Call extends EntityAbstract implements ResourceInterface
     public function setLoiRequirement($loiRequirement): Call
     {
         $this->loiRequirement = $loiRequirement;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProjectReport()
+    {
+        return $this->projectReport;
+    }
+
+    /**
+     * @param int $projectReport
+     * @return Call
+     */
+    public function setProjectReport(int $projectReport): Call
+    {
+        $this->projectReport = $projectReport;
 
         return $this;
     }

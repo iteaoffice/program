@@ -37,7 +37,7 @@ class NdaLink extends LinkAbstract
      */
     public function __invoke(
         Nda $nda = null,
-        $action = 'upload',
+        $action = 'submit',
         $show = 'text',
         Call $call = null,
         Contact $contact = null
