@@ -253,7 +253,7 @@ class Domain extends EntityAbstract
     }
 
     /**
-     * @return \Contact\Entity\Contact[]
+     * @return \Contact\Entity\Contact[]|Collections\Collection
      */
     public function getContact()
     {
@@ -261,7 +261,7 @@ class Domain extends EntityAbstract
     }
 
     /**
-     * @param \Contact\Entity\Contact[] $contact
+     * @param \Contact\Entity\Contact[]|Collections\ArrayCollection $contact
      */
     public function setContact($contact)
     {
