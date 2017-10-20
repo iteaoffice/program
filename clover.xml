@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1507017985">
-  <project timestamp="1507017985">
+<coverage generated="1508494472">
+  <project timestamp="1508494472">
     <package name="Program\Acl\Assertion">
       <file name="/var/www/dev1/vendor/iteaoffice/program/src/Acl/Assertion/AssertionAbstract.php">
         <class name="AssertionAbstract" namespace="Program\Acl\Assertion" category="Program">

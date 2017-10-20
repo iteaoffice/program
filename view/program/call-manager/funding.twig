@@ -1,7 +1,7 @@
 {% do headTitle().append(translate("txt-call-funded-cost")) %}
 {% do headLink().appendStylesheet(url('assets/funding-status-css')) %}
 
-<h1>{{ translate("txt-call-funded-cost-%s-year-%s")|format(call,year) }} {{ callLink(call, 'size', 'button') }} {{ callLink(call, 'download-funding', 'button') }}</h1>
+<h1 class="display-4">{{ translate("txt-call-funded-cost-%s-year-%s")|format(call,year) }} {{ callLink(call, 'size', 'button') }} {{ callLink(call, 'download-funding', 'button') }}</h1>
 
 
 <table class="table table-condensed table-striped table-hover table-bordered">

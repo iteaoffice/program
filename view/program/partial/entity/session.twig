@@ -1,7 +1,7 @@
 {% do headTitle().append(translate("txt-session")) %}
 {% do headTitle().append(session.session) %}
 
-<h1>{{ session.session }}</h1>
+<h1 class="display-4">{{ session.session }}</h1>
 
 <dl class="dl-horizontal">
     <dt>{{ translate("txt-name") }}</dt>
@@ -13,7 +13,7 @@
 </dl>
 
 <h2 class="pitch-overview">{{ translate("txt-presentations") }}</h2>
-<table class="table table-hover table-striped table-condensed">
+<table class="table table-hover table-striped table-condensed table-sm">
     <thead>
     <tr>
         <th>{{ translate("txt-time") }}</th>

@@ -1,7 +1,7 @@
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-call-%s")|format(call)) %}
 
-<h1>{{ translate("txt-call-%s")|format(call) }} {{ callLink(call,'edit','button') }} {{ callLink(call,'size','button') }}</h1>
+<h1 class="display-4">{{ translate("txt-call-%s")|format(call) }} {{ callLink(call,'edit','button') }} {{ callLink(call,'size','button') }}</h1>
 
 <h2>{{ translate("txt-call-information") }}</h2>
 <dl class="dl-horizontal">
@@ -42,7 +42,7 @@
 <h2>{{ translate("txt-projects-in-call-%s")|format(call) }}</h2>
 
 {% if call.project|length > 0 %}
-    <table class="table table-hover table-striped table-condensed">
+    <table class="table table-hover table-striped table-condensed table-sm">
         <thead>
         <tr>
             <th>{{ translate("txt-project") }}</th>
@@ -67,7 +67,7 @@
 <h2>{{ translate("txt-countries-active-in-call-%s")|format(call) }}</h2>
 
 {% if countries|length > 0 %}
-    <table class="table table-hover table-striped table-condensed">
+    <table class="table table-hover table-striped table-condensed table-sm">
         <thead>
         <tr>
             <th>{{ translate("txt-country") }}</th>

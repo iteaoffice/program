@@ -32,6 +32,7 @@ return array(
     'program/call-manager/funding'          => __DIR__ . '//view/program/call-manager/funding.twig',
     'program/call-manager/view'             => __DIR__ . '//view/program/call-manager/view.twig',
     'program/call-manager/list'             => __DIR__ . '//view/program/call-manager/list.twig',
+    'program/nda/upload'                    => __DIR__ . '//view/program/nda/upload.twig',
     'program/nda/replace'                   => __DIR__ . '//view/program/nda/replace.twig',
     'program/nda/submit'                    => __DIR__ . '//view/program/nda/submit.twig',
     'program/nda/view'                      => __DIR__ . '//view/program/nda/view.twig',

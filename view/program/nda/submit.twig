@@ -1,9 +1,9 @@
 {% do headTitle().append(translate("txt-upload-nda-title")) %}
 
 {% if call %}
-    <h1>{{ translate("txt-submit-non-disclosure-agreement-for-call-%s")|format(call) }}</h1>
+    <h1 class="display-4">{{ translate("txt-submit-non-disclosure-agreement-for-call-%s")|format(call) }}</h1>
 {% else %}
-    <h1>{{ translate("txt-submit-a-general-non-disclosure-agreement") }}</h1>
+    <h1 class="display-4">{{ translate("txt-submit-a-general-non-disclosure-agreement") }}</h1>
 {% endif %}
 
 {% if not nda %}
