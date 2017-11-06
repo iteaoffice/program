@@ -9,24 +9,24 @@
 
 {{ form().openTag(form)|raw }}
 
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{ translate("txt-program") }}</label>
+<div class="form-group row">
+    <label class="col-md-3 form-control-label control-label">{{ translate("txt-program") }}</label>
 
     <div class="col-sm-9">
         <p class="form-control-static">{{ programLink(program,'view-list') }}</p>
     </div>
 </div>
 
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{ translate("txt-organisation") }}</label>
+<div class="form-group row">
+    <label class="col-md-3 form-control-label control-label">{{ translate("txt-organisation") }}</label>
 
     <div class="col-sm-9">
         <p class="form-control-static">{{ organisation }}</p>
     </div>
 </div>
 
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{ translate("txt-download-doa") }}</label>
+<div class="form-group row">
+    <label class="col-md-3 form-control-label control-label">{{ translate("txt-download-doa") }}</label>
 
     <div class="col-sm-9">
         <p class="form-control-static">{{ translate("txt-download-program-doa-link-text") }}</p>
@@ -36,8 +36,8 @@
 {{ ztbformelement(form.get('file')) }}
 
 
-<div class="form-group">
-    <div class="col-sm-offset-3 col-sm-9">
+<div class="form-group row">
+    <div class="offset-md-3 col-sm-offset-3 col-sm-9">
         {{ ztbformelement(form.get('submit')) }}
         {{ ztbformelement(form.get('cancel')) }}
     </div>

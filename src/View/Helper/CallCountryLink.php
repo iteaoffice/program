@@ -50,6 +50,8 @@ class CallCountryLink extends LinkAbstract
         $this->setAction($action);
         $this->setShow($show);
 
+        $this->classes = [];
+
         if (!$this->hasAccess(
             $this->getCallCountry(),
             \Program\Acl\Assertion\Call\Country::class,

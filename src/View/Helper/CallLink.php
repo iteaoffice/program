@@ -25,19 +25,21 @@ use Program\Entity\Call\Call;
 class CallLink extends LinkAbstract
 {
     /**
-     * @param Call $call
+     * @param Call|null $call
      * @param string $action
      * @param string $show
-     *
+     * @param array $classes
      * @return string
-     *
-     * @throws \Exception
      */
-    public function __invoke(Call $call = null, $action = 'view', $show = 'name'): string
+    public function __invoke(Call $call = null, $action = 'view', $show = 'name', array $classes = []): string
     {
         $this->setCall($call);
         $this->setAction($action);
         $this->setShow($show);
+
+        $this->classes = [];
+
+        $this->addClasses($classes);
 
         /*
          * Set the non-standard options needed to give an other link value

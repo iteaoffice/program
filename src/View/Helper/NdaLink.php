@@ -52,6 +52,8 @@ class NdaLink extends LinkAbstract
             return '';
         }
 
+        $this->classes = [];
+
         $this->addRouterParam('id', $this->getNda()->getId());
         $this->addRouterParam('callId', $this->getCall()->getId());
         $this->addRouterParam('contactId', $this->getContact()->getId());

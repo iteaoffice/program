@@ -46,6 +46,8 @@ class FunderLink extends LinkAbstract
             return '';
         }
 
+        $this->classes = [];
+
         /*
          * If the alternativeShow is not null, use it an otherwise take the page
          */

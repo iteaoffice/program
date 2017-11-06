@@ -49,8 +49,10 @@ class DoaLink extends LinkAbstract
         $this->setAction($action);
         $this->setShow($show);
         if (!$this->hasAccess($this->getDoa(), DoaAssertion::class, $this->getAction())) {
-            return 'Access denied';
+            return '';
         }
+
+        $this->classes = [];
 
         // Set the non-standard options needed to give an other link value
         $this->setShowOptions([

@@ -19,8 +19,8 @@
     {{ ztbformelement(ndaForm.get('programCall')) }}
 
 {% if not nda.object.isEmpty() %}
-    <div class="form-group">
-        <label class="col-sm-3 control-label">{{ translate("txt-download-current-nda") }}</label>
+    <div class="form-group row">
+        <label class="col-md-3 form-control-label control-label">{{ translate("txt-download-current-nda") }}</label>
 
         <div class="col-sm-9">
             <p class="form-control-static">{{ ndaLink(nda,'download','text') }}</p>
@@ -33,8 +33,8 @@
 <hr>
 
 
-<div class="form-group">
-    <div class="col-sm-offset-3 col-sm-9">
+<div class="form-group row">
+    <div class="offset-md-3 col-sm-offset-3 col-sm-9">
         {{ ztbformelement(form.get('submit')) }}
         {{ ztbformelement(form.get('cancel')) }}
         {{ ztbformelement(form.get('delete')) }}

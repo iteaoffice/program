@@ -10,16 +10,16 @@ format(nda, nda.contact.displayName)) %}
 
 {{ form().openTag(form)|raw }}
 
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{ translate("txt-contact") }}</label>
+<div class="form-group row">
+    <label class="col-md-3 form-control-label control-label">{{ translate("txt-contact") }}</label>
 
     <div class="col-sm-9">
         <p class="form-control-static">{{ nda.contact.displayName }}</p></div>
 </div>
 
 {% if nda.call %}
-    <div class="form-group">
-        <label class="col-sm-3 control-label">{{ translate("txt-program-call") }}</label>
+    <div class="form-group row">
+        <label class="col-md-3 form-control-label control-label">{{ translate("txt-program-call") }}</label>
 
         <div class="col-sm-9">
             <p class="form-control-static">{{ nda.call }}</p>
@@ -27,16 +27,16 @@ format(nda, nda.contact.displayName)) %}
     </div>
 {% endif %}
 
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{ translate("txt-download-current-nda") }}</label>
+<div class="form-group row">
+    <label class="col-md-3 form-control-label control-label">{{ translate("txt-download-current-nda") }}</label>
 
     <div class="col-sm-9">
         <p class="form-control-static">{{ ndaLink(nda,'download','text') }}</p>
     </div>
 </div>
 
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{ translate("txt-render-new-nda") }}</label>
+<div class="form-group row">
+    <label class="col-md-3 form-control-label control-label">{{ translate("txt-render-new-nda") }}</label>
 
     <div class="col-sm-9">
         <p class="form-control-static">{{ ndaLink(nda,'render','text') }}</p>
@@ -47,8 +47,8 @@ format(nda, nda.contact.displayName)) %}
 {{ ztbformelement(form.get('file')) }}
 
 
-<div class="form-group">
-    <div class="col-sm-offset-3 col-sm-9">
+<div class="form-group row">
+    <div class="offset-md-3 col-sm-offset-3 col-sm-9">
         {{ ztbformelement(form.get('submit')) }}
         {{ ztbformelement(form.get('cancel')) }}
     </div>

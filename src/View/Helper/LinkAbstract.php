@@ -125,9 +125,8 @@ abstract class LinkAbstract extends AbstractViewHelper
     protected $page;
 
     /**
-     * This function produces the link in the end.
-     *
      * @return string
+     * @throws \Exception
      */
     public function createLink(): string
     {
@@ -141,7 +140,7 @@ abstract class LinkAbstract extends AbstractViewHelper
          */
         $serverUrl = $this->getHelperPluginManager()->get('serverUrl');
         $this->linkContent = [];
-        $this->classes = [];
+
         $this->parseAction();
         $this->parseShow();
 
@@ -326,16 +325,13 @@ abstract class LinkAbstract extends AbstractViewHelper
     }
 
     /**
-     * @param string $classes
+     * @param string|array $classes
      *
      * @return $this
      */
     public function addClasses($classes)
     {
-        if (!is_array($classes)) {
-            $classes = [$classes];
-        }
-        foreach ($classes as $class) {
+        foreach ((array) $classes as $class) {
             $this->classes[] = $class;
         }
 
@@ -400,7 +396,7 @@ abstract class LinkAbstract extends AbstractViewHelper
     /**
      * @return Authorize
      */
-    public function getAuthorizeService()
+    public function getAuthorizeService(): Authorize
     {
         return $this->getServiceManager()->get('BjyAuthorize\Service\Authorize');
     }
@@ -428,7 +424,7 @@ abstract class LinkAbstract extends AbstractViewHelper
      * @param        $value
      * @param bool $allowNull
      */
-    public function addRouterParam($key, $value, $allowNull = true)
+    public function addRouterParam($key, $value, $allowNull = true): void
     {
         if (!$allowNull && is_null($value)) {
             throw new \InvalidArgumentException(sprintf("null is not allowed for %s", $key));

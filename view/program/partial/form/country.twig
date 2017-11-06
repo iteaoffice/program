@@ -2,16 +2,16 @@
 
 {{ form().openTag(form)|raw }}
 
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{ translate("txt-call") }}</label>
+<div class="form-group row">
+    <label class="col-md-3 form-control-label control-label">{{ translate("txt-call") }}</label>
 
     <div class="col-sm-9">
         <p class="form-control-static">{{ callLink(callCountry.call,'view-admin','name') }}</p>
     </div>
 </div>
 
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{ translate("txt-country") }}</label>
+<div class="form-group row">
+    <label class="col-md-3 form-control-label control-label">{{ translate("txt-country") }}</label>
 
     <div class="col-sm-9">
         <p class="form-control-static">{{ countryLink(callCountry.country,'view-admin','name') }}</p>
@@ -23,8 +23,8 @@
 {{ ztbformelement(callCountryForm.get('dateNationalApplication')) }}
 {{ ztbformelement(callCountryForm.get('dateExpectedFundingDecision')) }}
 
-<div class="form-group">
-    <div class="col-sm-offset-3 col-sm-9">
+<div class="form-group row">
+    <div class="offset-md-3 col-sm-offset-3 col-sm-9">
         {{ ztbformelement(form.get('submit')) }}
         {{ ztbformelement(form.get('cancel')) }}
         {% if form.has('delete') %}

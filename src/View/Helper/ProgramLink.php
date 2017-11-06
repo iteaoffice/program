@@ -48,6 +48,8 @@ class ProgramLink extends LinkAbstract
             ]
         );
 
+        $this->classes = [];
+
         if (!is_null($program)) {
             $this->addRouterParam('id', $this->getProgram()->getId());
         }
