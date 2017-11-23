@@ -39,7 +39,7 @@ class Program extends EntityRepository
 
         $direction = 'DESC';
         if (isset($filter['direction'])
-            && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'])
+            && \in_array(strtoupper($filter['direction']), ['ASC', 'DESC'])
         ) {
             $direction = strtoupper($filter['direction']);
         }

@@ -164,7 +164,7 @@ class Nda extends EntityAbstract implements ResourceInterface
         /*
          * Return an empty value when no id is known
          */
-        if (is_null($this->id)) {
+        if (\is_null($this->id)) {
             return sprintf("NDA_EMPTY");
         }
 

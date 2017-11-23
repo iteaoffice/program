@@ -19,6 +19,7 @@ namespace Program\Factory;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Zend\Form\Form;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
 /**
@@ -29,15 +30,14 @@ use Zend\ServiceManager\Factory\FactoryInterface;
 final class FormFactory implements FactoryInterface
 {
     /**
-     * Create an instance of the requested class name.
-     *
      * @param ContainerInterface $container
      * @param string $requestedName
-     * @param null|array $options
-     *
-     * @return object
+     * @param array|null $options
+     * @return Form
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): Form
     {
         return new $requestedName($container->get(EntityManager::class), $options);
     }

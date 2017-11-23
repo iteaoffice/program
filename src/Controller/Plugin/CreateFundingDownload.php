@@ -90,7 +90,7 @@ class CreateFundingDownload extends AbstractPlugin
 
                     $year = $funding->getDateStart()->format('Y');
 
-                    if (!is_null($affiliation->getDateSelfFunded())) {
+                    if (!\is_null($affiliation->getDateSelfFunded())) {
                         $globalStatus = "Self Funded";
                     } else {
                         $globalStatus = null;

@@ -62,7 +62,7 @@ abstract class EntityAbstract implements EntityInterface
      */
     public function isEmpty(): bool
     {
-        return is_null($this->getId());
+        return \is_null($this->getId());
     }
 
     /**

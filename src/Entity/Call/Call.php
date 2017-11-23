@@ -35,28 +35,28 @@ class Call extends EntityAbstract implements ResourceInterface
     /**
      * Produce a list of different statuses in a call, which are required for representation and access control.
      */
-    const FPP_CLOSED = 'FPP_CLOSED';
-    const FPP_NOT_OPEN = 'FPP_NOT_OPEN';
-    const FPP_GRACE_PERIOD = 'FPP_GRACE_PERIOD';
-    const FPP_OPEN = 'FPP_OPEN';
-    const PO_CLOSED = 'PO_CLOSED';
-    const PO_NOT_OPEN = 'PO_NOT_OPEN';
-    const PO_GRACE_PERIOD = 'PO_GRACE_PERIOD';
-    const PO_OPEN = 'PO_OPEN';
+    public const FPP_CLOSED = 'FPP_CLOSED';
+    public const FPP_NOT_OPEN = 'FPP_NOT_OPEN';
+    public const FPP_GRACE_PERIOD = 'FPP_GRACE_PERIOD';
+    public const FPP_OPEN = 'FPP_OPEN';
+    public const PO_CLOSED = 'PO_CLOSED';
+    public const PO_NOT_OPEN = 'PO_NOT_OPEN';
+    public const PO_GRACE_PERIOD = 'PO_GRACE_PERIOD';
+    public const PO_OPEN = 'PO_OPEN';
 
-    const INACTIVE = 0;
-    const ACTIVE = 1;
-    const DOA_REQUIREMENT_NOT_APPLICABLE = 1;
-    const DOA_REQUIREMENT_PER_PROGRAM = 2;
-    const DOA_REQUIREMENT_PER_PROJECT = 3;
-    const NDA_REQUIREMENT_NOT_APPLICABLE = 1;
-    const NDA_REQUIREMENT_PER_CALL = 2;
-    const NDA_REQUIREMENT_PER_PROJECT = 3;
-    const LOI_NOI_REQUIRED = 0;
-    const LOI_REQUIRED = 1;
+    public const INACTIVE = 0;
+    public const ACTIVE = 1;
+    public const DOA_REQUIREMENT_NOT_APPLICABLE = 1;
+    public const DOA_REQUIREMENT_PER_PROGRAM = 2;
+    public const DOA_REQUIREMENT_PER_PROJECT = 3;
+    public const NDA_REQUIREMENT_NOT_APPLICABLE = 1;
+    public const NDA_REQUIREMENT_PER_CALL = 2;
+    public const NDA_REQUIREMENT_PER_PROJECT = 3;
+    public const LOI_NOI_REQUIRED = 0;
+    public const LOI_REQUIRED = 1;
 
-    const PROJECT_REPORT_SINGLE = 1;
-    const PROJECT_REPORT_DOUBLE = 2;
+    public const PROJECT_REPORT_SINGLE = 1;
+    public const PROJECT_REPORT_DOUBLE = 2;
 
     /**
      * @var array
@@ -986,10 +986,15 @@ class Call extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return int
+     * @param bool $textual
+     * @return int|string
      */
-    public function getProjectReport()
+    public function getProjectReport(bool $textual = false)
     {
+        if ($textual) {
+            return self::$projectReportTemplates[$this->projectReport];
+        }
+
         return $this->projectReport;
     }
 

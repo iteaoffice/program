@@ -33,13 +33,12 @@ use Zend\ServiceManager\Factory\FactoryInterface;
 final class CallServiceFactory implements FactoryInterface
 {
     /**
-     * Create an instance of the requested class name.
-     *
      * @param ContainerInterface $container
      * @param string $requestedName
-     * @param null|array $options
-     *
+     * @param array|null $options
      * @return CallService
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): CallService
     {

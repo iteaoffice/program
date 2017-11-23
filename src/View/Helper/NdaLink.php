@@ -61,7 +61,7 @@ class NdaLink extends LinkAbstract
         /*
          * Set the non-standard options needed to give an other link value
          */
-        if (!is_null($this->getNda()->getId())) {
+        if (!\is_null($this->getNda()->getId())) {
             $this->setShowOptions(
                 [
                     'name' => $this->getNda()->parseFileName(),
@@ -70,7 +70,7 @@ class NdaLink extends LinkAbstract
         }
 
 
-        if (!is_null($this->getNda()->getId()) && !is_null($this->getNda()->getContentType())) {
+        if (!\is_null($this->getNda()->getId()) && !\is_null($this->getNda()->getContentType())) {
             $this->addRouterParam('ext', $this->getNda()->getContentType()->getExtension());
         }
 
@@ -88,7 +88,7 @@ class NdaLink extends LinkAbstract
                 $this->setText(sprintf($this->translate("txt-submit-nda-title")));
 
 
-                if (!is_null($this->getCall()->getId())) {
+                if (!\is_null($this->getCall()->getId())) {
                     $this->setText(sprintf($this->translate("txt-submit-nda-for-call-%s-title"), $this->getCall()));
                 }
 
@@ -101,7 +101,7 @@ class NdaLink extends LinkAbstract
                 $this->setRouter('community/program/nda/render');
                 $this->setText(sprintf($this->translate("txt-render-general-nda-title")));
 
-                if (!is_null($this->getCall()->getId())) {
+                if (!\is_null($this->getCall()->getId())) {
                     $this->setText(sprintf($this->translate("txt-render-nda-for-call-%s-title"), $this->getCall()));
                 }
 

@@ -45,24 +45,24 @@ class Nda extends AssertionAbstract
         /*
          * @var $nda NdaEntity
          */
-        if (!$nda instanceof NdaEntity && !is_null($id)) {
+        if (!$nda instanceof NdaEntity && !\is_null($id)) {
             /** @var NdaEntity $nda */
             $nda = $this->getProgramService()->findEntityById(NdaEntity::class, $id);
         }
 
         switch ($this->getPrivilege()) {
             case 'submit':
-                return $this->hasContact() && !is_null($this->getContact()->getContactOrganisation());
+                return $this->hasContact() && !\is_null($this->getContact()->getContactOrganisation());
             case 'replace':
                 /*
                  * For the replace we need to see if the user has access on the editing of the program
                  * and the acl should not be approved
                  */
 
-                return is_null($nda->getDateApproved())
+                return \is_null($nda->getDateApproved())
                     && $nda->getContact()->getId() === $this->getContact()->getId();
             case 'render':
-                if (!$this->hasContact() || is_null($this->getContact()->getContactOrganisation())) {
+                if (!$this->hasContact() || \is_null($this->getContact()->getContactOrganisation())) {
                     return false;
                 }
                 /*
@@ -71,14 +71,14 @@ class Nda extends AssertionAbstract
                  * The resource has goes first
                  */
                 $call = null;
-                if ($nda instanceof NdaEntity && !is_null($nda->getCall())) {
+                if ($nda instanceof NdaEntity && !\is_null($nda->getCall())) {
                     $call = $nda->getCall();
-                } elseif (!is_null($callId = $this->getRouteMatch()->getParam('callId'))) {
+                } elseif (!\is_null($callId = $this->getRouteMatch()->getParam('callId'))) {
                     $call = $this->getCallService()->findCallById($callId);
                 }
 
                 //We have no 2 methods to get the call, if the call is set check if the status is correct
-                if (!is_null($call)) {
+                if (!\is_null($call)) {
                     return true;
 
                     //return $this->getCallService()->getCallStatus($call)->result !== CallService::UNDEFINED;

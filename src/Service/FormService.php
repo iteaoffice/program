@@ -36,7 +36,7 @@ class FormService extends ServiceAbstract
      *
      * @return Form
      */
-    public function prepare($className, EntityAbstract $entity = null, $data = [])
+    public function prepare($className, EntityAbstract $entity = null, $data = []): Form
     {
         $form = $this->getForm($className, $entity, true);
         $form->setData($data);
@@ -53,7 +53,7 @@ class FormService extends ServiceAbstract
      */
     public function getForm($className = null, EntityAbstract $entity = null, bool $bind = true): Form
     {
-        if (!is_null($className) && is_null($entity)) {
+        if (!\is_null($className) && \is_null($entity)) {
             $entity = new $className();
         }
 

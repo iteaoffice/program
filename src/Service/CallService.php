@@ -31,15 +31,15 @@ use Zend\Validator\File\MimeType;
  */
 class CallService extends ServiceAbstract
 {
-    const PO_CLOSED = 'PO_CLOSED';
-    const PO_NOT_OPEN = 'PO_NOT_OPEN';
-    const PO_GRACE = 'PO_GRACE';
-    const PO_OPEN = 'PO_OPEN';
-    const FPP_CLOSED = 'FPP_CLOSED';
-    const FPP_NOT_OPEN = 'FPP_NOT_OPEN';
-    const FPP_OPEN = 'FPP_OPEN';
-    const FPP_GRACE = 'FPP_GRACE';
-    const UNDEFINED = 'UNDEFINED';
+    public const PO_CLOSED = 'PO_CLOSED';
+    public const PO_NOT_OPEN = 'PO_NOT_OPEN';
+    public const PO_GRACE = 'PO_GRACE';
+    public const PO_OPEN = 'PO_OPEN';
+    public const FPP_CLOSED = 'FPP_CLOSED';
+    public const FPP_NOT_OPEN = 'FPP_NOT_OPEN';
+    public const FPP_OPEN = 'FPP_OPEN';
+    public const FPP_GRACE = 'FPP_GRACE';
+    public const UNDEFINED = 'UNDEFINED';
 
     /**
      * @param $id
@@ -148,7 +148,7 @@ class CallService extends ServiceAbstract
 
         $notEmptyCalls = $repository->findActiveCalls();
 
-        if (count($notEmptyCalls) > 0) {
+        if (\count($notEmptyCalls) > 0) {
             return end($notEmptyCalls);
         }
 
@@ -168,9 +168,9 @@ class CallService extends ServiceAbstract
     {
         switch ($type->getId()) {
             case Type::TYPE_PO:
-                return in_array($this->getCallStatus($call)->result, [self::PO_GRACE, self::PO_OPEN], true);
+                return \in_array($this->getCallStatus($call)->result, [self::PO_GRACE, self::PO_OPEN], true);
             case Type::TYPE_FPP:
-                return in_array($this->getCallStatus($call)->result, [self::FPP_OPEN, self::FPP_GRACE], true);
+                return \in_array($this->getCallStatus($call)->result, [self::FPP_OPEN, self::FPP_GRACE], true);
             default:
                 return true;
         }
@@ -254,7 +254,7 @@ class CallService extends ServiceAbstract
      */
     public function isGrace(Call $call): bool
     {
-        return in_array($this->getCallStatus($call)->result, [self::PO_GRACE, self::FPP_GRACE], true);
+        return \in_array($this->getCallStatus($call)->result, [self::PO_GRACE, self::FPP_GRACE], true);
     }
 
     /**
@@ -367,7 +367,7 @@ class CallService extends ServiceAbstract
      */
     public function isNdaValid(Nda $nda)
     {
-        if (is_null($nda->getDateSigned())) {
+        if (\is_null($nda->getDateSigned())) {
             return false;
         }
 
@@ -415,7 +415,7 @@ class CallService extends ServiceAbstract
         $ndaObject->setObject(file_get_contents($file['tmp_name']));
         $nda = new Nda();
         $nda->setContact($contact);
-        if (!is_null($call)) {
+        if (!\is_null($call)) {
             $nda->setCall([$call]);
         }
         $nda->setSize($file['size']);
@@ -442,7 +442,7 @@ class CallService extends ServiceAbstract
         $nda->setApprover($contact);
         $nda->setDateSigned(new \DateTime());
         $nda->setDateApproved(new \DateTime());
-        if (!is_null($call)) {
+        if (!\is_null($call)) {
             $nda->setCall([$call]);
         }
 

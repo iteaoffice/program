@@ -54,15 +54,6 @@ class CallFilter extends InputFilter
                             'max'      => 100,
                         ],
                     ],
-                    [
-                        'name'    => UniqueObject::class,
-                        'options' => [
-                            'object_repository' => $entityManager->getRepository(Call::class),
-                            'object_manager'    => $entityManager,
-                            'use_context'       => true,
-                            'fields'            => 'call',
-                        ],
-                    ],
                 ],
             ]
         );

@@ -31,10 +31,11 @@ final class ModuleOptionsFactory implements FactoryInterface
      * @param ContainerInterface $container
      * @param string $requestedName
      * @param array|null $options
-     *
-     * @return ModuleOptions
+     * @return object|ModuleOptions
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ModuleOptions
     {
         $config = $container->get('Config');
 

@@ -154,7 +154,7 @@ abstract class LinkAbstract extends AbstractViewHelper
             $serverUrl() . $url($this->router, $this->routerParams),
             htmlentities((string) $this->text),
             implode(' ', $this->classes),
-            in_array($this->getShow(), ['icon', 'button', 'alternativeShow']) ? implode('', $this->linkContent)
+            \in_array($this->getShow(), ['icon', 'button', 'alternativeShow']) ? implode('', $this->linkContent)
                 : htmlentities(implode('', $this->linkContent))
         );
     }
@@ -231,7 +231,7 @@ abstract class LinkAbstract extends AbstractViewHelper
                 $this->addLinkContent($this->getText());
                 break;
             case 'paginator':
-                if (is_null($this->getAlternativeShow())) {
+                if (\is_null($this->getAlternativeShow())) {
                     throw new \InvalidArgumentException(
                         sprintf("this->alternativeShow cannot be null for a paginator link")
                     );
@@ -372,7 +372,7 @@ abstract class LinkAbstract extends AbstractViewHelper
     public function hasAccess(EntityAbstract $entity, $assertion, $action)
     {
         $assertion = $this->getAssertion($assertion);
-        if (!is_null($entity) && !$this->getAuthorizeService()->getAcl()->hasResource($entity)) {
+        if (!\is_null($entity) && !$this->getAuthorizeService()->getAcl()->hasResource($entity)) {
             $this->getAuthorizeService()->getAcl()->addResource($entity);
             $this->getAuthorizeService()->getAcl()->allow([], $entity, [], $assertion);
         }
@@ -426,10 +426,10 @@ abstract class LinkAbstract extends AbstractViewHelper
      */
     public function addRouterParam($key, $value, $allowNull = true): void
     {
-        if (!$allowNull && is_null($value)) {
+        if (!$allowNull && \is_null($value)) {
             throw new \InvalidArgumentException(sprintf("null is not allowed for %s", $key));
         }
-        if (!is_null($value)) {
+        if (!\is_null($value)) {
             $this->routerParams[$key] = $value;
         }
     }
@@ -463,7 +463,7 @@ abstract class LinkAbstract extends AbstractViewHelper
      */
     public function getDoa()
     {
-        if (is_null($this->doa)) {
+        if (\is_null($this->doa)) {
             $this->doa = new Doa();
         }
 
@@ -487,7 +487,7 @@ abstract class LinkAbstract extends AbstractViewHelper
      */
     public function getNda(): Nda
     {
-        if (is_null($this->nda)) {
+        if (\is_null($this->nda)) {
             $this->nda = new Nda();
         }
 
@@ -511,7 +511,7 @@ abstract class LinkAbstract extends AbstractViewHelper
      */
     public function getFunder()
     {
-        if (is_null($this->funder)) {
+        if (\is_null($this->funder)) {
             $this->funder = new Funder();
         }
 
@@ -595,7 +595,7 @@ abstract class LinkAbstract extends AbstractViewHelper
      */
     public function getCall()
     {
-        if (is_null($this->call)) {
+        if (\is_null($this->call)) {
             $this->call = new Call();
         }
 
@@ -619,7 +619,7 @@ abstract class LinkAbstract extends AbstractViewHelper
      */
     public function getCountry()
     {
-        if (is_null($this->country)) {
+        if (\is_null($this->country)) {
             $this->country = new Country();
         }
 
@@ -643,7 +643,7 @@ abstract class LinkAbstract extends AbstractViewHelper
      */
     public function getSession()
     {
-        if (is_null($this->session)) {
+        if (\is_null($this->session)) {
             $this->session = new Session();
         }
 
@@ -667,7 +667,7 @@ abstract class LinkAbstract extends AbstractViewHelper
      */
     public function getCallCountry()
     {
-        if (is_null($this->callCountry)) {
+        if (\is_null($this->callCountry)) {
             $this->callCountry = new CallCountry();
         }
 
@@ -691,7 +691,7 @@ abstract class LinkAbstract extends AbstractViewHelper
      */
     public function getContact()
     {
-        if (is_null($this->contact)) {
+        if (\is_null($this->contact)) {
             $this->contact = new Contact();
         }
 

@@ -160,7 +160,7 @@ class CreateCallFundingOverview extends AbstractPlugin
                         $costs = $costsPerYear[$year];
                     }
 
-                    if (!is_null($affiliation->getDateSelfFunded())) {
+                    if (!\is_null($affiliation->getDateSelfFunded())) {
                         $costSelfFunded += $costs;
                     } else {
                         //We have now the funding in the given year (office version)

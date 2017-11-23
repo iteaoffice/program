@@ -41,7 +41,7 @@ class CallCountryManagerController extends ProgramAbstractController
          */
         $callCountry = $this->getCallService()->findEntityById(CallCountry::class, (int)$this->params('id'));
 
-        if (is_null($callCountry)) {
+        if (\is_null($callCountry)) {
             return $this->notFoundAction();
         }
 
@@ -63,7 +63,7 @@ class CallCountryManagerController extends ProgramAbstractController
         $callCountry = $this->getCallService()->findEntityById(CallCountry::class, (int)$this->params('id'));
 
 
-        if (is_null($callCountry)) {
+        if (\is_null($callCountry)) {
             return $this->notFoundAction();
         }
 
@@ -141,7 +141,7 @@ class CallCountryManagerController extends ProgramAbstractController
         /** @var Country $country */
         $country = $this->getGeneralService()->findEntityById(Country::class, $this->params('country'));
 
-        if (is_null($call) || is_null($country)) {
+        if (\is_null($call) || \is_null($country)) {
             return $this->notFoundAction();
         }
 

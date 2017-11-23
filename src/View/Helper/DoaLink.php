@@ -59,7 +59,7 @@ class DoaLink extends LinkAbstract
             'name' => $this->getDoa(),
         ]);
 
-        if (!is_null($this->getDoa())) {
+        if (!\is_null($this->getDoa())) {
             $this->addRouterParam('id', $this->getDoa()->getId());
         }
 
@@ -91,7 +91,7 @@ class DoaLink extends LinkAbstract
                  * The $doa can be null, we then use the $organisation and $program to produce the link
                  */
                 $renderText = _("txt-render-doa-for-organisation-%s-in-program-%s-link-title");
-                if (is_null($this->getDoa()->getId())) {
+                if (\is_null($this->getDoa()->getId())) {
                     $this->setText(sprintf($renderText, $this->getOrganisation(), $this->getProgram()));
                     $this->addRouterParam('organisationId', $this->getOrganisation()->getId());
                     $this->addRouterParam('programId', $this->getProgram()->getId());

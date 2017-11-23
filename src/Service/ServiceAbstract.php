@@ -214,7 +214,7 @@ abstract class ServiceAbstract implements ServiceInterface
      */
     public function getProjectService(): ProjectService
     {
-        if (is_null($this->projectService)) {
+        if (\is_null($this->projectService)) {
             $this->projectService = $this->getServiceLocator()->get(ProjectService::class);
         }
 

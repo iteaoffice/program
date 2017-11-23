@@ -33,6 +33,7 @@
                     <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/program/list', 'criteria': 'number', 'text': translate('txt-number')} %}</th>
                     <th>{{ translate("txt-amount-of-calls") }}</th>
                     <th>{{ translate("txt-eurkeka-export") }}</th>
+                    <th>{{ translate("txt-invoice-method") }}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -44,6 +45,7 @@
                         <td>{{ program.call.count }}</td>
                         <td><a href="{{ url('zfcadmin/project/export/program',{'id': program.id}) }}"><i
                                         class="fa fa-exchange"></i></a></td>
+                        <td>{% for method in program.invoiceMethod %}{{ method }}{% endfor %}</td>
                     </tr>
                 {% endfor %}
                 </tbody>

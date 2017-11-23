@@ -44,7 +44,7 @@ class CallLink extends LinkAbstract
         /*
          * Set the non-standard options needed to give an other link value
          */
-        if (!is_null($call)) {
+        if (!\is_null($call)) {
             $this->addRouterParam('id', $this->getCall()->getId());
 
             $this->setShowOptions(

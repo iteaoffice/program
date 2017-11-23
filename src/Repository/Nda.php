@@ -44,7 +44,8 @@ class Nda extends EntityRepository
 
     /**
      * @param Contact $contact
-     * @return Entity\Nda|null
+     * @return null|Entity\Nda
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findNdaByContact(Contact $contact): ?Entity\Nda
     {

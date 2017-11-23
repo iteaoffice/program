@@ -55,7 +55,7 @@ class NdaManagerController extends ProgramAbstractController
     public function viewAction()
     {
         $nda = $this->callService->findEntityById(Nda::class, $this->params('id'));
-        if (is_null($nda)) {
+        if (\is_null($nda)) {
             return $this->notFoundAction();
         }
 
@@ -70,7 +70,7 @@ class NdaManagerController extends ProgramAbstractController
         /** @var Nda $nda */
         $nda = $this->getCallService()->findEntityById(Nda::class, $this->params('id'));
 
-        if (is_null($nda)) {
+        if (\is_null($nda)) {
             return $this->notFoundAction();
         }
 
@@ -180,7 +180,7 @@ class NdaManagerController extends ProgramAbstractController
         $contact = $this->getContactService()->findContactById($this->params('contactId'));
         $calls = $this->getProgramService()->findAll(Call::class);
 
-        if (is_null($contact)) {
+        if (\is_null($contact)) {
             return $this->notFoundAction();
         }
 
@@ -231,8 +231,9 @@ class NdaManagerController extends ProgramAbstractController
 
     /**
      * @return JsonModel
+     * @throws \Exception
      */
-    public function approveAction()
+    public function approveAction(): JsonModel
     {
         $nda = $this->params()->fromPost('nda');
         $dateSigned = $this->params()->fromPost('dateSigned');
@@ -247,7 +248,7 @@ class NdaManagerController extends ProgramAbstractController
             );
         }
 
-        if (!\DateTime::createFromFormat('Y-h-d', $dateSigned)) {
+        if (!\DateTime::createFromFormat('Y-m-d', $dateSigned)) {
             return new JsonModel(
                 [
                     'result' => 'error',
@@ -258,7 +259,7 @@ class NdaManagerController extends ProgramAbstractController
 
         /** @var Nda $nda */
         $nda = $this->getCallService()->findEntityById(Nda::class, $nda);
-        $nda->setDateSigned(\DateTime::createFromFormat('Y-h-d', $dateSigned));
+        $nda->setDateSigned(\DateTime::createFromFormat('Y-m-d', $dateSigned));
         $nda->setDateApproved(new \DateTime());
         $nda->setApprover($this->zfcUserAuthentication()->getIdentity());
         $this->getCallService()->updateEntity($nda);

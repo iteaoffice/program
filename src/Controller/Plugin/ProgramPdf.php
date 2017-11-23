@@ -37,7 +37,7 @@ class ProgramPdf extends TcpdfFpdi
      */
     public function header()
     {
-        if (is_null($this->_tplIdx)) {
+        if (\is_null($this->_tplIdx)) {
             if (!file_exists($this->template)) {
                 throw new \InvalidArgumentException(sprintf("Template %s cannot be found", $this->template));
             }
@@ -77,7 +77,7 @@ class ProgramPdf extends TcpdfFpdi
         $this->SetLineWidth(0.1);
         $this->SetFont('', 'B');
         // Header
-        if (is_null($width)) {
+        if (\is_null($width)) {
             $w = [40, 35, 40, 45, 40];
         } else {
             $w = $width;
@@ -108,7 +108,7 @@ class ProgramPdf extends TcpdfFpdi
             $counter = 0;
 
             foreach ($row as $column) {
-                if ($lastRow && $rowCounter === (count($data))) {
+                if ($lastRow && $rowCounter === (\count($data))) {
                     $this->SetFont('', 'B');
                 }
 

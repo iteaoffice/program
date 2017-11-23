@@ -34,11 +34,11 @@ class Funder extends EntityAbstract implements ResourceInterface
     /**
      * Constant for hideOnWebsite = 0.
      */
-    const HIDE_ON_WEBSITE = 0;
+    public const HIDE_ON_WEBSITE = 0;
     /**
      * Constant for hideOnWebsite = 1.
      */
-    const SHOW_ON_WEBSITE = 1;
+    public const SHOW_ON_WEBSITE = 1;
     /**
      * Textual versions of the showOnWebsite.
      *

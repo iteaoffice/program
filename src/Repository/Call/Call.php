@@ -41,7 +41,7 @@ class Call extends EntityRepository
 
         $direction = 'DESC';
         if (isset($filter['direction'])
-            && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)
+            && \in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)
         ) {
             $direction = strtoupper($filter['direction']);
         }
@@ -202,7 +202,7 @@ class Call extends EntityRepository
         /**
          * Check first if we find an open PO
          */
-        if (!is_null($queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult())) {
+        if (!\is_null($queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult())) {
             /*
              * We have found an open PO and call, return the result
              */
@@ -219,7 +219,7 @@ class Call extends EntityRepository
         /*
          * Check first if we find an open FPP
          */
-        if (!is_null($queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult())) {
+        if (!\is_null($queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult())) {
             /*
              * We have found an open PO and call, return the result
              */
@@ -243,7 +243,7 @@ class Call extends EntityRepository
         $queryBuilder->setParameter('active', \Program\Entity\Call\Call::ACTIVE);
         $queryBuilder->setMaxResults(1);
 
-        if (!is_null($queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult())) {
+        if (!\is_null($queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult())) {
             return [
                 'call'        => $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult(),
                 'versionType' => Type::TYPE_PO,

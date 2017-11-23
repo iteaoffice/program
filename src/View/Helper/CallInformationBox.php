@@ -32,7 +32,7 @@ class CallInformationBox extends AbstractViewHelper
      */
     public function __invoke(Call $call = null): string
     {
-        if (is_null($call)) {
+        if (\is_null($call)) {
             return '';
         }
 
