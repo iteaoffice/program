@@ -323,6 +323,13 @@ class Call extends EntityAbstract implements ResourceInterface
      * @var \Program\Entity\Call\Country[]|Collections\ArrayCollection
      */
     private $callCountry;
+    /**
+     * @ORM\ManyToMany(targetEntity="General\Entity\Challenge", cascade={"persist"}, mappedBy="call")
+     * @Annotation\Exclude()
+     *
+     * @var \General\Entity\Challenge[]|Collections\ArrayCollection
+     */
+    private $challenge;
 
     /**
      * Class constructor.
@@ -340,6 +347,7 @@ class Call extends EntityAbstract implements ResourceInterface
         $this->ideaMessageBoard = new Collections\ArrayCollection();
         $this->session = new Collections\ArrayCollection();
         $this->callCountry = new Collections\ArrayCollection();
+        $this->challenge = new Collections\ArrayCollection();
 
         $this->doaRequirement = self::DOA_REQUIREMENT_PER_PROJECT;
         $this->ndaRequirement = self::NDA_REQUIREMENT_PER_CALL;
@@ -876,7 +884,7 @@ class Call extends EntityAbstract implements ResourceInterface
      *
      * @return int|string
      */
-    public function getNdaRequirement($textual = false)
+    public function getNdaRequirement(bool $textual = false)
     {
         if ($textual) {
             return self::$ndaRequirementTemplates[$this->ndaRequirement];
@@ -898,7 +906,7 @@ class Call extends EntityAbstract implements ResourceInterface
      *
      * @return int|string
      */
-    public function getDoaRequirement($textual = false)
+    public function getDoaRequirement(bool $textual = false)
     {
         if ($textual) {
             return self::$doaRequirementTemplates[$this->doaRequirement];
@@ -940,7 +948,7 @@ class Call extends EntityAbstract implements ResourceInterface
      *
      * @return int|string
      */
-    public function getActive($textual = false)
+    public function getActive(bool $textual = false)
     {
         if ($textual) {
             return self::$activeTemplates[$this->active];
@@ -1005,6 +1013,25 @@ class Call extends EntityAbstract implements ResourceInterface
     public function setProjectReport(int $projectReport): Call
     {
         $this->projectReport = $projectReport;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\General\Entity\Challenge[]
+     */
+    public function getChallenge()
+    {
+        return $this->challenge;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\General\Entity\Challenge[] $challenge
+     * @return Call
+     */
+    public function setChallenge($challenge): Call
+    {
+        $this->challenge = $challenge;
 
         return $this;
     }

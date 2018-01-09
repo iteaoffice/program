@@ -141,7 +141,7 @@ class CallCountryManagerController extends ProgramAbstractController
         /** @var Country $country */
         $country = $this->getGeneralService()->findEntityById(Country::class, $this->params('country'));
 
-        if (\is_null($call) || \is_null($country)) {
+        if (null === $call || \is_null($country)) {
             return $this->notFoundAction();
         }
 

@@ -57,7 +57,7 @@ class Doa extends AssertionAbstract
                 if ($doa instanceof DoaEntity) {
                     $organisation = $doa->getOrganisation();
                 }
-                if (\is_null($organisation)) {
+                if (null === $organisation) {
                     /*
                      * The id can originate from two different params
                      */

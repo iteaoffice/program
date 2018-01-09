@@ -47,7 +47,7 @@ class Funder extends EntityRepository
             $direction = strtoupper($filter['direction']);
         }
 
-        if (!\is_null($filter)) {
+        if (null !== $filter) {
             $queryBuilder = $this->applyFilter($queryBuilder, $filter);
         }
 

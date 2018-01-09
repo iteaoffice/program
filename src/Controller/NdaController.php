@@ -55,7 +55,7 @@ class NdaController extends ProgramAbstractController
         $contact = $this->zfcUserAuthentication()->getIdentity();
 
         //When the call requires no NDA, remove it form the form
-        if (!\is_null($call) && $call->getNdaRequirement() !== Call::NDA_REQUIREMENT_PER_CALL) {
+        if (null !== $call && $call->getNdaRequirement() !== Call::NDA_REQUIREMENT_PER_CALL) {
             $call = null;
         }
 
@@ -67,7 +67,7 @@ class NdaController extends ProgramAbstractController
                 return $this->notFoundAction();
             }
             $nda = $this->getCallService()->findNdaByCallAndContact($call, $contact);
-        } elseif (!\is_null($call)) {
+        } elseif (null !== $call) {
             $nda = $this->getCallService()->findNdaByCallAndContact($call, $contact);
         } else {
             $nda = $this->getCallService()->findNdaByContact($contact);
@@ -204,7 +204,7 @@ class NdaController extends ProgramAbstractController
          */
         if (!\is_null($this->params('callId'))) {
             $call = $this->getCallService()->findCallById($this->params('callId'));
-            if (\is_null($call)) {
+            if (null === $call) {
                 return $this->notFoundAction();
             }
             $arrayCollection = new ArrayCollection([$call]);

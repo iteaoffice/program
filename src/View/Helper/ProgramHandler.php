@@ -82,7 +82,7 @@ class ProgramHandler extends AbstractViewHelper
                 case 'call':
                     $call = $this->findParamValueFromContent($content, $parameter);
 
-                    if (!\is_null($call)) {
+                    if (null !== $call) {
                         $this->setCallById($call);
                     }
                     break;
@@ -155,7 +155,7 @@ class ProgramHandler extends AbstractViewHelper
             [
                 'displayNameCall' => 'name',
                 'calls'           => $this->getCallService()->findNonEmptyAndActiveCalls($program),
-                'callId'          => !\is_null($call) ? $call->getId() : null,
+                'callId'          => null !== $call ? $call->getId() : null,
             ]
         );
     }

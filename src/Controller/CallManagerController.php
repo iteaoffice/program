@@ -35,9 +35,9 @@ use Zend\View\Model\ViewModel;
 class CallManagerController extends ProgramAbstractController
 {
     /**
-     * @return \Zend\View\Model\ViewModel
+     * @return ViewModel
      */
-    public function listAction()
+    public function listAction(): ViewModel
     {
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getProgramFilter();
@@ -64,12 +64,13 @@ class CallManagerController extends ProgramAbstractController
     }
 
     /**
-     * @return array|ViewModel
+     * @return ViewModel
      */
-    public function viewAction()
+    public function viewAction(): ViewModel
     {
-        $call = $this->getProgramService()->findEntityById(Call::class, $this->params('id'));
-        if (\is_null($call)) {
+        $call = $this->getCallService()->findCallById($this->params('id'));
+
+        if (null === $call) {
             return $this->notFoundAction();
         }
 
@@ -78,25 +79,22 @@ class CallManagerController extends ProgramAbstractController
 
         return new ViewModel(
             [
-                'call'      => $call,
-                'countries' => $countries,
+                'call'           => $call,
+                'countries'      => $countries,
+                'generalService' => $this->generalService
             ]
         );
     }
 
     /**
-     * Create a new template.
-     *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Zend\Http\Response|ViewModel
      */
     public function newAction()
     {
-        $data = array_merge($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
+        $data = $this->getRequest()->getPost()->toArray();
 
         $form = $this->getFormService()->prepare(Call::class, null, $data);
         $form->remove('delete');
-
-        $form->setAttribute('class', 'form-horizontal');
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
@@ -108,7 +106,8 @@ class CallManagerController extends ProgramAbstractController
                 $call = $form->getData();
 
                 $call = $this->getProgramService()->newEntity($call);
-                $this->redirect()->toRoute(
+
+                return $this->redirect()->toRoute(
                     'zfcadmin/call/view',
                     [
                         'id' => $call->getId(),
@@ -126,7 +125,7 @@ class CallManagerController extends ProgramAbstractController
     public function editAction()
     {
         $call = $this->getProgramService()->findEntityById(Call::class, $this->params('id'));
-        $data = array_merge($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
+        $data = $this->getRequest()->getPost()->toArray();
 
         $form = $this->getFormService()->prepare($call, $call, $data);
 
@@ -141,7 +140,8 @@ class CallManagerController extends ProgramAbstractController
 
                 /** @var Call $call */
                 $call = $this->getCallService()->updateEntity($call);
-                $this->redirect()->toRoute(
+
+                return $this->redirect()->toRoute(
                     'zfcadmin/call/view',
                     [
                         'id' => $call->getId(),
@@ -154,13 +154,15 @@ class CallManagerController extends ProgramAbstractController
     }
 
     /**
-     * Edit an template by finding it and call the corresponding form.
-     *
-     * @return \Zend\View\Model\ViewModel
+     * @return ViewModel
      */
-    public function sizeAction()
+    public function sizeAction(): ViewModel
     {
         $call = $this->getCallService()->findCallById($this->params('id'));
+
+        if (null === $call) {
+            return $this->notFoundAction();
+        }
 
         //Only add the active projects
         $activeProjects = $this->getProjectService()->findProjectsByCall($call, ProjectService::WHICH_LABELLED);
@@ -196,16 +198,18 @@ class CallManagerController extends ProgramAbstractController
     }
 
     /**
-     * Edit an template by finding it and call the corresponding form.
-     *
-     * @return \Zend\View\Model\ViewModel
+     * @return ViewModel
      */
-    public function fundingAction()
+    public function fundingAction(): ViewModel
     {
         $callId = $this->params('id', $this->getCallService()->findFirstAndLastCall()->lastCall->getId());
 
-
         $call = $this->getCallService()->findCallById($callId);
+
+        if (null === $call) {
+            return $this->notFoundAction();
+        }
+
         $minMaxYear = $this->getCallService()->findMinAndMaxYearInCall($call);
 
         $year = $this->params('year', $minMaxYear->maxYear);
@@ -251,12 +255,16 @@ class CallManagerController extends ProgramAbstractController
     }
 
     /**
-     * @return \Zend\Http\PhpEnvironment\Response|\Zend\Stdlib\ResponseInterface
+     * @return \Zend\Stdlib\ResponseInterface
      */
     public function downloadFundingAction()
     {
         $callId = $this->params('id');
         $call = $this->getCallService()->findCallById($callId);
+
+        if (null === $call) {
+            return $this->getResponse();
+        }
 
         $string = $this->createFundingDownload()->create($call);
 

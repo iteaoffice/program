@@ -107,6 +107,20 @@ class Program extends EntityAbstract implements ResourceInterface
      * @var \Invoice\Entity\Method[]|Collections\ArrayCollection
      */
     private $invoiceMethod;
+    /**
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\Parent\Invoice", cascade={"persist"}, mappedBy="program")
+     * @Annotation\Exclude()
+     *
+     * @var \Organisation\Entity\Parent\Invoice[]|Collections\ArrayCollection
+     */
+    private $parentInvoice;
+    /**
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\Parent\InvoiceExtra", cascade={"persist"}, mappedBy="program")
+     * @Annotation\Exclude()
+     *
+     * @var \Organisation\Entity\Parent\InvoiceExtra[]|Collections\ArrayCollection
+     */
+    private $parentInvoiceExtra;
 
     /**
      * Class constructor.
@@ -117,6 +131,8 @@ class Program extends EntityAbstract implements ResourceInterface
         $this->doa = new Collections\ArrayCollection();
         $this->parentDoa = new Collections\ArrayCollection();
         $this->invoiceMethod = new Collections\ArrayCollection();
+        $this->parentInvoice = new Collections\ArrayCollection();
+        $this->parentInvoiceExtra = new Collections\ArrayCollection();
     }
 
     /**
@@ -315,6 +331,44 @@ class Program extends EntityAbstract implements ResourceInterface
     public function setParentDoa($parentDoa)
     {
         $this->parentDoa = $parentDoa;
+
+        return $this;
+    }
+
+    /**
+     * @return \Organisation\Entity\Parent\Invoice[]|Collections\ArrayCollection
+     */
+    public function getParentInvoice()
+    {
+        return $this->parentInvoice;
+    }
+
+    /**
+     * @param \Organisation\Entity\Parent\Invoice $parentInvoice
+     * @return Program
+     */
+    public function setParentInvoice(\Organisation\Entity\Parent\Invoice $parentInvoice): Program
+    {
+        $this->parentInvoice = $parentInvoice;
+
+        return $this;
+    }
+
+    /**
+     * @return \Organisation\Entity\Parent\InvoiceExtra[]|Collections\ArrayCollection
+     */
+    public function getParentInvoiceExtra()
+    {
+        return $this->parentInvoiceExtra;
+    }
+
+    /**
+     * @param \Organisation\Entity\Parent\InvoiceExtra $parentInvoiceExtra
+     * @return Program
+     */
+    public function setParentInvoiceExtra(\Organisation\Entity\Parent\InvoiceExtra $parentInvoiceExtra): Program
+    {
+        $this->parentInvoiceExtra = $parentInvoiceExtra;
 
         return $this;
     }

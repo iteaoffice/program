@@ -39,6 +39,13 @@
     <dt>{{ translate("txt-project-report") }}</dt>
     <dd>{{ translate(call.getProjectReport(true)) }}</dd>
 
+    <dt>{{ translate("txt-challenges") }}</dt>
+    {% for challenge in generalService.findChallengesByCall(call) %}
+        <dd>{{ challengeLink(challenge,'view-admin','name') }}</dd>
+    {% else %}
+        <dd>{{ translate("txt-no-challenges-could-be-found") }}</dd>
+    {% endfor %}
+
 
 </dl>
 

@@ -35,7 +35,7 @@ class DoaController extends ProgramAbstractController
     public function viewAction()
     {
         $doa = $this->getProgramService()->findEntityById(Doa::class, $this->params('id'));
-        if (\is_null($doa) || count($doa->getObject()) === 0) {
+        if (null === $doa || count($doa->getObject()) === 0) {
             return $this->notFoundAction();
         }
 
@@ -110,7 +110,7 @@ class DoaController extends ProgramAbstractController
     {
         /** @var Doa $doa */
         $doa = $this->getProgramService()->findEntityById(Doa::class, $this->params('id'));
-        if (\is_null($doa) || count($doa->getObject()) === 0) {
+        if (null === $doa || count($doa->getObject()) === 0) {
             return $this->notFoundAction();
         }
         $data = array_merge_recursive(
@@ -202,7 +202,7 @@ class DoaController extends ProgramAbstractController
     {
         set_time_limit(0);
         $doa = $this->getProgramService()->findEntityById(Doa::class, $this->params('id'));
-        if (\is_null($doa) || count($doa->getObject()) === 0) {
+        if (null === $doa || count($doa->getObject()) === 0) {
             return $this->notFoundAction();
         }
         /*

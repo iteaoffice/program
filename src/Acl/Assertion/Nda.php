@@ -78,7 +78,7 @@ class Nda extends AssertionAbstract
                 }
 
                 //We have no 2 methods to get the call, if the call is set check if the status is correct
-                if (!\is_null($call)) {
+                if (null !== $call) {
                     return true;
 
                     //return $this->getCallService()->getCallStatus($call)->result !== CallService::UNDEFINED;

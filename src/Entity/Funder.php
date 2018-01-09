@@ -300,7 +300,7 @@ class Funder extends EntityAbstract implements ResourceInterface
      *
      * @return int
      */
-    public function getShowOnWebsite($textual = false)
+    public function getShowOnWebsite(bool $textual = false)
     {
         if ($textual) {
             return self::$showOnWebsiteTemplates[$this->showOnWebsite];

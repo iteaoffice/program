@@ -28,7 +28,7 @@ class Call extends EntityRepository
      *
      * @return Query
      */
-    public function findFiltered(array $filter)
+    public function findFiltered(array $filter): Query
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('program_entity_call_call');
@@ -82,7 +82,7 @@ class Call extends EntityRepository
      *
      * @return null|CallEntity
      */
-    public function findOpenCall($type)
+    public function findOpenCall($type): ?CallEntity
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('program_entity_call_call');
@@ -90,7 +90,7 @@ class Call extends EntityRepository
 
         //Filter here on the active calls
         $queryBuilder->andWhere('program_entity_call_call.active = :active');
-        $queryBuilder->setParameter('active', \Program\Entity\Call\Call::ACTIVE);
+        $queryBuilder->setParameter('active', CallEntity::ACTIVE);
 
         $today = new \DateTime();
         switch ($type) {
@@ -119,7 +119,7 @@ class Call extends EntityRepository
      *
      * @return array
      */
-    public function findNonEmptyAndActiveCalls(ProgramEntity $program = null)
+    public function findNonEmptyAndActiveCalls(ProgramEntity $program = null): array
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('program_entity_call_call');
@@ -147,7 +147,7 @@ class Call extends EntityRepository
      *
      * @return array
      */
-    public function findActiveCalls(ProgramEntity $program = null)
+    public function findActiveCalls(ProgramEntity $program = null): array
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('program_entity_call_call');
@@ -167,7 +167,7 @@ class Call extends EntityRepository
     /**
      * @return CallEntity[]
      */
-    public function findWithAchievement()
+    public function findWithAchievement(): array
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('program_entity_call_call');
@@ -182,7 +182,7 @@ class Call extends EntityRepository
     /**
      * @return array
      */
-    public function findLastCallAndActiveVersionType()
+    public function findLastCallAndActiveVersionType(): array
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('program_entity_call_call');
@@ -300,7 +300,7 @@ class Call extends EntityRepository
      *
      * @return array
      */
-    public function findProjectAndPartners(CallEntity $call)
+    public function findProjectAndPartners(CallEntity $call): array
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('COUNT(DISTINCT a.organisation) partners');
