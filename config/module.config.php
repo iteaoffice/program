@@ -17,6 +17,7 @@ use Program\Options;
 use Program\Service;
 use Program\View;
 use Zend\Stdlib;
+use Zend\I18n\Translator\TranslatorInterface;
 
 $config = [
     'controllers'        => [
@@ -29,6 +30,7 @@ $config = [
             Controller\NdaManagerController::class         => Controller\Factory\ControllerFactory::class,
             Controller\ProgramManagerController::class     => Controller\Factory\ControllerFactory::class,
             Controller\SessionController::class            => Controller\Factory\ControllerFactory::class,
+            Controller\SessionManagerController::class     => \Zend\Config\AbstractConfigFactory::class,
         ],
     ],
     'controller_plugins' => [
@@ -97,6 +99,7 @@ $config = [
             Navigation\Invokable\NdaLabel::class       => Navigation\Factory\NavigationInvokableFactory::class,
             Navigation\Invokable\ProgramLabel::class   => Navigation\Factory\NavigationInvokableFactory::class,
             Navigation\Invokable\UploadNdaLabel::class => Navigation\Factory\NavigationInvokableFactory::class,
+            TranslatorInterface::class                 => \Zend\I18n\Translator\TranslatorServiceFactory::class,
         ],
     ],
     'doctrine'           => [

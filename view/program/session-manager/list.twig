@@ -1,0 +1,67 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-session-list")) %}
+
+{% do form.prepare() %}
+{{ form().openTag(form)|raw }}
+{% set filter = form.get('filter') %}
+
+<input type="hidden" name="filter[order]" value="{{ order }}">
+<input type="hidden" name="filter[direction]" value="{{ direction }}">
+
+<div class="row">
+    <div class="col-md-10">
+        <h1 class="display-4">{{ translate("txt-session-list") }} {{ funderLink(null, 'new','button') }}</h1>
+
+        <div class="row">
+            <div class="col-md-6">
+                <p class="lead">{{ translate("txt-session-list-explanation") }}</p>
+            </div>
+            <div class="col-md-6">
+                <div class="input-group">
+                    {{ formelement(filter.get('search')) }}
+                    <span class="input-group-btn">{{ formelement(form.get('submit')) }}</span></div>
+            </div>
+        </div>
+
+        {% if paginator.pageRange > 0 %}
+            <table class="table table-hover table-striped table-condensed table-sm">
+                <thead>
+                <tr>
+                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/funder/list', 'criteria': 'contact', 'text': translate('txt-contact')} %}</th>
+                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/funder/list', 'criteria': 'country', 'text': translate('txt-country')} %}</th>
+                    <th>{{ translate("txt-position") }}</th>
+                    <th>{{ translate("txt-show-on-website") }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for session in paginator.getCurrentItems() %}
+                    <tr>
+                        <td>{{ funderLink(funder,'view-admin', 'name') }} {{ funderLink(funder,'edit', 'icon') }}</td>
+                        <td>{{ countryLink(funder.country,'view-admin','name') }}</td>
+                        <td>{{ funder.position }}</td>
+                        <td>{% if funder.getShowOnWebsite %}{{ translate(funder.getShowOnWebsite(true)) }}{% endif %}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% include 'program/partial/pagination-control' %}
+        {% else %}
+            {{ ztbalert().info(translate("txt-no-sessions-found"))|raw }}
+        {% endif %}
+    </div>
+    <div class="col-md-2">
+        <div class="well well-sm">
+            <fieldset>
+                {{ ztbformelement(filter.get('call')) }}
+
+                <div class="form-group row">
+                    {{ ztbformelement(form.get('submit')) }}
+                    {{ ztbformelement(form.get('clear')) }}
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>
+
+{{ form().closeTag()|raw }}
+

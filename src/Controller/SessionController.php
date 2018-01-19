@@ -18,18 +18,19 @@ declare(strict_types=1);
 namespace Program\Controller;
 
 use Program\Entity\Call\Session;
+use Zend\Stdlib\ResponseInterface;
 
 /**
  * Class SessionController
  *
  * @package Program\Controller
  */
-class SessionController extends ProgramAbstractController
+final class SessionController extends ProgramAbstractController
 {
     /**
-     * @return \Zend\Stdlib\ResponseInterface
+     * @return ResponseInterface
      */
-    public function downloadAction()
+    public function downloadAction(): ResponseInterface
     {
         $session = $this->getProgramService()->findEntityById(Session::class, $this->params('id'));
 
