@@ -22,7 +22,7 @@ use Program\Entity\Call\Call;
  * Class CallLink
  * @package Program\View\Helper
  */
-class CallLink extends LinkAbstract
+class CallLink extends AbstractLink
 {
     /**
      * @param Call|null $call
@@ -36,8 +36,6 @@ class CallLink extends LinkAbstract
         $this->setCall($call);
         $this->setAction($action);
         $this->setShow($show);
-
-        $this->classes = [];
 
         $this->addClasses($classes);
 

@@ -22,8 +22,7 @@ use Zend\Form\Annotation;
 
 /**
  * @ORM\Table(name="programcall_session")
- * @ORM\Entity
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @ORM\Entity(repositoryClass="Program\Repository\Call\Session")
  * @Annotation\Name("programcall_session")
  *
  * @category    Program
@@ -51,8 +50,17 @@ class Session extends EntityAbstract
      * @ORM\ManyToOne(targetEntity="Program\Entity\Call\Call", cascade={"persist"}, inversedBy="session")
      * @ORM\JoinColumn(name="programcall_id", referencedColumnName="programcall_id", nullable=false)
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
-     * @Annotation\Options({"target_class":"Program\Entity\Call\Call"})
-     * @Annotation\Attributes({"label":"txt-program-call"})
+     * @Annotation\Options({
+     *     "label":"txt-program-call",
+     *     "target_class": "Program\Entity\Call\Call",
+     *     "find_method": {
+     *         "name": "findBy",
+     *         "params": {
+     *             "criteria": {},
+     *             "orderBy": {"id": "DESC"}
+     *         }
+     *     }
+     * })
      *
      * @var \Program\Entity\Call\Call
      */
@@ -61,9 +69,18 @@ class Session extends EntityAbstract
      * @ORM\ManyToOne(targetEntity="Project\Entity\Idea\Tool", cascade={"persist"}, inversedBy="session")
      * @ORM\JoinColumn(name="tool_id", referencedColumnName="tool_id", nullable=true)
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
-     * @Annotation\Options({"target_class":"Project\Entity\Idea\Tool"})
-     * @Annotation\Attributes({"label":"txt-program-session-idea-tool-label"})
-     * @Annotation\Options({"help-block":"txt-program-session-idea-tool-help-block"})
+     * @Annotation\Options({
+     *     "label":"txt-idea-tool",
+     *     "help-block":"txt-idea-tool-help-block",
+     *     "target_class":"Project\Entity\Idea\Tool",
+     *     "find_method": {
+     *         "name": "findBy",
+     *         "params": {
+     *             "criteria": {},
+     *             "orderBy": {"id": "DESC"}
+     *         }
+     *     }
+     * })
      *
      * @var \Project\Entity\Idea\Tool|null
      */
@@ -140,7 +157,7 @@ class Session extends EntityAbstract
     /**
      * @return int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -159,7 +176,7 @@ class Session extends EntityAbstract
     /**
      * @return string
      */
-    public function getSession(): string
+    public function getSession(): ?string
     {
         return $this->session;
     }

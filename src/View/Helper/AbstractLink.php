@@ -6,7 +6,7 @@
  * @category    Program
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2018 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        https://itea3.org
@@ -23,7 +23,6 @@ use General\Entity\Country;
 use Organisation\Entity\Organisation;
 use Program\Entity\Call\Call;
 use Program\Entity\Call\Country as CallCountry;
-use Program\Entity\Call\Session;
 use Program\Entity\Doa;
 use Program\Entity\EntityAbstract;
 use Program\Entity\Funder;
@@ -34,10 +33,10 @@ use Zend\View\Helper\ServerUrl;
 use Zend\View\Helper\Url;
 
 /**
- * Class LinkAbstract
+ * Class AbstractLink
  * @package Program\View\Helper
  */
-abstract class LinkAbstract extends AbstractViewHelper
+abstract class AbstractLink extends AbstractViewHelper
 {
     /**
      * @var RouteMatch
@@ -63,6 +62,14 @@ abstract class LinkAbstract extends AbstractViewHelper
      * @var string
      */
     protected $alternativeShow;
+    /**
+     * @var array List of parameters needed to construct the URL from the router
+     */
+    protected $fragment = null;
+    /**
+     * @var array Url query params
+     */
+    protected $query = [];
     /**
      * @var array List of parameters needed to construct the URL from the router
      */
@@ -96,10 +103,6 @@ abstract class LinkAbstract extends AbstractViewHelper
      */
     protected $funder;
     /**
-     * @var Session
-     */
-    protected $session;
-    /**
      * @var Organisation
      */
     protected $organisation;
@@ -130,28 +133,36 @@ abstract class LinkAbstract extends AbstractViewHelper
      */
     public function createLink(): string
     {
-        /**
-         * @var $url Url
-         */
+        /** @var $url Url */
         $url = $this->getHelperPluginManager()->get('url');
-
-        /**
-         * @var $serverUrl ServerUrl
-         */
+        /** @var $serverUrl ServerUrl */
         $serverUrl = $this->getHelperPluginManager()->get('serverUrl');
+
+        // Init params and layout
+        $this->fragment = null;
+        $this->query = [];
+        $this->classes = [];
         $this->linkContent = [];
 
         $this->parseAction();
         $this->parseShow();
 
         if ('social' === $this->getShow()) {
-            return $serverUrl() . $url($this->router, $this->routerParams);
+            return $serverUrl() . $url(
+                $this->router,
+                $this->routerParams,
+                ['query' => $this->query, 'fragment' => $this->fragment]
+            );
         }
         $uri = '<a href="%s" title="%s" class="%s">%s</a>';
 
         return sprintf(
             $uri,
-            $serverUrl() . $url($this->router, $this->routerParams),
+            $serverUrl() . $url(
+                $this->router,
+                $this->routerParams,
+                ['query' => $this->query, 'fragment' => $this->fragment]
+            ),
             htmlentities((string) $this->text),
             implode(' ', $this->classes),
             \in_array($this->getShow(), ['icon', 'button', 'alternativeShow']) ? implode('', $this->linkContent)
@@ -473,7 +484,7 @@ abstract class LinkAbstract extends AbstractViewHelper
     /**
      * @param  Doa $doa
      *
-     * @return LinkAbstract
+     * @return AbstractLink
      */
     public function setDoa($doa)
     {
@@ -497,9 +508,9 @@ abstract class LinkAbstract extends AbstractViewHelper
     /**
      * @param  Nda $nda
      *
-     * @return LinkAbstract
+     * @return AbstractLink
      */
-    public function setNda($nda): LinkAbstract
+    public function setNda($nda): AbstractLink
     {
         $this->nda = $nda;
 
@@ -521,7 +532,7 @@ abstract class LinkAbstract extends AbstractViewHelper
     /**
      * @param  Funder $funder
      *
-     * @return LinkAbstract
+     * @return AbstractLink
      */
     public function setFunder($funder)
     {
@@ -541,7 +552,7 @@ abstract class LinkAbstract extends AbstractViewHelper
     /**
      * @param  Organisation $organisation
      *
-     * @return LinkAbstract
+     * @return AbstractLink
      */
     public function setOrganisation($organisation)
     {
@@ -561,7 +572,7 @@ abstract class LinkAbstract extends AbstractViewHelper
     /**
      * @param  Program $program
      *
-     * @return LinkAbstract
+     * @return AbstractLink
      */
     public function setProgram($program)
     {
@@ -581,7 +592,7 @@ abstract class LinkAbstract extends AbstractViewHelper
     /**
      * @param int $page
      *
-     * @return LinkAbstract
+     * @return AbstractLink
      */
     public function setPage($page)
     {
@@ -605,7 +616,7 @@ abstract class LinkAbstract extends AbstractViewHelper
     /**
      * @param Call $call
      *
-     * @return LinkAbstract
+     * @return AbstractLink
      */
     public function setCall($call)
     {
@@ -629,35 +640,11 @@ abstract class LinkAbstract extends AbstractViewHelper
     /**
      * @param Country $country
      *
-     * @return LinkAbstract
+     * @return AbstractLink
      */
     public function setCountry($country)
     {
         $this->country = $country;
-
-        return $this;
-    }
-
-    /**
-     * @return Session
-     */
-    public function getSession()
-    {
-        if (\is_null($this->session)) {
-            $this->session = new Session();
-        }
-
-        return $this->session;
-    }
-
-    /**
-     * @param Session $session
-     *
-     * @return LinkAbstract
-     */
-    public function setSession($session)
-    {
-        $this->session = $session;
 
         return $this;
     }
@@ -677,7 +664,7 @@ abstract class LinkAbstract extends AbstractViewHelper
     /**
      * @param CallCountry $callCountry
      *
-     * @return LinkAbstract
+     * @return AbstractLink
      */
     public function setCallCountry($callCountry)
     {
@@ -701,7 +688,7 @@ abstract class LinkAbstract extends AbstractViewHelper
     /**
      * @param Contact $contact
      *
-     * @return LinkAbstract
+     * @return AbstractLink
      */
     public function setContact($contact)
     {
@@ -709,4 +696,6 @@ abstract class LinkAbstract extends AbstractViewHelper
 
         return $this;
     }
+
+
 }

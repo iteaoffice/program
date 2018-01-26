@@ -23,6 +23,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use Program\Service\FormService;
 use Program\Service\ProgramService;
+use Project\Service\IdeaService;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\I18n\Translator\TranslatorInterface;
@@ -46,6 +47,11 @@ final class SessionManagerController extends AbstractActionController
     private $programService;
 
     /**
+     * @var IdeaService
+     */
+    private $ideaService;
+
+    /**
      * @var FormService
      */
     private $formService;
@@ -58,16 +64,19 @@ final class SessionManagerController extends AbstractActionController
     /**
      * SessionManagerController constructor.
      * @param ProgramService      $programService
+     * @param IdeaService         $ideaService
      * @param FormService         $formService
      * @param TranslatorInterface $translator
      */
     public function __construct(
         ProgramService      $programService,
+        IdeaService         $ideaService,
         FormService         $formService,
         TranslatorInterface $translator
     )
     {
         $this->programService = $programService;
+        $this->ideaService    = $ideaService;
         $this->formService    = $formService;
         $this->translator     = $translator;
     }
@@ -107,7 +116,8 @@ final class SessionManagerController extends AbstractActionController
         $session = $this->programService->findEntityById(Session::class, $this->params('id'));
 
         return new ViewModel([
-            'session' => $session,
+            'session'     => $session,
+            'ideaService' => $this->ideaService
         ]);
     }
 
@@ -124,15 +134,20 @@ final class SessionManagerController extends AbstractActionController
 
         $session = new Session();
         $form = $this->formService->prepare($session, null, $data);
-
         $form->remove('delete');
 
-        if ($request->isPost() && $form->isValid()) {
-            /** @var Session $session */
-            $session = $form->getData();
-            $this->programService->newEntity($session);
+        if ($request->isPost()){
+            if (isset($data['cancel'])) {
+                return $this->redirect()->toRoute('zfcadmin/session/list');
+            }
 
-            return $this->redirect()->toRoute('zfcadmin/session/view', ['id' => $session->getId()]);
+            if($form->isValid()) {
+                /** @var Session $session */
+                $session = $form->getData();
+                $this->programService->newEntity($session);
+
+                return $this->redirect()->toRoute('zfcadmin/session/view', ['id' => $session->getId()]);
+            }
         }
 
         return new ViewModel([
@@ -160,14 +175,14 @@ final class SessionManagerController extends AbstractActionController
                     $this->translator->translate("txt-session-has-successfully-been-deleted")
                 ));
 
-                return $this->redirect()->toRoute('zfcadmin/funder/list');
+                return $this->redirect()->toRoute('zfcadmin/session/list');
             }
 
             if (!isset($data['cancel'])) {
                 $this->programService->updateEntity($session);
             }
 
-            return $this->redirect()->toRoute('zfcadmin/funder/view', ['id' => $session->getId()]);
+            return $this->redirect()->toRoute('zfcadmin/session/view', ['id' => $session->getId()]);
         }
 
         return new ViewModel([

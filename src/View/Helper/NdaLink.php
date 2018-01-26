@@ -25,7 +25,7 @@ use Program\Entity\Nda;
  * Class NdaLink
  * @package Program\View\Helper
  */
-class NdaLink extends LinkAbstract
+class NdaLink extends AbstractLink
 {
     /**
      * @param Nda|null $nda
@@ -51,8 +51,6 @@ class NdaLink extends LinkAbstract
         if (!$this->hasAccess($this->getNda(), NdaAssertion::class, $this->getAction())) {
             return '';
         }
-
-        $this->classes = [];
 
         $this->addRouterParam('id', $this->getNda()->getId());
         $this->addRouterParam('callId', $this->getCall()->getId());

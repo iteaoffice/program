@@ -19,13 +19,14 @@ namespace Program;
 
 use Program\Service\FormService;
 use Program\Service\ProgramService;
+use Project\Service\IdeaService;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 
 return [
     ConfigAbstractFactory::class => [
         Controller\SessionManagerController::class => [
-            ProgramService::class, FormService::class, TranslatorInterface::class
+            ProgramService::class, IdeaService::class, FormService::class, TranslatorInterface::class
         ],
     ]
 ];

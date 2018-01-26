@@ -26,7 +26,7 @@ use Program\Entity\Call\Country as CallCountry;
  * Class CallCountryLink
  * @package Program\View\Helper
  */
-class CallCountryLink extends LinkAbstract
+class CallCountryLink extends AbstractLink
 {
     /**
      * @param CallCountry|null $callCountry
@@ -49,8 +49,6 @@ class CallCountryLink extends LinkAbstract
         $this->setCall($call);
         $this->setAction($action);
         $this->setShow($show);
-
-        $this->classes = [];
 
         if (!$this->hasAccess(
             $this->getCallCountry(),

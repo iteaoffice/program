@@ -24,8 +24,13 @@ use Program\Entity\Call\Session;
  * Class CallSessionLink
  * @package Program\View\Helper
  */
-class CallSessionLink extends LinkAbstract
+class CallSessionLink extends AbstractLink
 {
+    /**
+     * @var Session
+     */
+    private $session;
+
     /**
      * @param Session $session
      * @param string $action
@@ -40,17 +45,14 @@ class CallSessionLink extends LinkAbstract
         $action = 'view',
         $show = 'text'
     ): string {
-        $this->setSession($session);
+        $this->session = $session;
         $this->setAction($action);
         $this->setShow($show);
-        /*
-         * Set the non-standard options needed to give an other link value
-         */
-        $this->setShowOptions(
-            [
-                'name' => $this->getSession(),
-            ]
-        );
+
+        // Set the non-standard options needed to give an other link value
+        $this->setShowOptions([
+            'name' => $this->getSession(),
+        ]);
 
         $this->addRouterParam('id', $this->getSession()->getId());
 
@@ -69,23 +71,50 @@ class CallSessionLink extends LinkAbstract
                     'route-' . str_replace(
                         'doctrineormmodule_proxy___cg___',
                         '',
-                        $this->getSession()->get("underscore_entity_name")
+                        $this->getSession()->get('underscore_entity_name')
                     )
                 );
-                $this->setText(sprintf($this->translate("txt-view-session-%s"), $this->getSession()->getSession()));
+                $this->setText(sprintf($this->translate('txt-view-session-%s'), $this->getSession()->getSession()));
                 break;
             case 'download':
                 $this->setRouter('program/session/download');
-                $this->setText(sprintf($this->translate("txt-download-session-%s"), $this->getSession()->getSession()));
+                $this->setText(sprintf($this->translate('txt-download-session-%s'), $this->getSession()->getSession()));
+                break;
+            case 'view-admin':
+                $this->setRouter('zfcadmin/session/view');
+                $this->setText($this->getSession()->getSession());
+                break;
+            case 'edit-admin':
+                $this->setRouter('zfcadmin/session/edit');
+                $this->setText(sprintf(
+                    $this->translate('txt-edit-session-%s'),
+                    $this->getSession()->getSession()
+                ));
+                break;
+            case 'new-admin':
+                $this->setRouter('zfcadmin/session/new');
+                $this->setText($this->translate('txt-new-session'));
                 break;
             default:
                 throw new \InvalidArgumentException(
                     sprintf(
-                        "%s is an incorrect action for %s",
+                        '%s is an incorrect action for %s',
                         $this->getAction(),
                         __CLASS__
                     )
                 );
         }
+    }
+
+    /**
+     * @return Session
+     */
+    private function getSession(): Session
+    {
+        if ($this->session === null) {
+            $this->session = new Session();
+        }
+
+        return $this->session;
     }
 }

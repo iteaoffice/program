@@ -25,7 +25,7 @@ use Program\Entity\Program;
  * Class DoaLink
  * @package Program\View\Helper
  */
-class DoaLink extends LinkAbstract
+class DoaLink extends AbstractLink
 {
     /**
      * @param Doa|null $doa
@@ -51,8 +51,6 @@ class DoaLink extends LinkAbstract
         if (!$this->hasAccess($this->getDoa(), DoaAssertion::class, $this->getAction())) {
             return '';
         }
-
-        $this->classes = [];
 
         // Set the non-standard options needed to give an other link value
         $this->setShowOptions([

@@ -18,6 +18,7 @@ declare(strict_types=1);
 
 namespace Program\Form;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use DoctrineORMModule\Form\Element\EntityMultiCheckbox;
 use Program\Entity\Call\Call;
@@ -58,7 +59,11 @@ class SessionFilter extends Form
             'options' => [
                 'target_class'   => Call::class,
                 'find_method'    => [
-                    'name'   => 'findAll'
+                    'name'   => 'findBy',
+                    'params' => [
+                        'criteria' => [],
+                        'orderBy'  => ['id' => Criteria::DESC],
+                    ]
                 ],
                 'inline'         => true,
                 'object_manager' => $entityManager,

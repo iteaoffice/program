@@ -1,0 +1,33 @@
+<h2>{{ translate("txt-call-information") }}</h2>
+<dl class="dl-horizontal">
+    <dt>{{ translate("txt-call-id") }}</dt>
+    <dd>{{ call.id }}</dd>
+    <dt>{{ translate("txt-program") }}</dt>
+    <dd>{{ programLink(call.program,'view-admin','name') }}</dd>
+    <dt>{{ translate("txt-call") }}</dt>
+    <dd>{{ call }}</dd>
+    <dt>{{ translate("txt-po-open-date") }}</dt>
+    <dd>{{ call.poOpenDate|string_date }} ({{ call.poOpenDate|date('d-m-Y H:i:s') }})</dd>
+    <dt>{{ translate("txt-po-close-date") }}</dt>
+    <dd>{{ call.poCloseDate|string_date }} ({{ call.poCloseDate|date('d-m-Y H:i:s') }})</dd>
+    <dt>{{ translate("txt-fpp-open-date") }}</dt>
+    <dd>{{ call.fppOpenDate|string_date }} ({{ call.fppOpenDate|date('d-m-Y H:i:s') }})</dd>
+    <dt>{{ translate("txt-fpp-close-date") }}</dt>
+    <dd>{{ call.fppCloseDate|string_date }} ({{ call.fppCloseDate|date('d-m-Y H:i:s') }})</dd>
+    <dt>{{ translate("txt-active") }}</dt>
+    <dd>{{ translate(call.getActive(true)) }}</dd>
+    <dt>{{ translate("txt-doa-requirement") }}</dt>
+    <dd>{{ translate(call.getDoaRequirement(true)) }}</dd>
+    <dt>{{ translate("txt-nda-requirement") }}</dt>
+    <dd>{{ translate(call.getNdaRequirement(true)) }}</dd>
+    <dt>{{ translate("txt-loi-requirement") }}</dt>
+    <dd>{{ translate(call.getLoiRequirement(true)) }}</dd>
+    <dt>{{ translate("txt-project-report") }}</dt>
+    <dd>{{ translate(call.getProjectReport(true)) }}</dd>
+    <dt>{{ translate("txt-challenges") }}</dt>
+    {% for challenge in generalService.findChallengesByCall(call) %}
+        <dd>{{ challengeLink(challenge,'view-admin','name') }}</dd>
+    {% else %}
+        <dd>{{ translate("txt-no-challenges-could-be-found") }}</dd>
+    {% endfor %}
+</dl>

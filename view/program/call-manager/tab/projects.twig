@@ -1,0 +1,24 @@
+<h2>{{ translate("txt-projects-in-call-%s")|format(call) }}</h2>
+
+{% if call.project|length > 0 %}
+    <table class="table table-hover table-striped table-condensed table-sm">
+        <thead>
+        <tr>
+            <th>{{ translate("txt-project") }}</th>
+            <th>{{ translate("txt-project-leader") }}</th>
+            <th>{{ translate("txt-project-partners") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for project in call.project %}
+            <tr>
+                <td>{{ projectLink(project,'view-admin','name') }}</td>
+                <td>{{ contactLink(project.contact, 'view-admin','name') }}</td>
+                <td>{{ project.affiliation.count() }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    {{ ztbalert().info(translate("txt-there-are-currently-no-projects-active-in-this-call"))|raw }}
+{% endif %}

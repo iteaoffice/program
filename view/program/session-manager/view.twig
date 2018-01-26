@@ -1,24 +1,70 @@
 {% do headTitle().append(translate("txt-admin")) %}
-{% do headTitle().append(translate("txt-funder-%s")|format(funder)) %}
+{% do headTitle().append(translate("txt-session-%s")|format(session.session)) %}
 
-<h1 class="display-4">{{ translate("txt-funder-%s")|format(funder) }} {{ funderLink(funder,'edit','button') }}</h1>
+<h1 class="display-4">{{ session.session }} {{ callSessionLink(session,'edit-admin','button') }}</h1>
 
 <dl class="dl-horizontal">
-    <dt>{{ translate("txt-contact") }}</dt>
-    <dd>{{ contactLink(funder.contact,'view-admin','name') }}</dd>
-    <dt>{{ translate("txt-country") }}</dt>
-    <dd>{{ funder.country }}</dd>
-    <dt>{{ translate("txt-position") }}</dt>
-    <dd>{{ funder.position }}</dd>
-    <dt>{{ translate("txt-show-on-website") }}</dt>
-    <dd>{{ translate(funder.getShowOnWebsite(true)) }}</dd>
-    <dt>{{ translate("txt-info-office") }}</dt>
-    <dd>{{ funder.infoOffice|default(translate("txt-not-provided")) }}</dd>
-    <dt>{{ translate("txt-info-public") }}</dt>
-    <dd>{{ funder.infoPublic|default(translate("txt-not-provided")) }}</dd>
-    {% if funder.website %}
-        <dt>{{ translate("txt-website") }}</dt>
-        {# show only the first result#}
-        <dd><a href="{{ funder.website }}">{{ funder.website }}</a></dd>
-    {% endif %}
+    <dt>{{ translate("txt-session") }}</dt>
+    <dd>{{ session.session }}</dd>
+    <dt>{{ translate("txt-call") }}</dt>
+    <dd>{{ callLink(session.call, 'view-admin') }}</dd>
+    <dt>{{ translate("txt-date") }}</dt>
+    <dd>{{ session.date|string_date }}</dd>
+    <dt>{{ translate("txt-ideas") }}</dt>
+    <dd>{{ session.ideaSession|length }}</dd>
 </dl>
+
+<h2>{{ translate("txt-presentations") }}</h2>
+{% if session.ideaSession|length > 0 %}
+    <table class="table table-hover table-striped table-condensed table-sm">
+        <thead>
+        <tr>
+            <th>{{ translate("txt-time") }}</th>
+            <th>{{ translate("txt-idea") }}</th>
+            <th>{{ translate("txt-status") }}</th>
+            <th>{{ translate("txt-contact") }}</th>
+            <th>{{ translate("txt-country") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for session in session.ideaSession %}
+            <tr>
+                <td>{{ session.schedule }}</td>
+                <td>{{ ideaLink(session.idea, 'view-admin') }}</td>
+                <td>
+                    {% if session.idea.getHasPoster() %}
+                        <span class="fa fa-file-image-o"
+                              title="{{ translate("txt-idea-will-be-presented-as-poster") }}"></span>
+                    {% endif %}
+                    {% if session.idea.hasPresentation %}
+                        <span class="fa fa-file-powerpoint-o"
+                              title="{{ translate("txt-idea-will-be-presented-as-presentation") }}"></span>
+                    {% endif %}
+                    {% if session.idea.visibility is constant("Project\\Entity\\Idea\\Idea::VISIBILITY_HIDDEN") %}
+                        <span class="fa fa-eye-slash"
+                              title="{{ translate("this-idea-is-hidden") }}"></span>
+                    {% endif %}
+                    {% if session.idea.subIdea.count() > 0 %}
+                        <i class="fa fa-link"
+                           title="{{ translate("txt-%s-ideas-joined")|format(session.idea.subIdea.count()) }}"></i>
+                    {% endif %}
+                    {% for subIdea in session.idea.mainIdea %}
+                        <i class="fa fa-link"
+                           title="{{ translate("txt-merged-with-%s")|format(subidea.idea)|raw }}"></i>
+                    {% endfor %}
+                    {% if ideaService.isComplete(session.idea) %}
+                        <small>(<i class="fa fa-check-circle"></i> {{ translate("txt-idea-complete") }})
+                        </small>{% endif %}
+                </td>
+                <td>{{ contactLink(session.idea.contact,'view-admin','name') }}</td>
+                <td>{% if session.idea.contact.contactOrganisation %}
+                        {{ countryLink(session.idea.contact.contactOrganisation.organisation.country, 'view-admin', 'iso3') }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    {{ ztbalert().info(translate("txt-no-ideas-found"))|raw }}
+{% endif %}

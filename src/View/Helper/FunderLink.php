@@ -20,7 +20,7 @@ use Program\Entity\Funder;
  *
  * @category    Funder
  */
-class FunderLink extends LinkAbstract
+class FunderLink extends AbstractLink
 {
     /**
      * @param Funder|null $funder
@@ -45,8 +45,6 @@ class FunderLink extends LinkAbstract
         if (!$this->hasAccess($this->getFunder(), FunderAssertion::class, $this->getAction())) {
             return '';
         }
-
-        $this->classes = [];
 
         /*
          * If the alternativeShow is not null, use it an otherwise take the page
