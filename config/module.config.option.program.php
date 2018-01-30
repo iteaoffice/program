@@ -17,7 +17,7 @@ $options = [
     'blank_template'      => __DIR__ . '/../../../../styles/' . (defined("ITEAOFFICE_HOST") ? ITEAOFFICE_HOST : 'test')
         . '/template/pdf/blank-template-firstpage.pdf',
     'has_nda'             => !(defined("ITEAOFFICE_HOST")
-        && (defined("ITEAOFFICE_HOST") ? ITEAOFFICE_HOST : 'test') === 'artemisia'),
+        && (defined("ITEAOFFICE_HOST") ? ITEAOFFICE_HOST : 'test') === 'aeneas'),
     'country_color'       => '#00a651',
     'country_color_faded' => '#005C00'
 ];

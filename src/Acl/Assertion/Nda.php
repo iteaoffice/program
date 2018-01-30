@@ -71,7 +71,7 @@ class Nda extends AssertionAbstract
                  * The resource has goes first
                  */
                 $call = null;
-                if ($nda instanceof NdaEntity && !\is_null($nda->getCall())) {
+                if ($nda instanceof NdaEntity && null !== $nda->getCall()) {
                     $call = $nda->getCall();
                 } elseif (!\is_null($callId = $this->getRouteMatch()->getParam('callId'))) {
                     $call = $this->getCallService()->findCallById($callId);

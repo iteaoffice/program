@@ -59,7 +59,7 @@ class NdaLink extends AbstractLink
         /*
          * Set the non-standard options needed to give an other link value
          */
-        if (!\is_null($this->getNda()->getId())) {
+        if (!$this->getNda()->isEmpty()) {
             $this->setShowOptions(
                 [
                     'name' => $this->getNda()->parseFileName(),
