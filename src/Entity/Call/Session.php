@@ -15,7 +15,8 @@ declare(strict_types=1);
 
 namespace Program\Entity\Call;
 
-use Doctrine\Common\Collections;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Program\Entity\EntityAbstract;
 use Zend\Form\Annotation;
@@ -101,15 +102,24 @@ class Session extends EntityAbstract
      * )
      * @Annotation\Exclude()
      *
-     * @var \Event\Entity\Track[]|Collections\ArrayCollection
+     * @var \Event\Entity\Track[]|Collection
      */
     private $track;
     /**
-     * @ORM\OneToMany(targetEntity="\Project\Entity\Idea\Session", cascade={"persist"}, mappedBy="session")
+     * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Session", cascade={"persist", "remove"}, mappedBy="session", orphanRemoval=true)
      * @ORM\OrderBy({"schedule" = "ASC"})
-     * @Annotation\Exclude()
+     * @Annotation\ComposedObject({
+     *     "target_object":"\Project\Entity\Idea\Session",
+     *     "is_collection":"true"
+     * })
+     * @Annotation\Options({
+     *     "allow_add":"true",
+     *     "allow_remove":"true",
+     *     "count":0,
+     *     "label":"txt-ideas"
+     * })
      *
-     * @var \Project\Entity\Idea\Session[]|Collections\ArrayCollection
+     * @var \Project\Entity\Idea\Session[]|Collection
      */
     private $ideaSession;
 
@@ -118,8 +128,8 @@ class Session extends EntityAbstract
      */
     public function __construct()
     {
-        $this->track = new Collections\ArrayCollection();
-        $this->ideaSession = new Collections\ArrayCollection();
+        $this->track = new ArrayCollection();
+        $this->ideaSession = new ArrayCollection();
     }
 
     /**
@@ -250,7 +260,7 @@ class Session extends EntityAbstract
     }
 
     /**
-     * @return Collections\ArrayCollection|\Event\Entity\Track[]
+     * @return Collection|\Event\Entity\Track[]
      */
     public function getTrack()
     {
@@ -258,7 +268,7 @@ class Session extends EntityAbstract
     }
 
     /**
-     * @param Collections\ArrayCollection|\Event\Entity\Track[] $track
+     * @param Collection|\Event\Entity\Track[] $track
      * @return Session
      */
     public function setTrack($track): Session
@@ -269,7 +279,7 @@ class Session extends EntityAbstract
     }
 
     /**
-     * @return Collections\ArrayCollection|\Project\Entity\Idea\Session[]
+     * @return Collection|\Project\Entity\Idea\Session[]
      */
     public function getIdeaSession()
     {
@@ -277,7 +287,7 @@ class Session extends EntityAbstract
     }
 
     /**
-     * @param Collections\ArrayCollection|\Project\Entity\Idea\Session[] $ideaSession
+     * @param Collection|\Project\Entity\Idea\Session[] $ideaSession
      * @return Session
      */
     public function setIdeaSession($ideaSession)
@@ -285,5 +295,29 @@ class Session extends EntityAbstract
         $this->ideaSession = $ideaSession;
 
         return $this;
+    }
+
+    /**
+     * New function needed to make the hydrator happy
+     *
+     * @param Collection $ideaSessions
+     * @return void
+     */
+    public function addIdeaSession(Collection $ideaSessions): void
+    {
+        foreach ($ideaSessions as $ideaSession) {
+            $this->ideaSession->add($ideaSession);
+        }
+    }
+
+    /**
+     * @param Collection $ideaSessions
+     * @return void
+     */
+    public function removeIdeaSession(Collection $ideaSessions): void
+    {
+        foreach ($ideaSessions as $ideaSession) {
+            $this->ideaSession->removeElement($ideaSession);
+        }
     }
 }

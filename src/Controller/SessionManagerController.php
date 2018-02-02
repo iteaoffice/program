@@ -146,7 +146,7 @@ final class SessionManagerController extends AbstractActionController
                 $session = $form->getData();
                 $this->programService->newEntity($session);
 
-                return $this->redirect()->toRoute('zfcadmin/session/view', ['id' => $session->getId()]);
+                return $this->redirect()->toRoute('zfcadmin/session/edit', ['id' => $session->getId()]);
             }
         }
 
@@ -163,12 +163,24 @@ final class SessionManagerController extends AbstractActionController
         /** @var Session $session */
         $session = $this->programService->findEntityById(Session::class, $this->params('id'));
 
+        if ($session === null) {
+            return $this->notFoundAction();
+        }
+
         /** @var Request $request */
         $request = $this->getRequest();
         $data = $request->getPost()->toArray();
+        // Set to empty array to allow removing all ideas
+        if ($request->isPost() && !isset($data['program_entity_call_session']['ideaSession'])) {
+            $data['program_entity_call_session']['ideaSession'] = [];
+        }
         $form = $this->formService->prepare($session, $session, $data);
 
-        if ($request->isPost() && $form->isValid()) {
+        if ($request->isPost()) {
+            if (isset($data['cancel'])) {
+                return $this->redirect()->toRoute('zfcadmin/session/list');
+            }
+
             if (isset($data['delete'])) {
                 $this->programService->removeEntity($session);
                 $this->flashMessenger()->setNamespace('success')->addMessage(sprintf(
@@ -178,15 +190,24 @@ final class SessionManagerController extends AbstractActionController
                 return $this->redirect()->toRoute('zfcadmin/session/list');
             }
 
-            if (!isset($data['cancel'])) {
-                $this->programService->updateEntity($session);
+            if ($form->isValid()) {
+                /** @var Session $session */
+                $session = $form->getData();
+                foreach ($session->getIdeaSession() as $ideaSession) {
+                    //var_dump($ideaSession);
+                    $ideaSession->setSession($session);
+                }
+                //var_dump($session->getIdeaSession());
+                //$this->programService->updateEntity($session);
+                //return $this->redirect()->toRoute('zfcadmin/session/view', ['id' => $session->getId()]);
             }
-
-            return $this->redirect()->toRoute('zfcadmin/session/view', ['id' => $session->getId()]);
         }
 
+        //die();
+
         return new ViewModel([
-            'form' => $form
+            'form'  => $form,
+            'ideas' => $session->getCall()->getIdea()
         ]);
     }
 

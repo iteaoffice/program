@@ -20,6 +20,7 @@ namespace Program\Form;
 use Doctrine\ORM\EntityManager;
 use Program\Entity\EntityAbstract;
 use Zend\Form\Form;
+use Zend\Form\Element;
 
 /**
  * Class CreateObject
@@ -42,12 +43,9 @@ class CreateObject extends Form
          * We then need to check if if an factory is present,
          * If not we will use the default ObjectFieldset
          */
-
         $objectSpecificFieldset = __NAMESPACE__ . '\\' . $object->get('entity_name') . 'Fieldset';
 
-        /**
-         * Load a specific fieldSet when present
-         */
+        // Load a specific fieldSet when present
         if (class_exists($objectSpecificFieldset)) {
             $objectFieldset = new $objectSpecificFieldset($entityManager, $object);
         } else {
@@ -62,7 +60,7 @@ class CreateObject extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Element\Submit::class,
                 'name'       => 'submit',
                 'attributes' => [
                     'class' => "btn btn-primary",
@@ -72,7 +70,7 @@ class CreateObject extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Element\Submit::class,
                 'name'       => 'cancel',
                 'attributes' => [
                     'class' => "btn btn-warning",
@@ -82,7 +80,7 @@ class CreateObject extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Element\Submit::class,
                 'name'       => 'delete',
                 'attributes' => [
                     'class' => "btn btn-danger",
@@ -92,7 +90,7 @@ class CreateObject extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Element\Submit::class,
                 'name'       => 'restore',
                 'attributes' => [
                     'class' => "btn btn-info",
