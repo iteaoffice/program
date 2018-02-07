@@ -24,7 +24,6 @@ use Zend\Form\Annotation;
 /**
  * @ORM\Table(name="programcall_session")
  * @ORM\Entity(repositoryClass="Program\Repository\Call\Session")
- * @Annotation\Name("programcall_session")
  *
  * @category    Program
  */
@@ -109,7 +108,7 @@ class Session extends EntityAbstract
      * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Session", cascade={"persist", "remove"}, mappedBy="session", orphanRemoval=true)
      * @ORM\OrderBy({"schedule" = "ASC"})
      * @Annotation\ComposedObject({
-     *     "target_object":"\Project\Entity\Idea\Session",
+     *     "target_object":"Project\Entity\Idea\Session",
      *     "is_collection":"true"
      * })
      * @Annotation\Options({
@@ -128,7 +127,7 @@ class Session extends EntityAbstract
      */
     public function __construct()
     {
-        $this->track = new ArrayCollection();
+        $this->track       = new ArrayCollection();
         $this->ideaSession = new ArrayCollection();
     }
 

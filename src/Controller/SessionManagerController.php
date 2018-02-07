@@ -193,17 +193,14 @@ final class SessionManagerController extends AbstractActionController
             if ($form->isValid()) {
                 /** @var Session $session */
                 $session = $form->getData();
+
                 foreach ($session->getIdeaSession() as $ideaSession) {
-                    //var_dump($ideaSession);
                     $ideaSession->setSession($session);
                 }
-                //var_dump($session->getIdeaSession());
-                //$this->programService->updateEntity($session);
-                //return $this->redirect()->toRoute('zfcadmin/session/view', ['id' => $session->getId()]);
+                $this->programService->updateEntity($session);
+                return $this->redirect()->toRoute('zfcadmin/session/view', ['id' => $session->getId()]);
             }
         }
-
-        //die();
 
         return new ViewModel([
             'form'  => $form,

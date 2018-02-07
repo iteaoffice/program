@@ -289,6 +289,7 @@ class Call extends EntityAbstract implements ResourceInterface
     private $doa;
     /**
      * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Idea", cascade={"persist"}, mappedBy="call")
+     * @ORM\OrderBy({"number" = "ASC"})
      * @Annotation\Exclude()
      *
      * @var \Project\Entity\Idea\Idea[]|Collections\ArrayCollection
