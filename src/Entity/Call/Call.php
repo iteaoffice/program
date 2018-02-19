@@ -352,6 +352,7 @@ class Call extends EntityAbstract implements ResourceInterface
         $this->doaRequirement = self::DOA_REQUIREMENT_PER_PROJECT;
         $this->ndaRequirement = self::NDA_REQUIREMENT_PER_CALL;
         $this->loiRequirement = self::LOI_REQUIRED;
+        $this->projectReport = self::PROJECT_REPORT_SINGLE;
         $this->active = self::ACTIVE;
     }
 

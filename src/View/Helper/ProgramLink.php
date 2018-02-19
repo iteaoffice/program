@@ -37,8 +37,7 @@ class ProgramLink extends AbstractLink
         Program $program = null,
         $action = 'view',
         $show = 'name'
-    ): string
-    {
+    ): string {
         $this->setProgram($program);
         $this->setAction($action);
         $this->setShow($show);

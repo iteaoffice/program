@@ -62,7 +62,7 @@ class ObjectFieldset extends Fieldset
     protected function addElements(
         Fieldset               $dataFieldset,
         EntityManager          $entityManager,
-        /* object */           $object,
+        /* object */ $object,
         Fieldset               $baseFieldset = null
     ) {
         /** @var Element $element */

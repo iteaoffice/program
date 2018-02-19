@@ -696,6 +696,4 @@ abstract class AbstractLink extends AbstractViewHelper
 
         return $this;
     }
-
-
 }

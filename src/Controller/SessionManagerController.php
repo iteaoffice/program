@@ -73,8 +73,7 @@ final class SessionManagerController extends AbstractActionController
         IdeaService         $ideaService,
         FormService         $formService,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->programService = $programService;
         $this->ideaService    = $ideaService;
         $this->formService    = $formService;
@@ -136,12 +135,12 @@ final class SessionManagerController extends AbstractActionController
         $form = $this->formService->prepare($session, null, $data);
         $form->remove('delete');
 
-        if ($request->isPost()){
+        if ($request->isPost()) {
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute('zfcadmin/session/list');
             }
 
-            if($form->isValid()) {
+            if ($form->isValid()) {
                 /** @var Session $session */
                 $session = $form->getData();
                 $this->programService->newEntity($session);
@@ -207,5 +206,4 @@ final class SessionManagerController extends AbstractActionController
             'ideas' => $session->getCall()->getIdea()
         ]);
     }
-
 }
