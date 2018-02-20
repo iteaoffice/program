@@ -40,6 +40,7 @@ return [
                 ['route' => 'zfcadmin/nda/edit', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/nda/approve', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/nda/upload', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/nda/render', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/funder/view', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/funder/new', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/funder/list', 'roles' => [Access::ACCESS_OFFICE]],

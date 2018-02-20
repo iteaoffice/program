@@ -23,16 +23,18 @@ use Program\Entity\Nda;
 
 /**
  * Class NdaLink
+ *
  * @package Program\View\Helper
  */
 class NdaLink extends AbstractLink
 {
     /**
-     * @param Nda|null $nda
-     * @param string $action
-     * @param string $show
-     * @param Call|null $call
+     * @param Nda|null     $nda
+     * @param string       $action
+     * @param string       $show
+     * @param Call|null    $call
      * @param Contact|null $contact
+     *
      * @return string
      */
     public function __invoke(
@@ -99,8 +101,17 @@ class NdaLink extends AbstractLink
                 $this->setRouter('community/program/nda/render');
                 $this->setText(sprintf($this->translate("txt-render-general-nda-title")));
 
-                if (!\is_null($this->getCall()->getId())) {
+                if (null !== $this->getCall()->getId()) {
                     $this->setText(sprintf($this->translate("txt-render-nda-for-call-%s-title"), $this->getCall()));
+                }
+
+                break;
+            case 'render-admin':
+                $this->setRouter('zfcadmin/nda/render');
+                $this->setText(sprintf($this->translate("txt-render-general-nda-title-for-%s"), $this->getContact()->parseFullName()));
+
+                if (null !== $this->getCall()->getId()) {
+                    $this->setText(sprintf($this->translate("txt-render-nda-for-call-%s-for-%s-title"), $this->getCall(), $this->getContact()->parseFullName()));
                 }
 
                 break;

@@ -460,6 +460,19 @@ return [
                                     ],
                                 ],
                             ],
+                            'render'   => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'       => '/render/contact-[:contactId][/call-:callId].pdf',
+                                    'constraints' => [
+                                        'id' => '\d+',
+                                    ],
+                                    'defaults'    => [
+                                        'action'    => 'render',
+                                        'privilege' => 'render',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                     'funder'  => [

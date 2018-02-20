@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Program\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Program\Entity\Call\Call;
 use Program\Entity\Nda;
 use Program\Entity\NdaObject;
@@ -50,16 +51,53 @@ class NdaManagerController extends ProgramAbstractController
     }
 
     /**
-     * @return array|ViewModel
+     * @return ViewModel
      */
-    public function viewAction()
+    public function viewAction(): ViewModel
     {
         $nda = $this->callService->findEntityById(Nda::class, $this->params('id'));
-        if (\is_null($nda)) {
+        if (null === $nda) {
             return $this->notFoundAction();
         }
 
         return new ViewModel(['nda' => $nda]);
+    }
+
+    /**
+     * @return \Zend\Stdlib\ResponseInterface|ViewModel
+     */
+    public function renderAction()
+    {
+        //Create an empty NDA object
+        $nda = new Nda();
+
+        $contactId = $this->params('contactId');
+        $contact = $this->getContactService()->findContactById($contactId);
+
+        $nda->setContact($contact);
+        /*
+         * Add the call when a id is given
+         */
+        if (null !== $this->params('callId')) {
+            $call = $this->getCallService()->findCallById($this->params('callId'));
+            if (null === $call) {
+                return $this->notFoundAction();
+            }
+            $arrayCollection = new ArrayCollection([$call]);
+            $nda->setCall($arrayCollection);
+            $renderNda = $this->renderNda()->renderForCall($nda);
+        } else {
+            $renderNda = $this->renderNda()->render($nda);
+        }
+        $response = $this->getResponse();
+        $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
+            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
+            ->addHeaderLine('Content-Disposition', 'attachment; filename="' . $nda->parseFileName() . '.pdf"')
+            ->addHeaderLine('Content-Type: application/pdf')
+            ->addHeaderLine('Content-Length', strlen($renderNda->getPDFData()));
+        $response->setContent($renderNda->getPDFData());
+
+        return $response;
     }
 
     /**

@@ -34,9 +34,9 @@
 
 <h2>{{ translate("txt-render-nda-for-a-call") }}</h2>
 <ul>
-    <li>{{ ndaLink(null, 'render', 'text') }}</li>
+    <li>{{ ndaLink(null, 'render-admin', 'text', null, contact) }}</li>
     {% for call in calls %}
-        <li>{{ ndaLink(null, 'render', 'text', call ) }}</li>
+        <li>{{ ndaLink(null, 'render-admin', 'text', call, contact ) }}</li>
     {% endfor %}
 </ul>
 

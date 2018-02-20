@@ -96,6 +96,7 @@ class Nda extends AssertionAbstract
                 }
 
                 return $this->rolesHaveAccess([Access::ACCESS_OFFICE]);
+            case 'render-admin':
             case 'view-admin':
             case 'edit-admin':
             case 'approval-admin':

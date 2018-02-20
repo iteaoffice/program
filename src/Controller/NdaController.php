@@ -26,17 +26,18 @@ use Zend\View\Model\ViewModel;
 
 /**
  * Class NdaController
+ *
  * @package Program\Controller
  */
 class NdaController extends ProgramAbstractController
 {
     /**
-     * @return array|ViewModel
+     * @return ViewModel
      */
-    public function viewAction()
+    public function viewAction(): ViewModel
     {
         $nda = $this->getProgramService()->findEntityById(Nda::class, $this->params('id'));
-        if (\is_null($nda) || count($nda->getObject()) === 0) {
+        if (null === $nda || count($nda->getObject()) === 0) {
             return $this->notFoundAction();
         }
 
@@ -134,13 +135,13 @@ class NdaController extends ProgramAbstractController
     }
 
     /**
-     * @return array|\Zend\Http\Response|ViewModel
+     * @return \Zend\Http\Response|ViewModel
      */
     public function replaceAction()
     {
         /** @var Nda $nda */
         $nda = $this->getProgramService()->findEntityById(Nda::class, $this->params('id'));
-        if (\is_null($nda) || count($nda->getObject()) === 0) {
+        if (null === $nda || count($nda->getObject()) === 0) {
             return $this->notFoundAction();
         }
         $data = array_merge_recursive(
@@ -167,7 +168,9 @@ class NdaController extends ProgramAbstractController
 
                 $fileTypeValidator = new MimeType();
                 $fileTypeValidator->isValid($fileData['file']);
-                $nda->setContentType($this->getGeneralService()->findContentTypeByContentTypeName($fileTypeValidator->type));
+                $nda->setContentType(
+                    $this->getGeneralService()->findContentTypeByContentTypeName($fileTypeValidator->type)
+                );
 
                 $ndaObject->setNda($nda);
                 $this->getProgramService()->newEntity($ndaObject);

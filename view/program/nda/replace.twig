@@ -22,7 +22,7 @@ format(nda, nda.contact.displayName)) %}
         <label class="col-md-3 form-control-label control-label">{{ translate("txt-program-call") }}</label>
 
         <div class="col-sm-9">
-            <p class="form-control-static">{{ nda.call }}</p>
+            <p class="form-control-static">{{ nda.call.first }}</p>
         </div>
     </div>
 {% endif %}
@@ -39,7 +39,7 @@ format(nda, nda.contact.displayName)) %}
     <label class="col-md-3 form-control-label control-label">{{ translate("txt-render-new-nda") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static">{{ ndaLink(nda,'render','text') }}</p>
+        <p class="form-control-static">{{ ndaLink(nda,'render','text',nda.call.first) }}</p>
     </div>
 </div>
 
