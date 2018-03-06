@@ -33,6 +33,7 @@ use Zend\View\Model\ViewModel;
 
 /**
  * Class CallManagerController
+ *
  * @package Program\Controller
  */
 class CallManagerController extends ProgramAbstractController
@@ -44,10 +45,10 @@ class CallManagerController extends ProgramAbstractController
     {
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getProgramFilter();
-        $contactQuery = $this->getProgramService()->findEntitiesFiltered(Call::class, $filterPlugin->getFilter());
+        $callQuery = $this->getProgramService()->findEntitiesFiltered(Call::class, $filterPlugin->getFilter());
 
         $paginator
-            = new Paginator(new PaginatorAdapter(new ORMPaginator($contactQuery, false)));
+            = new Paginator(new PaginatorAdapter(new ORMPaginator($callQuery, false)));
         $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 20);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
@@ -55,13 +56,15 @@ class CallManagerController extends ProgramAbstractController
         $form = new CallFilter();
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
-        return new ViewModel([
-            'paginator'     => $paginator,
-            'form'          => $form,
-            'encodedFilter' => urlencode($filterPlugin->getHash()),
-            'order'         => $filterPlugin->getOrder(),
-            'direction'     => $filterPlugin->getDirection(),
-        ]);
+        return new ViewModel(
+            [
+                'paginator'     => $paginator,
+                'form'          => $form,
+                'encodedFilter' => urlencode($filterPlugin->getHash()),
+                'order'         => $filterPlugin->getOrder(),
+                'direction'     => $filterPlugin->getDirection(),
+            ]
+        );
     }
 
     /**
@@ -78,11 +81,13 @@ class CallManagerController extends ProgramAbstractController
         // We need the countries active in the call, to store the funding decisions
         $countries = $this->getGeneralService()->findCountryByCall($call, AffiliationService::WHICH_ALL);
 
-        return new ViewModel([
-            'call'           => $call,
-            'countries'      => $countries,
-            'generalService' => $this->generalService
-        ]);
+        return new ViewModel(
+            [
+                'call'           => $call,
+                'countries'      => $countries,
+                'generalService' => $this->generalService
+            ]
+        );
     }
 
     /**
@@ -173,13 +178,15 @@ class CallManagerController extends ProgramAbstractController
             }
         };
 
-        return new ViewModel([
-            'call'            => $call,
-            'yearSpan'        => $yearSpan,
-            'projectService'  => $this->getProjectService(),
-            'versionOverview' => $versionOverview,
-            'projects'        => $projects,
-        ]);
+        return new ViewModel(
+            [
+                'call'            => $call,
+                'yearSpan'        => $yearSpan,
+                'projectService'  => $this->getProjectService(),
+                'versionOverview' => $versionOverview,
+                'projects'        => $projects,
+            ]
+        );
     }
 
     /**
@@ -216,25 +223,29 @@ class CallManagerController extends ProgramAbstractController
                 ]
             );
         } else {
-            $form->setData([
-                'call' => $callId,
-                'year' => $year,
-            ]);
+            $form->setData(
+                [
+                    'call' => $callId,
+                    'year' => $year,
+                ]
+            );
         }
 
         $projects = $this->getProjectService()->findProjectsByCall($call)->getQuery()->getResult();
 
-        return new ViewModel([
-            'projects'      => $projects,
-            'fundingResult' => $this->createCallFundingOverview()->create($projects, $year),
-            'year'          => $year,
-            'call'          => $call,
-            'form'          => $form,
-        ]);
+        return new ViewModel(
+            [
+                'projects'      => $projects,
+                'fundingResult' => $this->createCallFundingOverview()->create($projects, $year),
+                'year'          => $year,
+                'call'          => $call,
+                'form'          => $form,
+            ]
+        );
     }
 
     /**
-     * @return \Zend\Stdlib\ResponseInterface
+     * @return Response|\Zend\Stdlib\ResponseInterface
      */
     public function downloadFundingAction()
     {

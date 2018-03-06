@@ -30,6 +30,7 @@ use Zend\View\Model\ViewModel;
 
 /**
  * Class NdaManagerController
+ *
  * @package Program\Controller
  */
 class NdaManagerController extends ProgramAbstractController
@@ -101,14 +102,14 @@ class NdaManagerController extends ProgramAbstractController
     }
 
     /**
-     * @return array|\Zend\Http\Response|ViewModel
+     * @return \Zend\Http\Response|ViewModel
      */
     public function editAction()
     {
         /** @var Nda $nda */
         $nda = $this->getCallService()->findEntityById(Nda::class, $this->params('id'));
 
-        if (\is_null($nda)) {
+        if (null === $nda) {
             return $this->notFoundAction();
         }
 
@@ -176,7 +177,9 @@ class NdaManagerController extends ProgramAbstractController
 
                     $fileTypeValidator = new MimeType();
                     $fileTypeValidator->isValid($fileData['program_entity_nda']['file']);
-                    $nda->setContentType($this->getGeneralService()->findContentTypeByContentTypeName($fileTypeValidator->type));
+                    $nda->setContentType(
+                        $this->getGeneralService()->findContentTypeByContentTypeName($fileTypeValidator->type)
+                    );
                 }
 
                 /*
@@ -211,14 +214,14 @@ class NdaManagerController extends ProgramAbstractController
     }
 
     /**
-     * @return array|\Zend\Http\Response|ViewModel
+     * @return \Zend\Http\Response|ViewModel
      */
     public function uploadAction()
     {
         $contact = $this->getContactService()->findContactById($this->params('contactId'));
         $calls = $this->getProgramService()->findAll(Call::class);
 
-        if (\is_null($contact)) {
+        if (null === $contact) {
             return $this->notFoundAction();
         }
 

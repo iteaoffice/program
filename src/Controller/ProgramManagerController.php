@@ -33,7 +33,7 @@ use Zend\View\Model\ViewModel;
 class ProgramManagerController extends ProgramAbstractController
 {
     /**
-     * @return \Zend\View\Model\ViewModel
+     * @return ViewModel
      */
     public function listAction()
     {
@@ -62,12 +62,12 @@ class ProgramManagerController extends ProgramAbstractController
     }
 
     /**
-     * @return array|ViewModel
+     * @return ViewModel
      */
-    public function viewAction()
+    public function viewAction(): ViewModel
     {
         $program = $this->getProgramService()->findEntityById(Program::class, $this->params('id'));
-        if (\is_null($program)) {
+        if (null === $program) {
             return $this->notFoundAction();
         }
 
@@ -75,9 +75,7 @@ class ProgramManagerController extends ProgramAbstractController
     }
 
     /**
-     * Create a new template.
-     *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Zend\Http\Response|ViewModel
      */
     public function newAction()
     {
@@ -99,7 +97,7 @@ class ProgramManagerController extends ProgramAbstractController
                 $program = $form->getData();
 
                 $program = $this->getProgramService()->newEntity($program);
-                $this->redirect()->toRoute(
+                return $this->redirect()->toRoute(
                     'zfcadmin/program/view',
                     [
                         'id' => $program->getId(),
@@ -119,10 +117,16 @@ class ProgramManagerController extends ProgramAbstractController
         /** @var Program $program */
         $program = $this->getProgramService()->findEntityById(Program::class, $this->params('id'));
 
-        $data = array_merge($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
+        if (null === $program) {
+            return $this->notFoundAction();
+        }
+
+        $data = array_merge(
+            $this->getRequest()->getPost()->toArray(),
+            $this->getRequest()->getFiles()->toArray()
+        );
 
         $form = $this->getFormService()->prepare($program, $program, $data);
-        $form->setAttribute('class', 'form-horizontal');
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
@@ -161,7 +165,7 @@ class ProgramManagerController extends ProgramAbstractController
 
         $program = $this->getProgramService()->findLastProgram();
 
-        if (!\is_null($this->params('id'))) {
+        if (null !== $this->params('id')) {
             $program = $this->getProgramService()->findProgramById($this->params('id'));
         }
 
@@ -205,7 +209,7 @@ class ProgramManagerController extends ProgramAbstractController
                         $dateSubmitted->modify('last day of december ' . $year)
                     );
 
-                    if (!\is_null($activeVersion)) {
+                    if (null !== $activeVersion) {
                         //We have the version now, add the total cost of that version to the cost of that year
                         $projectOverview[$call->getId()][$year][$project->getDocRef()] = $this->getVersionService()
                             ->findTotalCostVersionByProjectVersion($activeVersion);

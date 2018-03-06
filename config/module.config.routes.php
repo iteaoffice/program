@@ -204,6 +204,28 @@ return [
                             ],
                         ],
                     ],
+                    'call'    => [
+                        'type'         => 'Literal',
+                        'priority'     => 1000,
+                        'options'      => [
+                            'route'    => '/call',
+                            'defaults' => [
+                                'controller' => Controller\CallController::class,
+                                'action'     => 'index',
+                            ],
+                        ],
+                        'child_routes' => [
+                            'index' => [
+                                'type'    => 'Literal',
+                                'options' => [
+                                    'route'    => '/index.html',
+                                    'defaults' => [
+                                        'action' => 'index',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
             'zfcadmin'  => [
@@ -529,7 +551,7 @@ return [
                             ],
                         ],
                     ],
-                    'session'  => [
+                    'session' => [
                         'type'          => 'Segment',
                         'options'       => [
                             'route'    => '/session',

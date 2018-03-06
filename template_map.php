@@ -49,4 +49,5 @@ return array(
     'program/funder-manager/new'            => __DIR__ . '//view/program/funder-manager/new.twig',
     'program/funder-manager/view'           => __DIR__ . '//view/program/funder-manager/view.twig',
     'program/funder-manager/list'           => __DIR__ . '//view/program/funder-manager/list.twig',
+    'program/call/index'                    => __DIR__ . '//view/program/call/index.twig',
 );

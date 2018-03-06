@@ -60,6 +60,7 @@ return [
                 ['route' => 'community/program/doa/render', 'roles' => [], 'assertion' => DoaAssertion::class],
                 ['route' => 'community/program/doa/replace', 'roles' => [], 'assertion' => DoaAssertion::class],
                 ['route' => 'community/program/doa/download', 'roles' => [], 'assertion' => DoaAssertion::class],
+                ['route' => 'community/call/index', 'roles' => [Access::ACCESS_USER]],
             ],
         ],
     ],

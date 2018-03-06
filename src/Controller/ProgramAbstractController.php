@@ -30,6 +30,7 @@ use Program\Service\FormService;
 use Program\Service\ProgramService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
+use Zend\I18n\Translator\TranslatorInterface;
 use Zend\I18n\View\Helper\Translate;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
@@ -37,15 +38,6 @@ use Zend\View\HelperPluginManager;
 use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
 
 /**
- * Create a link to an project.
- *
- * @category   Program
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    https://itea3.org/licence.txt proprietary
- *
- * @link       https://itea3.org
- *
  * @method      ZfcUserAuthentication zfcUserAuthentication()
  * @method      FlashMessenger flashMessenger()
  * @method      IsAllowed isAllowed($resource, $action)
@@ -114,7 +106,7 @@ abstract class ProgramAbstractController extends AbstractActionController
     /**
      * @return FormService
      */
-    public function getFormService()
+    public function getFormService(): FormService
     {
         return $this->formService;
     }
@@ -146,7 +138,7 @@ abstract class ProgramAbstractController extends AbstractActionController
      *
      * @return ProgramAbstractController
      */
-    public function setProgramService(ProgramService $programService)
+    public function setProgramService(ProgramService $programService): ProgramAbstractController
     {
         $this->programService = $programService;
 
@@ -348,6 +340,7 @@ abstract class ProgramAbstractController extends AbstractActionController
 
     /**
      * @param EmailService $emailService
+     *
      * @return ProgramAbstractController
      */
     public function setEmailService(EmailService $emailService): ProgramAbstractController

@@ -121,9 +121,7 @@ final class SessionManagerController extends AbstractActionController
     }
 
     /**
-     * Create a new funder.
-     *
-     * @return ViewModel|Response
+     * @return Response|ViewModel
      */
     public function newAction()
     {

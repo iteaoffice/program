@@ -72,7 +72,9 @@ class DoaController extends ProgramAbstractController
 
                 $fileTypeValidator = new MimeType();
                 $fileTypeValidator->isValid($fileData['file']);
-                $doa->setContentType($this->getGeneralService()->findContentTypeByContentTypeName($fileTypeValidator->type));
+                $doa->setContentType(
+                    $this->getGeneralService()->findContentTypeByContentTypeName($fileTypeValidator->type)
+                );
 
                 $doa->setContact($this->zfcUserAuthentication()->getIdentity());
                 $doa->setOrganisation($organisation);
@@ -142,14 +144,16 @@ class DoaController extends ProgramAbstractController
 
                 $fileTypeValidator = new MimeType();
                 $fileTypeValidator->isValid($fileData['file']);
-                $doa->setContentType($this->getGeneralService()->findContentTypeByContentTypeName($fileTypeValidator->type));
+                $doa->setContentType(
+                    $this->getGeneralService()->findContentTypeByContentTypeName($fileTypeValidator->type)
+                );
 
                 $programDoaObject->setDoa($doa);
                 $this->getProgramService()->newEntity($programDoaObject);
                 $this->flashMessenger()->setNamespace('success')
                     ->addMessage(
                         sprintf(
-                            _("txt-doa-for-organisation-%s-in-program-%s-has-been-uploaded"),
+                            $this->translate("txt-doa-for-organisation-%s-in-program-%s-has-been-uploaded"),
                             $doa->getOrganisation(),
                             $doa->getProgram()
                         )
@@ -196,13 +200,13 @@ class DoaController extends ProgramAbstractController
     }
 
     /**
-     * @return array|\Zend\Stdlib\ResponseInterface
+     * @return \Zend\Stdlib\ResponseInterface|ViewModel
      */
     public function downloadAction()
     {
         set_time_limit(0);
         $doa = $this->getProgramService()->findEntityById(Doa::class, $this->params('id'));
-        if (null === $doa || count($doa->getObject()) === 0) {
+        if (null === $doa || \count($doa->getObject()) === 0) {
             return $this->notFoundAction();
         }
         /*

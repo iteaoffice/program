@@ -16,9 +16,9 @@ use Program\Navigation;
 use Program\Options;
 use Program\Service;
 use Program\View;
-use Zend\Stdlib;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
+use Zend\Stdlib;
 
 $config = [
     'controllers'        => [
@@ -32,6 +32,7 @@ $config = [
             Controller\ProgramManagerController::class     => Controller\Factory\ControllerFactory::class,
             Controller\SessionController::class            => Controller\Factory\ControllerFactory::class,
             Controller\SessionManagerController::class     => ConfigAbstractFactory::class,
+            Controller\CallController::class               => ConfigAbstractFactory::class,
         ],
     ],
     'controller_plugins' => [
