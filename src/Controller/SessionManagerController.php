@@ -17,10 +17,11 @@ declare(strict_types=1);
 
 namespace Program\Controller;
 
-use Program\Entity\Call\Session;
-use Program\Form\SessionFilter;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
+use Program\Entity\Call\Session;
+use Program\Form\SessionFilter;
 use Program\Service\FormService;
 use Program\Service\ProgramService;
 use Project\Service\IdeaService;
@@ -34,6 +35,7 @@ use Zend\View\Model\ViewModel;
 
 /**
  * Class SessionManagerController
+ *
  * @package Program\Controller
  *
  * @method Plugin\GetFilter getProgramFilter()
@@ -62,23 +64,33 @@ final class SessionManagerController extends AbstractActionController
     private $translator;
 
     /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
      * SessionManagerController constructor.
+     *
      * @param ProgramService      $programService
      * @param IdeaService         $ideaService
      * @param FormService         $formService
      * @param TranslatorInterface $translator
+     * @param EntityManager       $entityManager
      */
     public function __construct(
-        ProgramService      $programService,
-        IdeaService         $ideaService,
-        FormService         $formService,
-        TranslatorInterface $translator
+        ProgramService $programService,
+        IdeaService $ideaService,
+        FormService $formService,
+        TranslatorInterface $translator,
+        EntityManager $entityManager
     ) {
         $this->programService = $programService;
-        $this->ideaService    = $ideaService;
-        $this->formService    = $formService;
-        $this->translator     = $translator;
+        $this->ideaService = $ideaService;
+        $this->formService = $formService;
+        $this->translator = $translator;
+        $this->entityManager = $entityManager;
     }
+
 
     /**
      * @return ViewModel
@@ -87,37 +99,45 @@ final class SessionManagerController extends AbstractActionController
     {
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getProgramFilter();
-        $contactQuery = $this->programService->findEntitiesFiltered(Session::class, $filterPlugin->getFilter());
+        $contactQuery = $this->programService->findFiltered(Session::class, $filterPlugin->getFilter());
 
         $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($contactQuery, false)));
         $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 20);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
-        $form = new SessionFilter($this->programService->getEntityManager());
+        $form = new SessionFilter($this->entityManager);
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
-        return new ViewModel([
-            'paginator'     => $paginator,
-            'form'          => $form,
-            'encodedFilter' => urlencode($filterPlugin->getHash()),
-            'order'         => $filterPlugin->getOrder(),
-            'direction'     => $filterPlugin->getDirection(),
-        ]);
+        return new ViewModel(
+            [
+                'paginator'     => $paginator,
+                'form'          => $form,
+                'encodedFilter' => urlencode($filterPlugin->getHash()),
+                'order'         => $filterPlugin->getOrder(),
+                'direction'     => $filterPlugin->getDirection(),
+            ]
+        );
     }
 
     /**
      * @return ViewModel
      */
-    public function viewAction()
+    public function viewAction(): ViewModel
     {
         /** @var Session $session */
-        $session = $this->programService->findEntityById(Session::class, $this->params('id'));
+        $session = $this->programService->find(Session::class, (int)$this->params('id'));
 
-        return new ViewModel([
-            'session'     => $session,
-            'ideaService' => $this->ideaService
-        ]);
+        if (null === $session) {
+            return $this->notFoundAction();
+        }
+
+        return new ViewModel(
+            [
+                'session'     => $session,
+                'ideaService' => $this->ideaService
+            ]
+        );
     }
 
     /**
@@ -130,7 +150,7 @@ final class SessionManagerController extends AbstractActionController
         $data = $request->getPost()->toArray();
 
         $session = new Session();
-        $form = $this->formService->prepare($session, null, $data);
+        $form = $this->formService->prepare($session, $data);
         $form->remove('delete');
 
         if ($request->isPost()) {
@@ -141,15 +161,17 @@ final class SessionManagerController extends AbstractActionController
             if ($form->isValid()) {
                 /** @var Session $session */
                 $session = $form->getData();
-                $this->programService->newEntity($session);
+                $this->programService->save($session);
 
                 return $this->redirect()->toRoute('zfcadmin/session/edit', ['id' => $session->getId()]);
             }
         }
 
-        return new ViewModel([
-            'form' => $form
-        ]);
+        return new ViewModel(
+            [
+                'form' => $form
+            ]
+        );
     }
 
     /**
@@ -158,7 +180,7 @@ final class SessionManagerController extends AbstractActionController
     public function editAction()
     {
         /** @var Session $session */
-        $session = $this->programService->findEntityById(Session::class, $this->params('id'));
+        $session = $this->programService->find(Session::class, (int) $this->params('id'));
 
         if ($session === null) {
             return $this->notFoundAction();
@@ -171,7 +193,7 @@ final class SessionManagerController extends AbstractActionController
         if ($request->isPost() && !isset($data['program_entity_call_session']['ideaSession'])) {
             $data['program_entity_call_session']['ideaSession'] = [];
         }
-        $form = $this->formService->prepare($session, $session, $data);
+        $form = $this->formService->prepare($session, $data);
 
         if ($request->isPost()) {
             if (isset($data['cancel'])) {
@@ -179,10 +201,12 @@ final class SessionManagerController extends AbstractActionController
             }
 
             if (isset($data['delete'])) {
-                $this->programService->removeEntity($session);
-                $this->flashMessenger()->setNamespace('success')->addMessage(sprintf(
-                    $this->translator->translate("txt-session-has-successfully-been-deleted")
-                ));
+                $this->programService->delete($session);
+                $this->flashMessenger()->setNamespace('success')->addMessage(
+                    sprintf(
+                        $this->translator->translate("txt-session-has-successfully-been-deleted")
+                    )
+                );
 
                 return $this->redirect()->toRoute('zfcadmin/session/list');
             }
@@ -194,14 +218,16 @@ final class SessionManagerController extends AbstractActionController
                 foreach ($session->getIdeaSession() as $ideaSession) {
                     $ideaSession->setSession($session);
                 }
-                $this->programService->updateEntity($session);
+                $this->programService->save($session);
                 return $this->redirect()->toRoute('zfcadmin/session/view', ['id' => $session->getId()]);
             }
         }
 
-        return new ViewModel([
-            'form'  => $form,
-            'ideas' => $session->getCall()->getIdea()
-        ]);
+        return new ViewModel(
+            [
+                'form'  => $form,
+                'ideas' => $session->getCall()->getIdea()
+            ]
+        );
     }
 }

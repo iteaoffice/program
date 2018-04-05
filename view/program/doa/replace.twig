@@ -11,33 +11,33 @@ format(doa.organisation, doa.program)) %}
 {{ form().openTag(form)|raw }}
 
 <div class="form-group row">
-    <label class="col-md-3 form-control-label control-label">{{ translate("txt-program") }}</label>
+    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-program") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static">{{ doa.program }}</p></div>
+        <p class="form-control-static form-control-plaintext">{{ doa.program }}</p></div>
 </div>
 
 <div class="form-group row">
-    <label class="col-md-3 form-control-label control-label">{{ translate("txt-organisation") }}</label>
+    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-organisation") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static">{{ doa.organisation }}</p>
+        <p class="form-control-static form-control-plaintext">{{ doa.organisation }}</p>
     </div>
 </div>
 
 <div class="form-group row">
-    <label class="col-md-3 form-control-label control-label">{{ translate("txt-download-current-program-doa") }}</label>
+    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-download-current-program-doa") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static">{{ programDoaLink(doa,'download','text') }}</p>
+        <p class="form-control-static form-control-plaintext">{{ programDoaLink(doa,'download','text') }}</p>
     </div>
 </div>
 
 {#<div class="form-group row">#}
-    {#<label class="col-md-3 form-control-label control-label">{{ translate("txt-render-new-program-doa") }}</label>#}
+    {#<label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-render-new-program-doa") }}</label>#}
 
     {#<div class="col-sm-9">#}
-        {#<p class="form-control-static">{{ programDoaLink(doa,'render','text') }}</p>#}
+        {#<p class="form-control-static form-control-plaintext">{{ programDoaLink(doa,'render','text') }}</p>#}
     {#</div>#}
 {#</div>#}
 

@@ -13,10 +13,10 @@
     {{ form().openTag(form)|raw }}
 
 <div class="form-group row">
-    <label class="col-md-3 form-control-label control-label">{{ translate("txt-contact") }}</label>
+    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-contact") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static">{{ contact.displayName }}</p>
+        <p class="form-control-static form-control-plaintext">{{ contact.displayName }}</p>
     </div>
 </div>
 

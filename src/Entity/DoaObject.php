@@ -23,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @category    Program
  */
-class DoaObject extends EntityAbstract
+class DoaObject extends AbstractEntity
 {
     /**
      * @ORM\Column(name="object_id", type="integer", nullable=false)
@@ -74,6 +74,7 @@ class DoaObject extends EntityAbstract
 
     /**
      * @param $property
+     *
      * @return bool
      */
     public function __isset($property)

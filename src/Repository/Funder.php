@@ -18,21 +18,22 @@ declare(strict_types=1);
 namespace Program\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Program\Entity;
 
 /**
- * @category    Funder
+ * Class Funder
+ *
+ * @package Program\Repository
  */
 class Funder extends EntityRepository
 {
     /**
      * @param array $filter
      *
-     * @return Query
+     * @return QueryBuilder
      */
-    public function findFiltered(array $filter): Query
+    public function findFiltered(array $filter): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('funder_entity_funder');
@@ -62,12 +63,12 @@ class Funder extends EntityRepository
                 $queryBuilder->addOrderBy('funder_entity_funder.country', 'ASC');
         }
 
-        return $queryBuilder->getQuery();
+        return $queryBuilder;
     }
 
     /**
      * @param QueryBuilder $queryBuilder
-     * @param array $filter
+     * @param array        $filter
      *
      * @return QueryBuilder
      */
@@ -88,10 +89,12 @@ class Funder extends EntityRepository
 
 
         if (!empty($filter['showOnWebsite'])) {
-            $queryBuilder->andWhere($queryBuilder->expr()->in(
-                'funder_entity_funder.showOnWebsite',
-                $filter['showOnWebsite']
-            ));
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->in(
+                    'funder_entity_funder.showOnWebsite',
+                    $filter['showOnWebsite']
+                )
+            );
         }
 
         return $queryBuilder;

@@ -23,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @category    Program
  */
-class NdaObject extends EntityAbstract
+class NdaObject extends AbstractEntity
 {
     /**
      * @ORM\Column(name="object_id", type="integer", nullable=false)

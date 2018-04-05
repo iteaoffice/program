@@ -29,7 +29,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  *
  * @category    Program
  */
-class Funder extends EntityAbstract implements ResourceInterface
+class Funder extends AbstractEntity
 {
     /**
      * Constant for hideOnWebsite = 0.

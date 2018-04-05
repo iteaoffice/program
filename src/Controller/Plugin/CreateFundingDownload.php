@@ -18,39 +18,65 @@ declare(strict_types=1);
 namespace Program\Controller\Plugin;
 
 use Affiliation\Service\AffiliationService;
-use General\Service\GeneralService;
 use Program\Entity\Call\Call;
 use Project\Entity\Funding\Source;
 use Project\Entity\Funding\Status;
 use Project\Entity\Project;
-use Project\Service\EvaluationService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\Mvc\Controller\PluginManager;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Special plugin to produce an array with the evaluation.
  *
  * Class CreateEvaluation
  */
-class CreateFundingDownload extends AbstractPlugin
+final class CreateFundingDownload extends AbstractPlugin
 {
     /**
-     * @var ServiceLocatorInterface|PluginManager
+     * @var VersionService
      */
-    protected $serviceLocator;
+    protected $versionService;
+    /**
+     * @var ProjectService
+     */
+    protected $projectService;
+    /**
+     * @var AffiliationService
+     */
+    protected $affiliationService;
+    /**
+     * @var array
+     */
+    protected $countries = [];
+
+    /**
+     * CreateFundingDownload constructor.
+     *
+     * @param VersionService     $versionService
+     * @param ProjectService     $projectService
+     * @param AffiliationService $affiliationService
+     */
+    public function __construct(
+        VersionService $versionService,
+        ProjectService $projectService,
+        AffiliationService $affiliationService
+    ) {
+        $this->versionService = $versionService;
+        $this->projectService = $projectService;
+        $this->affiliationService = $affiliationService;
+    }
+
 
     /**
      * @param Call $call
      *
      * @return string
      */
-    public function create(Call $call): string
+    public function __invoke(Call $call): string
     {
         // Open the output stream
-        $fh = fopen('php://output', 'w');
+        $fh = fopen('php://output', 'wb');
         ob_start();
 
         fputcsv(
@@ -72,13 +98,17 @@ class CreateFundingDownload extends AbstractPlugin
         );
 
         /** @var Project $project */
-        foreach ($this->getProjectService()->findProjectsByCall($call)->getQuery()->getResult() as $project) {
-            $version = $this->getProjectService()->getLatestProjectVersion($project);
+        foreach ($this->projectService->findProjectsByCall($call)->getQuery()->getResult() as $project) {
+            $version = $this->projectService->getLatestProjectVersion($project);
 
-            foreach ($this->getAffiliationService()->findAffiliationByProjectAndWhich($project) as $affiliation) {
+            if (null === $version) {
+                continue;
+            }
+
+            foreach ($this->affiliationService->findAffiliationByProjectAndWhich($project) as $affiliation) {
                 //Find the cost in the year
                 //Find the costs of this affiliation (in the given year)
-                $costsPerYear = $this->getVersionService()->findTotalCostVersionByAffiliationAndVersionPerYear(
+                $costsPerYear = $this->versionService->findTotalCostVersionByAffiliationAndVersionPerYear(
                     $affiliation,
                     $version
                 );
@@ -90,7 +120,7 @@ class CreateFundingDownload extends AbstractPlugin
 
                     $year = $funding->getDateStart()->format('Y');
 
-                    if (!\is_null($affiliation->getDateSelfFunded())) {
+                    if (null !== $affiliation->getDateSelfFunded()) {
                         $globalStatus = "Self Funded";
                     } else {
                         $globalStatus = null;
@@ -114,7 +144,7 @@ class CreateFundingDownload extends AbstractPlugin
                             $project->getCall()->getProgram(),
                             $project->getCall(),
                             $project->parseFullName(),
-                            $this->getProjectService()->parseStatus($project),
+                            $this->projectService->parseStatus($project),
                             $affiliation->getOrganisation(),
                             $affiliation->getOrganisation()->getType(),
                             $affiliation->getOrganisation()->getCountry()->getIso3(),
@@ -131,75 +161,5 @@ class CreateFundingDownload extends AbstractPlugin
         }
 
         return ob_get_clean();
-    }
-
-    /**
-     * Gateway to the Project Service.
-     *
-     * @return ProjectService
-     */
-    public function getProjectService()
-    {
-        return $this->getServiceLocator()->get(ProjectService::class);
-    }
-
-    /**
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param ServiceLocatorInterface|PluginManager $serviceLocator
-     *
-     * @return $this
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-
-        return $this;
-    }
-
-    /**
-     * Gateway to the Affiliation Service.
-     *
-     * @return AffiliationService
-     */
-    public function getAffiliationService()
-    {
-        return $this->getServiceLocator()->get(AffiliationService::class);
-    }
-
-    /**
-     * Gateway to the Version Service.
-     *
-     * @return VersionService
-     */
-    public function getVersionService()
-    {
-        return $this->getServiceLocator()->get(VersionService::class);
-    }
-
-    /**
-     * Gateway to the General Service.
-     *
-     * @return GeneralService
-     */
-    public function getGeneralService()
-    {
-        return $this->getServiceLocator()->get(GeneralService::class);
-    }
-
-    /**
-     * Gateway to the Evaluation Service.
-     *
-     * @return EvaluationService
-     */
-    public function getEvaluationService()
-    {
-        return $this->getServiceLocator()->get(EvaluationService::class);
     }
 }

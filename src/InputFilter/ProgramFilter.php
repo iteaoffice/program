@@ -23,9 +23,9 @@ use Program\Entity\Program;
 use Zend\InputFilter\InputFilter;
 
 /**
- * Class ArticleFilter
+ * Class ProgramFilter
  *
- * @package Content\InputFilter
+ * @package Program\InputFilter
  */
 class ProgramFilter extends InputFilter
 {

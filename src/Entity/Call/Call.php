@@ -18,7 +18,7 @@ namespace Program\Entity\Call;
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Program\Entity\EntityAbstract;
+use Program\Entity\AbstractEntity;
 use Zend\Form\Annotation;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
@@ -29,7 +29,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  *
  * @category    Program
  */
-class Call extends EntityAbstract implements ResourceInterface
+class Call extends AbstractEntity
 {
     /**
      * Produce a list of different statuses in a call, which are required for representation and access control.

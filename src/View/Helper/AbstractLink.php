@@ -24,7 +24,7 @@ use Organisation\Entity\Organisation;
 use Program\Entity\Call\Call;
 use Program\Entity\Call\Country as CallCountry;
 use Program\Entity\Doa;
-use Program\Entity\EntityAbstract;
+use Program\Entity\AbstractEntity;
 use Program\Entity\Funder;
 use Program\Entity\Nda;
 use Program\Entity\Program;
@@ -374,13 +374,13 @@ abstract class AbstractLink extends AbstractViewHelper
     }
 
     /**
-     * @param EntityAbstract $entity
+     * @param AbstractEntity $entity
      * @param string $assertion
      * @param string $action
      *
      * @return bool
      */
-    public function hasAccess(EntityAbstract $entity, $assertion, $action)
+    public function hasAccess(AbstractEntity $entity, $assertion, $action)
     {
         $assertion = $this->getAssertion($assertion);
         if (!\is_null($entity) && !$this->getAuthorizeService()->getAcl()->hasResource($entity)) {
@@ -413,7 +413,7 @@ abstract class AbstractLink extends AbstractViewHelper
     }
 
     /**
-     * @param null|EntityAbstract $resource
+     * @param null|AbstractEntity $resource
      * @param string $privilege
      *
      * @return bool

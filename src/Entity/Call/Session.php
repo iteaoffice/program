@@ -18,7 +18,7 @@ namespace Program\Entity\Call;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Program\Entity\EntityAbstract;
+use Program\Entity\AbstractEntity;
 use Zend\Form\Annotation;
 
 /**
@@ -27,7 +27,7 @@ use Zend\Form\Annotation;
  *
  * @category    Program
  */
-class Session extends EntityAbstract
+class Session extends AbstractEntity
 {
     /**
      * @ORM\Column(name="session_id", type="integer", nullable=false)
@@ -166,7 +166,7 @@ class Session extends EntityAbstract
     /**
      * @return int
      */
-    public function getId(): ?int
+    public function getId()
     {
         return $this->id;
     }

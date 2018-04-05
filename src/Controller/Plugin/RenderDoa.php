@@ -16,53 +16,70 @@ declare(strict_types=1);
 namespace Program\Controller\Plugin;
 
 use Contact\Service\ContactService;
-use General\Service\GeneralService;
 use Program\Entity\Doa;
 use Program\Options\ModuleOptions;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfcTwig\View\TwigRenderer;
 
 /**
- * Create a link to an project.
+ * Class RenderDoa
  *
- * @category   Program
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    https://itea3.org/licence.txt proprietary
- *
- * @link       https://itea3.org
+ * @package Program\Controller\Plugin
  */
-class RenderDoa extends AbstractPlugin
+final class RenderDoa extends AbstractPlugin
 {
     /**
-     * @var ServiceLocatorInterface
+     * @var TwigRenderer
      */
-    protected $serviceLocator;
+    protected $renderer;
+    /**
+     * @var ModuleOptions
+     */
+    protected $moduleOptions;
+    /**
+     * @var ContactService
+     */
+    protected $contactService;
+
+    /**
+     * RenderDoa constructor.
+     *
+     * @param TwigRenderer   $renderer
+     * @param ModuleOptions  $moduleOptions
+     * @param ContactService $contactService
+     */
+    public function __construct(TwigRenderer $renderer, ModuleOptions $moduleOptions, ContactService $contactService)
+    {
+        $this->renderer = $renderer;
+        $this->moduleOptions = $moduleOptions;
+        $this->contactService = $contactService;
+    }
+
 
     /**
      * @param Doa $doa
      *
      * @return ProgramPdf
      */
-    public function __invoke(Doa $doa)
+    public function __invoke(Doa $doa): ProgramPdf
     {
         $pdf = new ProgramPdf();
-        $pdf->setTemplate($this->getModuleOptions()->getDoaTemplate());
+        $pdf->setTemplate($this->moduleOptions->getDoaTemplate());
         $pdf->AddPage();
         $pdf->SetFontSize(9);
-        $twig = $this->getServiceLocator()->get('ZfcTwigRenderer');
+
         /*
          * Write the contact details
          */
         $pdf->SetXY(14, 55);
         $pdf->Write(0, $doa->getContact()->parseFullName());
         $pdf->SetXY(14, 60);
-        $pdf->Write(0, $this->getContactService()->parseOrganisation($doa->getContact()));
+        $pdf->Write(0, $this->contactService->parseOrganisation($doa->getContact()));
         /*
          * Write the current date
          */
         $pdf->SetXY(77, 55);
-        $pdf->Write(0, date("Y-m-d"));
+        $pdf->Write(0, date('Y-m-d'));
         /*
          * Write the Reference
          */
@@ -71,12 +88,12 @@ class RenderDoa extends AbstractPlugin
          * Use the NDA object to render the filename
          */
         $pdf->Write(0, $doa->parseFileName());
-        $ndaContent = $twig->render(
+        $ndaContent = $this->renderer->render(
             'program/pdf/doa-program',
             [
                 'contact'        => $doa->getContact(),
                 'program'        => $doa->getProgram(),
-                'contactService' => $this->getContactService(),
+                'contactService' => $this->contactService,
             ]
         );
         $pdf->writeHTMLCell(0, 0, 14, 70, $ndaContent);
@@ -99,53 +116,5 @@ class RenderDoa extends AbstractPlugin
         $pdf->Line(30, 275, 90, 275);
 
         return $pdf;
-    }
-
-    /**
-     * @return ModuleOptions
-     */
-    public function getModuleOptions()
-    {
-        return $this->getServiceLocator()->get(ModuleOptions::class);
-    }
-
-    /**
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return $this
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-
-        return $this;
-    }
-
-    /**
-     * Gateway to the Contact Service.
-     *
-     * @return ContactService
-     */
-    public function getContactService()
-    {
-        return $this->getServiceLocator()->get(ContactService::class);
-    }
-
-    /**
-     * Gateway to the General Service.
-     *
-     * @return GeneralService
-     */
-    public function getGeneralService()
-    {
-        return $this->getServiceLocator()->get(GeneralService::class);
     }
 }

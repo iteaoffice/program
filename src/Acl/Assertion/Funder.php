@@ -20,7 +20,7 @@ use Zend\Permissions\Acl\Role\RoleInterface;
 /**
  * Class Program.
  */
-class Funder extends AssertionAbstract
+class Funder extends AbstractAssertion
 {
     /**
      * Returns true if and only if the assertion conditions are met.
@@ -29,15 +29,19 @@ class Funder extends AssertionAbstract
      * $role, $resource, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
      * privileges, respectively.
      *
-     * @param Acl $acl
-     * @param RoleInterface $role
+     * @param Acl               $acl
+     * @param RoleInterface     $role
      * @param ResourceInterface $resource
-     * @param string $privilege
+     * @param string            $privilege
      *
      * @return bool
      */
-    public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null): bool
-    {
-        return $this->rolesHaveAccess([Access::ACCESS_OFFICE]);
+    public function assert(
+        Acl $acl,
+        RoleInterface $role = null,
+        ResourceInterface $resource = null,
+        $privilege = null
+    ): bool {
+        return $this->rolesHaveAccess(Access::ACCESS_OFFICE);
     }
 }

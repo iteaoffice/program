@@ -3,18 +3,18 @@
 {{ form().openTag(form)|raw }}
 
 <div class="form-group row">
-    <label class="col-md-3 form-control-label control-label">{{ translate("txt-call") }}</label>
+    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-call") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static">{{ callLink(callCountry.call,'view-admin','name') }}</p>
+        <p class="form-control-static form-control-plaintext">{{ callLink(callCountry.call,'view-admin','name') }}</p>
     </div>
 </div>
 
 <div class="form-group row">
-    <label class="col-md-3 form-control-label control-label">{{ translate("txt-country") }}</label>
+    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-country") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static">{{ countryLink(callCountry.country,'view-admin','name') }}</p>
+        <p class="form-control-static form-control-plaintext">{{ countryLink(callCountry.country,'view-admin','name') }}</p>
     </div>
 </div>
 

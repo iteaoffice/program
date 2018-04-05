@@ -18,20 +18,22 @@ declare(strict_types=1);
 namespace Program\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Program\Entity;
 
 /**
- * @category    Program
+ * Class Program
+ *
+ * @package Program\Repository
  */
 class Program extends EntityRepository
 {
     /**
      * @param array $filter
      *
-     * @return Query
+     * @return QueryBuilder
      */
-    public function findFiltered(array $filter)
+    public function findFiltered(array $filter): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('program_entity_program');
@@ -55,7 +57,7 @@ class Program extends EntityRepository
                 $queryBuilder->addOrderBy('program_entity_program.id', $direction);
         }
 
-        return $queryBuilder->getQuery();
+        return $queryBuilder;
     }
 
     /**

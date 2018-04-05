@@ -20,19 +20,19 @@ use Program\Entity\Program;
 
 /**
  * Class ProgramService
+ *
  * @package Program\Service
  */
-class ProgramService extends ServiceAbstract
+class ProgramService extends AbstractService
 {
-
     /**
      * @param $id
      *
      * @return null|Program
      */
-    public function findProgramById($id): ?Program
+    public function findProgramById(int $id): ?Program
     {
-        return $this->getEntityManager()->getRepository(Program::class)->find($id);
+        return $this->entityManager->getRepository(Program::class)->find($id);
     }
 
     /**
@@ -40,9 +40,9 @@ class ProgramService extends ServiceAbstract
      *
      * @return null|Program
      */
-    public function findProgramByName($name): ?Program
+    public function findProgramByName(string $name): ?Program
     {
-        return $this->getEntityManager()->getRepository(Program::class)->findOneBy(['program' => $name]);
+        return $this->entityManager->getRepository(Program::class)->findOneBy(['program' => $name]);
     }
 
     /**
@@ -52,7 +52,7 @@ class ProgramService extends ServiceAbstract
      */
     public function findLastProgram(): ?Program
     {
-        return $this->getEntityManager()->getRepository(Program::class)->findOneBy([], ['id' => 'DESC']);
+        return $this->entityManager->getRepository(Program::class)->findOneBy([], ['id' => 'DESC']);
     }
 
     /**
@@ -63,7 +63,7 @@ class ProgramService extends ServiceAbstract
     public function findMinAndMaxYearInProgram(Program $program): \stdClass
     {
         /** @var \Program\Repository\Program $repository */
-        $repository = $this->getEntityManager()->getRepository(Program::class);
+        $repository = $this->entityManager->getRepository(Program::class);
 
         $yearSpanResult = $repository->findMinAndMaxYearInProgram($program);
         $yearSpan = new \stdClass();
@@ -80,19 +80,19 @@ class ProgramService extends ServiceAbstract
      */
     public function findFunderByCountry(Country $country): array
     {
-        return $this->getEntityManager()->getRepository(Funder::class)
+        return $this->entityManager->getRepository(Funder::class)
             ->findBy(['country' => $country], ['position' => 'ASC']);
     }
 
     /**
-     * @param Program $program
+     * @param Program      $program
      * @param Organisation $organisation
      *
      * @return null|Doa
      */
     public function findProgramDoaByProgramAndOrganisation(Program $program, Organisation $organisation): ?Doa
     {
-        return $this->getEntityManager()->getRepository(Doa::class)->findOneBy(
+        return $this->entityManager->getRepository(Doa::class)->findOneBy(
             [
                 'program'      => $program,
                 'organisation' => $organisation,

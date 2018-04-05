@@ -29,7 +29,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  *
  * @category    Program
  */
-class Doa extends EntityAbstract implements ResourceInterface
+class Doa extends AbstractEntity
 {
     /**
      * @ORM\Column(name="doa_id", type="integer", nullable=false)

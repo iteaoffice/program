@@ -18,30 +18,72 @@ declare(strict_types=1);
 namespace Program\Controller;
 
 use General\Entity\Country;
+use General\Service\GeneralService;
 use Program\Entity\Call\Country as CallCountry;
+use Program\Service\CallService;
+use Program\Service\FormService;
+use Zend\I18n\Translator\TranslatorInterface;
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Zend\View\Model\ViewModel;
 
 /**
- * ITEA Office all rights reserved
+ * Class CallCountryManagerController
  *
- * @category  Program
- *
- * @author    Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @package Program\Controller
+ * @method FlashMessenger flashMessenger()
  */
-class CallCountryManagerController extends ProgramAbstractController
+class CallCountryManagerController extends AbstractActionController
 {
+    /**
+     * @var CallService
+     */
+    protected $callService;
+    /**
+     * @var GeneralService
+     */
+    protected $generalService;
+    /**
+     * @var FormService
+     */
+    protected $formService;
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    /**
+     * CallCountryManagerController constructor.
+     *
+     * @param CallService         $callService
+     * @param GeneralService      $generalService
+     * @param FormService         $formService
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(
+        CallService $callService,
+        GeneralService $generalService,
+        FormService $formService,
+        TranslatorInterface $translator
+    ) {
+        $this->callService = $callService;
+        $this->generalService = $generalService;
+        $this->formService = $formService;
+        $this->translator = $translator;
+    }
+
+
     /**
      * @return ViewModel
      */
-    public function viewAction()
+    public function viewAction(): ViewModel
     {
         /**
          * @var $callCountry CallCountry
          */
-        $callCountry = $this->getCallService()->findEntityById(CallCountry::class, (int)$this->params('id'));
+        $callCountry = $this->callService->find(CallCountry::class, (int)$this->params('id'));
 
-        if (\is_null($callCountry)) {
+        if (null === $callCountry) {
             return $this->notFoundAction();
         }
 
@@ -53,22 +95,23 @@ class CallCountryManagerController extends ProgramAbstractController
     }
 
     /**
-     * @return ViewModel
+     * @return \Zend\Http\Response|ViewModel
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function editAction()
     {
         /**
          * @var $callCountry CallCountry
          */
-        $callCountry = $this->getCallService()->findEntityById(CallCountry::class, (int)$this->params('id'));
+        $callCountry = $this->callService->find(CallCountry::class, (int)$this->params('id'));
 
-
-        if (\is_null($callCountry)) {
+        if (null === $callCountry) {
             return $this->notFoundAction();
         }
 
-        $data = array_merge($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
-        $form = $this->getFormService()->prepare($callCountry, $callCountry, $data);
+        $data = $this->getRequest()->getPost()->toArray();
+        $form = $this->formService->prepare($callCountry, $data);
         $country = $callCountry->getCountry();
 
         if ($this->getRequest()->isPost()) {
@@ -82,11 +125,13 @@ class CallCountryManagerController extends ProgramAbstractController
             }
 
             if (isset($data['delete'])) {
-                $this->getCallService()->removeEntity($callCountry);
+                $this->callService->delete($callCountry);
                 $this->flashMessenger()->setNamespace('success')
                     ->addMessage(
                         sprintf(
-                            $this->translate("txt-call-country-information-%s-has-successfully-been-removed"),
+                            $this->translator->translate(
+                                "txt-call-country-information-%s-has-successfully-been-removed"
+                            ),
                             $country
                         )
                     );
@@ -106,11 +151,13 @@ class CallCountryManagerController extends ProgramAbstractController
                  */
                 $entity = $form->getData();
 
-                $this->getCallService()->updateEntity($entity);
+                $this->callService->save($entity);
                 $this->flashMessenger()->setNamespace('success')
                     ->addMessage(
                         sprintf(
-                            $this->translate("txt-call-country-information-%s-has-successfully-been-updated"),
+                            $this->translator->translate(
+                                "txt-call-country-information-%s-has-successfully-been-updated"
+                            ),
                             $callCountry->getCountry()
                         )
                     );
@@ -130,18 +177,20 @@ class CallCountryManagerController extends ProgramAbstractController
     }
 
     /**
-     * @return ViewModel
+     * @return \Zend\Http\Response|ViewModel
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function newAction()
     {
         /**
          * Find the corresponding call and country and process
          */
-        $call = $this->getCallService()->findCallById($this->params('call'));
+        $call = $this->callService->findCallById((int)$this->params('call'));
         /** @var Country $country */
-        $country = $this->getGeneralService()->findEntityById(Country::class, $this->params('country'));
+        $country = $this->generalService->find(Country::class, (int)$this->params('country'));
 
-        if (null === $call || \is_null($country)) {
+        if (null === $call || null === $country) {
             return $this->notFoundAction();
         }
 
@@ -152,10 +201,9 @@ class CallCountryManagerController extends ProgramAbstractController
         $callCountry->setCall($call);
         $callCountry->setCountry($country);
 
-        $data = array_merge($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
+        $data = $this->getRequest()->getPost()->toArray();
 
-        $form = $this->getFormService()->prepare($callCountry, $callCountry, $data);
-
+        $form = $this->formService->prepare($callCountry, $data);
         $form->remove('delete');
 
         if ($this->getRequest()->isPost()) {
@@ -176,11 +224,13 @@ class CallCountryManagerController extends ProgramAbstractController
                 $callCountry->setCall($call);
                 $callCountry->setCountry($country);
 
-                $this->getCallService()->updateEntity($callCountry);
+                $this->callService->save($callCountry);
                 $this->flashMessenger()->setNamespace('success')
                     ->addMessage(
                         sprintf(
-                            $this->translate("txt-call-country-information-%s-has-successfully-been-updated"),
+                            $this->translator->translate(
+                                "txt-call-country-information-%s-has-successfully-been-updated"
+                            ),
                             $country
                         )
                     );
@@ -193,9 +243,6 @@ class CallCountryManagerController extends ProgramAbstractController
                 );
             }
         }
-
-        $form->setAttribute('role', 'form');
-        $form->setAttribute('class', 'form-horizontal');
 
         return new ViewModel(['form' => $form, 'callCountry' => $callCountry]);
     }

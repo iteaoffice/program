@@ -25,19 +25,19 @@
     {{ form().openTag(form)|raw }}
 
     <div class="form-group row">
-        <label class="col-md-3 form-control-label control-label">{{ translate("txt-contact") }}</label>
+        <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-contact") }}</label>
 
         <div class="col-sm-9">
-            <p class="form-control-static">{{ zfcUserIdentity().displayName }}</p>
+            <p class="form-control-static form-control-plaintext">{{ zfcUserIdentity().displayName }}</p>
         </div>
     </div>
 
     {% if call %}
         <div class="form-group row">
-            <label class="col-md-3 form-control-label control-label">{{ translate("txt-program-call") }}</label>
+            <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-program-call") }}</label>
 
             <div class="col-sm-9">
-                <p class="form-control-static">{{ call }}</p>
+                <p class="form-control-static form-control-plaintext">{{ call }}</p>
             </div>
         </div>
     {% endif %}

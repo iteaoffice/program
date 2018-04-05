@@ -19,9 +19,10 @@ use setasign\Fpdi\TcpdfFpdi;
 
 /**
  * Class ProgramPdf
+ *
  * @package Program\Controller\Plugin
  */
-class ProgramPdf extends TcpdfFpdi
+final class ProgramPdf extends TcpdfFpdi
 {
     /**
      * "Remembers" the template id of the imported page.
@@ -37,9 +38,9 @@ class ProgramPdf extends TcpdfFpdi
      */
     public function header()
     {
-        if (\is_null($this->_tplIdx)) {
+        if (null === $this->_tplIdx) {
             if (!file_exists($this->template)) {
-                throw new \InvalidArgumentException(sprintf("Template %s cannot be found", $this->template));
+                throw new \InvalidArgumentException(sprintf('Template %s cannot be found', $this->template));
             }
             $this->setSourceFile($this->template);
             $this->_tplIdx = $this->importPage(1);
@@ -67,23 +68,23 @@ class ProgramPdf extends TcpdfFpdi
      * @param            $header
      * @param            $data
      * @param array|null $width
-     * @param bool|false $lastRow
+     * @param bool       $lastRow
      */
-    public function coloredTable($header, $data, array $width = null, $lastRow = false)
+    public function coloredTable($header, $data, array $width = null, $lastRow = false): void
     {
         // Colors, line width and bold font
         $this->SetDrawColor(205, 205, 205);
         $this->SetFillColor(255, 255, 255);
         $this->SetLineWidth(0.1);
         $this->SetFont('', 'B');
+
+        $w = $width;
         // Header
-        if (\is_null($width)) {
+        if (null === $w) {
             $w = [40, 35, 40, 45, 40];
-        } else {
-            $w = $width;
         }
 
-        $num_headers = count($header);
+        $num_headers = \count($header);
 
         for ($i = 0; $i < $num_headers; ++$i) {
             $this->Cell($w[$i], 7, $header[$i], 1, 0, 'l', 1);

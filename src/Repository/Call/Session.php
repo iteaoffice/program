@@ -14,8 +14,8 @@ namespace Program\Repository\Call;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
-use Program\Entity\Call\Session as SessionEntity;
+use Doctrine\ORM\QueryBuilder;
+use Program\Entity;
 
 /**
  * @category    Program
@@ -25,20 +25,20 @@ class Session extends EntityRepository
     /**
      * @param array $filter
      *
-     * @return Query
+     * @return QueryBuilder
      */
-    public function findFiltered(array $filter): Query
+    public function findFiltered(array $filter): QueryBuilder
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-        $queryBuilder->select('s');
-        $queryBuilder->from(SessionEntity::class, 's');
-        $queryBuilder->innerJoin('s.call', 'c');
-        $queryBuilder->innerJoin('c.program', 'p');
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('program_entity_call_session');
+        $queryBuilder->from(Entity\Call\Session::class, 'program_entity_call_session');
+        $queryBuilder->innerJoin('program_entity_call_session.call', 'program_entity_call_call');
+        $queryBuilder->innerJoin('program_entity_call_call.program', 'program_entity_program');
 
         // Search
         if (array_key_exists('search', $filter)) {
             $queryBuilder->andWhere(
-                $queryBuilder->expr()->like('s.session', ':like')
+                $queryBuilder->expr()->like('program_entity_call_session.session', ':like')
             );
             $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
         }
@@ -46,7 +46,7 @@ class Session extends EntityRepository
         // Filter by call
         if (array_key_exists('call', $filter)) {
             $queryBuilder->andWhere(
-                $queryBuilder->expr()->in('s.call', implode($filter['call'], ', '))
+                $queryBuilder->expr()->in('program_entity_call_session.call', implode($filter['call'], ', '))
             );
         }
 
@@ -59,22 +59,22 @@ class Session extends EntityRepository
 
         switch ($filter['order']) {
             case 'id':
-                $queryBuilder->addOrderBy('s.id', $direction);
+                $queryBuilder->addOrderBy('program_entity_call_session.id', $direction);
                 break;
             case 'session':
-                $queryBuilder->addOrderBy('s.session', $direction);
+                $queryBuilder->addOrderBy('program_entity_call_session.session', $direction);
                 break;
             case 'call':
-                $queryBuilder->addOrderBy('p.id', $direction);
-                $queryBuilder->addOrderBy('c.call', $direction);
+                $queryBuilder->addOrderBy('program_entity_program.id', $direction);
+                $queryBuilder->addOrderBy('program_entity_call_call.call', $direction);
                 break;
             case 'date':
-                $queryBuilder->addOrderBy('s.date', $direction);
+                $queryBuilder->addOrderBy('program_entity_call_session.date', $direction);
                 break;
             default:
-                $queryBuilder->addOrderBy('s.id', $direction);
+                $queryBuilder->addOrderBy('program_entity_call_session.id', $direction);
         }
 
-        return $queryBuilder->getQuery();
+        return $queryBuilder;
     }
 }

@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Program\Controller;
 
+use Contact\Entity\Contact;
 use Program\Service\CallService;
 use Program\Service\FormService;
 use Program\Service\ProgramService;
@@ -25,15 +26,15 @@ use Project\Service\ProjectService;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Zend\Mvc\Plugin\Identity\Identity;
 use Zend\View\Model\ViewModel;
-use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
 
 /**
  * Class SessionManagerController
  *
  * @package Program\Controller
  *
- * @method ZfcUserAuthentication zfcUserAuthentication()
+ * @method Identity|Contact identity()
  * @method Plugin\GetFilter getProgramFilter()
  * @method FlashMessenger flashMessenger()
  */
@@ -96,8 +97,7 @@ final class CallController extends AbstractActionController
     public function indexAction(): ViewModel
     {
         $call = $this->callService->findLastActiveCall();
-        $contact = $this->zfcUserAuthentication()->getIdentity();
-
+        $contact = $this->identity();
 
         $projects = $this->projectService->findProjectsByCallAndContact($call, $contact, ProjectService::WHICH_ALL);
         $ideas = $this->ideaService->findIdeasByCallAndContact($call, $contact);

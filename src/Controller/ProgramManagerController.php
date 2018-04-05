@@ -17,32 +17,103 @@ declare(strict_types=1);
 
 namespace Program\Controller;
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
+use Program\Controller\Plugin\GetFilter;
 use Program\Entity\Program;
 use Program\Form\ProgramFilter;
 use Program\Form\SizeSelect;
+use Program\Service\CallService;
+use Program\Service\FormService;
+use Program\Service\ProgramService;
 use Project\Entity\Project;
 use Project\Service\ProjectService;
+use Project\Service\VersionService;
+use Zend\I18n\Translator\TranslatorInterface;
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 
 /**
+ * Class ProgramManagerController
  *
+ * @package Program\Controller
+ * @method FlashMessenger flashMessenger()
+ * @method GetFilter getProgramFilter()
  */
-class ProgramManagerController extends ProgramAbstractController
+class ProgramManagerController extends AbstractActionController
 {
+    /**
+     * @var ProgramService
+     */
+    protected $programService;
+    /**
+     * @var CallService
+     */
+    protected $callService;
+    /**
+     * @var ProjectService
+     */
+    protected $projectService;
+    /**
+     * @var VersionService
+     */
+    protected $versionService;
+    /**
+     * @var FormService
+     */
+    protected $formService;
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    /**
+     * ProgramManagerController constructor.
+     *
+     * @param ProgramService      $programService
+     * @param CallService         $callService
+     * @param ProjectService      $projectService
+     * @param VersionService      $versionService
+     * @param FormService         $formService
+     * @param EntityManager       $entityManager
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(
+        ProgramService $programService,
+        CallService $callService,
+        ProjectService $projectService,
+        VersionService $versionService,
+        FormService $formService,
+        EntityManager $entityManager,
+        TranslatorInterface $translator
+    ) {
+        $this->programService = $programService;
+        $this->callService = $callService;
+        $this->projectService = $projectService;
+        $this->versionService = $versionService;
+        $this->formService = $formService;
+        $this->entityManager = $entityManager;
+        $this->translator = $translator;
+    }
+
+
     /**
      * @return ViewModel
      */
-    public function listAction()
+    public function listAction(): ViewModel
     {
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getProgramFilter();
-        $contactQuery = $this->getProgramService()->findEntitiesFiltered(Program::class, $filterPlugin->getFilter());
+        $query = $this->programService->findFiltered(Program::class, $filterPlugin->getFilter());
 
-        $paginator
-            = new Paginator(new PaginatorAdapter(new ORMPaginator($contactQuery, false)));
+        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($query, false)));
         $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 20);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
@@ -66,7 +137,7 @@ class ProgramManagerController extends ProgramAbstractController
      */
     public function viewAction(): ViewModel
     {
-        $program = $this->getProgramService()->findEntityById(Program::class, $this->params('id'));
+        $program = $this->programService->find(Program::class, (int)$this->params('id'));
         if (null === $program) {
             return $this->notFoundAction();
         }
@@ -79,13 +150,11 @@ class ProgramManagerController extends ProgramAbstractController
      */
     public function newAction()
     {
-        $data = array_merge($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
+        $data = $this->getRequest()->getPost()->toArray();
 
         $program = new Program();
-        $form = $this->getFormService()->prepare($program, null, $data);
+        $form = $this->formService->prepare($program, $data);
         $form->remove('delete');
-
-        $form->setAttribute('class', 'form-horizontal');
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
@@ -96,7 +165,7 @@ class ProgramManagerController extends ProgramAbstractController
                 /* @var $program Program */
                 $program = $form->getData();
 
-                $program = $this->getProgramService()->newEntity($program);
+                $this->programService->save($program);
                 return $this->redirect()->toRoute(
                     'zfcadmin/program/view',
                     [
@@ -111,22 +180,21 @@ class ProgramManagerController extends ProgramAbstractController
 
     /**
      * @return \Zend\Http\Response|ViewModel
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function editAction()
     {
         /** @var Program $program */
-        $program = $this->getProgramService()->findEntityById(Program::class, $this->params('id'));
+        $program = $this->programService->find(Program::class, (int)$this->params('id'));
 
         if (null === $program) {
             return $this->notFoundAction();
         }
 
-        $data = array_merge(
-            $this->getRequest()->getPost()->toArray(),
-            $this->getRequest()->getFiles()->toArray()
-        );
+        $data = $this->getRequest()->getPost()->toArray();
 
-        $form = $this->getFormService()->prepare($program, $program, $data);
+        $form = $this->formService->prepare($program, $data);
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
@@ -138,7 +206,7 @@ class ProgramManagerController extends ProgramAbstractController
                 $program = $form->getData();
 
                 /** @var Program $program */
-                $program = $this->getProgramService()->updateEntity($program);
+                $this->programService->save($program);
                 $this->redirect()->toRoute(
                     'zfcadmin/program/view',
                     [
@@ -152,30 +220,33 @@ class ProgramManagerController extends ProgramAbstractController
     }
 
     /**
-     * Edit an template by finding it and call the corresponding form.
-     *
-     * @return \Zend\View\Model\ViewModel
+     * @return ViewModel
+     * @throws \Exception
      */
-    public function sizeAction()
+    public function sizeAction(): ViewModel
     {
         $filter = $this->getRequest()->getPost()->toArray();
 
-        $form = new SizeSelect($this->getEntityManager());
+        $form = new SizeSelect($this->entityManager);
         $form->setData($filter);
 
-        $program = $this->getProgramService()->findLastProgram();
+        $program = $this->programService->findLastProgram();
 
         if (null !== $this->params('id')) {
-            $program = $this->getProgramService()->findProgramById($this->params('id'));
+            $program = $this->programService->findProgramById((int)$this->params('id'));
+        }
+
+        if (null === $program) {
+            return $this->notFoundAction();
         }
 
         if (isset($filter['filter']['program']) && $this->getRequest()->isPost()) {
-            $program = $this->getProgramService()->findProgramById($filter['filter']['program']);
+            $program = $this->programService->findProgramById($filter['filter']['program']);
         }
 
         $form->get('filter')->get('program')->setValue($program->getId());
 
-        $minMaxYear = $this->getProgramService()->findMinAndMaxYearInProgram($program);
+        $minMaxYear = $this->programService->findMinAndMaxYearInProgram($program);
         $yearSpan = range($minMaxYear->minYear, $minMaxYear->maxYear);
 
 
@@ -184,10 +255,10 @@ class ProgramManagerController extends ProgramAbstractController
 
         foreach ($program->getCall() as $call) {
             //Only add the active projects
-            $activeProjects = $this->getProjectService()->findProjectsByCall($call, ProjectService::WHICH_LABELLED);
+            $activeProjects = $this->projectService->findProjectsByCall($call, ProjectService::WHICH_LABELLED);
 
             //Find the span of the call, because otherwise the matrix will be filled with numbers of year before the call
-            $minMaxYearCall = $this->getCallService()->findMinAndMaxYearInCall($call);
+            $minMaxYearCall = $this->callService->findMinAndMaxYearInCall($call);
             $yearSpanCall = range($minMaxYearCall->minYear, $minMaxYearCall->maxYear);
 
 
@@ -195,7 +266,7 @@ class ProgramManagerController extends ProgramAbstractController
             foreach ($activeProjects->getQuery()->getResult() as $project) {
                 foreach ($yearSpan as $year) {
                     //Skip the years which are not in the call
-                    if (!\in_array($year, $yearSpanCall)) {
+                    if (!\in_array($year, $yearSpanCall, true)) {
                         continue;
                     }
 
@@ -203,7 +274,7 @@ class ProgramManagerController extends ProgramAbstractController
                     $dateSubmitted = new \DateTime();
 
                     //Find the version corresponding to the year
-                    $activeVersion = $this->getProjectService()->getLatestProjectVersion(
+                    $activeVersion = $this->projectService->getLatestProjectVersion(
                         $project,
                         null,
                         $dateSubmitted->modify('last day of december ' . $year)
@@ -211,7 +282,7 @@ class ProgramManagerController extends ProgramAbstractController
 
                     if (null !== $activeVersion) {
                         //We have the version now, add the total cost of that version to the cost of that year
-                        $projectOverview[$call->getId()][$year][$project->getDocRef()] = $this->getVersionService()
+                        $projectOverview[$call->getId()][$year][$project->getDocRef()] = $this->versionService
                             ->findTotalCostVersionByProjectVersion($activeVersion);
                     }
                 }
@@ -222,7 +293,7 @@ class ProgramManagerController extends ProgramAbstractController
         $totals = [];
         foreach ($projectOverview as $callId => $yearOverview) {
             foreach ($yearOverview as $year => $projects) {
-                $totals[$callId][$year] = array_sum($projects);
+                $totals[$callId][$year] = \array_sum($projects);
             }
         }
 
@@ -231,7 +302,7 @@ class ProgramManagerController extends ProgramAbstractController
                 'form'            => $form,
                 'program'         => $program,
                 'yearSpan'        => $yearSpan,
-                'projectService'  => $this->getProjectService(),
+                'projectService'  => $this->projectService,
                 'projectOverview' => $projectOverview,
                 'totals'          => $totals,
             ]

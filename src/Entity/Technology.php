@@ -29,7 +29,7 @@ use Zend\Form\Annotation;
  *
  * @category    Program
  */
-class Technology extends EntityAbstract
+class Technology extends AbstractEntity
 {
     /**
      * @ORM\Column(name="technology_id", type="integer", nullable=false)
@@ -43,7 +43,6 @@ class Technology extends EntityAbstract
      * @ORM\Column(name="technology", type="string", length=45, nullable=false)
      * Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-technology"})
-     * @Annotation\Required(true)
      *
      * @var string
      */
@@ -52,7 +51,6 @@ class Technology extends EntityAbstract
      * @ORM\Column(name="description", type="text", nullable=true)
      * Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-description"})
-     * @Annotation\Required(true)
      *
      * @var string
      */
@@ -130,6 +128,7 @@ class Technology extends EntityAbstract
 
     /**
      * @param $property
+     *
      * @return bool
      */
     public function __isset($property)

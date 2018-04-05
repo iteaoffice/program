@@ -29,8 +29,9 @@ final class ModuleOptionsFactory implements FactoryInterface
 {
     /**
      * @param ContainerInterface $container
-     * @param string $requestedName
-     * @param array|null $options
+     * @param string             $requestedName
+     * @param array|null         $options
+     *
      * @return object|ModuleOptions
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
@@ -39,6 +40,6 @@ final class ModuleOptionsFactory implements FactoryInterface
     {
         $config = $container->get('Config');
 
-        return new ModuleOptions(isset($config['program_option']) ? $config['program_option'] : []);
+        return new ModuleOptions($config['program_option'] ?? []);
     }
 }

@@ -28,7 +28,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  *
  * @category    Program
  */
-class Program extends EntityAbstract implements ResourceInterface
+class Program extends AbstractEntity
 {
     /**
      * @ORM\Column(name="program_id", type="integer", nullable=false)
@@ -183,7 +183,7 @@ class Program extends EntityAbstract implements ResourceInterface
      *
      * @param Collections\Collection $invoiceMethodCollection
      */
-    public function addInvoiceMethod(Collections\Collection $invoiceMethodCollection)
+    public function addInvoiceMethod(Collections\Collection $invoiceMethodCollection): void
     {
         foreach ($invoiceMethodCollection as $invoiceMethod) {
             $this->invoiceMethod->add($invoiceMethod);
@@ -195,7 +195,7 @@ class Program extends EntityAbstract implements ResourceInterface
      *
      * @param Collections\Collection $invoiceMethodCollection
      */
-    public function removeInvoiceMethod(Collections\Collection $invoiceMethodCollection)
+    public function removeInvoiceMethod(Collections\Collection $invoiceMethodCollection): void
     {
         foreach ($invoiceMethodCollection as $single) {
             $this->invoiceMethod->removeElement($single);

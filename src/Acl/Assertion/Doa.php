@@ -13,15 +13,17 @@ declare(strict_types=1);
 namespace Program\Acl\Assertion;
 
 use Admin\Entity\Access;
-use Program\Entity\Doa as DoaEntity;
+use Program\Entity;
 use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 use Zend\Permissions\Acl\Role\RoleInterface;
 
 /**
- * Class Program.
+ * Class Doa
+ *
+ * @package Program\Acl\Assertion
  */
-class Doa extends AssertionAbstract
+class Doa extends AbstractAssertion
 {
     /**
      * Returns true if and only if the assertion conditions are met.
@@ -30,22 +32,21 @@ class Doa extends AssertionAbstract
      * $role, $doa, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
      * privileges, respectively.
      *
-     * @param Acl $acl
-     * @param RoleInterface $role
-     * @param ResourceInterface $doa
-     * @param string $privilege
+     * @param Acl                          $acl
+     * @param RoleInterface                $role
+     * @param ResourceInterface|Entity\Doa $doa
+     * @param string                       $privilege
      *
      * @return bool
      */
-    public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $doa = null, $privilege = null)
+    public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $doa = null, $privilege = null): bool
     {
         $this->setPrivilege($privilege);
         $id = $this->getId();
 
-        if (!$doa instanceof DoaEntity && !\is_null($id)) {
-            $doa = $this->getProgramService()->findEntityById(DoaEntity::class, $id);
+        if (!$doa instanceof Entity\Doa && null !== $id) {
+            $doa = $this->programService->find(Entity\Doa::class, (int)$id);
         }
-
 
         switch ($this->getPrivilege()) {
             case 'upload':
@@ -54,22 +55,22 @@ class Doa extends AssertionAbstract
                  * The affiliation can already be known, but if not grab it from the routeMatch
                  */
                 $organisation = null;
-                if ($doa instanceof DoaEntity) {
+
+                if ($doa instanceof Entity\Doa) {
                     $organisation = $doa->getOrganisation();
                 }
+
                 if (null === $organisation) {
-                    /*
+                    /**
                      * The id can originate from two different params
                      */
-                    if (!\is_null($this->getRouteMatch()->getParam('id'))) {
-                        $organisationId = $this->getRouteMatch()->getParam('id');
-                    } else {
-                        $organisationId = $this->getRouteMatch()->getParam('organisationId');
+                    if (null === $id) {
+                        $id = $this->getRouteMatch()->getParam('organisationId');
                     }
-                    $organisation = $this->getOrganisationService()->findOrganisationById($organisationId);
+                    $organisation = $this->organisationService->findOrganisationById((int)$id);
                 }
 
-                return $this->getOrganisationAssertion()->assert($acl, $role, $organisation, 'edit-community');
+                return $this->assert($acl, $role, $organisation, 'edit-community');
             case 'replace':
                 /*
                  * For the replace we need to see if the user has access on the editing of the program
@@ -79,8 +80,7 @@ class Doa extends AssertionAbstract
                     return true;
                 }
 
-                return \is_null($doa->getDateApproved())
-                    && $doa->getContact()->getId() === $this->getContact()->getId();
+                return null === $doa->getDateApproved() && $doa->getContact()->getId() === $this->contact->getId();
             case 'render':
                 return $this->hasContact();
             case 'download':
@@ -89,7 +89,7 @@ class Doa extends AssertionAbstract
                     return true;
                 }
 
-                return $doa->getContact()->getId() === $this->getContact()->getId();
+                return $doa->getContact()->getId() === $this->contact->getId();
         }
 
         return false;

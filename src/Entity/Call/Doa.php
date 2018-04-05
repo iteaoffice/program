@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace Program\Entity\Call;
 
 use Doctrine\ORM\Mapping as ORM;
+use Program\Entity\AbstractEntity;
 use Zend\Form\Annotation;
 
 /**
@@ -26,7 +27,7 @@ use Zend\Form\Annotation;
  *
  * @category    Program
  */
-class Doa
+class Doa extends AbstractEntity
 {
     /**
      * @ORM\Column(name="doa_id", type="integer", nullable=false)
@@ -72,6 +73,39 @@ class Doa
      * @var \Program\Entity\Call\Call
      */
     private $call;
+
+    /**
+     * Magic Getter.
+     *
+     * @param $property
+     *
+     * @return mixed
+     */
+    public function __get($property)
+    {
+        return $this->$property;
+    }
+
+    /**
+     * Magic Setter.
+     *
+     * @param $property
+     * @param $value
+     */
+    public function __set($property, $value)
+    {
+        $this->$property = $value;
+    }
+
+    /**
+     * @param $property
+     *
+     * @return bool
+     */
+    public function __isset($property)
+    {
+        return isset($this->$property);
+    }
 
     /**
      * @return int

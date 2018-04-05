@@ -11,26 +11,26 @@
 use Program\Acl;
 use Program\Controller;
 use Program\Factory;
+use Program\Factory\InvokableFactory;
 use Program\InputFilter;
 use Program\Navigation;
 use Program\Options;
 use Program\Service;
 use Program\View;
-use Zend\I18n\Translator\TranslatorInterface;
 use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 use Zend\Stdlib;
 
 $config = [
     'controllers'        => [
         'factories' => [
-            Controller\CallCountryManagerController::class => Controller\Factory\ControllerFactory::class,
-            Controller\CallManagerController::class        => Controller\Factory\ControllerFactory::class,
-            Controller\DoaController::class                => Controller\Factory\ControllerFactory::class,
-            Controller\FunderManagerController::class      => Controller\Factory\ControllerFactory::class,
-            Controller\NdaController::class                => Controller\Factory\ControllerFactory::class,
-            Controller\NdaManagerController::class         => Controller\Factory\ControllerFactory::class,
-            Controller\ProgramManagerController::class     => Controller\Factory\ControllerFactory::class,
-            Controller\SessionController::class            => Controller\Factory\ControllerFactory::class,
+            Controller\CallCountryManagerController::class => ConfigAbstractFactory::class,
+            Controller\CallManagerController::class        => ConfigAbstractFactory::class,
+            Controller\DoaController::class                => ConfigAbstractFactory::class,
+            Controller\FunderManagerController::class      => ConfigAbstractFactory::class,
+            Controller\NdaController::class                => ConfigAbstractFactory::class,
+            Controller\NdaManagerController::class         => ConfigAbstractFactory::class,
+            Controller\ProgramManagerController::class     => ConfigAbstractFactory::class,
+            Controller\SessionController::class            => ConfigAbstractFactory::class,
             Controller\SessionManagerController::class     => ConfigAbstractFactory::class,
             Controller\CallController::class               => ConfigAbstractFactory::class,
         ],
@@ -45,12 +45,12 @@ $config = [
             'createFundingDownload'     => Controller\Plugin\CreateFundingDownload::class,
         ],
         'factories' => [
-            Controller\Plugin\GetFilter::class                 => Controller\Factory\PluginFactory::class,
-            Controller\Plugin\RenderNda::class                 => Controller\Factory\PluginFactory::class,
-            Controller\Plugin\RenderDoa::class                 => Controller\Factory\PluginFactory::class,
-            Controller\Plugin\RenderSession::class             => Controller\Factory\PluginFactory::class,
-            Controller\Plugin\CreateCallFundingOverview::class => Controller\Factory\PluginFactory::class,
-            Controller\Plugin\CreateFundingDownload::class     => Controller\Factory\PluginFactory::class,
+            Controller\Plugin\GetFilter::class                 => ConfigAbstractFactory::class,
+            Controller\Plugin\RenderNda::class                 => ConfigAbstractFactory::class,
+            Controller\Plugin\RenderDoa::class                 => ConfigAbstractFactory::class,
+            Controller\Plugin\RenderSession::class             => ConfigAbstractFactory::class,
+            Controller\Plugin\CreateCallFundingOverview::class => ConfigAbstractFactory::class,
+            Controller\Plugin\CreateFundingDownload::class     => ConfigAbstractFactory::class,
         ],
     ],
     'view_manager'       => [
@@ -81,29 +81,32 @@ $config = [
         ],
     ],
     'service_manager'    => [
-        'factories' => [
-            Service\ProgramService::class              => Factory\ProgramServiceFactory::class,
-            Service\CallService::class                 => Factory\CallServiceFactory::class,
-            Service\FormService::class                 => Factory\FormServiceFactory::class,
-            InputFilter\Call\CallFilter::class         => Factory\InputFilterFactory::class,
-            InputFilter\Call\CountryFilter::class      => Factory\InputFilterFactory::class,
-            InputFilter\DoaFilter::class               => Factory\InputFilterFactory::class,
-            InputFilter\FunderFilter::class            => Factory\InputFilterFactory::class,
-            InputFilter\ProgramFilter::class           => Factory\InputFilterFactory::class,
+        'factories'  => [
+            Service\ProgramService::class => ConfigAbstractFactory::class,
+            Service\CallService::class    => ConfigAbstractFactory::class,
+            Service\FormService::class    => Factory\FormServiceFactory::class,
+
+            InputFilter\ProgramFilter::class => ConfigAbstractFactory::class,
+
             Options\ModuleOptions::class               => Factory\ModuleOptionsFactory::class,
-            Acl\Assertion\Doa::class                   => Acl\Factory\AssertionFactory::class,
-            Acl\Assertion\Funder::class                => Acl\Factory\AssertionFactory::class,
-            Acl\Assertion\Nda::class                   => Acl\Factory\AssertionFactory::class,
-            Acl\Assertion\Call\Country::class          => Acl\Factory\AssertionFactory::class,
-            Navigation\Invokable\CallLabel::class      => Navigation\Factory\NavigationInvokableFactory::class,
-            Navigation\Invokable\CountryLabel::class   => Navigation\Factory\NavigationInvokableFactory::class,
-            Navigation\Invokable\FunderLabel::class    => Navigation\Factory\NavigationInvokableFactory::class,
-            Navigation\Invokable\NdaLabel::class       => Navigation\Factory\NavigationInvokableFactory::class,
-            Navigation\Invokable\ProgramLabel::class   => Navigation\Factory\NavigationInvokableFactory::class,
-            Navigation\Invokable\SessionLabel::class   => Navigation\Factory\NavigationInvokableFactory::class,
-            Navigation\Invokable\UploadNdaLabel::class => Navigation\Factory\NavigationInvokableFactory::class,
-            TranslatorInterface::class                 => \Zend\I18n\Translator\TranslatorServiceFactory::class,
+            Acl\Assertion\Doa::class                   => InvokableFactory::class,
+            Acl\Assertion\Funder::class                => InvokableFactory::class,
+            Acl\Assertion\Nda::class                   => InvokableFactory::class,
+            Acl\Assertion\Call\Country::class          => InvokableFactory::class,
+            Navigation\Invokable\CallLabel::class      => InvokableFactory::class,
+            Navigation\Invokable\CountryLabel::class   => InvokableFactory::class,
+            Navigation\Invokable\FunderLabel::class    => InvokableFactory::class,
+            Navigation\Invokable\NdaLabel::class       => InvokableFactory::class,
+            Navigation\Invokable\ProgramLabel::class   => InvokableFactory::class,
+            Navigation\Invokable\SessionLabel::class   => InvokableFactory::class,
+            Navigation\Invokable\UploadNdaLabel::class => InvokableFactory::class,
         ],
+        'invokables' => [
+            InputFilter\Call\CallFilter::class,
+            InputFilter\Call\CountryFilter::class,
+            InputFilter\DoaFilter::class,
+            InputFilter\FunderFilter::class,
+        ]
     ],
     'doctrine'           => [
         'driver'       => [

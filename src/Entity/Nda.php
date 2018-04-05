@@ -31,7 +31,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  *
  * @category    Contact
  */
-class Nda extends EntityAbstract implements ResourceInterface
+class Nda extends AbstractEntity
 {
     /**
      * @ORM\Column(name="nda_id", type="integer", nullable=false)

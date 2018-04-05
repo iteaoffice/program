@@ -12,6 +12,10 @@ build:
                coverage:
                    file: coverage
                    format: php-clover
+checks:
+    php:
+        code_rating: true
+        duplication: true
 tools:
     php_changetracking: true
     php_sim: true

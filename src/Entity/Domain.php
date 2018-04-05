@@ -27,7 +27,7 @@ use Zend\Form\Annotation;
  * @Annotation\Name("project_domain")
  * @ORM\Entity
  */
-class Domain extends EntityAbstract
+class Domain extends AbstractEntity
 {
     /**
      * @ORM\Column(name="domain_id", type="integer", nullable=false)
@@ -43,7 +43,6 @@ class Domain extends EntityAbstract
      * @Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-domain"})
      * @Annotation\Attributes({"required":"true","class":"span3"})
-     * @Annotation\Required(true)
      *
      * @var string
      */

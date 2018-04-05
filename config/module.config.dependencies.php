@@ -17,22 +17,138 @@ declare(strict_types=1);
 
 namespace Program;
 
+use Admin\Service\AdminService;
+use Affiliation\Service\AffiliationService;
+use Contact\Service\ContactService;
+use Doctrine\ORM\EntityManager;
+use General\Service\EmailService;
+use General\Service\GeneralService;
+use Organisation\Service\OrganisationService;
+use Program\Options\ModuleOptions;
 use Program\Service\CallService;
 use Program\Service\FormService;
 use Program\Service\ProgramService;
+use Project\Service\EvaluationService;
 use Project\Service\IdeaService;
 use Project\Service\ProjectService;
+use Project\Service\VersionService;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
+use ZfcTwig\View\TwigRenderer;
+
 
 return [
     ConfigAbstractFactory::class => [
-        Controller\SessionManagerController::class => [
-            ProgramService::class, IdeaService::class, FormService::class, TranslatorInterface::class
+        Controller\Plugin\CreateCallFundingOverview::class => [
+            GeneralService::class,
+            VersionService::class,
+            ProjectService::class,
+            EvaluationService::class,
+            AffiliationService::class
         ],
-        Controller\CallController::class           => [
-            ProgramService::class, CallService::class, ProjectService::class, IdeaService::class, FormService::class,
+        Controller\Plugin\CreateFundingDownload::class     => [
+            VersionService::class,
+            ProjectService::class,
+            AffiliationService::class
+        ],
+        Controller\Plugin\GetFilter::class                 => [
+            'Application'
+        ],
+        Controller\Plugin\RenderDoa::class                 => [
+            TwigRenderer::class,
+            ModuleOptions::class,
+            ContactService::class
+        ],
+        Controller\Plugin\RenderNda::class                 => [
+            TwigRenderer::class,
+            ModuleOptions::class,
+            ContactService::class
+        ],
+        Controller\Plugin\RenderSession::class             => [
+            ModuleOptions::class,
             TranslatorInterface::class
         ],
+        Controller\CallController::class                   => [
+            ProgramService::class,
+            CallService::class,
+            ProjectService::class,
+            IdeaService::class,
+            FormService::class,
+            TranslatorInterface::class
+        ],
+        Controller\CallCountryManagerController::class     => [
+            CallService::class,
+            GeneralService::class,
+            FormService::class,
+            TranslatorInterface::class
+        ],
+        Controller\CallManagerController::class            => [
+            CallService::class,
+            FormService::class,
+            ProjectService::class,
+            VersionService::class,
+            GeneralService::class,
+            EntityManager::class,
+            TranslatorInterface::class
+        ],
+        Controller\DoaController::class                    => [
+            ProgramService::class,
+            OrganisationService::class,
+            GeneralService::class,
+            TranslatorInterface::class
+        ],
+        Controller\FunderManagerController::class          => [
+            ProgramService::class,
+            FormService::class,
+            TranslatorInterface::class
+        ],
+        Controller\NdaController::class                    => [
+            ProgramService::class,
+            CallService::class,
+            GeneralService::class,
+            ContactService::class,
+            TranslatorInterface::class,
+            TwigRenderer::class
+        ],
+        Controller\NdaManagerController::class             => [
+            CallService::class,
+            FormService::class,
+            ContactService::class,
+            GeneralService::class,
+            AdminService::class,
+            EmailService::class,
+            TranslatorInterface::class,
+            EntityManager::class
+        ],
+        Controller\ProgramManagerController::class         => [
+            ProgramService::class,
+            CallService::class,
+            ProjectService::class,
+            VersionService::class,
+            FormService::class,
+            EntityManager::class,
+            TranslatorInterface::class
+        ],
+        Controller\SessionManagerController::class         => [
+            ProgramService::class,
+            IdeaService::class,
+            FormService::class,
+            TranslatorInterface::class,
+            EntityManager::class
+        ],
+        Controller\SessionController::class                => [
+            ProgramService::class
+        ],
+        InputFilter\ProgramFilter::class                   => [
+            EntityManager::class
+        ],
+        Service\ProgramService::class                      => [
+            EntityManager::class
+        ],
+        Service\CallService::class                         => [
+            EntityManager::class,
+            GeneralService::class,
+            AdminService::class
+        ]
     ]
 ];

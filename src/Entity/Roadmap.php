@@ -27,7 +27,7 @@ use Zend\Form\Annotation;
  * @ORM\Table(name="roadmap")
  * @ORM\Entity
  */
-class Roadmap extends EntityAbstract
+class Roadmap extends AbstractEntity
 {
     /**
      * @ORM\Column(name="roadmap_id", type="integer", nullable=false)
@@ -115,6 +115,15 @@ class Roadmap extends EntityAbstract
         $this->$property = $value;
     }
 
+    /**
+     * @param $property
+     *
+     * @return bool
+     */
+    public function __isset($property)
+    {
+        return isset($this->$property);
+    }
 
     /**
      * toString returns the name.
