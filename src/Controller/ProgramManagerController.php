@@ -241,7 +241,7 @@ class ProgramManagerController extends AbstractActionController
         }
 
         if (isset($filter['filter']['program']) && $this->getRequest()->isPost()) {
-            $program = $this->programService->findProgramById($filter['filter']['program']);
+            $program = $this->programService->findProgramById((int) $filter['filter']['program']);
         }
 
         $form->get('filter')->get('program')->setValue($program->getId());

@@ -47,7 +47,7 @@ class Nda extends AbstractAssertion
          */
         if (!$nda instanceof Entity\Nda && null !== $id) {
             /** @var Entity\Nda $nda */
-            $nda = $this->programService->findEntityById(Entity\Nda::class, $id);
+            $nda = $this->programService->find(Entity\Nda::class, (int) $id);
         }
 
         switch ($this->getPrivilege()) {

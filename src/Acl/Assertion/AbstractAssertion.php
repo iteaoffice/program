@@ -80,6 +80,8 @@ abstract class AbstractAssertion implements AssertionInterface
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+        $this->request = $container->get('Application')->getRequest();
+
         $this->adminService = $container->get(AdminService::class);
         $this->programService = $container->get(ProgramService::class);
         $this->callService = $container->get(CallService::class);

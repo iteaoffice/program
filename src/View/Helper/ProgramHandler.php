@@ -138,7 +138,7 @@ class ProgramHandler extends AbstractViewHelper
      */
     public function setCallById($callId): void
     {
-        $call = $this->getCallService()->findCallById($callId);
+        $call = $this->getCallService()->findCallById((int) $callId);
         $this->setCall($call);
     }
 

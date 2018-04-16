@@ -65,8 +65,7 @@ class Domain extends AbstractEntity
     private $color;
     /**
      * @ORM\Column(name="main_id", type="integer", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\Text")
-     * @Annotation\Options({"label":"txt-mian_id"})
+     * @Annotation\Exclude()
      *
      * @var integer
      */

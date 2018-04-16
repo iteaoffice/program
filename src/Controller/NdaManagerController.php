@@ -272,7 +272,7 @@ class NdaManagerController extends AbstractActionController
                  * The programme call needs to have a dedicated treatment
                  */
                 if (!empty($data['program_entity_nda']['programCall'])) {
-                    $nda->setCall([$this->callService->findCallById($data['program_entity_nda']['programCall'])]);
+                    $nda->setCall([$this->callService->findCallById((int) $data['program_entity_nda']['programCall'])]);
                 } else {
                     $nda->setCall([]);
                 }
@@ -322,7 +322,7 @@ class NdaManagerController extends AbstractActionController
             if (isset($data['submit'])) {
                 $fileData = $form->getData('file');
 
-                $call = $this->callService->findCallById($data['call']);
+                $call = $this->callService->findCallById((int) $data['call']);
                 $nda = $this->callService->uploadNda($fileData['file'], $contact, $call);
 
                 //if the date-signed is set, arrange that
