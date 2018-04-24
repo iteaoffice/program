@@ -51,7 +51,7 @@ use Zend\View\Model\ViewModel;
  * @method CreateCallFundingOverview createCallFundingOverview($projects, $year)
  * @method CreateFundingDownload createFundingDownload(Call $call)
  */
-class CallManagerController extends AbstractActionController
+final class CallManagerController extends AbstractActionController
 {
     /**
      * @var CallService
@@ -232,6 +232,8 @@ class CallManagerController extends AbstractActionController
                     );
 
                 return $this->redirect()->toRoute('zfcadmin/call/view', ['id' => $call->getId()]);
+            } else {
+                var_dump($form->getInputFilter()->getMessages());
             }
         }
 

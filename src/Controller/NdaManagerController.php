@@ -52,7 +52,7 @@ use Zend\View\Model\ViewModel;
  * @method Identity|Contact identity()
  * @method RenderNda renderNda()
  */
-class NdaManagerController extends AbstractActionController
+final class NdaManagerController extends AbstractActionController
 {
     /**
      * @var CallService

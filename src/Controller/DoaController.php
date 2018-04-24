@@ -22,6 +22,7 @@ use Program\Controller\Plugin\RenderDoa;
 use Program\Entity;
 use Program\Form\UploadDoa;
 use Program\Service\ProgramService;
+use setasign\Fpdi\TcpdfFpdi;
 use Zend\Http\Response;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -37,9 +38,9 @@ use Zend\View\Model\ViewModel;
  * @package Program\Controller
  * @method Identity|Contact identity()
  * @method FlashMessenger flashMessenger()
- * @method RenderDoa renderDoa(Entity\Doa $doa)
+ * @method RenderDoa|TcpdfFpdi renderDoa(Entity\Doa $doa)
  */
-class DoaController extends AbstractActionController
+final class DoaController extends AbstractActionController
 {
     /**
      * @var ProgramService
@@ -194,7 +195,7 @@ class DoaController extends AbstractActionController
                 }
                 //Create a article object element
                 $programDoaObject = new Entity\DoaObject();
-                $programDoaObject->setObject(file_get_contents($fileData['file']['tmp_name']));
+                $programDoaObject->setObject(\file_get_contents($fileData['file']['tmp_name']));
                 $fileSizeValidator = new FilesSize(PHP_INT_MAX);
                 $fileSizeValidator->isValid($fileData['file']);
                 $doa->setSize($fileSizeValidator->size);

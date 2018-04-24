@@ -20,15 +20,17 @@ use Program\Entity\Call\Call;
 
 /**
  * Class CallLink
+ *
  * @package Program\View\Helper
  */
 class CallLink extends AbstractLink
 {
     /**
      * @param Call|null $call
-     * @param string $action
-     * @param string $show
-     * @param array $classes
+     * @param string    $action
+     * @param string    $show
+     * @param array     $classes
+     *
      * @return string
      */
     public function __invoke(Call $call = null, $action = 'view', $show = 'name', array $classes = []): string
@@ -89,12 +91,6 @@ class CallLink extends AbstractLink
             case 'list-admin':
                 $this->setRouter('zfcadmin/call/list');
                 $this->setText(sprintf($this->translate("txt-call-list")));
-                break;
-            case 'external':
-                $this->addRouterParam('docRef', $this->getCall()->getDocRef());
-                $this->setRouter('route-program_entity_call_call');
-                $this->addRouterParam('call', $this->getCall()->getId());
-                $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));
                 break;
             case 'view-list':
                 /*

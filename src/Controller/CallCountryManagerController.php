@@ -33,7 +33,7 @@ use Zend\View\Model\ViewModel;
  * @package Program\Controller
  * @method FlashMessenger flashMessenger()
  */
-class CallCountryManagerController extends AbstractActionController
+final class CallCountryManagerController extends AbstractActionController
 {
     /**
      * @var CallService

@@ -57,7 +57,7 @@
         </tbody>
     </table>
 
-
+    {{ formelement(form.get('csrf')) }}
     {{ form().closeTag()|raw }}
 {% else %}
     {{ ztbalert().info(translate("txt-no-nda-are-waiting-for-approval"))|raw }}

@@ -181,7 +181,7 @@ return [
                             ],
                         ],
                     ],
-                    'session-list'    => [
+                    'session-list' => [
                         'label' => _("txt-nav-program-call-sessions"),
                         'route' => 'zfcadmin/session/list',
                         'pages' => [
@@ -197,7 +197,7 @@ return [
                                     ],
                                 ],
                                 'pages'   => [
-                                    'edit'         => [
+                                    'edit' => [
                                         'label'   => _('txt-nav-edit'),
                                         'route'   => 'zfcadmin/session/edit',
                                         'visible' => false,
@@ -209,7 +209,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'new'          => [
+                            'new'  => [
                                 'route'   => 'zfcadmin/session/new',
                                 'label'   => _("txt-add-session"),
                                 'visible' => false,
@@ -232,19 +232,17 @@ return [
                                         'id' => Program\Entity\Nda::class,
                                     ],
                                     'invokables' => [
-                                        Program\Navigation\Invokable\CountryLabel::class,
+                                        Program\Navigation\Invokable\NdaLabel::class,
                                     ],
                                 ],
                                 'pages'   => [
                                     'edit' => [
+                                        'label'   => _("txt-edit-nda"),
                                         'route'   => 'zfcadmin/nda/edit',
                                         'visible' => false,
                                         'params'  => [
-                                            'entities'   => [
+                                            'entities' => [
                                                 'id' => Program\Entity\Nda::class,
-                                            ],
-                                            'invokables' => [
-                                                Program\Navigation\Invokable\NdaLabel::class,
                                             ],
                                         ],
                                     ],

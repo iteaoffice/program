@@ -44,7 +44,7 @@ use ZfcTwig\View\TwigRenderer;
  * @method Identity|Contact identity()
  * @method RenderNda renderNda()
  */
-class NdaController extends AbstractActionController
+final class NdaController extends AbstractActionController
 {
     /**
      * @var ProgramService

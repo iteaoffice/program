@@ -52,6 +52,7 @@
     <hr>
     {{ formelement(form.get('submit')) }}
     {{ formelement(form.get('cancel')) }}
+    {{ formelement(form.get('csrf')) }}
     {{ form().closeTag()|raw }}
 
     <script>
@@ -100,5 +101,6 @@
             {{ formelement(form.get('cancel')) }}
         </div>
     </div>
+    {{ formelement(form.get('csrf')) }}
     {{ form().closeTag()|raw }}
 {% endif %}

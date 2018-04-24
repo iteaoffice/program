@@ -12,16 +12,16 @@ declare(strict_types=1);
 
 namespace Program\Form;
 
-use Application\Entity\AbstractEntity;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
-use Zend\Form\Form;
+use Program\Entity\AbstractEntity;
 use Zend\Form\Element;
+use Zend\Form\Form;
 
 /**
  * Class CreateObject
  *
- * @package Application\Form
+ * @package Program\Form
  */
 class CreateObject extends Form
 {
@@ -37,7 +37,7 @@ class CreateObject extends Form
         AbstractEntity $object,
         ContainerInterface $serviceManager
     ) {
-        parent::__construct($object->get("entity_name"));
+        parent::__construct($object->get('entity_name'));
 
         /**
          * There is an option to drag the fieldset from the serviceManager,
@@ -52,20 +52,18 @@ class CreateObject extends Form
          */
         if ($serviceManager->has($objectSpecificFieldset)) {
             $objectFieldset = $serviceManager->get($objectSpecificFieldset);
-        } elseif (class_exists($objectSpecificFieldset)) {
+        } elseif (\class_exists($objectSpecificFieldset)) {
             $objectFieldset = new $objectSpecificFieldset($entityManager, $object);
         } else {
             $objectFieldset = new ObjectFieldset($entityManager, $object);
         }
 
-
-
         $objectFieldset->setUseAsBaseFieldset(true);
         $this->add($objectFieldset);
 
-
         $this->setAttribute('method', 'post');
         $this->setAttribute('class', 'form-horizontal');
+        $this->setAttribute('action', '');
 
         $this->add(
             [

@@ -17,7 +17,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
 /**
  * Class AbstractEntity
  *
- * @package Application\Entity
+ * @package Program\Entity
  */
 abstract class AbstractEntity implements EntityInterface, ResourceInterface
 {

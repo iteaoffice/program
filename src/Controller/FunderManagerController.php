@@ -32,7 +32,7 @@ use Zend\View\Model\ViewModel;
  * @method GetFilter getProgramFilter()
  * @method FlashMessenger flashMessenger()
  */
-class FunderManagerController extends AbstractActionController
+final class FunderManagerController extends AbstractActionController
 {
     /**
      * @var ProgramService

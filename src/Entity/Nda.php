@@ -164,7 +164,7 @@ class Nda extends AbstractEntity
         /*
          * Return an empty value when no id is known
          */
-        if (\is_null($this->id)) {
+        if (null !== $this->id) {
             return sprintf("NDA_EMPTY");
         }
 

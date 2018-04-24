@@ -88,6 +88,12 @@ class AdminUploadNda extends Form\Form implements InputFilterProviderInterface
         );
         $this->add(
             [
+                'type' => Form\Element\Csrf::class,
+                'name' => 'csrf',
+            ]
+        );
+        $this->add(
+            [
                 'type'    => Form\Element\Checkbox::class,
                 'name'    => 'approve',
                 'options' => [

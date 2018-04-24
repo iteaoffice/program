@@ -22,9 +22,9 @@ use Program\Entity\Nda;
 use Zend\Navigation\Page\Mvc;
 
 /**
- * Class ProjectLabel
+ * Class NdaLabel
  *
- * @package Project\Navigation\Invokable
+ * @package Program\Navigation\Invokable
  */
 class NdaLabel extends AbstractNavigationInvokable
 {
@@ -35,24 +35,26 @@ class NdaLabel extends AbstractNavigationInvokable
      */
     public function __invoke(Mvc $page): void
     {
+        $label = $this->translate('txt-nav-nda');
+
         if ($this->getEntities()->containsKey(Nda::class)) {
             /** @var Nda $nda */
             $nda = $this->getEntities()->get(Nda::class);
 
-            if (!\is_null($nda->getCall())) {
+            if (!$nda->getCall()->isEmpty()) {
                 $page->setParams(
-                    array_merge(
+                    \array_merge(
                         $page->getParams(),
                         [
                             'id'     => $nda->getId(),
-                            'callId' => !\is_null($nda->getCall()) ?: $nda->getCall()->getId(),
+                            'callId' => $nda->getCall()->first()->getId(),
                         ]
                     )
                 );
                 $label = (string)$nda;
             } else {
                 $page->setParams(
-                    array_merge(
+                    \array_merge(
                         $page->getParams(),
                         [
                             'id' => $nda->getId(),
@@ -61,8 +63,6 @@ class NdaLabel extends AbstractNavigationInvokable
                 );
                 $label = (string)$nda;
             }
-        } else {
-            $label = $this->translate('txt-nav-nda');
         }
         $page->set('label', $label);
     }

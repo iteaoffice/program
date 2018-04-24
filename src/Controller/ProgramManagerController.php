@@ -43,7 +43,7 @@ use Zend\View\Model\ViewModel;
  * @method FlashMessenger flashMessenger()
  * @method GetFilter getProgramFilter()
  */
-class ProgramManagerController extends AbstractActionController
+final class ProgramManagerController extends AbstractActionController
 {
     /**
      * @var ProgramService

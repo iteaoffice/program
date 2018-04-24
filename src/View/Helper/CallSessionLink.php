@@ -18,10 +18,12 @@ declare(strict_types=1);
 
 namespace Program\View\Helper;
 
+use Content\Entity\Route;
 use Program\Entity\Call\Session;
 
 /**
  * Class CallSessionLink
+ *
  * @package Program\View\Helper
  */
 class CallSessionLink extends AbstractLink
@@ -33,8 +35,8 @@ class CallSessionLink extends AbstractLink
 
     /**
      * @param Session $session
-     * @param string $action
-     * @param string $show
+     * @param string  $action
+     * @param string  $show
      *
      * @return string
      *
@@ -50,13 +52,27 @@ class CallSessionLink extends AbstractLink
         $this->setShow($show);
 
         // Set the non-standard options needed to give an other link value
-        $this->setShowOptions([
-            'name' => $this->getSession(),
-        ]);
+        $this->setShowOptions(
+            [
+                'name' => $this->getSession(),
+            ]
+        );
 
         $this->addRouterParam('id', $this->getSession()->getId());
 
         return $this->createLink();
+    }
+
+    /**
+     * @return Session
+     */
+    private function getSession(): Session
+    {
+        if ($this->session === null) {
+            $this->session = new Session();
+        }
+
+        return $this->session;
     }
 
     /**
@@ -67,13 +83,7 @@ class CallSessionLink extends AbstractLink
         switch ($this->getAction()) {
             case 'view':
                 $this->addRouterParam('session', $this->getSession()->getId());
-                $this->setRouter(
-                    'route-' . str_replace(
-                        'doctrineormmodule_proxy___cg___',
-                        '',
-                        $this->getSession()->get('underscore_entity_name')
-                    )
-                );
+                $this->setRouter(Route::parseRouteName(Route::DEFAULT_ROUTE_HOME));
                 $this->setText(sprintf($this->translate('txt-view-session-%s'), $this->getSession()->getSession()));
                 break;
             case 'download':
@@ -86,10 +96,12 @@ class CallSessionLink extends AbstractLink
                 break;
             case 'edit-admin':
                 $this->setRouter('zfcadmin/session/edit');
-                $this->setText(sprintf(
-                    $this->translate('txt-edit-session-%s'),
-                    $this->getSession()->getSession()
-                ));
+                $this->setText(
+                    sprintf(
+                        $this->translate('txt-edit-session-%s'),
+                        $this->getSession()->getSession()
+                    )
+                );
                 break;
             case 'new-admin':
                 $this->setRouter('zfcadmin/session/new');
@@ -104,17 +116,5 @@ class CallSessionLink extends AbstractLink
                     )
                 );
         }
-    }
-
-    /**
-     * @return Session
-     */
-    private function getSession(): Session
-    {
-        if ($this->session === null) {
-            $this->session = new Session();
-        }
-
-        return $this->session;
     }
 }

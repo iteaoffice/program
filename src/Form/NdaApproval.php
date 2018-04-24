@@ -24,6 +24,7 @@ class NdaApproval extends Form implements InputFilterProviderInterface
 {
     /**
      * NdaApproval constructor.
+     *
      * @param ArrayCollection $ndas
      */
     public function __construct(ArrayCollection $ndas)
@@ -63,7 +64,12 @@ class NdaApproval extends Form implements InputFilterProviderInterface
 
             $this->add($ndaFieldset);
         }
-
+        $this->add(
+            [
+                'type' => 'Zend\Form\Element\Csrf',
+                'name' => 'csrf',
+            ]
+        );
         $this->add(
             [
                 'type'       => 'Zend\Form\Element\Submit',

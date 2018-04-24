@@ -121,7 +121,7 @@ class ProgramHandler extends AbstractViewHelper
     public function setSessionById($sessionId): void
     {
         /** @var Session $session */
-        $session = $this->getCallService()->findEntityById(Session::class, $sessionId);
+        $session = $this->getCallService()->find(Session::class, (int) $sessionId);
         $this->setSession($session);
     }
 
