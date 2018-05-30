@@ -26,6 +26,7 @@ use Zend\Form\Annotation\AnnotationBuilder;
 use Zend\Form\Element;
 use Zend\Form\Element\Radio;
 use Zend\Form\Fieldset;
+use Zend\Form\FieldsetInterface;
 use Zend\Form\Form;
 
 /**
@@ -38,7 +39,7 @@ class ObjectFieldset extends Fieldset
     /**
      * @var EntityManager
      */
-    protected $entityManager;
+    private $entityManager;
 
     /**
      * @param EntityManager         $entityManager
@@ -50,7 +51,7 @@ class ObjectFieldset extends Fieldset
     {
         parent::__construct($object->get('underscore_entity_name'));
         $this->entityManager = $entityManager;
-        $doctrineHydrator = new DoctrineHydrator($entityManager);
+        $doctrineHydrator    = new DoctrineHydrator($entityManager);
         $this->setHydrator($doctrineHydrator)->setObject($object);
         $builder = new AnnotationBuilder();
 
@@ -63,20 +64,21 @@ class ObjectFieldset extends Fieldset
     /**
      * Recursively add form elements and sub-fieldsets
      *
-     * @param Fieldset|Form         $dataFieldset
-     * @param Entity\AbstractEntity $object
-     * @param Fieldset              $baseFieldset
+     * @param Fieldset|Form                $dataFieldset
+     * @param Entity\AbstractEntity|object $object (can be abstract entity from another module/namespace!)
+     * @param Fieldset                     $baseFieldset
      */
     protected function addElements(
         Fieldset $dataFieldset,
-        Entity\AbstractEntity $object,
+        $object,
         Fieldset $baseFieldset = null
-    ): void {
+    ): void
+    {
         /** @var Element $element */
         foreach ($dataFieldset->getElements() as $element) {
             $this->parseElement($element, $object);
             // Add only when a type is provided
-            if (!array_key_exists('type', $element->getAttributes())) {
+            if (!\array_key_exists('type', $element->getAttributes())) {
                 continue;
             }
 
@@ -86,44 +88,49 @@ class ObjectFieldset extends Fieldset
                 $dataFieldset->add($element);
             }
         }
+        // Prepare the target element of a form collection
+        if ($dataFieldset instanceof Element\Collection) {
+            /** @var Element\Collection $dataFieldset */
+            $targetFieldset = $dataFieldset->getTargetElement();
+            // Collections have "container" fieldsets for their items, they must have the hydrator set too
+            if ($targetFieldset instanceof FieldsetInterface) {
+                $targetFieldset->setHydrator($this->getHydrator());
+            }
+            /** @var Fieldset $targetFieldset */
+            foreach ($targetFieldset->getElements() as $element) {
+                $this->parseElement($element, $targetFieldset->getObject());
+            }
+        }
 
         // Add sub-fieldsets
         foreach ($dataFieldset->getFieldsets() as $subFieldset) {
             /** @var Fieldset $subFieldset */
             $subFieldset->setHydrator($this->getHydrator());
-            $subFieldset->setAllowedObjectBindingClass(get_class($subFieldset->getObject()));
             $this->addElements($subFieldset, $subFieldset->getObject());
             $this->add($subFieldset);
         }
     }
 
     /**
-     * @param Element               $element
-     * @param Entity\AbstractEntity $object
+     * @param Element                      $element
+     * @param Entity\AbstractEntity|object $object (can be abstract entity from another module/namespace)
      */
-    protected function parseElement(Element $element, Entity\AbstractEntity $object): void
+    protected function parseElement(Element $element, $object): void
     {
         // Go over each element to add the objectManager to the EntitySelect
         /** Element $element */
         if ($element instanceof EntitySelect || $element instanceof EntityMultiCheckbox
             || $element instanceof EntityRadio
         ) {
-            $element->setOptions(
-                array_merge(
-                    $element->getOptions(),
-                    ['object_manager' => $this->entityManager]
-                )
-            );
+            $element->setOptions(\array_merge($element->getOptions(), ['object_manager' => $this->entityManager]));
         }
-        if ($element instanceof Radio && !$element instanceof EntityRadio) {
-            $attributes = $element->getAttributes();
-            $valueOptionsArray = sprintf('get%s', ucfirst($attributes['array']));
-            $element->setOptions(
-                array_merge(
-                    $element->getOptions(),
-                    ['value_options' => $object::$valueOptionsArray()]
-                )
-            );
+        if ($element instanceof Radio && !($element instanceof EntityRadio)) {
+            $attributes        = $element->getAttributes();
+            $valueOptionsArray = \sprintf('get%s', \ucfirst($attributes['array']));
+            $element->setOptions(\array_merge(
+                $element->getOptions(),
+                ['value_options' => $object::$valueOptionsArray()]
+            ));
         }
     }
 }
