@@ -72,8 +72,7 @@ class ObjectFieldset extends Fieldset
         Fieldset $dataFieldset,
         $object,
         Fieldset $baseFieldset = null
-    ): void
-    {
+    ): void {
         /** @var Element $element */
         foreach ($dataFieldset->getElements() as $element) {
             $this->parseElement($element, $object);

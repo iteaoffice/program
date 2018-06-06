@@ -304,7 +304,7 @@ final class NdaManagerController extends AbstractActionController
      */
     public function uploadAction()
     {
-        $contact = $this->contactService->findContactById($this->params('contactId'));
+        $contact = $this->contactService->findContactById((int) $this->params('contactId'));
         $calls = $this->callService->findAll(Call::class);
 
         if (null === $contact) {

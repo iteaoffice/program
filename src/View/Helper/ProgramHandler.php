@@ -75,7 +75,7 @@ class ProgramHandler extends AbstractViewHelper
                 case 'session':
                     $session = $this->findParamValueFromContent($content, $parameter);
 
-                    if (!\is_null($session)) {
+                    if (null !== $session) {
                         $this->setSessionById($session);
                     }
                     break;

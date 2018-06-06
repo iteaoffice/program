@@ -19,19 +19,23 @@ use Zend\Validator\File\Size;
 
 /**
  * Class UploadNda
+ *
  * @package Program\Form
  */
 class UploadNda extends Form\Form implements InputFilterProviderInterface
 {
-    /**
-     * Class constructor.
-     */
     public function __construct()
     {
         parent::__construct();
         $this->setAttribute('method', 'post');
         $this->setAttribute('class', 'form-horizontal');
         $this->setAttribute('action', '');
+        $this->add(
+            [
+                'type' => Form\Element\Csrf::class,
+                'name' => 'csrf',
+            ]
+        );
         $this->add(
             [
                 'type'    => Form\Element\File::class,
