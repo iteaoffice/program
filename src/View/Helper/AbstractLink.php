@@ -156,17 +156,17 @@ abstract class AbstractLink extends AbstractViewHelper
         }
         $uri = '<a href="%s" title="%s" class="%s">%s</a>';
 
-        return sprintf(
+        return \sprintf(
             $uri,
             $serverUrl() . $url(
                 $this->router,
                 $this->routerParams,
                 ['query' => $this->query, 'fragment' => $this->fragment]
             ),
-            htmlentities((string) $this->text),
-            implode(' ', $this->classes),
-            \in_array($this->getShow(), ['icon', 'button', 'alternativeShow']) ? implode('', $this->linkContent)
-                : htmlentities(implode('', $this->linkContent))
+            \htmlentities((string) $this->text),
+            \implode(' ', $this->classes),
+            \in_array($this->getShow(), ['icon', 'button', 'alternativeShow']) ? \implode('', $this->linkContent)
+                : \htmlentities(\implode('', $this->linkContent))
         );
     }
 
@@ -203,6 +203,7 @@ abstract class AbstractLink extends AbstractViewHelper
                         $this->addLinkContent('<i class="fa fa-external-link"></i>');
                         break;
                     case 'download':
+                    case 'download-spreadsheet':
                         $this->addLinkContent('<i class="fa fa-download" aria-hidden="true"></i>');
                         break;
                     case 'upload':

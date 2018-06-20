@@ -462,14 +462,14 @@ class Call extends AbstractEntity
      */
     public function shortName(): string
     {
-        $words = explode(" ", $this->getProgram()->getProgram());
-        $acronym = "";
+        $words = \explode(' ', $this->getProgram()->getProgram());
+        $acronym = '';
 
         foreach ($words as $w) {
-            $acronym .= strtoupper($w[0]);
+            $acronym .= \strtoupper($w[0]);
         }
 
-        return sprintf("%sC%s", $acronym, $this->call);
+        return \sprintf('%sC%s', $acronym, $this->call);
     }
 
     /**
