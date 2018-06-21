@@ -17,41 +17,34 @@ declare(strict_types=1);
 
 namespace Program\Controller;
 
-use Program\Controller\Plugin\RenderSession;
+use Program\Controller\Plugin\ProgramPdf;
+use Program\Controller\Plugin\SessionSpreadsheet;
+use Program\Controller\Plugin\SessionPdf;
 use Program\Entity\Call\Session;
 use Program\Service\ProgramService;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Stdlib\ResponseInterface;
 
 /**
  * Class SessionController
  *
  * @package Program\Controller
- * @method RenderSession renderSession(Session $session)
+ * @method SessionPdf sessionPdf(Session $session)
+ * @method SessionSpreadsheet sessionSpreadsheet(Session $session)
  */
 final class SessionController extends AbstractActionController
 {
     /**
      * @var ProgramService
      */
-    protected $programService;
+    private $programService;
 
-    /**
-     * SessionController constructor.
-     *
-     * @param ProgramService $programService
-     */
     public function __construct(ProgramService $programService)
     {
         $this->programService = $programService;
     }
 
-
-    /**
-     * @return Response
-     */
-    public function downloadAction(): Response
+    public function downloadPdfAction(): Response
     {
         /** @var Session $session */
         $session = $this->programService->find(Session::class, (int)$this->params('id'));
@@ -63,16 +56,24 @@ final class SessionController extends AbstractActionController
             return $response->setStatusCode(Response::STATUS_CODE_404);
         }
 
-        $renderSession = $this->renderSession($session);
+        /** @var ProgramPdf $sessionPdf */
+        $sessionPdf = $this->sessionPdf($session);
 
-
-        $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
+        $response->getHeaders()->addHeaderLine('Expires: ' . \gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
             ->addHeaderLine('Cache-Control: max-age=36000, must-revalidate')->addHeaderLine('Pragma: public')
             ->addHeaderLine('Content-Disposition', 'attachment; filename="Session_' . $session->getId() . '.pdf"')
             ->addHeaderLine('Content-Type: application/pdf')
-            ->addHeaderLine('Content-Length', \strlen($renderSession->getPDFData()));
-        $response->setContent($renderSession->getPDFData());
+            ->addHeaderLine('Content-Length', \strlen($sessionPdf->getPDFData()));
+        $response->setContent($sessionPdf->getPDFData());
 
         return $response;
+    }
+
+    public function downloadSpreadsheetAction(): Response
+    {
+        /** @var Session $session */
+        $session = $this->programService->find(Session::class, (int)$this->params('id'));
+
+        return $this->sessionSpreadsheet($session)->parseResponse();
     }
 }

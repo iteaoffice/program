@@ -86,8 +86,12 @@ class CallSessionLink extends AbstractLink
                 $this->setRouter(Route::parseRouteName(Route::DEFAULT_ROUTE_HOME));
                 $this->setText(sprintf($this->translate('txt-view-session-%s'), $this->getSession()->getSession()));
                 break;
-            case 'download':
-                $this->setRouter('program/session/download');
+            case 'download-pdf':
+                $this->setRouter('community/program/session/download-pdf');
+                $this->setText(sprintf($this->translate('txt-download-session-%s'), $this->getSession()->getSession()));
+                break;
+            case 'download-spreadsheet':
+                $this->setRouter('community/program/session/download-spreadsheet');
                 $this->setText(sprintf($this->translate('txt-download-session-%s'), $this->getSession()->getSession()));
                 break;
             case 'view-admin':

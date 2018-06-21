@@ -25,7 +25,7 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin;
  *
  * @package Program\Controller\Plugin
  */
-final class RenderSession extends AbstractPlugin
+final class SessionPdf extends AbstractPlugin
 {
 
     /**

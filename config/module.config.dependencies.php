@@ -20,6 +20,7 @@ namespace Program;
 use Admin\Service\AdminService;
 use Affiliation\Service\AffiliationService;
 use Contact\Service\ContactService;
+use Content\Navigation\Service\UpdateNavigationService;
 use Doctrine\ORM\EntityManager;
 use General\Service\EmailService;
 use General\Service\GeneralService;
@@ -32,6 +33,7 @@ use Project\Service\EvaluationService;
 use Project\Service\IdeaService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
+use Zend\Authentication\AuthenticationService;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 use ZfcTwig\View\TwigRenderer;
@@ -64,8 +66,11 @@ return [
             ModuleOptions::class,
             ContactService::class
         ],
-        Controller\Plugin\RenderSession::class             => [
+        Controller\Plugin\SessionPdf::class                => [
             ModuleOptions::class,
+            TranslatorInterface::class
+        ],
+        Controller\Plugin\SessionSpreadsheet::class        => [
             TranslatorInterface::class
         ],
         Controller\CallController::class                   => [
@@ -149,6 +154,15 @@ return [
             EntityManager::class,
             GeneralService::class,
             AdminService::class
-        ]
+        ],
+        View\Handler\SessionHandler::class              => [
+            'Application',
+            'ViewHelperManager',
+            TwigRenderer::class,
+            AuthenticationService::class,
+            UpdateNavigationService::class,
+            TranslatorInterface::class,
+            ProgramService::class
+        ],
     ]
 ];

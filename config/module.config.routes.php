@@ -37,7 +37,7 @@ return [
                                     ],
                                 ],
                                 'child_routes' => [
-                                    'download' => [
+                                    'download-pdf' => [
                                         'type'    => 'Segment',
                                         'options' => [
                                             'route'       => '/download/[:id].pdf',
@@ -45,7 +45,20 @@ return [
                                                 'id' => '\d+',
                                             ],
                                             'defaults'    => [
-                                                'action'    => 'download',
+                                                'action'    => 'download-pdf',
+                                                'privilege' => 'download-session',
+                                            ],
+                                        ],
+                                    ],
+                                    'download-spreadsheet' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'       => '/download/[:id].xlsx',
+                                            'constraints' => [
+                                                'id' => '\d+',
+                                            ],
+                                            'defaults'    => [
+                                                'action'    => 'download-spreadsheet',
                                                 'privilege' => 'download-session',
                                             ],
                                         ],
