@@ -71,16 +71,6 @@ final class NdaController extends AbstractActionController
      */
     protected $renderer;
 
-    /**
-     * NdaController constructor.
-     *
-     * @param ProgramService      $programService
-     * @param CallService         $callService
-     * @param GeneralService      $generalService
-     * @param ContactService      $contactService
-     * @param TranslatorInterface $translator
-     * @param TwigRenderer        $renderer
-     */
     public function __construct(
         ProgramService $programService,
         CallService $callService,
@@ -97,10 +87,6 @@ final class NdaController extends AbstractActionController
         $this->renderer = $renderer;
     }
 
-
-    /**
-     * @return ViewModel
-     */
     public function viewAction(): ViewModel
     {
         /** @var Entity\Nda $nda */

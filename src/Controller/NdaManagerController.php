@@ -272,7 +272,7 @@ final class NdaManagerController extends AbstractActionController
                  * The programme call needs to have a dedicated treatment
                  */
                 if (!empty($data['program_entity_nda']['programCall'])) {
-                    $nda->setCall([$this->callService->findCallById((int) $data['program_entity_nda']['programCall'])]);
+                    $nda->setCall([$this->callService->findCallById((int)$data['program_entity_nda']['programCall'])]);
                 } else {
                     $nda->setCall([]);
                 }
@@ -304,7 +304,7 @@ final class NdaManagerController extends AbstractActionController
      */
     public function uploadAction()
     {
-        $contact = $this->contactService->findContactById((int) $this->params('contactId'));
+        $contact = $this->contactService->findContactById((int)$this->params('contactId'));
         $calls = $this->callService->findAll(Call::class);
 
         if (null === $contact) {
@@ -322,7 +322,7 @@ final class NdaManagerController extends AbstractActionController
             if (isset($data['submit'])) {
                 $fileData = $form->getData('file');
 
-                $call = $this->callService->findCallById((int) $data['call']);
+                $call = $this->callService->findCallById((int)$data['call']);
                 $nda = $this->callService->uploadNda($fileData['file'], $contact, $call);
 
                 //if the date-signed is set, arrange that
@@ -356,10 +356,6 @@ final class NdaManagerController extends AbstractActionController
         );
     }
 
-    /**
-     * @return JsonModel
-     * @throws \Exception
-     */
     public function approveAction(): JsonModel
     {
         $dateSigned = $this->params()->fromPost('dateSigned');
@@ -384,7 +380,7 @@ final class NdaManagerController extends AbstractActionController
         }
 
         /** @var Nda $nda */
-        $nda = $this->callService->find(Nda::class, (int) $this->params()->fromPost('nda'));
+        $nda = $this->callService->find(Nda::class, (int)$this->params()->fromPost('nda'));
         $nda->setDateSigned(\DateTime::createFromFormat('Y-m-d', $dateSigned));
         $nda->setDateApproved(new \DateTime());
         $nda->setApprover($this->identity());
@@ -397,15 +393,14 @@ final class NdaManagerController extends AbstractActionController
          * Send the email tot he user
          */
         if ($sendEmail === 'true') {
-            $email = $this->emailService->create();
-            $this->emailService->setTemplate("/program/nda/approved");
-            $email->setFilename($nda->parseFileName());
-            $email->setDateSigned($nda->getDateSigned()->format('d-m-Y'));
+            $this->emailService->setWebInfo("/program/nda/approved");
+            $this->emailService->addTo($nda->getContact());
+            $this->emailService->setTemplateVariable('filename', $nda->parseFileName());
+            $this->emailService->setTemplateVariable('date_signed', $nda->getDateSigned()->format('d-m-Y'));
             if (!$nda->getCall()->isEmpty()) {
-                $email->setCall((string)$nda->getCall());
+                $this->emailService->setTemplateVariable('call', (string)$nda->getCall());
             }
 
-            $email->addTo($nda->getContact());
             $this->emailService->send();
         }
 

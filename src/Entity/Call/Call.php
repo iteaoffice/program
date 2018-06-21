@@ -20,7 +20,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Program\Entity\AbstractEntity;
 use Zend\Form\Annotation;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * @ORM\Table(name="programcall")
@@ -79,7 +78,7 @@ class Call extends AbstractEntity
      */
     protected static $ndaRequirementTemplates
         = [
-            self::NDA_REQUIREMENT_NOT_APPLICABLE => 'txt-no-dna-required',
+            self::NDA_REQUIREMENT_NOT_APPLICABLE => 'txt-no-nda-required',
             self::NDA_REQUIREMENT_PER_CALL       => 'txt-nda-per-call-required',
             self::NDA_REQUIREMENT_PER_PROJECT    => 'txt-nda-per-project-required',
         ];
@@ -303,13 +302,6 @@ class Call extends AbstractEntity
      */
     private $ideaTool;
     /**
-     * @ORM\OneToMany(targetEntity="Project\Entity\Idea\MessageBoard", cascade={"persist"}, mappedBy="call")
-     * @Annotation\Exclude()
-     *
-     * @var \Project\Entity\Idea\MessageBoard[]|Collections\ArrayCollection
-     */
-    private $ideaMessageBoard;
-    /**
      * @ORM\OneToMany(targetEntity="Program\Entity\Call\Session", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
@@ -344,7 +336,6 @@ class Call extends AbstractEntity
         $this->doa = new Collections\ArrayCollection();
         $this->idea = new Collections\ArrayCollection();
         $this->ideaTool = new Collections\ArrayCollection();
-        $this->ideaMessageBoard = new Collections\ArrayCollection();
         $this->session = new Collections\ArrayCollection();
         $this->callCountry = new Collections\ArrayCollection();
         $this->challenge = new Collections\ArrayCollection();
@@ -356,87 +347,61 @@ class Call extends AbstractEntity
         $this->active = self::ACTIVE;
     }
 
-    /**
-     * @return array
-     */
     public static function getDoaRequirementTemplates(): array
     {
         return self::$doaRequirementTemplates;
     }
 
-    /**
-     * @return array
-     */
     public static function getNdaRequirementTemplates(): array
     {
         return self::$ndaRequirementTemplates;
     }
 
-    /**
-     * @return array
-     */
     public static function getLoiRequirementTemplates(): array
     {
         return self::$loiRequirementTemplates;
     }
 
-    /**
-     * @return array
-     */
     public static function getActiveTemplates(): array
     {
         return self::$activeTemplates;
     }
 
-    /**
-     * @return array
-     */
     public static function getProjectReportTemplates(): array
     {
         return self::$projectReportTemplates;
     }
 
-    /**
-     * Magic Getter.
-     *
-     * @param $property
-     *
-     * @return mixed
-     */
     public function __get($property)
     {
         return $this->$property;
     }
 
-    /**
-     * Magic Setter.
-     *
-     * @param $property
-     * @param $value
-     */
     public function __set($property, $value)
     {
         $this->$property = $value;
     }
 
-    /**
-     * @param $property
-     *
-     * @return bool
-     */
     public function __isset($property)
     {
         return isset($this->$property);
     }
 
-    /**
-     * toString returns the name.
-     *
-     * @return string
-     */
     public function __toString(): string
     {
-        return sprintf("%s Call %s", $this->getProgram()->getProgram(), $this->call);
+        return sprintf('%s Call %s', $this->program->getProgram(), $this->call);
+    }
+
+    public function shortName(): string
+    {
+        $words = \explode(' ', $this->getProgram()->getProgram());
+        $acronym = '';
+
+        foreach ($words as $w) {
+            $acronym .= \strtoupper($w[0]);
+        }
+
+        return \sprintf('%sC%s', $acronym, $this->call);
     }
 
     /**
@@ -455,29 +420,9 @@ class Call extends AbstractEntity
         $this->program = $program;
     }
 
-    /**
-     * Create a short name.
-     *
-     * @return string
-     */
-    public function shortName(): string
+    public function parseInvoiceName(): string
     {
-        $words = explode(" ", $this->getProgram()->getProgram());
-        $acronym = "";
-
-        foreach ($words as $w) {
-            $acronym .= strtoupper($w[0]);
-        }
-
-        return sprintf("%sC%s", $acronym, $this->call);
-    }
-
-    /**
-     * @return string
-     */
-    public function parseInvoiceName()
-    {
-        return sprintf("%s %s", $this->call, $this->program->getProgram());
+        return sprintf('%s %s', $this->call, $this->program->getProgram());
     }
 
     /**
@@ -821,26 +766,6 @@ class Call extends AbstractEntity
     }
 
     /**
-     * @return Collections\ArrayCollection|\Project\Entity\Idea\MessageBoard[]
-     */
-    public function getIdeaMessageBoard()
-    {
-        return $this->ideaMessageBoard;
-    }
-
-    /**
-     * @param Collections\ArrayCollection|\Project\Entity\Idea\MessageBoard[] $ideaMessageBoard
-     *
-     * @return Call
-     */
-    public function setIdeaMessageBoard($ideaMessageBoard)
-    {
-        $this->ideaMessageBoard = $ideaMessageBoard;
-
-        return $this;
-    }
-
-    /**
      * @return Collections\ArrayCollection|Session[]
      */
     public function getSession()
@@ -972,6 +897,7 @@ class Call extends AbstractEntity
 
     /**
      * @param bool $textual
+     *
      * @return int|string
      */
     public function getLoiRequirement(bool $textual = false)
@@ -985,6 +911,7 @@ class Call extends AbstractEntity
 
     /**
      * @param int $loiRequirement
+     *
      * @return Call
      */
     public function setLoiRequirement($loiRequirement): Call
@@ -996,6 +923,7 @@ class Call extends AbstractEntity
 
     /**
      * @param bool $textual
+     *
      * @return int|string
      */
     public function getProjectReport(bool $textual = false)
@@ -1009,6 +937,7 @@ class Call extends AbstractEntity
 
     /**
      * @param int $projectReport
+     *
      * @return Call
      */
     public function setProjectReport(int $projectReport): Call
@@ -1028,6 +957,7 @@ class Call extends AbstractEntity
 
     /**
      * @param Collections\ArrayCollection|\General\Entity\Challenge[] $challenge
+     *
      * @return Call
      */
     public function setChallenge($challenge): Call
