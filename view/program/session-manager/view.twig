@@ -1,3 +1,5 @@
+{% do headScript().appendFile('//cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/min/dropzone.min.js', 'text/javascript') %}
+{% do headScript().appendFile('//cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.js', 'text/javascript') %}
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-session-%s")|format(session.session)) %}
 
@@ -14,57 +16,27 @@
     <dd>{{ session.ideaSession|length }}</dd>
 </dl>
 
-<h2>{{ translate("txt-presentations") }}</h2>
-{% if session.ideaSession|length > 0 %}
-    <table class="table table-hover table-striped table-condensed table-sm">
-        <thead>
-        <tr>
-            <th>{{ translate("txt-time") }}</th>
-            <th>{{ translate("txt-idea") }}</th>
-            <th>{{ translate("txt-status") }}</th>
-            <th>{{ translate("txt-contact") }}</th>
-            <th>{{ translate("txt-country") }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for session in session.ideaSession %}
-            <tr>
-                <td>{{ session.schedule }}</td>
-                <td>{{ ideaLink(session.idea, 'view-admin') }}</td>
-                <td>
-                    {% if session.idea.getHasPoster() %}
-                        <span class="fa fa-file-image-o"
-                              title="{{ translate("txt-idea-will-be-presented-as-poster") }}"></span>
-                    {% endif %}
-                    {% if session.idea.hasPresentation %}
-                        <span class="fa fa-file-powerpoint-o"
-                              title="{{ translate("txt-idea-will-be-presented-as-presentation") }}"></span>
-                    {% endif %}
-                    {% if session.idea.visibility is constant("Project\\Entity\\Idea\\Idea::VISIBILITY_HIDDEN") %}
-                        <span class="fa fa-eye-slash"
-                              title="{{ translate("this-idea-is-hidden") }}"></span>
-                    {% endif %}
-                    {% if session.idea.subIdea.count() > 0 %}
-                        <i class="fa fa-link"
-                           title="{{ translate("txt-%s-ideas-joined")|format(session.idea.subIdea.count()) }}"></i>
-                    {% endif %}
-                    {% for subIdea in session.idea.mainIdea %}
-                        <i class="fa fa-link"
-                           title="{{ translate("txt-merged-with-%s")|format(subidea.idea)|raw }}"></i>
-                    {% endfor %}
-                    {% if ideaService.isComplete(session.idea) %}
-                        <small>(<i class="fa fa-check-circle"></i> {{ translate("txt-idea-complete") }})
-                        </small>{% endif %}
-                </td>
-                <td>{{ contactLink(session.idea.contact,'view-admin','name') }}</td>
-                <td>{% if session.idea.contact.contactOrganisation %}
-                        {{ countryLink(session.idea.contact.contactOrganisation.organisation.country, 'view-admin', 'iso3') }}
-                    {% endif %}
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-{% else %}
-    {{ ztbalert().info(translate("txt-no-ideas-found"))|raw }}
-{% endif %}
+<div role="tabpanel">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item active">
+            <a class="nav-link active" href="#presentations" aria-controls="presentations" role="tab" data-toggle="tab">
+            {{ translate("txt-presentations") }}
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#files" aria-controls="files" role="tab" data-toggle="tab">
+            {{ translate("txt-files") }}
+            </a>
+        </li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="presentations">
+            {% include 'program/session-manager/tab/presentations' %}
+        </div>
+        <div role="tabpanel" class="tab-pane" id="files">
+            {% include 'program/session-manager/tab/files' %}
+        </div>
+    </div>
+</div>

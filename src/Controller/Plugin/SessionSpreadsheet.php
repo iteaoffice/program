@@ -18,6 +18,7 @@ namespace Program\Controller\Plugin;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Shared\Font;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -74,21 +75,31 @@ final class SessionSpreadsheet extends AbstractPlugin
             'B' => $this->translator->translate('txt-idea'),
             'C' => $this->translator->translate('txt-title'),
             'D' => $this->translator->translate('txt-challenges'),
-            'E' => $this->translator->translate('txt-description'),
+            'E' => $this->translator->translate('txt-notes'),
         ];
         \end($columns);
         $lastColumn = \key($columns);
         foreach (\range('A', $lastColumn) as $column) {
             $sheet->getColumnDimension($column)->setAutoSize(true);
         }
-        $sheet->getStyle('A1:' . $lastColumn . '1')->getFill()->setFillType(Fill::FILL_SOLID)
+        $sheet->getStyle('A2:' . $lastColumn . '2')->getFill()->setFillType(Fill::FILL_SOLID)
             ->getStartColor()->setRGB('DDDDDD');
+        $sheet->getRowDimension(1)->setRowHeight(20);
+        $sheet->mergeCells('A1:'.$lastColumn.'1');
+        $sheet->getStyle('A1')->getAlignment()
+            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A1')->getFont()->setSize(18);
+        $sheet->setCellValue(
+            'A1',
+            \sprintf('%s / %s', $session->getSession(), $session->getDate()->format('Y-m-d H:i'))
+        );
+
         // Freeze the header
-        $sheet->freezePane('A2');
-        $sheet->fromArray($columns, null, 'A1');
+        $sheet->freezePane('A3');
+        $sheet->fromArray($columns, null, 'A2');
 
         // Data
-        $row = 2;
+        $row = 3;
         foreach ($session->getIdeaSession() as $ideaSession) {
             $sheet->setCellValue('A' . $row, $ideaSession->getSchedule());
             $sheet->setCellValue('B' . $row, $ideaSession->getIdea()->getIdea());

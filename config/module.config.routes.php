@@ -578,7 +578,6 @@ return [
                         'child_routes'  => [
                             'list' => [
                                 'type'     => 'Segment',
-                                'priority' => 1000,
                                 'options'  => [
                                     'route'    => '/list[/f-:encodedFilter][/page-:page].html',
                                     'defaults' => [
@@ -588,7 +587,6 @@ return [
                             ],
                             'new'  => [
                                 'type'     => 'Literal',
-                                'priority' => 1000,
                                 'options'  => [
                                     'route'    => '/new.html',
                                     'defaults' => [
@@ -598,7 +596,6 @@ return [
                             ],
                             'view' => [
                                 'type'     => 'Segment',
-                                'priority' => 1000,
                                 'options'  => [
                                     'route'    => '/view/[:id].html',
                                     'defaults' => [
@@ -608,11 +605,46 @@ return [
                             ],
                             'edit' => [
                                 'type'     => 'Segment',
-                                'priority' => 1000,
                                 'options'  => [
                                     'route'    => '/edit/[:id].html',
                                     'defaults' => [
                                         'action' => 'edit',
+                                    ],
+                                ],
+                            ],
+                            'download' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'       => '/download/[:id].zip',
+                                    'constraints' => [
+                                        'id' => '\d+',
+                                    ],
+                                    'defaults'    => [
+                                        'action'    => 'download'
+                                    ],
+                                ],
+                            ],
+                            'upload-document' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'       => '/upload/[:id].html',
+                                    'constraints' => [
+                                        'id' => '\d+',
+                                    ],
+                                    'defaults'    => [
+                                        'action'    => 'upload'
+                                    ],
+                                ],
+                            ],
+                            'idea-files' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'       => '/idea-files/[:id].html',
+                                    'constraints' => [
+                                        'id' => '\d+',
+                                    ],
+                                    'defaults'    => [
+                                        'action'    => 'idea-files'
                                     ],
                                 ],
                             ],

@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Program\Controller;
 
+use Application\Twig\ParseSizeExtension;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
@@ -24,6 +25,7 @@ use Program\Entity\Call\Session;
 use Program\Form\SessionFilter;
 use Program\Service\FormService;
 use Program\Service\ProgramService;
+use Project\Entity\Idea\Idea;
 use Project\Service\IdeaService;
 use Zend\Http\Request;
 use Zend\Http\Response;
@@ -31,6 +33,7 @@ use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Zend\Paginator\Paginator;
+use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -78,46 +81,43 @@ final class SessionManagerController extends AbstractActionController
      * @param EntityManager       $entityManager
      */
     public function __construct(
-        ProgramService $programService,
-        IdeaService $ideaService,
-        FormService $formService,
+        ProgramService      $programService,
+        IdeaService         $ideaService,
+        FormService         $formService,
         TranslatorInterface $translator,
-        EntityManager $entityManager
+        EntityManager       $entityManager
     ) {
         $this->programService = $programService;
-        $this->ideaService = $ideaService;
-        $this->formService = $formService;
-        $this->translator = $translator;
-        $this->entityManager = $entityManager;
+        $this->ideaService    = $ideaService;
+        $this->formService    = $formService;
+        $this->translator     = $translator;
+        $this->entityManager  = $entityManager;
     }
-
 
     /**
      * @return ViewModel
      */
     public function listAction()
     {
-        $page = $this->params()->fromRoute('page', 1);
+        $page         = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getProgramFilter();
         $contactQuery = $this->programService->findFiltered(Session::class, $filterPlugin->getFilter());
 
         $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($contactQuery, false)));
         $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 20);
         $paginator->setCurrentPageNumber($page);
-        $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
+        $paginator->setPageRange(\ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
         $form = new SessionFilter($this->entityManager);
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
-        return new ViewModel(
-            [
-                'paginator'     => $paginator,
-                'form'          => $form,
-                'encodedFilter' => urlencode($filterPlugin->getHash()),
-                'order'         => $filterPlugin->getOrder(),
-                'direction'     => $filterPlugin->getDirection(),
-            ]
-        );
+        return new ViewModel([
+            'paginator'     => $paginator,
+            'form'          => $form,
+            'encodedFilter' => \urlencode($filterPlugin->getHash()),
+            'order'         => $filterPlugin->getOrder(),
+            'direction'     => $filterPlugin->getDirection(),
+        ]);
     }
 
     /**
@@ -132,12 +132,17 @@ final class SessionManagerController extends AbstractActionController
             return $this->notFoundAction();
         }
 
-        return new ViewModel(
-            [
-                'session'     => $session,
-                'ideaService' => $this->ideaService
-            ]
-        );
+        $orderedIdeas = [];
+        foreach ($session->getIdeaSession() as $ideaSession) {
+            $orderedIdeas[$ideaSession->getIdea()->getNumber()] = $ideaSession->getIdea();
+        }
+        \ksort($orderedIdeas);
+
+        return new ViewModel([
+            'session'      => $session,
+            'orderedIdeas' => $orderedIdeas,
+            'ideaService'  => $this->ideaService
+        ]);
     }
 
     /**
@@ -167,11 +172,9 @@ final class SessionManagerController extends AbstractActionController
             }
         }
 
-        return new ViewModel(
-            [
-                'form' => $form
-            ]
-        );
+        return new ViewModel([
+            'form' => $form
+        ]);
     }
 
     /**
@@ -223,11 +226,60 @@ final class SessionManagerController extends AbstractActionController
             }
         }
 
-        return new ViewModel(
-            [
-                'form'  => $form,
-                'ideas' => $session->getCall()->getIdea()
-            ]
-        );
+        return new ViewModel([
+            'form'  => $form,
+            'ideas' => $session->getCall()->getIdea()
+        ]);
+    }
+
+    public function downloadAction(): Response
+    {
+        /** @var Response $response */
+        $response = $this->getResponse();
+
+        return $response;
+    }
+
+    public function uploadAction(): Response
+    {
+        /** @var Request $request */
+        $request =  $this->getRequest();
+        /** @var Idea $idea */
+        $idea    = $this->ideaService->findIdeaById((int) $this->params('id'));
+        $data    = $request->getFiles()->toArray();
+        $errors  = [];
+        foreach ($data['file'] as $fileData) {
+            try {
+                $this->ideaService->addFileToIdea($idea, $fileData);
+            } catch (\Exception $e) {
+                $errors[] = $e->getMessage();
+            }
+        }
+        /** @var Response $response */
+        $response = $this->getResponse();
+        if (!empty($errors)) {
+            $response->setStatusCode(501);
+            $response->setContent(\implode(', ', $errors));
+        }
+        return $response;
+    }
+
+    public function ideaFilesAction(): JsonModel
+    {
+        /** @var Idea $idea */
+        $idea       = $this->ideaService->findIdeaById((int) $this->params('id'));
+        $data       = [];
+        $sizeParser = new ParseSizeExtension();
+
+        foreach ($idea->getDocument() as $document) {
+            $data[] = [
+                'name' => $document->parseFileName(),
+                'size' => $sizeParser->processFilter($document->getSize())
+            ];
+        }
+
+        return new JsonModel([
+            'files' => $data
+        ]);
     }
 }
