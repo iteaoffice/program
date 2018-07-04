@@ -90,7 +90,7 @@ class CallFilter extends InputFilter
         );
         $inputFilter->add(
             [
-                'name'       => 'poGraceDate',
+                'name'       => 'loiSubmissionDate',
                 'required'   => false,
                 'filters'    => [
                     ['name' => 'StripTags'],
@@ -126,7 +126,7 @@ class CallFilter extends InputFilter
         );
         $inputFilter->add(
             [
-                'name'       => 'fppGraceDate',
+                'name'       => 'doaSubmissionDate',
                 'required'   => false,
                 'filters'    => [
                     ['name' => 'StripTags'],
@@ -146,6 +146,24 @@ class CallFilter extends InputFilter
             [
                 'name'       => 'fppCloseDate',
                 'required'   => true,
+                'filters'    => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+                'validators' => [
+                    [
+                        'name'    => 'DateTime',
+                        'options' => [
+                            'pattern' => 'yyyy-mm-dd H:mm:ss',
+                        ],
+                    ],
+                ],
+            ]
+        );
+        $inputFilter->add(
+            [
+                'name'       => 'labelAnnouncementDate',
+                'required'   => false,
                 'filters'    => [
                     ['name' => 'StripTags'],
                     ['name' => 'StringTrim'],

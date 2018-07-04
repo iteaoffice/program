@@ -35,30 +35,21 @@ class CallService extends AbstractService
 {
     public const PO_CLOSED = 'PO_CLOSED';
     public const PO_NOT_OPEN = 'PO_NOT_OPEN';
-    public const PO_GRACE = 'PO_GRACE';
     public const PO_OPEN = 'PO_OPEN';
     public const FPP_CLOSED = 'FPP_CLOSED';
     public const FPP_NOT_OPEN = 'FPP_NOT_OPEN';
     public const FPP_OPEN = 'FPP_OPEN';
-    public const FPP_GRACE = 'FPP_GRACE';
     public const UNDEFINED = 'UNDEFINED';
 
     /**
      * @var GeneralService
      */
-    protected $generalService;
+    private $generalService;
     /**
      * @var AdminService
      */
-    protected $adminService;
+    private $adminService;
 
-    /**
-     * CallService constructor.
-     *
-     * @param EntityManager  $entityManager
-     * @param GeneralService $generalService
-     * @param AdminService   $adminService
-     */
     public function __construct(
         EntityManager $entityManager,
         GeneralService $generalService,
@@ -70,31 +61,16 @@ class CallService extends AbstractService
         $this->adminService = $adminService;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return null|Call
-     */
     public function findCallById(int $id): ?Call
     {
         return $this->entityManager->getRepository(Call::class)->find($id);
     }
 
-    /**
-     * @param string $name
-     *
-     * @return null|Call
-     */
     public function findCallByName(string $name): ?Call
     {
         return $this->entityManager->getRepository(Call::class)->findOneBy(['call' => $name]);
     }
 
-    /**
-     * Get a list of not approved lois.
-     *
-     * @return Nda[]|ArrayCollection
-     */
     public function findNotApprovedNda(): ArrayCollection
     {
         /** @var \Program\Repository\Nda $repository */
@@ -103,11 +79,16 @@ class CallService extends AbstractService
         return new ArrayCollection($repository->findNotApprovedNda());
     }
 
-    /**
-     * @param $type
-     *
-     * @return null|Call
-     */
+    public function findNextCall(Call $call): ?Call
+    {
+        return $this->entityManager->getRepository(Call::class)->findNextCall($call);
+    }
+
+    public function findPreviousCall(Call $call): ?Call
+    {
+        return $this->entityManager->getRepository(Call::class)->findPreviousCall($call);
+    }
+
     public function findOpenCall($type): ?Call
     {
         /** @var \Program\Repository\Call\Call $repository */
@@ -116,11 +97,6 @@ class CallService extends AbstractService
         return $repository->findOpenCall($type);
     }
 
-    /**
-     * @param Call $call
-     *
-     * @return \stdClass
-     */
     public function findMinAndMaxYearInCall(Call $call): \stdClass
     {
         /** @var \Program\Repository\Call\Call $repository */
@@ -181,22 +157,13 @@ class CallService extends AbstractService
         return null;
     }
 
-
-    /**
-     * Return true when the call is open specified for the given type.
-     *
-     * @param Call $call
-     * @param Type $type
-     *
-     * @return bool
-     */
     public function isOpen(Call $call, Type $type): bool
     {
         switch ($type->getId()) {
             case Type::TYPE_PO:
-                return \in_array($this->getCallStatus($call)->result, [self::PO_GRACE, self::PO_OPEN], true);
+                return $this->getCallStatus($call)->result === self::PO_OPEN;
             case Type::TYPE_FPP:
-                return \in_array($this->getCallStatus($call)->result, [self::FPP_OPEN, self::FPP_GRACE], true);
+                return $this->getCallStatus($call)->result === self::FPP_OPEN;
             default:
                 return true;
         }
@@ -232,10 +199,6 @@ class CallService extends AbstractService
             $referenceDate = $call->getPoCloseDate();
             $result = self::PO_OPEN;
             $type = Type::TYPE_PO;
-        } elseif ($call->getPoGraceDate() > $today) {
-            $referenceDate = $call->getPoCloseDate();
-            $result = self::PO_GRACE;
-            $type = Type::TYPE_PO;
         } elseif ($call->getPoCloseDate() > $notificationDeadline
             && $call->getFppOpenDate() > $today
         ) {
@@ -249,10 +212,6 @@ class CallService extends AbstractService
         } elseif ($call->getFppCloseDate() > $today) {
             $referenceDate = $call->getFppCloseDate();
             $result = self::FPP_OPEN;
-            $type = Type::TYPE_FPP;
-        } elseif ($call->getPoGraceDate() > $today) {
-            $referenceDate = $call->getFppCloseDate();
-            $result = self::FPP_GRACE;
             $type = Type::TYPE_FPP;
         } elseif ($call->getFppCloseDate() > $notificationDeadline) {
             $referenceDate = $call->getFppCloseDate();
@@ -271,57 +230,21 @@ class CallService extends AbstractService
         return $callStatus;
     }
 
-    /**
-     * Return true when the call is in grace mode.
-     *
-     * @param Call $call
-     *
-     * @return bool
-     */
-    public function isGrace(Call $call): bool
-    {
-        return \in_array($this->getCallStatus($call)->result, [self::PO_GRACE, self::FPP_GRACE], true);
-    }
-
-    /**
-     * Returns true when a DOA per partner is required.
-     *
-     * @param Call $call
-     *
-     * @return bool
-     */
     public function requireDoaPerProject(Call $call): bool
     {
         return $call->getDoaRequirement() === Call::DOA_REQUIREMENT_PER_PROJECT;
     }
 
-    /**
-     * @param Call $call
-     *
-     * @return bool
-     */
     public function requireDoaPerProgram(Call $call): bool
     {
         return $call->getDoaRequirement() === Call::DOA_REQUIREMENT_PER_PROGRAM;
     }
 
-    /**
-     * Returns true when an LOI is required
-     *
-     * @param Call $call
-     *
-     * @return bool
-     */
     public function requireLoi(Call $call): bool
     {
         return $call->getLoiRequirement() === Call::LOI_REQUIRED;
     }
 
-    /**
-     * Return an object with the first and last call in the database.
-     *
-     * @return \stdClass
-     */
     public function findFirstAndLastCall(): \stdClass
     {
         $firstCall = $this->entityManager->getRepository(Call::class)->findOneBy([], ['id' => 'ASC']);

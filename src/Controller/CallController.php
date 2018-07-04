@@ -18,12 +18,12 @@ declare(strict_types=1);
 namespace Program\Controller;
 
 use Contact\Entity\Contact;
+use Event\Service\MeetingService;
+use Event\Service\RegistrationService;
 use Program\Service\CallService;
-use Program\Service\FormService;
-use Program\Service\ProgramService;
+use Project\Service\HelpService;
 use Project\Service\IdeaService;
 use Project\Service\ProjectService;
-use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Zend\Mvc\Plugin\Identity\Identity;
@@ -41,10 +41,6 @@ use Zend\View\Model\ViewModel;
 final class CallController extends AbstractActionController
 {
     /**
-     * @var ProgramService
-     */
-    private $programService;
-    /**
      * @var CallService
      */
     private $callService;
@@ -57,56 +53,74 @@ final class CallController extends AbstractActionController
      */
     private $ideaService;
     /**
-     * @var FormService
+     * @var HelpService
      */
-    private $formService;
+    private $helpService;
     /**
-     * @var TranslatorInterface
+     * @var MeetingService
      */
-    private $translator;
+    private $meetingService;
+    /**
+     * @var RegistrationService
+     */
+    private $registrationService;
 
-    /**
-     * CallController constructor.
-     *
-     * @param ProgramService      $programService
-     * @param CallService         $callService
-     * @param ProjectService      $projectService
-     * @param IdeaService         $ideaService
-     * @param FormService         $formService
-     * @param TranslatorInterface $translator
-     */
     public function __construct(
-        ProgramService $programService,
         CallService $callService,
         ProjectService $projectService,
         IdeaService $ideaService,
-        FormService $formService,
-        TranslatorInterface $translator
+        HelpService $helpService,
+        MeetingService $meetingService,
+        RegistrationService $registrationService
     ) {
-        $this->programService = $programService;
         $this->callService = $callService;
         $this->projectService = $projectService;
         $this->ideaService = $ideaService;
-        $this->formService = $formService;
-        $this->translator = $translator;
+        $this->helpService = $helpService;
+        $this->meetingService = $meetingService;
+        $this->registrationService = $registrationService;
     }
 
-    /**
-     * @return ViewModel
-     */
-    public function indexAction(): ViewModel
+
+    public function indexAction()
     {
+        $callId = $this->params('callId');
         $call = $this->callService->findLastActiveCall();
+
+        if (null !== $callId) {
+            $call = $this->callService->findCallById((int)$callId);
+        }
+
+        if (null === $call) {
+            return $this->redirect()->toRoute('community');
+        }
+
         $contact = $this->identity();
 
-        $projects = $this->projectService->findProjectsByCallAndContact($call, $contact, ProjectService::WHICH_ALL);
-        $ideas = $this->ideaService->findIdeasByCallAndContact($call, $contact);
+        $projects = [];
+        $ideas = [];
+        $tool = null;
+
+        if (null !== $call) {
+            $projects = $this->projectService->findInvolvedProjectsByCallAndContact($call, $contact);
+
+            $tool = $call->getIdeaTool()->first();
+            if ($tool) {
+                $ideas = $this->ideaService->getInvolvedIdeaListByToolAndContact($tool, $contact);
+            }
+        }
 
         return new ViewModel(
             [
-                'call'     => $call,
-                'projects' => $projects,
-                'ideas'    => $ideas,
+                'call'                => $call,
+                'tool'                => $tool,
+                'projects'            => $projects,
+                'ideas'               => $ideas,
+                'helpTree'            => $this->helpService->getHelpTree(),
+                'nextCall'            => $this->callService->findNextCall($call),
+                'previousCall'        => $this->callService->findPreviousCall($call),
+                'meetingService'      => $this->meetingService,
+                'registrationService' => $this->registrationService
             ]
         );
     }

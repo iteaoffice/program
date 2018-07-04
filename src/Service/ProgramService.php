@@ -25,41 +25,21 @@ use Program\Entity\Program;
  */
 class ProgramService extends AbstractService
 {
-    /**
-     * @param $id
-     *
-     * @return null|Program
-     */
     public function findProgramById(int $id): ?Program
     {
         return $this->entityManager->getRepository(Program::class)->find($id);
     }
 
-    /**
-     * @param string $name
-     *
-     * @return null|Program
-     */
     public function findProgramByName(string $name): ?Program
     {
         return $this->entityManager->getRepository(Program::class)->findOneBy(['program' => $name]);
     }
 
-    /**
-     * Find the last open program and check which versionType is active.
-     *
-     * @return Program
-     */
     public function findLastProgram(): ?Program
     {
         return $this->entityManager->getRepository(Program::class)->findOneBy([], ['id' => 'DESC']);
     }
 
-    /**
-     * @param Program $program
-     *
-     * @return \stdClass
-     */
     public function findMinAndMaxYearInProgram(Program $program): \stdClass
     {
         /** @var \Program\Repository\Program $repository */
@@ -73,23 +53,12 @@ class ProgramService extends AbstractService
         return $yearSpan;
     }
 
-    /**
-     * @param Country $country
-     *
-     * @return Funder[]
-     */
     public function findFunderByCountry(Country $country): array
     {
         return $this->entityManager->getRepository(Funder::class)
             ->findBy(['country' => $country], ['position' => 'ASC']);
     }
 
-    /**
-     * @param Program      $program
-     * @param Organisation $organisation
-     *
-     * @return null|Doa
-     */
     public function findProgramDoaByProgramAndOrganisation(Program $program, Organisation $organisation): ?Doa
     {
         return $this->entityManager->getRepository(Doa::class)->findOneBy(

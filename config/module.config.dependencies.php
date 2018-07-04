@@ -22,6 +22,8 @@ use Affiliation\Service\AffiliationService;
 use Contact\Service\ContactService;
 use Content\Navigation\Service\UpdateNavigationService;
 use Doctrine\ORM\EntityManager;
+use Event\Service\MeetingService;
+use Event\Service\RegistrationService;
 use General\Service\EmailService;
 use General\Service\GeneralService;
 use Organisation\Service\OrganisationService;
@@ -30,6 +32,7 @@ use Program\Service\CallService;
 use Program\Service\FormService;
 use Program\Service\ProgramService;
 use Project\Service\EvaluationService;
+use Project\Service\HelpService;
 use Project\Service\IdeaService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
@@ -74,12 +77,12 @@ return [
             TranslatorInterface::class
         ],
         Controller\CallController::class                   => [
-            ProgramService::class,
             CallService::class,
             ProjectService::class,
             IdeaService::class,
-            FormService::class,
-            TranslatorInterface::class
+            HelpService::class,
+            MeetingService::class,
+            RegistrationService::class
         ],
         Controller\CallCountryManagerController::class     => [
             CallService::class,
@@ -155,7 +158,7 @@ return [
             GeneralService::class,
             AdminService::class
         ],
-        View\Handler\SessionHandler::class              => [
+        View\Handler\SessionHandler::class                 => [
             'Application',
             'ViewHelperManager',
             TwigRenderer::class,

@@ -232,8 +232,6 @@ final class CallManagerController extends AbstractActionController
                     );
 
                 return $this->redirect()->toRoute('zfcadmin/call/view', ['id' => $call->getId()]);
-            } else {
-                var_dump($form->getInputFilter()->getMessages());
             }
         }
 

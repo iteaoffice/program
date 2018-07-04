@@ -35,11 +35,9 @@ class Call extends AbstractEntity
      */
     public const FPP_CLOSED = 'FPP_CLOSED';
     public const FPP_NOT_OPEN = 'FPP_NOT_OPEN';
-    public const FPP_GRACE_PERIOD = 'FPP_GRACE_PERIOD';
     public const FPP_OPEN = 'FPP_OPEN';
     public const PO_CLOSED = 'PO_CLOSED';
     public const PO_NOT_OPEN = 'PO_NOT_OPEN';
-    public const PO_GRACE_PERIOD = 'PO_GRACE_PERIOD';
     public const PO_OPEN = 'PO_OPEN';
 
     public const INACTIVE = 0;
@@ -56,26 +54,19 @@ class Call extends AbstractEntity
     public const PROJECT_REPORT_SINGLE = 1;
     public const PROJECT_REPORT_DOUBLE = 2;
 
-    /**
-     * @var array
-     */
     protected static $activeTemplates
         = [
             self::INACTIVE => 'txt-inactive-for-projects',
             self::ACTIVE   => 'txt-active-for-projects',
         ];
-    /**
-     * @var array
-     */
+
     protected static $doaRequirementTemplates
         = [
             self::DOA_REQUIREMENT_NOT_APPLICABLE => 'txt-no-doa-required',
             self::DOA_REQUIREMENT_PER_PROGRAM    => 'txt-doa-per-program-required',
             self::DOA_REQUIREMENT_PER_PROJECT    => 'txt-doa-per-project-required',
         ];
-    /**
-     * @var array
-     */
+
     protected static $ndaRequirementTemplates
         = [
             self::NDA_REQUIREMENT_NOT_APPLICABLE => 'txt-no-nda-required',
@@ -83,18 +74,12 @@ class Call extends AbstractEntity
             self::NDA_REQUIREMENT_PER_PROJECT    => 'txt-nda-per-project-required',
         ];
 
-    /**
-     * @var array
-     */
     protected static $loiRequirementTemplates
         = [
             self::LOI_NOI_REQUIRED => 'txt-no-loi-required',
             self::LOI_REQUIRED     => 'txt-loi-required',
         ];
 
-    /**
-     * @var array
-     */
     protected static $projectReportTemplates
         = [
             self::PROJECT_REPORT_SINGLE => 'txt-project-report-single',
@@ -145,14 +130,14 @@ class Call extends AbstractEntity
      */
     private $poCloseDate;
     /**
-     * @ORM\Column(name="po_grace_date", type="datetime", nullable=true)
+     * @ORM\Column(name="loi_submission_date", type="datetime", nullable=true)
      * @Annotation\Type("\Zend\Form\Element\DateTime")
      * @Annotation\Attributes({"step":"any"})
-     * @Annotation\Options({"label":"txt-po-grace-date", "format":"Y-m-d H:i:s","help-block":"txt-po-grace-date-inline-help"})
+     * @Annotation\Options({"label":"txt-loi-submission-date-label", "format":"Y-m-d H:i:s","help-block":"txt-loi-submission-help-block"})
      *
      * @var \DateTime
      */
-    private $poGraceDate;
+    private $loiSubmissionDate;
     /**
      * @ORM\Column(name="fpp_open_date", type="datetime", nullable=true)
      * @Annotation\Type("\Zend\Form\Element\DateTime")
@@ -172,14 +157,23 @@ class Call extends AbstractEntity
      */
     private $fppCloseDate;
     /**
-     * @ORM\Column(name="fpp_grace_date", type="datetime", nullable=true)
+     * @ORM\Column(name="doa_submission_date", type="datetime", nullable=true)
      * @Annotation\Type("\Zend\Form\Element\DateTime")
      * @Annotation\Attributes({"step":"any"})
-     * @Annotation\Options({"label":"txt-fpp-grace-date", "format":"Y-m-d H:i:s","help-block":"txt-fpp-grace-date-inline-help"})
+     * @Annotation\Options({"label":"txt-doa-submission-date-label", "format":"Y-m-d H:i:s","help-block":"txt-doa-submission-help-block"})
      *
      * @var \DateTime
      */
-    private $fppGraceDate;
+    private $doaSubmissionDate;
+    /**
+     * @ORM\Column(name="label_announcement_date", type="datetime", nullable=true)
+     * @Annotation\Type("\Zend\Form\Element\DateTime")
+     * @Annotation\Attributes({"step":"any"})
+     * @Annotation\Options({"label":"txt-label-announcement-date-label", "format":"Y-m-d H:i:s","help-block":"txt-label-announcement-help-block"})
+     *
+     * @var \DateTime
+     */
+    private $labelAnnouncementDate;
     /**
      * @ORM\Column(name="doa_requirement", type="smallint", nullable=false)
      * @Annotation\Type("Zend\Form\Element\Radio")
@@ -498,10 +492,9 @@ class Call extends AbstractEntity
      *
      * @return Call
      */
-    public function setPoOpenDate($poOpenDate)
+    public function setPoOpenDate($poOpenDate): Call
     {
         $this->poOpenDate = $poOpenDate;
-
         return $this;
     }
 
@@ -518,30 +511,28 @@ class Call extends AbstractEntity
      *
      * @return Call
      */
-    public function setPoCloseDate($poCloseDate)
+    public function setPoCloseDate($poCloseDate): Call
     {
         $this->poCloseDate = $poCloseDate;
-
         return $this;
     }
 
     /**
      * @return \DateTime
      */
-    public function getPoGraceDate()
+    public function getLoiSubmissionDate()
     {
-        return $this->poGraceDate;
+        return $this->loiSubmissionDate;
     }
 
     /**
-     * @param \DateTime $poGraceDate
+     * @param \DateTime $loiSubmissionDate
      *
      * @return Call
      */
-    public function setPoGraceDate($poGraceDate)
+    public function setLoiSubmissionDate($loiSubmissionDate): Call
     {
-        $this->poGraceDate = $poGraceDate;
-
+        $this->loiSubmissionDate = $loiSubmissionDate;
         return $this;
     }
 
@@ -558,10 +549,9 @@ class Call extends AbstractEntity
      *
      * @return Call
      */
-    public function setFppOpenDate($fppOpenDate)
+    public function setFppOpenDate($fppOpenDate): Call
     {
         $this->fppOpenDate = $fppOpenDate;
-
         return $this;
     }
 
@@ -578,32 +568,50 @@ class Call extends AbstractEntity
      *
      * @return Call
      */
-    public function setFppCloseDate($fppCloseDate)
+    public function setFppCloseDate($fppCloseDate): Call
     {
         $this->fppCloseDate = $fppCloseDate;
-
         return $this;
     }
 
     /**
      * @return \DateTime
      */
-    public function getFppGraceDate()
+    public function getDoaSubmissionDate()
     {
-        return $this->fppGraceDate;
+        return $this->doaSubmissionDate;
     }
 
     /**
-     * @param \DateTime $fppGraceDate
+     * @param \DateTime $doaSubmissionDate
      *
      * @return Call
      */
-    public function setFppGraceDate($fppGraceDate)
+    public function setDoaSubmissionDate($doaSubmissionDate): Call
     {
-        $this->fppGraceDate = $fppGraceDate;
-
+        $this->doaSubmissionDate = $doaSubmissionDate;
         return $this;
     }
+
+    /**
+     * @return \DateTime
+     */
+    public function getLabelAnnouncementDate()
+    {
+        return $this->labelAnnouncementDate;
+    }
+
+    /**
+     * @param \DateTime $labelAnnouncementDate
+     *
+     * @return Call
+     */
+    public function setLabelAnnouncementDate($labelAnnouncementDate): Call
+    {
+        $this->labelAnnouncementDate = $labelAnnouncementDate;
+        return $this;
+    }
+
 
     /**
      * @return Collections\ArrayCollection|\Project\Entity\Project[]

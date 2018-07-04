@@ -39,11 +39,9 @@ class CallInformationBox extends AbstractViewHelper
         $contents = [
             CallService::PO_NOT_OPEN  => "%call% for Project Outlines will open %diff% from now (%time%)",
             CallService::PO_OPEN      => "%call% for Project Outlines will close %diff% from now (deadline: %time%)",
-            CallService::PO_GRACE     => "%call% for Project Outlines closed %diff% ago (deadline: %time%), but a grace period for accepting Project Outlines is still open",
             CallService::PO_CLOSED    => "%call% for Project Outlines closed %diff% ago (deadline: %time%)",
             CallService::FPP_NOT_OPEN => "%call% for Full Project Proposals will open %diff% from now (deadline: %time%)",
             CallService::FPP_OPEN     => "%call% for Full Project Proposals will close %diff% from now (deadline: %time%)",
-            CallService::FPP_GRACE    => "%call% for Full Project Proposals will close %diff% from now (deadline: %time%), but a grace period for accepting Project Outlines is still open",
             CallService::FPP_CLOSED   => "%call% for Full Project Proposals closed %diff% ago (deadline: %time%)",
         ];
         $callStatus = $this->getCallService()->getCallStatus($call);
@@ -82,15 +80,7 @@ class CallInformationBox extends AbstractViewHelper
         );
         $alert = '<div class="alert alert-%s"><strong>%s</strong><br>%s</div>';
 
-        switch ($callStatus->result) {
-            case CallService::PO_GRACE:
-            case CallService::FPP_GRACE:
-                $type = 'warning';
-                break;
-            default:
-                $type = 'info';
-                break;
-        }
+        $type = 'info';
 
         return sprintf($alert, $type, $result, $content);
     }

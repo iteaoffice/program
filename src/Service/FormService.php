@@ -33,31 +33,18 @@ class FormService
     /**
      * @var ServiceLocatorInterface
      */
-    protected $serviceLocator;
+    private $serviceLocator;
     /**
      * @var EntityManager
      */
-    protected $entityManager;
+    private $entityManager;
 
-    /**
-     * FormService constructor.
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param EntityManager           $entityManager
-     */
     public function __construct(ServiceLocatorInterface $serviceLocator, EntityManager $entityManager)
     {
         $this->serviceLocator = $serviceLocator;
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @param string|AbstractEntity $classNameOrEntity
-     * @param array                 $data
-     * @param array                 $options
-     *
-     * @return Form
-     */
     public function prepare($classNameOrEntity, array $data = [], array $options = []): Form
     {
         /**
@@ -76,12 +63,6 @@ class FormService
         return $form;
     }
 
-    /**
-     * @param AbstractEntity $entity
-     * @param array          $options
-     *
-     * @return Form
-     */
     private function getForm(AbstractEntity $entity, array $options = []): Form
     {
         $formName = $entity->get('entity_form_name');

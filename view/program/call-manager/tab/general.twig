@@ -10,10 +10,22 @@
     <dd>{{ call.poOpenDate|string_date }} ({{ call.poOpenDate|date('d-m-Y H:i:s') }})</dd>
     <dt>{{ translate("txt-po-close-date") }}</dt>
     <dd>{{ call.poCloseDate|string_date }} ({{ call.poCloseDate|date('d-m-Y H:i:s') }})</dd>
+    {% if call.loiSubmissionDate %}
+        <dt>{{ translate("txt-loi-submission-deadline") }}</dt>
+        <dd>{{ call.loiSubmissionDate|string_date }} ({{ call.loiSubmissionDate|date('d-m-Y H:i:s') }})</dd>
+    {% endif %}
     <dt>{{ translate("txt-fpp-open-date") }}</dt>
     <dd>{{ call.fppOpenDate|string_date }} ({{ call.fppOpenDate|date('d-m-Y H:i:s') }})</dd>
     <dt>{{ translate("txt-fpp-close-date") }}</dt>
     <dd>{{ call.fppCloseDate|string_date }} ({{ call.fppCloseDate|date('d-m-Y H:i:s') }})</dd>
+    {% if call.doaSubmissionDate %}
+        <dt>{{ translate("txt-doa-submission-deadline") }}</dt>
+        <dd>{{ call.doaSubmissionDate|string_date }} ({{ call.doaSubmissionDate|date('d-m-Y H:i:s') }})</dd>
+    {% endif %}
+    {% if call.labelAnnouncementDate %}
+        <dt>{{ translate("txt-label-announcement-date") }}</dt>
+        <dd>{{ call.labelAnnouncementDate|string_date }} ({{ call.labelAnnouncementDate|date('d-m-Y H:i:s') }})</dd>
+    {% endif %}
     <dt>{{ translate("txt-active") }}</dt>
     <dd>{{ translate(call.getActive(true)) }}</dd>
     <dt>{{ translate("txt-doa-requirement") }}</dt>

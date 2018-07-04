@@ -43,26 +43,12 @@ abstract class AbstractService
      */
     protected $selectionContactService;
 
-    /**
-     * AbstractService constructor.
-     *
-     * @param EntityManager                $entityManager
-     * @param SelectionContactService|null $selectionContactService
-     */
     public function __construct(EntityManager $entityManager, SelectionContactService $selectionContactService = null)
     {
         $this->entityManager = $entityManager;
         $this->selectionContactService = $selectionContactService;
     }
 
-
-    /**
-     * @param string         $entity
-     * @param                $filter
-     * @param Entity\Contact $contact
-     *
-     * @return QueryBuilder
-     */
     public function findFilteredByContact(string $entity, $filter, Entity\Contact $contact): QueryBuilder
     {
         //The 'filter' should always be there to support the repositories
@@ -75,12 +61,6 @@ abstract class AbstractService
         return $this->limitQueryBuilderByPermissions($qb, $contact, $entity);
     }
 
-    /**
-     * @param string $entity
-     * @param array  $filter
-     *
-     * @return QueryBuilder
-     */
     public function findFiltered(string $entity, array $filter): QueryBuilder
     {
         return $this->entityManager->getRepository($entity)->findFiltered(
@@ -89,14 +69,6 @@ abstract class AbstractService
         );
     }
 
-    /**
-     * @param QueryBuilder   $qb
-     * @param Entity\Contact $contact
-     * @param string         $entity
-     * @param string         $permit
-     *
-     * @return QueryBuilder
-     */
     protected function limitQueryBuilderByPermissions(
         QueryBuilder $qb,
         Entity\Contact $contact,
@@ -189,57 +161,27 @@ abstract class AbstractService
         return $qb;
     }
 
-    /**
-     * @param AbstractEntity|object $entity
-     *
-     * @return Permit\Entity|null
-     */
     public function findPermitEntityByEntity(object $entity): ?Permit\Entity
     {
         return $this->entityManager->getRepository(Permit\Entity::class)
             ->findOneBy(['underscoreFullEntityName' => $entity->get('underscore_entity_name')]);
     }
 
-    /**
-     * @param string $entity
-     *
-     * @return array|AbstractEntity[]
-     */
     public function findAll(string $entity): array
     {
         return $this->entityManager->getRepository($entity)->findAll();
     }
 
-    /**
-     * @param string $entity
-     * @param int    $id
-     *
-     * @return null|AbstractEntity
-     */
     public function find(string $entity, int $id): ?AbstractEntity
     {
         return $this->entityManager->getRepository($entity)->find($id);
     }
 
-    /**
-     * @param string $entity
-     * @param string $column
-     * @param string $name
-     *
-     * @return null|AbstractEntity
-     */
     public function findByName(string $entity, string $column, string $name): ?AbstractEntity
     {
         return $this->entityManager->getRepository($entity)->findOneBy([$column => $name]);
     }
 
-    /**
-     * @param AbstractEntity $entity
-     *
-     * @return AbstractEntity
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
     public function save(AbstractEntity $entity): AbstractEntity
     {
         if (!$this->entityManager->contains($entity)) {

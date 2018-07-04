@@ -229,9 +229,9 @@ return [
                         ],
                         'child_routes' => [
                             'index' => [
-                                'type'    => 'Literal',
+                                'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/index.html',
+                                    'route'    => '/index[/call-:callId].html',
                                     'defaults' => [
                                         'action' => 'index',
                                     ],
