@@ -78,11 +78,11 @@ class CallInformationBox extends AbstractViewHelper
             ],
             $contents[$result]
         );
-        $alert = '<div class="alert alert-%s"><strong>%s</strong><br>%s</div>';
+        $alert = '<div class="alert alert-%s">%s</div>';
 
         $type = 'info';
 
-        return sprintf($alert, $type, $result, $content);
+        return \sprintf($alert, $type, $content);
     }
 
     /**
