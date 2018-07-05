@@ -78,7 +78,7 @@
                     <div class="col-xs-6 col-md-3">
 
                         {% if projectItem.type is constant('\\Project\\ValueObject\\ProjectItem::TYPE_PROJECT') %}
-                            <a class="thumbnail" href="{{ projectLink(projectItem.project,'view','social') }}">
+                            <a class="thumbnail" href="{{ projectLink(projectItem.project,'view-community','social') }}">
                                 <div class="project-thumbnail {% if projectItem.isPending() %}project-thumbnail-blur{% endif %}"
                                      style="background: url('{{ projectLogo(projectItem.project,150, true) }}') no-repeat center 15px"></div>
 

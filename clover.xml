@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1530713651">
-  <project timestamp="1530713651">
+<coverage generated="1530795604">
+  <project timestamp="1530795604">
     <package name="Program\Acl\Assertion">
       <file name="/var/www/dev1/vendor/iteaoffice/program/src/Acl/Assertion/AbstractAssertion.php">
         <class name="Program\Acl\Assertion\AbstractAssertion" namespace="Program\Acl\Assertion" fullPackage="Program" package="Program">
@@ -5425,24 +5425,29 @@
         <class name="Program\View\Helper\CallInformationBox" namespace="Program\View\Helper" fullPackage="Program" package="Program">
           <metrics complexity="7" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="49" coveredstatements="0" elements="51" coveredelements="0"/>
         </class>
-        <line num="33" type="method" name="__invoke" visibility="public" complexity="6" crap="42.00" count="0"/>
+        <line num="28" type="method" name="__invoke" visibility="public" complexity="6" crap="42.00" count="0"/>
+        <line num="29" type="stmt" count="0"/>
+        <line num="30" type="stmt" count="0"/>
+        <line num="31" type="stmt" count="0"/>
+        <line num="32" type="stmt" count="0"/>
         <line num="34" type="stmt" count="0"/>
         <line num="35" type="stmt" count="0"/>
         <line num="36" type="stmt" count="0"/>
         <line num="37" type="stmt" count="0"/>
+        <line num="38" type="stmt" count="0"/>
         <line num="39" type="stmt" count="0"/>
         <line num="40" type="stmt" count="0"/>
         <line num="41" type="stmt" count="0"/>
         <line num="42" type="stmt" count="0"/>
-        <line num="43" type="stmt" count="0"/>
-        <line num="44" type="stmt" count="0"/>
-        <line num="45" type="stmt" count="0"/>
         <line num="46" type="stmt" count="0"/>
         <line num="47" type="stmt" count="0"/>
+        <line num="48" type="stmt" count="0"/>
+        <line num="49" type="stmt" count="0"/>
         <line num="51" type="stmt" count="0"/>
         <line num="52" type="stmt" count="0"/>
         <line num="53" type="stmt" count="0"/>
         <line num="54" type="stmt" count="0"/>
+        <line num="55" type="stmt" count="0"/>
         <line num="56" type="stmt" count="0"/>
         <line num="57" type="stmt" count="0"/>
         <line num="58" type="stmt" count="0"/>
@@ -5464,19 +5469,14 @@
         <line num="74" type="stmt" count="0"/>
         <line num="75" type="stmt" count="0"/>
         <line num="76" type="stmt" count="0"/>
-        <line num="77" type="stmt" count="0"/>
         <line num="78" type="stmt" count="0"/>
-        <line num="79" type="stmt" count="0"/>
         <line num="80" type="stmt" count="0"/>
         <line num="81" type="stmt" count="0"/>
-        <line num="83" type="stmt" count="0"/>
+        <line num="83" type="method" name="getCallService" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="84" type="stmt" count="0"/>
         <line num="85" type="stmt" count="0"/>
         <line num="86" type="stmt" count="0"/>
-        <line num="91" type="method" name="getCallService" visibility="public" complexity="1" crap="2.00" count="0"/>
-        <line num="92" type="stmt" count="0"/>
-        <line num="93" type="stmt" count="0"/>
-        <line num="94" type="stmt" count="0"/>
-        <metrics loc="95" ncloc="69" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="49" coveredstatements="0" elements="51" coveredelements="0"/>
+        <metrics loc="87" ncloc="68" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="49" coveredstatements="0" elements="51" coveredelements="0"/>
       </file>
       <file name="/var/www/dev1/vendor/iteaoffice/program/src/View/Helper/CallLink.php">
         <class name="Program\View\Helper\CallLink" namespace="Program\View\Helper" fullPackage="Program" package="Program">
@@ -6068,6 +6068,6 @@
         <metrics loc="105" ncloc="73" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="57" coveredstatements="0" elements="59" coveredelements="0"/>
       </file>
     </package>
-    <metrics files="96" loc="16151" ncloc="10177" classes="93" methods="645" coveredmethods="73" conditionals="0" coveredconditionals="0" statements="4808" coveredstatements="263" elements="5453" coveredelements="336"/>
+    <metrics files="96" loc="16143" ncloc="10176" classes="93" methods="645" coveredmethods="73" conditionals="0" coveredconditionals="0" statements="4808" coveredstatements="263" elements="5453" coveredelements="336"/>
   </project>
 </coverage>

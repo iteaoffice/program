@@ -25,11 +25,6 @@ use Program\Service\CallService;
  */
 class CallInformationBox extends AbstractViewHelper
 {
-
-    /**
-     * @param Call|null $call
-     * @return string
-     */
     public function __invoke(Call $call = null): string
     {
         if (null === $call) {
@@ -37,12 +32,12 @@ class CallInformationBox extends AbstractViewHelper
         }
 
         $contents = [
-            CallService::PO_NOT_OPEN  => "%call% for Project Outlines will open %diff% from now (%time%)",
-            CallService::PO_OPEN      => "%call% for Project Outlines will close %diff% from now (deadline: %time%)",
-            CallService::PO_CLOSED    => "%call% for Project Outlines closed %diff% ago (deadline: %time%)",
-            CallService::FPP_NOT_OPEN => "%call% for Full Project Proposals will open %diff% from now (deadline: %time%)",
-            CallService::FPP_OPEN     => "%call% for Full Project Proposals will close %diff% from now (deadline: %time%)",
-            CallService::FPP_CLOSED   => "%call% for Full Project Proposals closed %diff% ago (deadline: %time%)",
+            CallService::PO_NOT_OPEN  => '%call% for Project Outlines will open %diff% from now (%time%)',
+            CallService::PO_OPEN      => '%call% for Project Outlines will close %diff% from now (deadline: %time%)',
+            CallService::PO_CLOSED    => '%call% for Project Outlines closed %diff% ago (deadline: %time%)',
+            CallService::FPP_NOT_OPEN => '%call% for Full Project Proposals will open %diff% from now (deadline: %time%)',
+            CallService::FPP_OPEN     => '%call% for Full Project Proposals will close %diff% from now (deadline: %time%)',
+            CallService::FPP_CLOSED   => '%call% for Full Project Proposals closed %diff% ago (deadline: %time%)',
         ];
         $callStatus = $this->getCallService()->getCallStatus($call);
         /*
@@ -84,10 +79,7 @@ class CallInformationBox extends AbstractViewHelper
 
         return \sprintf($alert, $type, $content);
     }
-
-    /**
-     * @return CallService
-     */
+    
     public function getCallService(): CallService
     {
         return $this->getServiceManager()->get(CallService::class);
