@@ -25,8 +25,9 @@ use Program\Entity\Call\Session;
 use Program\Form\SessionFilter;
 use Program\Service\FormService;
 use Program\Service\ProgramService;
-use Project\Entity\Idea\Idea;
+use Project\Entity\Idea\Session as IdeaSession;
 use Project\Service\IdeaService;
+use Zend\Http\Headers;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\I18n\Translator\TranslatorInterface;
@@ -132,16 +133,34 @@ final class SessionManagerController extends AbstractActionController
             return $this->notFoundAction();
         }
 
-        $orderedIdeas = [];
+        $orderedIdeaSessions = [];
         foreach ($session->getIdeaSession() as $ideaSession) {
-            $orderedIdeas[$ideaSession->getIdea()->getNumber()] = $ideaSession->getIdea();
+            $files = [];
+            foreach ($ideaSession->getDocuments() as $document) {
+                $files[$document->getDateUpdated()->format('U').'|'.$document->getId()] = [
+                    'object' => $document,
+                    'type'   => 'document'
+                ];
+            }
+            foreach ($ideaSession->getImages() as $image) {
+                $date = $image->getDateUpdated() ?? $image->getDateCreated();
+                $files[$date->format('U').'|'.$image->getId()] = [
+                    'object' => $image,
+                    'type'   => 'image'
+                ];
+            }
+            \krsort($files);
+            $orderedIdeaSessions[$ideaSession->getIdea()->getNumber()] = [
+                'session' => $ideaSession,
+                'files'   => $files
+            ];
         }
-        \ksort($orderedIdeas);
+        \ksort($orderedIdeaSessions);
 
         return new ViewModel([
-            'session'      => $session,
-            'orderedIdeas' => $orderedIdeas,
-            'ideaService'  => $this->ideaService
+            'session'             => $session,
+            'orderedIdeaSessions' => $orderedIdeaSessions,
+            'ideaService'         => $this->ideaService
         ]);
     }
 
@@ -232,10 +251,58 @@ final class SessionManagerController extends AbstractActionController
         ]);
     }
 
-    public function downloadAction(): Response
+    /**
+     * @return Response|ViewModel
+     */
+    public function downloadAction()
     {
         /** @var Response $response */
         $response = $this->getResponse();
+        /** @var Session $session */
+        $session  = $this->programService->find(Session::class, (int) $this->params('id'));
+
+        if ($session === null) {
+            return $this->notFoundAction();
+        }
+
+        $tempFile = \tempnam(sys_get_temp_dir(), 'zip');
+        $zip      = new \ZipArchive();
+
+        $zip->open($tempFile);
+        foreach ($session->getIdeaSession() as $ideaSession) {
+            $dir = \str_replace(':', '', $ideaSession->getIdea()->parseName());
+            $zip->addEmptyDir($dir);
+            foreach ($ideaSession->getDocuments() as $document) {
+                $zip->addFromString(
+                    $dir.'/'.$document->getFilename(),
+                    \stream_get_contents($document->getObject()->first()->getObject())
+                );
+            }
+            foreach ($ideaSession->getImages() as $image) {
+                $zip->addFromString(
+                    $dir.'/'.$image->getImage(),
+                    \stream_get_contents($image->getObject()->first()->getObject())
+                );
+            }
+        }
+        $zip->close();
+        $content       = \file_get_contents($tempFile);
+        $contentLength = \filesize($tempFile);
+        \unlink($tempFile);
+
+        // Prepare the response
+        $response->setContent($content);
+        $response->setStatusCode(Response::STATUS_CODE_200);
+        $headers = new Headers();
+        $headers->addHeaders([
+            'Content-Disposition' => 'attachment; filename="'.$session->getSession().'.zip"',
+            'Content-Type'        => 'application/zip',
+            'Content-Length'      => $contentLength,
+            'Expires'             => '0',
+            'Cache-Control'       => 'must-revalidate',
+            'Pragma'              => 'public',
+        ]);
+        $response->setHeaders($headers);
 
         return $response;
     }
@@ -244,13 +311,14 @@ final class SessionManagerController extends AbstractActionController
     {
         /** @var Request $request */
         $request =  $this->getRequest();
-        /** @var Idea $idea */
-        $idea    = $this->ideaService->findIdeaById((int) $this->params('id'));
-        $data    = $request->getFiles()->toArray();
-        $errors  = [];
+        /** @var IdeaSession $ideaSession */
+        $ideaSession = $this->ideaService->findEntityById(IdeaSession::class, (int) $this->params('id'));
+        $data        = $request->getFiles()->toArray();
+        $errors      = [];
+
         foreach ($data['file'] as $fileData) {
             try {
-                $this->ideaService->addFileToIdea($idea, $fileData);
+                $this->ideaService->addFileToIdea($ideaSession->getIdea(), $fileData, null, $ideaSession);
             } catch (\Exception $e) {
                 $errors[] = $e->getMessage();
             }
@@ -266,20 +334,34 @@ final class SessionManagerController extends AbstractActionController
 
     public function ideaFilesAction(): JsonModel
     {
-        /** @var Idea $idea */
-        $idea       = $this->ideaService->findIdeaById((int) $this->params('id'));
-        $data       = [];
-        $sizeParser = new ParseSizeExtension();
+        /** @var IdeaSession $ideaSession */
+        $ideaSession = $this->ideaService->findEntityById(IdeaSession::class, (int) $this->params('id'));
+        $data        = [];
+        $sizeParser  = new ParseSizeExtension();
 
-        foreach ($idea->getDocument() as $document) {
-            $data[] = [
-                'name' => $document->parseFileName(),
-                'size' => $sizeParser->processFilter($document->getSize())
+        foreach ($ideaSession->getDocuments() as $document) {
+            $data[$document->getDateUpdated()->format('U').'|'.$document->getId()] = [
+                'name'         => $document->parseFileName(),
+                'size'         => $sizeParser->processFilter($document->getSize()),
+                'download-url' => $this->url()
+                    ->fromRoute('community/idea/document/download', ['id' => $document->getId()]),
+                'delete-url'   => $this->url()
+                    ->fromRoute('community/idea/document/delete', ['id' => $document->getId()])
             ];
         }
+        foreach ($ideaSession->getImages() as $image) {
+            $date = $image->getDateUpdated() ?? $image->getDateCreated();
+            $data[$date->format('U').'|'.$image->getId()] = [
+                'name'         => $image->getImage(),
+                'size'         => $sizeParser->processFilter($image->getSize()),
+                'delete-url'   => $this->url()
+                    ->fromRoute('community/idea/image/delete', ['id' => $image->getId()])
+            ];
+        }
+        \krsort($data);
 
         return new JsonModel([
-            'files' => $data
+            'files' => \array_values($data)
         ]);
     }
 }

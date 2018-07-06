@@ -1,33 +1,41 @@
 <h2>{{ translate("txt-files") }}</h2>
 <p>{{ translate("txt-drop-files-explaination") }}</p>
 <div id="idea-panels">
-{% if orderedIdeas|length > 0 %}
+{% if orderedIdeaSessions|length > 0 %}
     {% set itemsPerRow = 3 %}
-    {% for idea in orderedIdeas %}
+    {% for ideaSession in orderedIdeaSessions %}
         {% if loop.first or loop.index0 is divisible by(itemsPerRow)  %}
             <div class="row">
         {% endif %}
         <div class="col-md-{{ 12/itemsPerRow }}">
             <div class="panel panel-default">
-                <div class="panel-heading">{{ ideaLink(idea, 'view-admin') }}</div>
+                <div class="panel-heading">{{ ideaLink(ideaSession.session.idea, 'view-admin') }}</div>
                 <div class="panel-body">
-                    <div data-files-url="{{ url('zfcadmin/session/idea-files', {'id': idea.id}) }}"
-                         data-upload-url="{{ url('zfcadmin/session/upload-document', {'id': idea.id}) }}"
+                    <div data-files-url="{{ url('zfcadmin/session/idea-files', {'id': ideaSession.session.id}) }}"
+                         data-upload-url="{{ url('zfcadmin/session/upload-document', {'id': ideaSession.session.id}) }}"
                          class="well drop">
                         {{ translate("txt-drop-files-here") }}
                     </div>
                     <div class="files">
-                        {% if idea.document is not empty %}
+                        {% if ideaSession.files is not empty %}
                         <table class="table table-condensed table-striped">
                             <tbody>
-                            {% for document in idea.document %}
+                            {% for file in ideaSession.files %}
                                 <tr>
-                                    <td>{{ document.parseFilename() }}</td>
-                                    <td>{{ document.size|parse_size }}</td>
+                                    {% if file.type == 'document' %}
+                                    <td><small>{{ file.object.parseFilename() }}</small></td>
+                                    <td><small>{{ file.object.size|parse_size }}</small></td>
                                     <td>
-                                        {{ ideaDocumentLink(document,'download', 'icon') }}
-                                        {{ ideaDocumentLink(document,'delete', 'icon') }}
+                                        {{ ideaDocumentLink(file.object, 'download', 'icon') }}
+                                        {{ ideaDocumentLink(file.object, 'delete', 'icon') }}
                                     </td>
+                                    {% elseif file.type == 'image' %}
+                                    <td>{{ file.object.getImage() }}</td>
+                                    <td>{{ file.object.size|parse_size }}</td>
+                                    <td>
+                                        {{ ideaImageLink(file.object, 'delete', 'icon') }}
+                                    </td>
+                                    {% endif %}
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -47,6 +55,11 @@
 {% endif %}
 </div>
 
+<style type="text/css">
+    div.dz-preview { display:none; }
+    div.drop:hover { cursor:pointer; }
+</style>
+
 <script>
     $(function(){
         var $template = $('#files-template');
@@ -56,7 +69,6 @@
                 uploadMultiple: true,
                 url: $self.data('upload-url'),
                 success: function(){
-                    $self.find('.dz-preview').fadeOut(function(){ $(this).remove(); });
                     $.get($self.data('files-url'), function(data){
                         var html = Mustache.render($template.html(), data);
                         $self.siblings('.files').html(html);
@@ -80,10 +92,10 @@
         <tbody>
         <!--{{#files}}-->
             <tr>
-                <td>{{name}}</td>
-                <td>{{{size}}}</td>
+                <td><small>{{name}}</small></td>
+                <td><small>{{{size}}}</small></td>
                 <td>
-                <a href="{{download-url}}"><i class="fa fa-download"></i></a>
+                {{#download-url}}<a href="{{download-url}}"><i class="fa fa-download"></i></a>{{/download-url}}
                 <a class="btn-del" data-delete-url="{{delete-url}}" href="/"><i class="fa fa-trash-o"></i></a>
                 </td>
             </tr>
