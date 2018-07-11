@@ -44,6 +44,7 @@
         {% endfor %}
         </tbody>
     </table>
+    {{ callSessionLink(session, 'download-document', 'button') }}
 {% else %}
     {{ ztbalert().info(translate("txt-no-ideas-found"))|raw }}
 {% endif %}

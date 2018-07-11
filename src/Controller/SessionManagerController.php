@@ -265,7 +265,7 @@ final class SessionManagerController extends AbstractActionController
             return $this->notFoundAction();
         }
 
-        $tempFile = \tempnam(sys_get_temp_dir(), 'zip');
+        $tempFile = \tempnam(\sys_get_temp_dir(), 'zip');
         $zip      = new \ZipArchive();
 
         $zip->open($tempFile);

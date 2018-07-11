@@ -29,7 +29,7 @@ use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 
 /**
- * Class SessionExcel
+ * Class SessionSpreadsheet
  * @package Program\Controller\Plugin
  */
 final class SessionSpreadsheet extends AbstractPlugin

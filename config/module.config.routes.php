@@ -63,6 +63,19 @@ return [
                                             ],
                                         ],
                                     ],
+                                    'download-document' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'       => '/download/[:id].docx',
+                                            'constraints' => [
+                                                'id' => '\d+',
+                                            ],
+                                            'defaults'    => [
+                                                'action'    => 'download-document',
+                                                'privilege' => 'download-session',
+                                            ],
+                                        ],
+                                    ],
                                 ],
                             ],
                             'nda'     => [

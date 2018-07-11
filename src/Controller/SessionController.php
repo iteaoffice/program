@@ -19,6 +19,7 @@ namespace Program\Controller;
 
 use Program\Controller\Plugin\ProgramPdf;
 use Program\Controller\Plugin\SessionSpreadsheet;
+use Program\Controller\Plugin\SessionDocument;
 use Program\Controller\Plugin\SessionPdf;
 use Program\Entity\Call\Session;
 use Program\Service\ProgramService;
@@ -31,6 +32,7 @@ use Zend\Mvc\Controller\AbstractActionController;
  * @package Program\Controller
  * @method SessionPdf sessionPdf(Session $session)
  * @method SessionSpreadsheet sessionSpreadsheet(Session $session)
+ * @method SessionDocument sessionDocument(Session $session)
  */
 final class SessionController extends AbstractActionController
 {
@@ -75,5 +77,13 @@ final class SessionController extends AbstractActionController
         $session = $this->programService->find(Session::class, (int)$this->params('id'));
 
         return $this->sessionSpreadsheet($session)->parseResponse();
+    }
+
+    public function downloadDocumentAction(): Response
+    {
+        /** @var Session $session */
+        $session = $this->programService->find(Session::class, (int)$this->params('id'));
+
+        return $this->sessionDocument($session)->parseResponse();
     }
 }

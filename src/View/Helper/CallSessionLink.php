@@ -94,6 +94,10 @@ class CallSessionLink extends AbstractLink
                 $this->setRouter('community/program/session/download-spreadsheet');
                 $this->setText(sprintf($this->translate('txt-download-session-%s'), $this->getSession()->getSession()));
                 break;
+            case 'download-document':
+                $this->setRouter('community/program/session/download-document');
+                $this->setText(sprintf($this->translate('txt-download-session-%s'), $this->getSession()->getSession()));
+                break;
             case 'download':
                 $this->setRouter('zfcadmin/session/download');
                 $this->setText($this->translate('txt-download-files'));

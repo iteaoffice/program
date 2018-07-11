@@ -7,9 +7,6 @@
  */
 
 $options = [
-    /**
-     * Indicate here if a project has versions
-     */
     'nda_template'        => __DIR__ . '/../../../../styles/' . (defined("ITEAOFFICE_HOST") ? ITEAOFFICE_HOST : 'test')
         . '/template/pdf/nda-template.pdf',
     'doa_template'        => __DIR__ . '/../../../../styles/' . (defined("ITEAOFFICE_HOST") ? ITEAOFFICE_HOST : 'test')
@@ -19,7 +16,11 @@ $options = [
     'has_nda'             => !(defined("ITEAOFFICE_HOST")
         && (defined("ITEAOFFICE_HOST") ? ITEAOFFICE_HOST : 'test') === 'aeneas'),
     'country_color'       => '#00a651',
-    'country_color_faded' => '#005C00'
+    'country_color_faded' => '#005C00',
+    'header_logo'         => __DIR__ . '/../../../../styles/' . (defined("ITEAOFFICE_HOST") ? ITEAOFFICE_HOST : 'test')
+        . '/template/word/logo.png',
+    'footer_image'         => __DIR__ . '/../../../../styles/' . (defined("ITEAOFFICE_HOST") ? ITEAOFFICE_HOST : 'test')
+        . '/template/word/footer.png'
 ];
 /**
  * You do not need to edit below this line

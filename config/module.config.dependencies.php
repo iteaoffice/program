@@ -76,6 +76,11 @@ return [
         Controller\Plugin\SessionSpreadsheet::class        => [
             TranslatorInterface::class
         ],
+        Controller\Plugin\SessionDocument::class           => [
+            EntityManager::class,
+            ModuleOptions::class,
+            TranslatorInterface::class
+        ],
         Controller\CallController::class                   => [
             CallService::class,
             ProjectService::class,
