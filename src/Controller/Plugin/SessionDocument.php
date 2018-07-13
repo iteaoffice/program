@@ -26,6 +26,7 @@ use Program\Entity\Call\Session;
 use Program\Options\ModuleOptions;
 use Project\Entity\Idea\Description;
 use Project\Entity\Idea\DescriptionType;
+use Project\Entity\Idea\Idea;
 use Zend\Http\Headers;
 use Zend\Http\Response;
 use Zend\I18n\Translator\TranslatorInterface;
@@ -132,29 +133,35 @@ final class SessionDocument extends AbstractPlugin
         $table->addCell(1600)->addText($this->translator->translate('txt-notes'), ['bold' => true], 'noSpacing');
 
         foreach ($session->getIdeaSession() as $ideaSession) {
-            $table->addRow(null, ['cantSplit' => true]);
-            // Schedule
-            $table->addCell(800)->addText($ideaSession->getSchedule(), null, 'noSpacing');
-            // Acronym
-            $acronymCell = $table->addCell(1600);
-            $acronymTextRun = $acronymCell->addTextRun('noSpacing');
-            $acronymTextRun->addText($ideaSession->getIdea()->parseName(), null, 'noSpacing');
-            $acronymTextRun->addTextBreak(2);
-            $acronymTextRun->addText($this->translator->translate('txt-contact') . ':', ['size' => 8], 'noSpacing');
-            $acronymTextRun->addTextBreak();
-            $acronymTextRun->addText($ideaSession->getIdea()->getContact()->parseFullName(), ['size' => 8], 'noSpacing');
-            // Description
-            $shortDescriptionText = '';
-            $shortDescription = $this->entityManager->getRepository(Description::class)->findOneBy([
-                'idea' => $ideaSession->getIdea(),
-                'type' => DescriptionType::TYPE_SHORT_DESCRIPTION
-            ]);
-            if ($shortDescription instanceof Description) {
-                $shortDescriptionText = \html_entity_decode(\strip_tags($shortDescription->getDescription()));
+            if ($ideaSession->getIdea()->getVisibility() === Idea::VISIBILITY_VISIBLE) {
+                $table->addRow(null, ['cantSplit' => true]);
+                // Schedule
+                $table->addCell(800)->addText($ideaSession->getSchedule(), null, 'noSpacing');
+                // Acronym
+                $acronymCell = $table->addCell(1600);
+                $acronymTextRun = $acronymCell->addTextRun('noSpacing');
+                $acronymTextRun->addText($ideaSession->getIdea()->parseName(), null, 'noSpacing');
+                $acronymTextRun->addTextBreak(2);
+                $acronymTextRun->addText($this->translator->translate('txt-contact') . ':', ['size' => 8], 'noSpacing');
+                $acronymTextRun->addTextBreak();
+                $acronymTextRun->addText($ideaSession->getIdea()->getContact()->parseFullName(), ['size' => 8], 'noSpacing');
+                // Description
+                $shortDescriptionText = '';
+                $shortDescription = $this->entityManager->getRepository(Description::class)->findOneBy([
+                    'idea' => $ideaSession->getIdea(),
+                    'type' => DescriptionType::TYPE_SHORT_DESCRIPTION
+                ]);
+                if ($shortDescription instanceof Description) {
+                    $shortDescriptionText = \preg_replace(
+                        '/[[:cntrl:]]+/',
+                        '',
+                        \html_entity_decode(\strip_tags($shortDescription->getDescription()))
+                    );
+                }
+                $table->addCell(6800)->addText($shortDescriptionText, ['size' => 9], 'noSpacing');
+                // Notes
+                $table->addCell(1600)->addText('', ['size' => 9], 'noSpacing');
             }
-            $table->addCell(6800)->addText($shortDescriptionText, ['size' => 9], 'noSpacing');
-            // Notes
-            $table->addCell(1600)->addText('', ['size' => 9], 'noSpacing');
         }
 
         return $this;
