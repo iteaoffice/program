@@ -15,6 +15,7 @@ use Content\Entity\Content;
 use Content\Navigation\Service\UpdateNavigationService;
 use Program\Entity\Call\Session;
 use Program\Service\ProgramService;
+use Project\Service\IdeaService;
 use Zend\Authentication\AuthenticationService;
 use Zend\Http\Response;
 use Zend\I18n\Translator\TranslatorInterface;
@@ -24,6 +25,7 @@ use ZfcTwig\View\TwigRenderer;
 
 /**
  * Class SessionHandler
+ *
  * @package Program\View\Handler
  */
 final class SessionHandler extends AbstractHandler
@@ -32,15 +34,20 @@ final class SessionHandler extends AbstractHandler
      * @var ProgramService
      */
     private $programService;
+    /**
+     * @var IdeaService
+     */
+    private $ideaService;
 
     public function __construct(
-        Application             $application,
-        HelperPluginManager     $helperPluginManager,
-        TwigRenderer            $renderer,
-        AuthenticationService   $authenticationService,
+        Application $application,
+        HelperPluginManager $helperPluginManager,
+        TwigRenderer $renderer,
+        AuthenticationService $authenticationService,
         UpdateNavigationService $updateNavigationService,
-        TranslatorInterface     $translator,
-        ProgramService          $programService
+        TranslatorInterface $translator,
+        ProgramService $programService,
+        IdeaService $ideaService
     ) {
         parent::__construct(
             $application,
@@ -51,17 +58,12 @@ final class SessionHandler extends AbstractHandler
             $translator
         );
         $this->programService = $programService;
+        $this->ideaService = $ideaService;
     }
 
-    /**
-     * @param Content $content
-     *
-     * @return null|string
-     * @throws \Exception
-     */
     public function __invoke(Content $content): ?string
     {
-        $params  = $this->extractContentParam($content);
+        $params = $this->extractContentParam($content);
 
         switch ($content->getHandler()->getHandler()) {
             case 'session_idea':
@@ -76,9 +78,13 @@ final class SessionHandler extends AbstractHandler
                 $this->getHeadTitle()->append($this->translate("txt-session"));
                 $this->getHeadTitle()->append($session->getSession());
 
-                return $this->renderer->render('cms/call/session', [
-                    'session' => $session
-                ]);
+                return $this->renderer->render(
+                    'cms/call/session',
+                    [
+                        'session'     => $session,
+                        'ideaService' => $this->ideaService
+                    ]
+                );
 
             default:
                 return sprintf(

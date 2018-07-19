@@ -33,15 +33,6 @@ class CallSessionLink extends AbstractLink
      */
     private $session;
 
-    /**
-     * @param Session $session
-     * @param string  $action
-     * @param string  $show
-     *
-     * @return string
-     *
-     * @throws \InvalidArgumentException
-     */
     public function __invoke(
         Session $session = null,
         $action = 'view',
@@ -99,7 +90,7 @@ class CallSessionLink extends AbstractLink
                 $this->setText(sprintf($this->translate('txt-download-session-%s'), $this->getSession()->getSession()));
                 break;
             case 'download':
-                $this->setRouter('zfcadmin/session/download');
+                $this->setRouter('community/program/session/download');
                 $this->setText($this->translate('txt-download-files'));
                 break;
             case 'view-admin':

@@ -3,7 +3,6 @@
 return array(
     'program/pdf/doa-program'                   => __DIR__ . '//view/program/pdf/doa-program.twig',
     'program/partial/pagination-control'        => __DIR__ . '//view/program/partial/pagination-control.twig',
-    'program/partial/entity/session'            => __DIR__ . '//view/program/partial/entity/session.twig',
     'program/partial/sortable-table-header'     => __DIR__ . '//view/program/partial/sortable-table-header.twig',
     'program/partial/list/funder'               => __DIR__ . '//view/program/partial/list/funder.twig',
     'program/partial/call-selector'             => __DIR__ . '//view/program/partial/call-selector.twig',

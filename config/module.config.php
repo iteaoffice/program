@@ -73,7 +73,7 @@ $config = [
             'callCountryLink'    => View\Helper\CallCountryLink::class,
         ],
         'factories' => [
-            View\Handler\SessionHandler::class    => ConfigAbstractFactory::class,
+            View\Handler\MeetingHandler::class    => ConfigAbstractFactory::class,
             View\Helper\CallSessionLink::class    => View\Factory\ViewHelperFactory::class,
             View\Helper\ProgramHandler::class     => View\Factory\ViewHelperFactory::class,
             View\Helper\CallInformationBox::class => View\Factory\ViewHelperFactory::class,

@@ -76,6 +76,18 @@ return [
                                             ],
                                         ],
                                     ],
+                                    'download' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'       => '/download/[:id].zip',
+                                            'constraints' => [
+                                                'id' => '\d+',
+                                            ],
+                                            'defaults'    => [
+                                                'action'    => 'download'
+                                            ],
+                                        ],
+                                    ],
                                 ],
                             ],
                             'nda'     => [
@@ -622,18 +634,6 @@ return [
                                     'route'    => '/edit/[:id].html',
                                     'defaults' => [
                                         'action' => 'edit',
-                                    ],
-                                ],
-                            ],
-                            'download' => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'       => '/download/[:id].zip',
-                                    'constraints' => [
-                                        'id' => '\d+',
-                                    ],
-                                    'defaults'    => [
-                                        'action'    => 'download'
                                     ],
                                 ],
                             ],

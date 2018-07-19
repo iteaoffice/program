@@ -19,6 +19,8 @@ namespace Program;
 
 use Admin\Service\AdminService;
 use Affiliation\Service\AffiliationService;
+use Application\Service\AssertionService;
+use BjyAuthorize\Service\Authorize;
 use Contact\Service\ContactService;
 use Content\Navigation\Service\UpdateNavigationService;
 use Doctrine\ORM\EntityManager;
@@ -74,11 +76,15 @@ return [
             TranslatorInterface::class
         ],
         Controller\Plugin\SessionSpreadsheet::class        => [
+            AssertionService::class,
+            Authorize::class,
             TranslatorInterface::class
         ],
         Controller\Plugin\SessionDocument::class           => [
             EntityManager::class,
             ModuleOptions::class,
+            AssertionService::class,
+            Authorize::class,
             TranslatorInterface::class
         ],
         Controller\CallController::class                   => [
@@ -149,28 +155,30 @@ return [
             TranslatorInterface::class,
             EntityManager::class
         ],
-        Controller\SessionController::class                => [
-            ProgramService::class
+        Controller\SessionController::class => [
+            ProgramService::class,
+            AssertionService::class
         ],
-        InputFilter\ProgramFilter::class                   => [
+        InputFilter\ProgramFilter::class    => [
             EntityManager::class
         ],
-        Service\ProgramService::class                      => [
+        Service\ProgramService::class       => [
             EntityManager::class
         ],
-        Service\CallService::class                         => [
+        Service\CallService::class          => [
             EntityManager::class,
             GeneralService::class,
             AdminService::class
         ],
-        View\Handler\SessionHandler::class                 => [
+        View\Handler\SessionHandler::class  => [
             'Application',
             'ViewHelperManager',
             TwigRenderer::class,
             AuthenticationService::class,
             UpdateNavigationService::class,
             TranslatorInterface::class,
-            ProgramService::class
+            ProgramService::class,
+            IdeaService::class
         ],
     ]
 ];

@@ -15,6 +15,8 @@ declare(strict_types=1);
 
 namespace Program\Controller\Plugin;
 
+use Application\Service\AssertionService;
+use BjyAuthorize\Service\Authorize;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Shared\Font;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -23,6 +25,7 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Program\Entity\Call\Session;
+use Project\Entity\Idea\Idea;
 use Zend\Http\Headers;
 use Zend\Http\Response;
 use Zend\I18n\Translator\TranslatorInterface;
@@ -38,22 +41,33 @@ final class SessionSpreadsheet extends AbstractPlugin
      * @var Session
      */
     private $session;
-
     /**
      * @var Spreadsheet
      */
     private $spreadsheet;
-
+    /**
+     * @var AssertionService
+     */
+    private $assertionService;
+    /**
+     * @var Authorize
+     */
+    private $authorize;
     /**
      * @var TranslatorInterface
      */
     private $translator;
 
-
-    public function __construct(TranslatorInterface $translator)
-    {
+    public function __construct(
+        AssertionService $assertionService,
+        Authorize $authorize,
+        TranslatorInterface $translator
+    ) {
+        $this->assertionService = $assertionService;
+        $this->authorize = $authorize;
         $this->translator = $translator;
     }
+
 
     public function __invoke(Session $session): SessionSpreadsheet
     {
@@ -101,6 +115,16 @@ final class SessionSpreadsheet extends AbstractPlugin
         // Data
         $row = 3;
         foreach ($session->getIdeaSession() as $ideaSession) {
+            if ($ideaSession->getIdea()->getVisibility() !== Idea::VISIBILITY_VISIBLE) {
+                continue;
+            }
+
+            //Check access to the idea
+            $this->assertionService->addResource($ideaSession->getIdea(), \Project\Acl\Assertion\Idea\Idea::class);
+            if (!$this->authorize->isAllowed($ideaSession->getIdea(), 'view')) {
+                continue;
+            }
+
             $sheet->setCellValue('A' . $row, $ideaSession->getSchedule());
             $sheet->setCellValue('B' . $row, $ideaSession->getIdea()->getIdea());
             $sheet->setCellValue('C' . $row, $ideaSession->getIdea()->getTitle());
@@ -115,9 +139,6 @@ final class SessionSpreadsheet extends AbstractPlugin
         return $this;
     }
 
-    /**
-     * @return Response
-     */
     public function parseResponse(): Response
     {
         $response = new Response();
@@ -145,7 +166,7 @@ final class SessionSpreadsheet extends AbstractPlugin
         $response->setStatusCode(Response::STATUS_CODE_200);
         $headers = new Headers();
         $headers->addHeaders([
-            'Content-Disposition' => 'attachment; filename="Session_' . $this->session->getId() . '.xlsx"',
+            'Content-Disposition' => 'attachment; filename="' . $this->session->getSession() . '.xlsx"',
             'Content-Type'        => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'Content-Length'      => $contentLength,
             'Expires'             => '@0', // @0, because ZF2 parses date as string to \DateTime() object
@@ -160,9 +181,6 @@ final class SessionSpreadsheet extends AbstractPlugin
         return $response;
     }
 
-    /**
-     * @return Spreadsheet
-     */
     public function getSpreadsheet(): Spreadsheet
     {
         return $this->spreadsheet;

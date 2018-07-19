@@ -72,15 +72,6 @@ final class SessionManagerController extends AbstractActionController
      */
     private $entityManager;
 
-    /**
-     * SessionManagerController constructor.
-     *
-     * @param ProgramService      $programService
-     * @param IdeaService         $ideaService
-     * @param FormService         $formService
-     * @param TranslatorInterface $translator
-     * @param EntityManager       $entityManager
-     */
     public function __construct(
         ProgramService      $programService,
         IdeaService         $ideaService,
@@ -95,10 +86,7 @@ final class SessionManagerController extends AbstractActionController
         $this->entityManager  = $entityManager;
     }
 
-    /**
-     * @return ViewModel
-     */
-    public function listAction()
+    public function listAction(): ViewModel
     {
         $page         = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getProgramFilter();
@@ -121,9 +109,6 @@ final class SessionManagerController extends AbstractActionController
         ]);
     }
 
-    /**
-     * @return ViewModel
-     */
     public function viewAction(): ViewModel
     {
         /** @var Session $session */
@@ -164,9 +149,6 @@ final class SessionManagerController extends AbstractActionController
         ]);
     }
 
-    /**
-     * @return Response|ViewModel
-     */
     public function newAction()
     {
         /** @var Request $request */
@@ -196,9 +178,6 @@ final class SessionManagerController extends AbstractActionController
         ]);
     }
 
-    /**
-     * @return ViewModel|Response
-     */
     public function editAction()
     {
         /** @var Session $session */
@@ -249,62 +228,6 @@ final class SessionManagerController extends AbstractActionController
             'form'  => $form,
             'ideas' => $session->getCall()->getIdea()
         ]);
-    }
-
-    /**
-     * @return Response|ViewModel
-     */
-    public function downloadAction()
-    {
-        /** @var Response $response */
-        $response = $this->getResponse();
-        /** @var Session $session */
-        $session  = $this->programService->find(Session::class, (int) $this->params('id'));
-
-        if ($session === null) {
-            return $this->notFoundAction();
-        }
-
-        $tempFile = \tempnam(\sys_get_temp_dir(), 'zip');
-        $zip      = new \ZipArchive();
-
-        $zip->open($tempFile);
-        foreach ($session->getIdeaSession() as $ideaSession) {
-            $dir = \str_replace(':', '', $ideaSession->getIdea()->parseName());
-            $zip->addEmptyDir($dir);
-            foreach ($ideaSession->getDocuments() as $document) {
-                $zip->addFromString(
-                    $dir.'/'.$document->getFilename(),
-                    \stream_get_contents($document->getObject()->first()->getObject())
-                );
-            }
-            foreach ($ideaSession->getImages() as $image) {
-                $zip->addFromString(
-                    $dir.'/'.$image->getImage(),
-                    \stream_get_contents($image->getObject()->first()->getObject())
-                );
-            }
-        }
-        $zip->close();
-        $content       = \file_get_contents($tempFile);
-        $contentLength = \filesize($tempFile);
-        \unlink($tempFile);
-
-        // Prepare the response
-        $response->setContent($content);
-        $response->setStatusCode(Response::STATUS_CODE_200);
-        $headers = new Headers();
-        $headers->addHeaders([
-            'Content-Disposition' => 'attachment; filename="'.$session->getSession().'.zip"',
-            'Content-Type'        => 'application/zip',
-            'Content-Length'      => $contentLength,
-            'Expires'             => '0',
-            'Cache-Control'       => 'must-revalidate',
-            'Pragma'              => 'public',
-        ]);
-        $response->setHeaders($headers);
-
-        return $response;
     }
 
     public function uploadAction(): Response
