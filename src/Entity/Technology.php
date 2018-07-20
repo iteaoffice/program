@@ -145,7 +145,7 @@ class Technology extends AbstractEntity
     }
 
     /**
-     * @return \Contact\Entity\Contact[]
+     * @return \Contact\Entity\Contact[]|Collections\Collection
      */
     public function getContact()
     {
@@ -153,7 +153,7 @@ class Technology extends AbstractEntity
     }
 
     /**
-     * @param \Contact\Entity\Contact[] $contact
+     * @param \Contact\Entity\Contact[]|Collections\Collection $contact
      */
     public function setContact($contact)
     {
