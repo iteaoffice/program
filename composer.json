@@ -23,6 +23,7 @@
   "require": {
     "php": "^7.2",
     "zendframework/zend-mvc":"^3.0.1",
+    "iteaoffice/contact": "3.0.*",
     "phpoffice/phpword": "0.14.*"
   },
   "require-dev": {
