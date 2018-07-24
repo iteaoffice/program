@@ -1,7 +1,7 @@
 language: php
 
 php:
-  - 7.1
+  - 7.2
   - nightly
 
 sudo: false
@@ -14,7 +14,7 @@ script:
   - ./vendor/bin/parallel-lint ./src/
   - ./vendor/bin/phpcs -n -p --standard=PSR2 --extensions=php,twig ./src/
   - ./vendor/bin/php-cs-fixer fix -v ./src --dry-run
-  - ./vendor/bin/phpunit
+  - ./vendor/bin/phpstan analyse ./src --level=1
 
 notifications:
   email:
