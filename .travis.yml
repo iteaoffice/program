@@ -8,13 +8,12 @@ sudo: false
 
 before_script:
 - composer self-update
-- composer install --prefer-dist;
+- composer install --prefer-dist --no-dev;
 
 script:
 - ./vendor/bin/parallel-lint ./src/
 - ./vendor/bin/phpcs -n -p --standard=PSR2 --extensions=php,twig ./src/
 - ./vendor/bin/php-cs-fixer fix -v ./src --dry-run
-- ./vendor/bin/phpunit
 
 notifications:
   email:

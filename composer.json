@@ -31,7 +31,8 @@
     "doctrine/doctrine-orm-module": "@stable"
   },
   "require-dev": {
-    "iteaoffice/testing": "^1.1.5"
+    "iteaoffice/testing": "^1.1.5",
+    "iteaoffice/project": "^3.0"
   },
   "autoload": {
     "psr-4": {
