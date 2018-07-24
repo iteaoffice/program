@@ -21,13 +21,14 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "php": "^7.2",
     "zendframework/zend-mvc": "^3.0.1",
     "zendframework/zend-mvc-form": "^1.0.0",
+    "zendframework/zend-code": "@stable",
     "zendframework/zend-mvc-console": "^1.2.0",
     "zendframework/zend-mvc-plugins": "^1.0.1",
     "zendframework/zend-navigation": "^2.9.0",
-    "kokspflanze/bjy-authorize": "@stable"
+    "kokspflanze/bjy-authorize": "^1.6.2",
+    "doctrine/doctrine-orm-module": "@stable"
   },
   "require-dev": {
     "iteaoffice/testing": "^1.1.5"
