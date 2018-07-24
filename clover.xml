@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1532424039">
-  <project timestamp="1532424039">
+<coverage generated="1532429599">
+  <project timestamp="1532429599">
     <package name="Program\Acl\Assertion">
       <file name="/var/www/dev1/vendor/iteaoffice/program/src/Acl/Assertion/AbstractAssertion.php">
         <class name="Program\Acl\Assertion\AbstractAssertion" namespace="Program\Acl\Assertion" fullPackage="Program" package="Program">
@@ -5085,9 +5085,16 @@
     <package name="Program\View\Handler">
       <file name="/var/www/dev1/vendor/iteaoffice/program/src/View/Handler/AbstractHandler.php">
         <class name="Program\View\Handler\AbstractHandler" namespace="Program\View\Handler" fullPackage="Program" package="Program">
-          <metrics complexity="21" methods="8" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="30" coveredstatements="0" elements="38" coveredelements="0"/>
+          <metrics complexity="21" methods="8" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="64" coveredstatements="0" elements="72" coveredelements="0"/>
         </class>
         <line num="82" type="method" name="__construct" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="83" type="stmt" count="0"/>
+        <line num="84" type="stmt" count="0"/>
+        <line num="85" type="stmt" count="0"/>
+        <line num="86" type="stmt" count="0"/>
+        <line num="87" type="stmt" count="0"/>
+        <line num="88" type="stmt" count="0"/>
+        <line num="89" type="stmt" count="0"/>
         <line num="90" type="stmt" count="0"/>
         <line num="91" type="stmt" count="0"/>
         <line num="92" type="stmt" count="0"/>
@@ -5098,13 +5105,27 @@
         <line num="98" type="stmt" count="0"/>
         <line num="99" type="stmt" count="0"/>
         <line num="106" type="method" name="extractContentParam" visibility="public" complexity="13" crap="182.00" count="0"/>
+        <line num="107" type="stmt" count="0"/>
+        <line num="108" type="stmt" count="0"/>
         <line num="109" type="stmt" count="0"/>
+        <line num="110" type="stmt" count="0"/>
+        <line num="111" type="stmt" count="0"/>
+        <line num="112" type="stmt" count="0"/>
+        <line num="113" type="stmt" count="0"/>
+        <line num="114" type="stmt" count="0"/>
+        <line num="115" type="stmt" count="0"/>
+        <line num="116" type="stmt" count="0"/>
+        <line num="117" type="stmt" count="0"/>
         <line num="119" type="stmt" count="0"/>
         <line num="120" type="stmt" count="0"/>
         <line num="121" type="stmt" count="0"/>
+        <line num="122" type="stmt" count="0"/>
+        <line num="123" type="stmt" count="0"/>
         <line num="126" type="stmt" count="0"/>
         <line num="127" type="stmt" count="0"/>
         <line num="128" type="stmt" count="0"/>
+        <line num="129" type="stmt" count="0"/>
+        <line num="130" type="stmt" count="0"/>
         <line num="133" type="stmt" count="0"/>
         <line num="134" type="stmt" count="0"/>
         <line num="135" type="stmt" count="0"/>
@@ -5113,25 +5134,47 @@
         <line num="138" type="stmt" count="0"/>
         <line num="139" type="stmt" count="0"/>
         <line num="141" type="stmt" count="0"/>
+        <line num="142" type="stmt" count="0"/>
         <line num="147" type="method" name="hasDocRef" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="148" type="stmt" count="0"/>
         <line num="149" type="stmt" count="0"/>
+        <line num="150" type="stmt" count="0"/>
         <line num="155" type="method" name="getDocRef" visibility="public" complexity="2" crap="6.00" count="0"/>
+        <line num="156" type="stmt" count="0"/>
         <line num="157" type="stmt" count="0"/>
+        <line num="158" type="stmt" count="0"/>
         <line num="163" type="method" name="getHeadTitle" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="164" type="stmt" count="0"/>
         <line num="165" type="stmt" count="0"/>
+        <line num="166" type="stmt" count="0"/>
         <line num="171" type="method" name="getHeadMeta" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="172" type="stmt" count="0"/>
         <line num="173" type="stmt" count="0"/>
+        <line num="174" type="stmt" count="0"/>
         <line num="179" type="method" name="getHeadStyle" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="180" type="stmt" count="0"/>
         <line num="181" type="stmt" count="0"/>
+        <line num="182" type="stmt" count="0"/>
         <line num="189" type="method" name="translate" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="190" type="stmt" count="0"/>
         <line num="191" type="stmt" count="0"/>
-        <metrics loc="193" ncloc="113" classes="1" methods="8" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="30" coveredstatements="0" elements="38" coveredelements="0"/>
+        <line num="192" type="stmt" count="0"/>
+        <metrics loc="193" ncloc="113" classes="1" methods="8" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="64" coveredstatements="0" elements="72" coveredelements="0"/>
       </file>
       <file name="/var/www/dev1/vendor/iteaoffice/program/src/View/Handler/SessionHandler.php">
         <class name="Program\View\Handler\SessionHandler" namespace="Program\View\Handler" fullPackage="Program" package="Program">
-          <metrics complexity="5" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="27" coveredstatements="0" elements="29" coveredelements="0"/>
+          <metrics complexity="5" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="46" coveredstatements="0" elements="48" coveredelements="0"/>
         </class>
         <line num="42" type="method" name="__construct" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="43" type="stmt" count="0"/>
+        <line num="44" type="stmt" count="0"/>
+        <line num="45" type="stmt" count="0"/>
+        <line num="46" type="stmt" count="0"/>
+        <line num="47" type="stmt" count="0"/>
+        <line num="48" type="stmt" count="0"/>
+        <line num="49" type="stmt" count="0"/>
+        <line num="50" type="stmt" count="0"/>
+        <line num="51" type="stmt" count="0"/>
         <line num="52" type="stmt" count="0"/>
         <line num="53" type="stmt" count="0"/>
         <line num="54" type="stmt" count="0"/>
@@ -5139,10 +5182,12 @@
         <line num="56" type="stmt" count="0"/>
         <line num="57" type="stmt" count="0"/>
         <line num="58" type="stmt" count="0"/>
+        <line num="59" type="stmt" count="0"/>
         <line num="60" type="stmt" count="0"/>
         <line num="61" type="stmt" count="0"/>
         <line num="62" type="stmt" count="0"/>
         <line num="64" type="method" name="__invoke" visibility="public" complexity="4" crap="20.00" count="0"/>
+        <line num="65" type="stmt" count="0"/>
         <line num="66" type="stmt" count="0"/>
         <line num="68" type="stmt" count="0"/>
         <line num="69" type="stmt" count="0"/>
@@ -5150,17 +5195,25 @@
         <line num="73" type="stmt" count="0"/>
         <line num="74" type="stmt" count="0"/>
         <line num="75" type="stmt" count="0"/>
+        <line num="76" type="stmt" count="0"/>
         <line num="78" type="stmt" count="0"/>
         <line num="79" type="stmt" count="0"/>
         <line num="81" type="stmt" count="0"/>
         <line num="82" type="stmt" count="0"/>
+        <line num="83" type="stmt" count="0"/>
         <line num="84" type="stmt" count="0"/>
         <line num="85" type="stmt" count="0"/>
+        <line num="86" type="stmt" count="0"/>
+        <line num="87" type="stmt" count="0"/>
+        <line num="89" type="stmt" count="0"/>
         <line num="90" type="stmt" count="0"/>
         <line num="91" type="stmt" count="0"/>
         <line num="92" type="stmt" count="0"/>
         <line num="93" type="stmt" count="0"/>
-        <metrics loc="97" ncloc="77" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="27" coveredstatements="0" elements="29" coveredelements="0"/>
+        <line num="94" type="stmt" count="0"/>
+        <line num="95" type="stmt" count="0"/>
+        <line num="96" type="stmt" count="0"/>
+        <metrics loc="97" ncloc="77" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="46" coveredstatements="0" elements="48" coveredelements="0"/>
       </file>
     </package>
     <package name="Program\View\Helper">
@@ -6268,6 +6321,6 @@
         <metrics loc="105" ncloc="73" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="57" coveredstatements="0" elements="59" coveredelements="0"/>
       </file>
     </package>
-    <metrics files="97" loc="16553" ncloc="10520" classes="94" methods="654" coveredmethods="74" conditionals="0" coveredconditionals="0" statements="4993" coveredstatements="274" elements="5647" coveredelements="348"/>
+    <metrics files="97" loc="16553" ncloc="10520" classes="94" methods="654" coveredmethods="74" conditionals="0" coveredconditionals="0" statements="5046" coveredstatements="274" elements="5700" coveredelements="348"/>
   </project>
 </coverage>

@@ -15,9 +15,11 @@ namespace ProgramTest\InputFilter;
 use Program\Controller\Plugin\GetFilter;
 use Program\InputFilter\ProgramFilter;
 use Program\Module;
+use Program\View\Handler\SessionHandler;
 use Testing\Util\AbstractServiceTest;
 use Zend\Mvc\Application;
 use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
+use Zend\View\HelperPluginManager;
 
 /**
  * Class GeneralTest
@@ -49,7 +51,9 @@ class ModuleTest extends AbstractServiceTest
         foreach ($abstractFacories as $service => $dependencies) {
 
             //Skip the GetFilter
-            if ($service === GetFilter::class || $service === ProgramFilter::class) {
+            if ($service === GetFilter::class || $service === ProgramFilter::class
+                || $service === SessionHandler::class
+            ) {
                 continue;
             }
 
@@ -58,6 +62,9 @@ class ModuleTest extends AbstractServiceTest
 
                 if ($dependency === 'Application') {
                     $dependency = Application::class;
+                }
+                if ($dependency === 'ViewHelperManager') {
+                    $dependency = HelperPluginManager::class;
                 }
                 $instantiatedDependencies[]
                     = $this->getMockBuilder($dependency)->disableOriginalConstructor()->getMock();
