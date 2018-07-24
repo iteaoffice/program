@@ -27,7 +27,7 @@
     "phpoffice/phpword": "0.14.*"
   },
   "require-dev": {
-    "iteaoffice/testing": "dev-master"
+    "iteaoffice/testing": "1.1.*"
   },
   "autoload": {
     "psr-4": {
