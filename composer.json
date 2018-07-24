@@ -22,8 +22,8 @@
   "minimum-stability": "dev",
   "require": {
     "php": "^7.2",
-    "zendframework/zendframework": "3.*",
-    "phpoffice/phpword": "v0.14.*"
+    "zendframework/zendframework": "^3.1",
+    "phpoffice/phpword": "0.14.*"
   },
   "require-dev": {
     "iteaoffice/testing": "dev-master"
