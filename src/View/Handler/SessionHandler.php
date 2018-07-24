@@ -68,7 +68,7 @@ final class SessionHandler extends AbstractHandler
         switch ($content->getHandler()->getHandler()) {
             case 'session_idea':
                 /** @var Session $session */
-                $session = $this->programService->find(Session::class, $params['id']);
+                $session = $this->programService->find(Session::class, (int) $params['id']);
 
                 if ($session === null) {
                     $this->response->setStatusCode(Response::STATUS_CODE_404);
