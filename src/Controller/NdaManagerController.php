@@ -87,18 +87,6 @@ final class NdaManagerController extends AbstractActionController
      */
     protected $entityManager;
 
-    /**
-     * NdaManagerController constructor.
-     *
-     * @param CallService         $callService
-     * @param FormService         $formService
-     * @param ContactService      $contactService
-     * @param GeneralService      $generalService
-     * @param AdminService        $adminService
-     * @param EmailService        $emailService
-     * @param TranslatorInterface $translator
-     * @param EntityManager       $entityManager
-     */
     public function __construct(
         CallService $callService,
         FormService $formService,
@@ -119,10 +107,6 @@ final class NdaManagerController extends AbstractActionController
         $this->entityManager = $entityManager;
     }
 
-
-    /**
-     * @return ViewModel
-     */
     public function approvalAction(): ViewModel
     {
         $nda = $this->callService->findNotApprovedNda();
@@ -220,13 +204,12 @@ final class NdaManagerController extends AbstractActionController
             }
 
             if (isset($data['delete'])) {
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translator->translate("txt-nda-for-contact-%s-has-been-removed"),
-                            $nda->getContact()->getDisplayName()
-                        )
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate("txt-nda-for-contact-%s-has-been-removed"),
+                        $nda->getContact()->getDisplayName()
+                    )
+                );
 
                 $this->callService->delete($nda);
 
@@ -299,9 +282,6 @@ final class NdaManagerController extends AbstractActionController
         );
     }
 
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     */
     public function uploadAction()
     {
         $contact = $this->contactService->findContactById((int)$this->params('contactId'));

@@ -38,28 +38,20 @@ final class CallCountryManagerController extends AbstractActionController
     /**
      * @var CallService
      */
-    protected $callService;
+    private $callService;
     /**
      * @var GeneralService
      */
-    protected $generalService;
+    private $generalService;
     /**
      * @var FormService
      */
-    protected $formService;
+    private $formService;
     /**
      * @var TranslatorInterface
      */
-    protected $translator;
+    private $translator;
 
-    /**
-     * CallCountryManagerController constructor.
-     *
-     * @param CallService         $callService
-     * @param GeneralService      $generalService
-     * @param FormService         $formService
-     * @param TranslatorInterface $translator
-     */
     public function __construct(
         CallService $callService,
         GeneralService $generalService,
@@ -72,10 +64,6 @@ final class CallCountryManagerController extends AbstractActionController
         $this->translator = $translator;
     }
 
-
-    /**
-     * @return ViewModel
-     */
     public function viewAction(): ViewModel
     {
         /**
@@ -94,11 +82,6 @@ final class CallCountryManagerController extends AbstractActionController
         );
     }
 
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
     public function editAction()
     {
         /**
@@ -170,17 +153,10 @@ final class CallCountryManagerController extends AbstractActionController
                 );
             }
         }
-        $form->setAttribute('role', 'form');
-        $form->setAttribute('class', 'form-horizontal');
 
         return new ViewModel(['form' => $form, 'callCountry' => $callCountry]);
     }
 
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
     public function newAction()
     {
         /**
