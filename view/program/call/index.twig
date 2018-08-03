@@ -26,7 +26,7 @@
     <li class="li {% if call.poCloseDate < date() %}complete{% endif %}">
         <div class="timestamp">
             <span class="author">PO submission deadline</span>
-            <span class="date">{{ call.poClosedDate|date('d M Y') }}</span>
+            <span class="date">{{ call.poCloseDate|date('d M Y') }}</span>
         </div>
         <div class="status"></div>
     </li>
@@ -238,7 +238,7 @@
             </div>
 
             <div class="col-xs-6 col-md-3">
-                <a class="thumbnail" href="{{ url('community/contact/search') }}">
+                <a class="thumbnail" href="/call-documents.html">
                     <img src="https://image.itea3.org/-Ul4jSuKtwTeDWrm9UyNBNGYyAM=/fit-in/150x150/https://itea3.org/img/i/1745-1430818012.jpg">
 
                     <div class="thumbnail-name"><p>{{ translate("txt-call-documents") }}</p></div>
