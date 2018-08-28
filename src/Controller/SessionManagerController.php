@@ -226,7 +226,7 @@ final class SessionManagerController extends AbstractActionController
 
         return new ViewModel([
             'form'  => $form,
-            'ideas' => $session->getCall()->getIdea()
+            'ideas' => $session->getTool()->getIdea()
         ]);
     }
 
