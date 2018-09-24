@@ -82,23 +82,32 @@
         <div class="alert alert-block alert-success">
             <div class="alert-heading"><h4>{{ translate("txt-nda-already-approved") }}</h4></div>
             <p>{{ translate("txt-nda-for-call-%s-has-already-been-approved-on-%s")|format(
-                call, nda.dateApproved|date("d-m-Y")) }}</p>
+                    call, nda.dateApproved|date("d-m-Y")) }}</p>
         </div>
     {% else %}
         <div class="alert alert-block alert-warning">
             <div class="alert-heading"><h4>{{ translate("txt-nda-waiting-for-approval") }}</h4></div>
             <p>{{ translate("txt-nda-for-call-%s-has-already-been-submitted-on-%s-and-is-waiting-for-approval")|format(
-                call, nda.dateSigned|date("d-m-Y")) }}</p>
+                    call, nda.dateSigned|date("d-m-Y")) }}</p>
         </div>
     {% endif %}
+
+
+
+    <p>{{ translate("txt-thank-you-for-signing-the-nda-by-signing-this-nda-you-have-agreed-to-the-following-conditions") }}</p>
+    <div style="max-height: 400px; overflow-y: scroll; background-color: #f8f8f8; padding: 10px;">
+        {{ ndaContent|raw }}
+    </div>
+
+    <hr>
 
     <dl class="dl-horizontal">
         {% if call %}
             <dt>{{ translate("txt-program-call") }}</dt>
             <dd>{{ call }}</dd>
         {% endif %}
-        <dt>{{ translate("txt-contact") }}</dt>
-        <dd>{{ zfcUserIdentity().displayName() }}</dd>
+        <dt>{{ translate("txt-signed-by") }}</dt>
+        <dd>{{ nda.contact.displayName() }}</dd>
         {% if not nda.object.isEmpty() %}
             <dt>{{ translate("txt-download-nda") }}</dt>
             <dd>{{ ndaLink(nda,'download', 'text') }}</dd>

@@ -117,6 +117,7 @@ class NdaLink extends AbstractLink
                 break;
             case 'download':
                 $this->setRouter('community/program/nda/download');
+
                 $this->setText(sprintf($this->translate("txt-download-nda-%s-title"), $this->getNda()));
                 break;
             case 'approval-admin':

@@ -78,14 +78,16 @@ return [
         Controller\Plugin\SessionSpreadsheet::class        => [
             AssertionService::class,
             Authorize::class,
-            TranslatorInterface::class
+            TranslatorInterface::class,
+            'ViewHelperManager'
         ],
         Controller\Plugin\SessionDocument::class           => [
             EntityManager::class,
             ModuleOptions::class,
             AssertionService::class,
             Authorize::class,
-            TranslatorInterface::class
+            TranslatorInterface::class,
+            'ViewHelperManager'
         ],
         Controller\CallController::class                   => [
             CallService::class,
@@ -155,22 +157,22 @@ return [
             TranslatorInterface::class,
             EntityManager::class
         ],
-        Controller\SessionController::class => [
+        Controller\SessionController::class                => [
             ProgramService::class,
             AssertionService::class
         ],
-        InputFilter\ProgramFilter::class    => [
+        InputFilter\ProgramFilter::class                   => [
             EntityManager::class
         ],
-        Service\ProgramService::class       => [
+        Service\ProgramService::class                      => [
             EntityManager::class
         ],
-        Service\CallService::class          => [
+        Service\CallService::class                         => [
             EntityManager::class,
             GeneralService::class,
             AdminService::class
         ],
-        View\Handler\SessionHandler::class  => [
+        View\Handler\SessionHandler::class                 => [
             'Application',
             'ViewHelperManager',
             TwigRenderer::class,

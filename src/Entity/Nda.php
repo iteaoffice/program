@@ -19,17 +19,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Zend\Form\Annotation;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
- * Entity for a nda.
- *
  * @ORM\Table(name="nda")
  * @ORM\Entity(repositoryClass="Program\Repository\Nda")
  * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("nda")
- *
- * @category    Contact
  */
 class Nda extends AbstractEntity
 {
@@ -117,72 +112,42 @@ class Nda extends AbstractEntity
      */
     private $object;
 
-
-    /**
-     * Class constructor.
-     */
     public function __construct()
     {
         $this->call = new ArrayCollection();
     }
 
-    /**
-     * @param $property
-     *
-     * @return mixed
-     */
     public function __get($property)
     {
         return $this->$property;
     }
 
-    /**
-     * @param $property
-     * @param $value
-     */
     public function __set($property, $value)
     {
         $this->$property = $value;
     }
 
-    /**
-     * @param $property
-     * @return bool
-     */
     public function __isset($property)
     {
         return isset($this->$property);
     }
 
-    /**
-     * ToString.
-     *
-     * @return string
-     */
     public function __toString(): string
     {
-        /*
-         * Return an empty value when no id is known
-         */
-        if (null !== $this->id) {
-            return sprintf("NDA_EMPTY");
+        if (null === $this->id) {
+            return \sprintf('NDA_EMPTY');
         }
 
         return $this->parseFileName();
     }
 
-    /**
-     * Parse a filename.
-     *
-     * @return string
-     */
     public function parseFileName(): string
     {
         if ($this->getCall()->isEmpty()) {
-            return sprintf("NDA_SEQ_%s", $this->getContact()->getId());
+            return \sprintf('NDA_SEQ_%s', $this->getContact()->getId());
         }
 
-        return str_replace(' ', '_', sprintf("NDA_%s_SEQ_%s", $this->parseCall(), $this->getContact()->getId()));
+        return \str_replace(' ', '_', \sprintf('NDA_%s_SEQ_%s', $this->parseCall(), $this->getContact()->getId()));
     }
 
     /**
@@ -195,9 +160,10 @@ class Nda extends AbstractEntity
 
     /**
      * @param ArrayCollection|Call\Call[] $call
+     *
      * @return Nda
      */
-    public function setCall($call)
+    public function setCall($call): Nda
     {
         $this->call = $call;
 
@@ -212,17 +178,13 @@ class Nda extends AbstractEntity
         return $this->contact;
     }
 
-    /**
-     * @param \Contact\Entity\Contact $contact
-     */
-    public function setContact($contact)
+    public function setContact($contact): Nda
     {
         $this->contact = $contact;
+
+        return $this;
     }
 
-    /**
-     * @return null|Call\Call
-     */
     public function parseCall(): ?Call\Call
     {
         if (!$this->hasCall()) {
@@ -232,12 +194,19 @@ class Nda extends AbstractEntity
         return $this->getCall()->first();
     }
 
-    /**
-     * @return bool
-     */
     public function hasCall(): bool
     {
         return !$this->getCall()->isEmpty();
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**
@@ -282,6 +251,7 @@ class Nda extends AbstractEntity
 
     /**
      * @param \Contact\Entity\Contact $approver
+     *
      * @return Nda
      */
     public function setApprover(\Contact\Entity\Contact $approver): Nda
@@ -326,33 +296,16 @@ class Nda extends AbstractEntity
     /**
      * @return \DateTime
      */
-    public function getDateUpdated()
+    public function getDateUpdated(): ?\DateTime
     {
         return $this->dateUpdated;
     }
 
-    /**
-     * @param \DateTime $dateUpdated
-     */
-    public function setDateUpdated($dateUpdated)
+    public function setDateUpdated($dateUpdated): Nda
     {
         $this->dateUpdated = $dateUpdated;
-    }
 
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
+        return $this;
     }
 
     /**

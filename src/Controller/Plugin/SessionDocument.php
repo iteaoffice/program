@@ -22,17 +22,20 @@ use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpWord\Shared\Converter;
+use PhpOffice\PhpWord\Style\Font;
 use PhpOffice\PhpWord\Style\Image;
 use PhpOffice\PhpWord\Writer\Word2007;
 use Program\Entity\Call\Session;
 use Program\Options\ModuleOptions;
 use Project\Entity\Idea\Description;
 use Project\Entity\Idea\DescriptionType;
-use Project\Entity\Idea\Idea;
 use Zend\Http\Headers;
 use Zend\Http\Response;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Zend\View\Helper\ServerUrl;
+use Zend\View\Helper\Url;
+use Zend\View\HelperPluginManager;
 
 /**
  * Class SessionDocument
@@ -73,13 +76,22 @@ final class SessionDocument extends AbstractPlugin
      * @var TranslatorInterface
      */
     private $translator;
+    /**
+     * @var Url
+     */
+    private $urlHelper;
+    /**
+     * @var ServerUrl
+     */
+    private $serverUrlHelper;
 
     public function __construct(
         EntityManager $entityManager,
         ModuleOptions $options,
         AssertionService $assertionService,
         Authorize $authorize,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        HelperPluginManager $helperPluginManager
     ) {
         $this->entityManager = $entityManager;
         $this->headerLogo = $options->getHeaderLogo();
@@ -87,6 +99,10 @@ final class SessionDocument extends AbstractPlugin
         $this->assertionService = $assertionService;
         $this->authorize = $authorize;
         $this->translator = $translator;
+
+        $this->urlHelper = $helperPluginManager->get(Url::class);
+        $this->serverUrlHelper = $helperPluginManager->get(ServerUrl::class);
+
         Settings::setOutputEscapingEnabled(true);
     }
 
@@ -153,10 +169,6 @@ final class SessionDocument extends AbstractPlugin
         $table->addCell(1600)->addText($this->translator->translate('txt-notes'), ['bold' => true], 'noSpacing');
 
         foreach ($session->getIdeaSession() as $ideaSession) {
-            if ($ideaSession->getIdea()->getVisibility() !== Idea::VISIBILITY_VISIBLE) {
-                continue;
-            }
-
             //Check access to the idea
             $this->assertionService->addResource($ideaSession->getIdea(), \Project\Acl\Assertion\Idea\Idea::class);
             if (!$this->authorize->isAllowed($ideaSession->getIdea(), 'view')) {
@@ -169,7 +181,19 @@ final class SessionDocument extends AbstractPlugin
             // Acronym
             $acronymCell = $table->addCell(1600);
             $acronymTextRun = $acronymCell->addTextRun('noSpacing');
-            $acronymTextRun->addText($ideaSession->getIdea()->parseName(), null, 'noSpacing');
+
+
+            // Acronym / link
+            $ideaLink = $this->urlHelper->__invoke('community/idea/view', ['docRef' => $ideaSession->getIdea()->getDocRef()]);
+            $acronymTextRun->addLink(
+                $this->serverUrlHelper->__invoke() . $ideaLink,
+                $ideaSession->getIdea()->parseName(),
+                ['underline' => Font::UNDERLINE_SINGLE, 'color' => '00A651'],
+                'noSpacing'
+            );
+
+
+            //$acronymTextRun->addText($ideaSession->getIdea()->parseName(), null, 'noSpacing');
             $acronymTextRun->addTextBreak(2);
             $acronymTextRun->addText($this->translator->translate('txt-contact') . ':', ['size' => 8], 'noSpacing');
             $acronymTextRun->addTextBreak();

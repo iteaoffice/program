@@ -18,21 +18,24 @@ namespace Program\Controller\Plugin;
 use Application\Service\AssertionService;
 use BjyAuthorize\Service\Authorize;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Shared\Font;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Font;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Program\Entity\Call\Session;
-use Project\Entity\Idea\Idea;
 use Zend\Http\Headers;
 use Zend\Http\Response;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Zend\View\Helper\ServerUrl;
+use Zend\View\Helper\Url;
+use Zend\View\HelperPluginManager;
 
 /**
  * Class SessionSpreadsheet
+ *
  * @package Program\Controller\Plugin
  */
 final class SessionSpreadsheet extends AbstractPlugin
@@ -57,27 +60,39 @@ final class SessionSpreadsheet extends AbstractPlugin
      * @var TranslatorInterface
      */
     private $translator;
+    /**
+     * @var Url
+     */
+    private $urlHelper;
+    /**
+     * @var ServerUrl
+     */
+    private $serverUrlHelper;
 
     public function __construct(
         AssertionService $assertionService,
         Authorize $authorize,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        HelperPluginManager $helperPluginManager
     ) {
         $this->assertionService = $assertionService;
         $this->authorize = $authorize;
         $this->translator = $translator;
+
+        $this->urlHelper = $helperPluginManager->get(Url::class);
+        $this->serverUrlHelper = $helperPluginManager->get(ServerUrl::class);
     }
 
 
     public function __invoke(Session $session): SessionSpreadsheet
     {
-        $this->session     = $session;
+        $this->session = $session;
         $this->spreadsheet = new Spreadsheet();
         //$this->spreadsheet->getDefaultStyle()->getFont()->setName('Arial');
         //Font::setAutoSizeMethod(Font::AUTOSIZE_METHOD_EXACT);
 
         $sheet = $this->spreadsheet->getActiveSheet();
-        //$sheet->setShowGridlines(false);
+
         $sheet->setTitle($this->translator->translate('txt-evaluation-report'));
         $sheet->getPageSetup()->setPaperSize(PageSetup::PAPERSIZE_A4);
         $sheet->getPageSetup()->setFitToWidth(true);
@@ -99,7 +114,7 @@ final class SessionSpreadsheet extends AbstractPlugin
         $sheet->getStyle('A2:' . $lastColumn . '2')->getFill()->setFillType(Fill::FILL_SOLID)
             ->getStartColor()->setRGB('DDDDDD');
         $sheet->getRowDimension(1)->setRowHeight(20);
-        $sheet->mergeCells('A1:'.$lastColumn.'1');
+        $sheet->mergeCells('A1:' . $lastColumn . '1');
         $sheet->getStyle('A1')->getAlignment()
             ->setHorizontal(Alignment::HORIZONTAL_CENTER);
         $sheet->getStyle('A1')->getFont()->setSize(18);
@@ -115,10 +130,6 @@ final class SessionSpreadsheet extends AbstractPlugin
         // Data
         $row = 3;
         foreach ($session->getIdeaSession() as $ideaSession) {
-            if ($ideaSession->getIdea()->getVisibility() !== Idea::VISIBILITY_VISIBLE) {
-                continue;
-            }
-
             //Check access to the idea
             $this->assertionService->addResource($ideaSession->getIdea(), \Project\Acl\Assertion\Idea\Idea::class);
             if (!$this->authorize->isAllowed($ideaSession->getIdea(), 'view')) {
@@ -126,6 +137,12 @@ final class SessionSpreadsheet extends AbstractPlugin
             }
 
             $sheet->setCellValue('A' . $row, $ideaSession->getSchedule());
+
+            $ideaLink = $this->urlHelper->__invoke('community/idea/view', ['docRef' => $ideaSession->getIdea()->getDocRef()]);
+            $sheet->getCell('B'. $row)->getHyperlink()->setUrl(
+                $this->serverUrlHelper->__invoke() . $ideaLink
+            );
+
             $sheet->setCellValue('B' . $row, $ideaSession->getIdea()->getIdea());
             $sheet->setCellValue('C' . $row, $ideaSession->getIdea()->getTitle());
             $challenges = [];
@@ -165,14 +182,16 @@ final class SessionSpreadsheet extends AbstractPlugin
         $response->setContent(\ob_get_clean());
         $response->setStatusCode(Response::STATUS_CODE_200);
         $headers = new Headers();
-        $headers->addHeaders([
-            'Content-Disposition' => 'attachment; filename="' . $this->session->getSession() . '.xlsx"',
-            'Content-Type'        => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'Content-Length'      => $contentLength,
-            'Expires'             => '@0', // @0, because ZF2 parses date as string to \DateTime() object
-            'Cache-Control'       => 'must-revalidate',
-            'Pragma'              => 'public',
-        ]);
+        $headers->addHeaders(
+            [
+                'Content-Disposition' => 'attachment; filename="' . $this->session->getSession() . '.xlsx"',
+                'Content-Type'        => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'Content-Length'      => $contentLength,
+                'Expires'             => '@0', // @0, because ZF2 parses date as string to \DateTime() object
+                'Cache-Control'       => 'must-revalidate',
+                'Pragma'              => 'public',
+            ]
+        );
         if ($gzip) {
             $headers->addHeaders(['Content-Encoding' => 'gzip']);
         }
