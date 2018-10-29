@@ -51,22 +51,18 @@ final class SessionManagerController extends AbstractActionController
      * @var ProgramService
      */
     private $programService;
-
     /**
      * @var IdeaService
      */
     private $ideaService;
-
     /**
      * @var FormService
      */
     private $formService;
-
     /**
      * @var TranslatorInterface
      */
     private $translator;
-
     /**
      * @var EntityManager
      */

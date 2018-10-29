@@ -22,10 +22,10 @@ use Affiliation\Service\AffiliationService;
 use Application\Service\AssertionService;
 use BjyAuthorize\Service\Authorize;
 use Contact\Service\ContactService;
-use Content\Navigation\Service\UpdateNavigationService;
 use Doctrine\ORM\EntityManager;
 use Event\Service\MeetingService;
 use Event\Service\RegistrationService;
+use General\Service\CountryService;
 use General\Service\EmailService;
 use General\Service\GeneralService;
 use Organisation\Service\OrganisationService;
@@ -47,7 +47,7 @@ use ZfcTwig\View\TwigRenderer;
 return [
     ConfigAbstractFactory::class => [
         Controller\Plugin\CreateCallFundingOverview::class => [
-            GeneralService::class,
+            CountryService::class,
             VersionService::class,
             ProjectService::class,
             EvaluationService::class,
@@ -109,6 +109,7 @@ return [
             ProjectService::class,
             VersionService::class,
             GeneralService::class,
+            CountryService::class,
             EntityManager::class,
             TranslatorInterface::class
         ],
@@ -177,7 +178,6 @@ return [
             'ViewHelperManager',
             TwigRenderer::class,
             AuthenticationService::class,
-            UpdateNavigationService::class,
             TranslatorInterface::class,
             ProgramService::class,
             IdeaService::class

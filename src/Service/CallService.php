@@ -22,8 +22,10 @@ use Program\Entity\Call\Call;
 use Program\Entity\Nda;
 use Program\Entity\NdaObject;
 use Program\Entity\Program;
+use Program\ValueObject\Calls;
+use Program\ValueObject\CallStatus;
+use Program\ValueObject\LastCall;
 use Project\Entity\Version\Type;
-use Zend\Stdlib\ArrayObject;
 use Zend\Validator\File\MimeType;
 
 /**
@@ -89,12 +91,18 @@ class CallService extends AbstractService
         return $this->entityManager->getRepository(Call::class)->findPreviousCall($call);
     }
 
-    public function findOpenCall($type): ?Call
+    public function findOpenCall(): Calls
     {
-        /** @var \Program\Repository\Call\Call $repository */
         $repository = $this->entityManager->getRepository(Call::class);
 
-        return $repository->findOpenCall($type);
+        return new Calls($repository->findOpenCall());
+    }
+
+    public function hasOpenCall(int $type): bool
+    {
+        $repository = $this->entityManager->getRepository(Call::class);
+
+        return $repository->hasOpenCall($type);
     }
 
     public function findMinAndMaxYearInCall(Call $call): \stdClass
@@ -110,86 +118,44 @@ class CallService extends AbstractService
         return $yearSpan;
     }
 
-    /**
-     * Find the last open call and check which versionType is active.
-     *
-     * @return \stdClass
-     */
-    public function findLastCallAndActiveVersionType(): \stdClass
+    public function findActiveVersionTypeInCall(Call $call): ?Type
     {
-        /** @var \Program\Repository\Call\Call $repository */
-        $repository = $this->entityManager->getRepository(Call::class);
+        $today = new \DateTime();
 
-        $result = $repository->findLastCallAndActiveVersionType();
-        $lastCallAndActiveVersionType = new \stdClass();
-        $lastCallAndActiveVersionType->call = $result['call'];
-        $lastCallAndActiveVersionType->versionType = $this->entityManager->find(Type::class, $result['versionType']);
+        if ($call->getPoOpenDate() < $today && $call->getPoCloseDate() > $today) {
+            return $this->entityManager->find(Type::class, Type::TYPE_PO);
+        }
 
-        return $lastCallAndActiveVersionType;
-    }
-
-    /**
-     * Find the last open call and check which versionType is active.
-     *
-     * @return Call
-     */
-    public function findLastCall(): ?Call
-    {
-        return $this->entityManager->getRepository(Call::class)->findOneBy([], ['id' => 'DESC']);
-    }
-
-    /**
-     * Find the last open call and check which versionType is active.
-     *
-     * @return Call|null
-     */
-    public function findLastActiveCall(): ?Call
-    {
-        /** @var \Program\Repository\Call\Call $repository */
-        $repository = $this->entityManager->getRepository(Call::class);
-
-        $notEmptyCalls = $repository->findActiveCalls();
-
-        if (\count($notEmptyCalls) > 0) {
-            return end($notEmptyCalls);
+        if ($call->getFppOpenDate() < $today && $call->getFppCloseDate() > $today) {
+            return $this->entityManager->find(Type::class, Type::TYPE_FPP);
         }
 
         return null;
+    }
+
+    public function findLastActiveCall(): ?Call
+    {
+        return $this->findOpenCall()->getFirst();
     }
 
     public function isOpen(Call $call, Type $type): bool
     {
         switch ($type->getId()) {
             case Type::TYPE_PO:
-                return $this->getCallStatus($call)->result === self::PO_OPEN;
+                return $this->getCallStatus($call)->getResult() === self::PO_OPEN;
             case Type::TYPE_FPP:
-                return $this->getCallStatus($call)->result === self::FPP_OPEN;
+                return $this->getCallStatus($call)->getResult() === self::FPP_OPEN;
             default:
                 return true;
         }
     }
 
-    /**
-     * Return the current status of the given all with given the current date
-     * Return a status and the relevant date.
-     *
-     * @param Call         $call
-     *
-     * @return ArrayObject
-     *
-     * @property \DateTime $result
-     * @method \DateTime $referenceDate
-     */
-    public function getCallStatus(Call $call): ArrayObject
+    public function getCallStatus(Call $call): CallStatus
     {
-        $callStatus = new ArrayObject();
-        /*
-         * Go over the dates and find the most suited date.
-         */
         $type = null;
         $today = new \DateTime();
         $dateTime = new \DateTime();
-        $notificationDeadline = $dateTime->sub(new \DateInterval("P1W"));
+        $notificationDeadline = $dateTime->sub(new \DateInterval('P1W'));
 
         if ($call->getPoOpenDate() > $today) {
             $referenceDate = $call->getPoOpenDate();
@@ -199,9 +165,7 @@ class CallService extends AbstractService
             $referenceDate = $call->getPoCloseDate();
             $result = self::PO_OPEN;
             $type = Type::TYPE_PO;
-        } elseif ($call->getPoCloseDate() > $notificationDeadline
-            && $call->getFppOpenDate() > $today
-        ) {
+        } elseif ($call->getPoCloseDate() > $notificationDeadline && $call->getFppOpenDate() > $today) {
             $referenceDate = $call->getPoCloseDate();
             $result = self::PO_CLOSED;
             $type = Type::TYPE_PO;
@@ -223,11 +187,8 @@ class CallService extends AbstractService
             $type = Type::TYPE_CR;
         }
 
-        $callStatus->result = $result;
-        $callStatus->type = $this->entityManager->find(Type::class, $type);
-        $callStatus->referenceDate = $referenceDate;
-
-        return $callStatus;
+        $type = $this->entityManager->find(Type::class, $type);
+        return new CallStatus($referenceDate, $result, $type);
     }
 
     public function requireDoaPerProject(Call $call): bool
@@ -269,11 +230,6 @@ class CallService extends AbstractService
         return $repository->findNonEmptyAndActiveCalls($program);
     }
 
-    /**
-     * @param Call $call
-     *
-     * @return array
-     */
     public function findProjectAndPartners(Call $call): array
     {
         /** @var \Program\Repository\Call\Call $repository */
@@ -282,12 +238,6 @@ class CallService extends AbstractService
         return $repository->findProjectAndPartners($call);
     }
 
-    /**
-     * @param Call    $call
-     * @param Contact $contact
-     *
-     * @return null|Nda
-     */
     public function findNdaByCallAndContact(Call $call, Contact $contact): ?Nda
     {
         /** @var \Program\Repository\Nda $repository */
@@ -296,11 +246,6 @@ class CallService extends AbstractService
         return $repository->findNdaByCallAndContact($call, $contact);
     }
 
-    /**
-     * @param Contact $contact
-     *
-     * @return null|Nda
-     */
     public function findNdaByContact(Contact $contact): ?Nda
     {
         /** @var \Program\Repository\Nda $repository */
@@ -309,11 +254,6 @@ class CallService extends AbstractService
         return $repository->findNdaByContact($contact);
     }
 
-    /**
-     * @param Nda $nda
-     *
-     * @return bool
-     */
     public function isNdaValid(Nda $nda): bool
     {
         if (null === $nda->getDateSigned()) {
@@ -326,25 +266,6 @@ class CallService extends AbstractService
         return $nda->getDateSigned() > $twoYearsAgo;
     }
 
-    /**
-     * @param Call $call
-     *
-     * @return Country[]
-     */
-    public function findCountryByCall(Call $call): array
-    {
-        return $this->generalService->findCountryByCall($call);
-    }
-
-    /**
-     * Upload a NDA to the system and store it for the user.
-     *
-     * @param array   $file
-     * @param Contact $contact
-     * @param Call    $call
-     *
-     * @return Nda
-     */
     public function uploadNda(array $file, Contact $contact, Call $call = null): Nda
     {
         $ndaObject = new NdaObject();
@@ -366,12 +287,6 @@ class CallService extends AbstractService
         return $ndaObject->getNda();
     }
 
-    /**
-     * @param Contact   $contact
-     * @param Call|null $call
-     *
-     * @return Nda
-     */
     public function submitNda(Contact $contact, Call $call = null): Nda
     {
         $nda = new Nda();

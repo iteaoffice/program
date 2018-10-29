@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Program\Controller\Plugin;
 
 use Affiliation\Service\AffiliationService;
-use General\Service\GeneralService;
+use General\Service\CountryService;
 use Project\Entity\Funding\Source;
 use Project\Entity\Funding\Status;
 use Project\Service\EvaluationService;
@@ -34,66 +34,50 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 final class CreateCallFundingOverview extends AbstractPlugin
 {
     /**
-     * @var GeneralService
+     * @var CountryService
      */
-    protected $generalService;
+    private $countryService;
     /**
      * @var VersionService
      */
-    protected $versionService;
+    private $versionService;
     /**
      * @var ProjectService
      */
-    protected $projectService;
+    private $projectService;
     /**
      * @var EvaluationService
      */
-    protected $evaluationService;
+    private $evaluationService;
     /**
      * @var AffiliationService
      */
-    protected $affiliationService;
+    private $affiliationService;
     /**
      * @var array
      */
-    protected $countries = [];
+    private $countries = [];
 
-    /**
-     * CreateCallFundingOverview constructor.
-     *
-     * @param GeneralService     $generalService
-     * @param VersionService     $versionService
-     * @param ProjectService     $projectService
-     * @param EvaluationService  $evaluationService
-     * @param AffiliationService $affiliationService
-     */
     public function __construct(
-        GeneralService $generalService,
+        CountryService $countryService,
         VersionService $versionService,
         ProjectService $projectService,
         EvaluationService $evaluationService,
         AffiliationService $affiliationService
     ) {
-        $this->generalService = $generalService;
+        $this->countryService = $countryService;
         $this->versionService = $versionService;
         $this->projectService = $projectService;
         $this->evaluationService = $evaluationService;
         $this->affiliationService = $affiliationService;
     }
 
-
-    /**
-     * @param array $projects
-     * @param null  $year
-     *
-     * @return array
-     */
     public function __invoke(array $projects, $year): array
     {
         $evaluationResult = [];
 
         foreach ($projects as $project) {
-            $countries = $this->generalService->findCountryByProject($project, AffiliationService::WHICH_ONLY_ACTIVE);
+            $countries = $this->countryService->findCountryByProject($project, AffiliationService::WHICH_ONLY_ACTIVE);
             foreach ($countries as $country) {
                 /*
                  * Create an array of countries to serialize it normally
@@ -142,11 +126,11 @@ final class CreateCallFundingOverview extends AbstractPlugin
 
         //Funding status separation
         /** @var Status $allGood */
-        $allGood = $this->evaluationService->findEntityById(Status::class, Status::STATUS_ALL_GOOD);
+        $allGood = $this->evaluationService->find(Status::class, Status::STATUS_ALL_GOOD);
         /** @var Status $selfFunded */
-        $selfFunded = $this->evaluationService->findEntityById(Status::class, Status::STATUS_SELF_FUNDED);
+        $selfFunded = $this->evaluationService->find(Status::class, Status::STATUS_SELF_FUNDED);
         /** @var Status $default */
-        $default = $this->evaluationService->findEntityById(Status::class, Status::STATUS_DEFAULT);
+        $default = $this->evaluationService->find(Status::class, Status::STATUS_DEFAULT);
 
         $costAllGood = 0;
         $costSelfFunded = 0;

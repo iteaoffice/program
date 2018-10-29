@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Program\View\Handler;
 
 use Content\Entity\Content;
-use Content\Navigation\Service\UpdateNavigationService;
 use Program\Entity\Call\Session;
 use Program\Service\ProgramService;
 use Project\Service\IdeaService;
@@ -44,7 +43,6 @@ final class SessionHandler extends AbstractHandler
         HelperPluginManager $helperPluginManager,
         TwigRenderer $renderer,
         AuthenticationService $authenticationService,
-        UpdateNavigationService $updateNavigationService,
         TranslatorInterface $translator,
         ProgramService $programService,
         IdeaService $ideaService
@@ -54,7 +52,6 @@ final class SessionHandler extends AbstractHandler
             $helperPluginManager,
             $renderer,
             $authenticationService,
-            $updateNavigationService,
             $translator
         );
         $this->programService = $programService;

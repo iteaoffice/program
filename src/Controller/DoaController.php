@@ -45,28 +45,20 @@ final class DoaController extends AbstractActionController
     /**
      * @var ProgramService
      */
-    protected $programService;
+    private $programService;
     /**
      * @var OrganisationService
      */
-    protected $organisationService;
+    private $organisationService;
     /**
      * @var GeneralService
      */
-    protected $generalService;
+    private $generalService;
     /**
      * @var TranslatorInterface
      */
-    protected $translator;
+    private $translator;
 
-    /**
-     * DoaController constructor.
-     *
-     * @param ProgramService      $programService
-     * @param OrganisationService $organisationService
-     * @param GeneralService      $generalService
-     * @param TranslatorInterface $translator
-     */
     public function __construct(
         ProgramService $programService,
         OrganisationService $organisationService,
@@ -79,10 +71,6 @@ final class DoaController extends AbstractActionController
         $this->translator = $translator;
     }
 
-
-    /**
-     * @return ViewModel
-     */
     public function viewAction(): ViewModel
     {
         /** @var Entity\Doa $doa */
@@ -95,9 +83,6 @@ final class DoaController extends AbstractActionController
         return new ViewModel(['doa' => $doa]);
     }
 
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     */
     public function uploadAction()
     {
         $organisation = $this->organisationService->findOrganisationById((int)$this->params('organisationId'));
@@ -161,20 +146,15 @@ final class DoaController extends AbstractActionController
         );
     }
 
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
     public function replaceAction()
     {
         /** @var Entity\Doa $doa */
         $doa = $this->programService->find(Entity\Doa::class, (int)$this->params('id'));
 
-        if (null === $doa || count($doa->getObject()) === 0) {
+        if (null === $doa || \count($doa->getObject()) === 0) {
             return $this->notFoundAction();
         }
-        $data = array_merge_recursive(
+        $data = \array_merge_recursive(
             $this->getRequest()->getPost()->toArray(),
             $this->getRequest()->getFiles()->toArray()
         );
@@ -230,9 +210,6 @@ final class DoaController extends AbstractActionController
         );
     }
 
-    /**
-     * @return Response
-     */
     public function renderAction(): Response
     {
         $organisation = $this->organisationService->findOrganisationById((int)$this->params('organisationId'));
@@ -263,9 +240,6 @@ final class DoaController extends AbstractActionController
         return $response;
     }
 
-    /**
-     * @return Response
-     */
     public function downloadAction(): Response
     {
         /** @var Entity\Doa $doa */

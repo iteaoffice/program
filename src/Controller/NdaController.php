@@ -49,27 +49,27 @@ final class NdaController extends AbstractActionController
     /**
      * @var ProgramService
      */
-    protected $programService;
+    private $programService;
     /**
      * @var CallService
      */
-    protected $callService;
+    private $callService;
     /**
      * @var GeneralService
      */
-    protected $generalService;
+    private $generalService;
     /**
      * @var ContactService
      */
-    protected $contactService;
+    private $contactService;
     /**
      * @var TranslatorInterface
      */
-    protected $translator;
+    private $translator;
     /**
      * @var TwigRenderer
      */
-    protected $renderer;
+    private $renderer;
 
     public function __construct(
         ProgramService $programService,
@@ -99,11 +99,6 @@ final class NdaController extends AbstractActionController
         return new ViewModel(['nda' => $nda]);
     }
 
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     */
     public function submitAction()
     {
         //We only want the active call, having the requirement that this call also requires an NDA
@@ -189,9 +184,6 @@ final class NdaController extends AbstractActionController
         );
     }
 
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     */
     public function replaceAction()
     {
         /** @var Entity\Nda $nda */
@@ -252,9 +244,6 @@ final class NdaController extends AbstractActionController
         );
     }
 
-    /**
-     * @return Response
-     */
     public function renderAction(): Response
     {
         //Create an empty NDA object
@@ -289,9 +278,6 @@ final class NdaController extends AbstractActionController
         return $response;
     }
 
-    /**
-     * @return Response
-     */
     public function downloadAction(): Response
     {
         /** @var Entity\Nda $nda */

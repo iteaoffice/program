@@ -48,43 +48,32 @@ final class ProgramManagerController extends AbstractActionController
     /**
      * @var ProgramService
      */
-    protected $programService;
+    private $programService;
     /**
      * @var CallService
      */
-    protected $callService;
+    private $callService;
     /**
      * @var ProjectService
      */
-    protected $projectService;
+    private $projectService;
     /**
      * @var VersionService
      */
-    protected $versionService;
+    private $versionService;
     /**
      * @var FormService
      */
-    protected $formService;
+    private $formService;
     /**
      * @var EntityManager
      */
-    protected $entityManager;
+    private $entityManager;
     /**
      * @var TranslatorInterface
      */
-    protected $translator;
+    private $translator;
 
-    /**
-     * ProgramManagerController constructor.
-     *
-     * @param ProgramService      $programService
-     * @param CallService         $callService
-     * @param ProjectService      $projectService
-     * @param VersionService      $versionService
-     * @param FormService         $formService
-     * @param EntityManager       $entityManager
-     * @param TranslatorInterface $translator
-     */
     public function __construct(
         ProgramService $programService,
         CallService $callService,
@@ -103,10 +92,6 @@ final class ProgramManagerController extends AbstractActionController
         $this->translator = $translator;
     }
 
-
-    /**
-     * @return ViewModel
-     */
     public function listAction(): ViewModel
     {
         $page = $this->params()->fromRoute('page', 1);
@@ -132,9 +117,6 @@ final class ProgramManagerController extends AbstractActionController
         );
     }
 
-    /**
-     * @return ViewModel
-     */
     public function viewAction(): ViewModel
     {
         $program = $this->programService->find(Program::class, (int)$this->params('id'));
@@ -145,9 +127,6 @@ final class ProgramManagerController extends AbstractActionController
         return new ViewModel(['program' => $program]);
     }
 
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     */
     public function newAction()
     {
         $data = $this->getRequest()->getPost()->toArray();
@@ -178,11 +157,6 @@ final class ProgramManagerController extends AbstractActionController
         return new ViewModel(['form' => $form]);
     }
 
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
     public function editAction()
     {
         /** @var Program $program */
@@ -219,10 +193,6 @@ final class ProgramManagerController extends AbstractActionController
         return new ViewModel(['form' => $form, 'program' => $program]);
     }
 
-    /**
-     * @return ViewModel
-     * @throws \Exception
-     */
     public function sizeAction(): ViewModel
     {
         $filter = $this->getRequest()->getPost()->toArray();

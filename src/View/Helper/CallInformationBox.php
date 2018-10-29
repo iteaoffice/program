@@ -21,6 +21,7 @@ use Program\Service\CallService;
 
 /**
  * Class CallInformationBox
+ *
  * @package Program\View\Helper
  */
 class CallInformationBox extends AbstractViewHelper
@@ -43,12 +44,12 @@ class CallInformationBox extends AbstractViewHelper
         /*
          * Return null when we have an undefined status
          */
-        if ($callStatus->result === CallService::UNDEFINED) {
+        if ($callStatus->getResult() === CallService::UNDEFINED) {
             return '';
         }
-        $result = $callStatus->result;
+        $result = $callStatus->getResult();
         /** @var \DateTime $referenceDate */
-        $referenceDate = $callStatus->referenceDate;
+        $referenceDate = $callStatus->getReferenceDate();
         $today = new \DateTime();
         $dateDifference = $referenceDate->diff($today);
         if ($dateDifference->days > 7) {
@@ -79,7 +80,7 @@ class CallInformationBox extends AbstractViewHelper
 
         return \sprintf($alert, $type, $content);
     }
-    
+
     public function getCallService(): CallService
     {
         return $this->getServiceManager()->get(CallService::class);

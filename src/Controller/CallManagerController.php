@@ -21,6 +21,7 @@ use Affiliation\Service\AffiliationService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
+use General\Service\CountryService;
 use General\Service\GeneralService;
 use Program\Controller\Plugin\CreateCallFundingOverview;
 use Program\Controller\Plugin\CreateFundingDownload;
@@ -56,49 +57,43 @@ final class CallManagerController extends AbstractActionController
     /**
      * @var CallService
      */
-    protected $callService;
+    private $callService;
     /**
      * @var FormService
      */
-    protected $formService;
+    private $formService;
     /**
      * @var ProjectService
      */
-    protected $projectService;
+    private $projectService;
     /**
      * @var VersionService
      */
-    protected $versionService;
+    private $versionService;
     /**
      * @var GeneralService
      */
-    protected $generalService;
+    private $generalService;
+    /**
+     * @var CountryService
+     */
+    private $countryService;
     /**
      * @var EntityManager
      */
-    protected $entityManager;
+    private $entityManager;
     /**
      * @var TranslatorInterface
      */
-    protected $translator;
+    private $translator;
 
-    /**
-     * CallManagerController constructor.
-     *
-     * @param CallService         $callService
-     * @param FormService         $formService
-     * @param ProjectService      $projectService
-     * @param VersionService      $versionService
-     * @param GeneralService      $generalService
-     * @param EntityManager       $entityManager
-     * @param TranslatorInterface $translator
-     */
     public function __construct(
         CallService $callService,
         FormService $formService,
         ProjectService $projectService,
         VersionService $versionService,
         GeneralService $generalService,
+        CountryService $countryService,
         EntityManager $entityManager,
         TranslatorInterface $translator
     ) {
@@ -107,14 +102,11 @@ final class CallManagerController extends AbstractActionController
         $this->projectService = $projectService;
         $this->versionService = $versionService;
         $this->generalService = $generalService;
+        $this->countryService = $countryService;
         $this->entityManager = $entityManager;
         $this->translator = $translator;
     }
 
-
-    /**
-     * @return ViewModel
-     */
     public function listAction(): ViewModel
     {
         $page = $this->params()->fromRoute('page', 1);
@@ -140,9 +132,6 @@ final class CallManagerController extends AbstractActionController
         );
     }
 
-    /**
-     * @return ViewModel
-     */
     public function viewAction(): ViewModel
     {
         $call = $this->callService->findCallById((int)$this->params('id'));
@@ -152,7 +141,7 @@ final class CallManagerController extends AbstractActionController
         }
 
         // We need the countries active in the call, to store the funding decisions
-        $countries = $this->generalService->findCountryByCall($call, AffiliationService::WHICH_ALL);
+        $countries = $this->countryService->findCountryByCall($call, AffiliationService::WHICH_ALL);
 
         return new ViewModel(
             [

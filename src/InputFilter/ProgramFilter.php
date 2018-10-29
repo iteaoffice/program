@@ -95,6 +95,12 @@ class ProgramFilter extends InputFilter
                 ],
             ]
         );
+        $inputFilter->add(
+            [
+                'name'     => 'invoiceMethod',
+                'required' => false,
+            ]
+        );
         $this->add($inputFilter, 'program_entity_program');
     }
 }

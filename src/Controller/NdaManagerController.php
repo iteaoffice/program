@@ -57,35 +57,35 @@ final class NdaManagerController extends AbstractActionController
     /**
      * @var CallService
      */
-    protected $callService;
+    private $callService;
     /**
      * @var FormService
      */
-    protected $formService;
+    private $formService;
     /**
      * @var ContactService
      */
-    protected $contactService;
+    private $contactService;
     /**
      * @var GeneralService
      */
-    protected $generalService;
+    private $generalService;
     /**
      * @var AdminService
      */
-    protected $adminService;
+    private $adminService;
     /**
      * @var EmailService
      */
-    protected $emailService;
+    private $emailService;
     /**
      * @var TranslatorInterface
      */
-    protected $translator;
+    private $translator;
     /**
      * @var EntityManager
      */
-    protected $entityManager;
+    private $entityManager;
 
     public function __construct(
         CallService $callService,
@@ -120,9 +120,6 @@ final class NdaManagerController extends AbstractActionController
         );
     }
 
-    /**
-     * @return ViewModel
-     */
     public function viewAction(): ViewModel
     {
         $nda = $this->callService->find(Nda::class, (int)$this->params('id'));
@@ -133,9 +130,6 @@ final class NdaManagerController extends AbstractActionController
         return new ViewModel(['nda' => $nda]);
     }
 
-    /**
-     * @return Response
-     */
     public function renderAction(): Response
     {
         //Create an empty NDA object
@@ -171,9 +165,6 @@ final class NdaManagerController extends AbstractActionController
         return $response;
     }
 
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     */
     public function editAction()
     {
         /** @var Nda $nda */

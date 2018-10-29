@@ -83,7 +83,6 @@ final class SessionSpreadsheet extends AbstractPlugin
         $this->serverUrlHelper = $helperPluginManager->get(ServerUrl::class);
     }
 
-
     public function __invoke(Session $session): SessionSpreadsheet
     {
         $this->session = $session;

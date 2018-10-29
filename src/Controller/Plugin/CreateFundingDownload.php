@@ -36,27 +36,16 @@ final class CreateFundingDownload extends AbstractPlugin
     /**
      * @var VersionService
      */
-    protected $versionService;
+    private $versionService;
     /**
      * @var ProjectService
      */
-    protected $projectService;
+    private $projectService;
     /**
      * @var AffiliationService
      */
-    protected $affiliationService;
-    /**
-     * @var array
-     */
-    protected $countries = [];
+    private $affiliationService;
 
-    /**
-     * CreateFundingDownload constructor.
-     *
-     * @param VersionService     $versionService
-     * @param ProjectService     $projectService
-     * @param AffiliationService $affiliationService
-     */
     public function __construct(
         VersionService $versionService,
         ProjectService $projectService,
@@ -67,19 +56,13 @@ final class CreateFundingDownload extends AbstractPlugin
         $this->affiliationService = $affiliationService;
     }
 
-
-    /**
-     * @param Call $call
-     *
-     * @return string
-     */
     public function __invoke(Call $call): string
     {
         // Open the output stream
-        $fh = fopen('php://output', 'wb');
-        ob_start();
+        $fh = \fopen('php://output', 'wb');
+        \ob_start();
 
-        fputcsv(
+        \fputcsv(
             $fh,
             [
                 'Program',
@@ -121,7 +104,7 @@ final class CreateFundingDownload extends AbstractPlugin
                     $year = $funding->getDateStart()->format('Y');
 
                     if (null !== $affiliation->getDateSelfFunded()) {
-                        $globalStatus = "Self Funded";
+                        $globalStatus = 'Self Funded';
                     } else {
                         $globalStatus = null;
                         switch ($funding->getStatus()->getId()) {
@@ -138,7 +121,7 @@ final class CreateFundingDownload extends AbstractPlugin
                     }
 
 
-                    fputcsv(
+                    \fputcsv(
                         $fh,
                         [
                             $project->getCall()->getProgram(),
@@ -160,6 +143,6 @@ final class CreateFundingDownload extends AbstractPlugin
             }
         }
 
-        return ob_get_clean();
+        return \ob_get_clean();
     }
 }

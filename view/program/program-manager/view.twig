@@ -29,31 +29,33 @@
     </dd>
 </dl>
 
-<h2>{{ translate("txt-overview-of-calls") }}</h2>
+{% if not program.call.isEmpty() %}
+    <h2>{{ translate("txt-overview-of-calls") }}</h2>
 
-<table class="table table-hover table-striped table-condensed table-sm">
-    <thead>
-    <tr>
-        <th>{{ translate("txt-call-id") }}</th>
-        <th>{{ translate("txt-call-name") }}</th>
-        <th>{{ translate("txt-call-po-open") }}</th>
-        <th>{{ translate("txt-call-po-close") }}</th>
-        <th>{{ translate("txt-call-fpp-open") }}</th>
-        <th>{{ translate("txt-call-fpp-close") }}</th>
-        <th>{{ translate("txt-#projects") }}</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for call in program.call %}
+    <table class="table table-hover table-striped table-condensed table-sm">
+        <thead>
         <tr>
-            <td>{{ call.id }} {{ callLink(call,'edit', 'icon') }}</td>
-            <td>{{ callLink(call,'view-admin','name') }}</td>
-            <td>{% if call.poOpenDate %}{{ call.poOpenDate|string_date }}{% endif %}</td>
-            <td>{% if call.poCloseDate %}{{ call.poCloseDate|string_date }}{% endif %}</td>
-            <td>{% if call.fppOpenDate %}{{ call.fppOpenDate|string_date }}{% endif %}</td>
-            <td>{% if call.fppCloseDate %}{{ call.fppCloseDate|string_date }}{% endif %}</td>
-            <td>{{ call.project.count }}</td>
+            <th>{{ translate("txt-call-id") }}</th>
+            <th>{{ translate("txt-call-name") }}</th>
+            <th>{{ translate("txt-call-po-open") }}</th>
+            <th>{{ translate("txt-call-po-close") }}</th>
+            <th>{{ translate("txt-call-fpp-open") }}</th>
+            <th>{{ translate("txt-call-fpp-close") }}</th>
+            <th>{{ translate("txt-#projects") }}</th>
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        {% for call in program.call %}
+            <tr>
+                <td>{{ call.id }} {{ callLink(call,'edit', 'icon') }}</td>
+                <td>{{ callLink(call,'view-admin','name') }}</td>
+                <td>{% if call.poOpenDate %}{{ call.poOpenDate|string_date }}{% endif %}</td>
+                <td>{% if call.poCloseDate %}{{ call.poCloseDate|string_date }}{% endif %}</td>
+                <td>{% if call.fppOpenDate %}{{ call.fppOpenDate|string_date }}{% endif %}</td>
+                <td>{% if call.fppCloseDate %}{{ call.fppCloseDate|string_date }}{% endif %}</td>
+                <td>{{ call.project.count }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}

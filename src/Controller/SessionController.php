@@ -56,7 +56,6 @@ final class SessionController extends AbstractActionController
         $this->assertionService = $assertionService;
     }
 
-
     public function downloadPdfAction(): Response
     {
         /** @var Session $session */

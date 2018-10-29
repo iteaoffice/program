@@ -31,23 +31,16 @@ final class RenderNda extends AbstractPlugin
     /**
      * @var TwigRenderer
      */
-    protected $renderer;
+    private $renderer;
     /**
      * @var ModuleOptions
      */
-    protected $moduleOptions;
+    private $moduleOptions;
     /**
      * @var ContactService
      */
-    protected $contactService;
+    private $contactService;
 
-    /**
-     * RenderDoa constructor.
-     *
-     * @param TwigRenderer   $renderer
-     * @param ModuleOptions  $moduleOptions
-     * @param ContactService $contactService
-     */
     public function __construct(TwigRenderer $renderer, ModuleOptions $moduleOptions, ContactService $contactService)
     {
         $this->renderer = $renderer;
@@ -55,12 +48,6 @@ final class RenderNda extends AbstractPlugin
         $this->contactService = $contactService;
     }
 
-
-    /**
-     * @param Nda $nda
-     *
-     * @return ProgramPdf
-     */
     public function renderForCall(Nda $nda): ProgramPdf
     {
         $pdf = new ProgramPdf();
@@ -125,13 +112,6 @@ final class RenderNda extends AbstractPlugin
         return $pdf;
     }
 
-    /**
-     * Render a NDA not bound to a call.
-     *
-     * @param Nda $nda
-     *
-     * @return ProgramPdf
-     */
     public function render(Nda $nda): ProgramPdf
     {
         $pdf = new ProgramPdf();
