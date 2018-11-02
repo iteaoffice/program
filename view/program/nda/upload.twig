@@ -28,7 +28,7 @@
         <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-contact") }}</label>
 
         <div class="col-sm-9">
-            <p class="form-control-static form-control-plaintext">{{ zfcUserIdentity().displayName }}</p>
+            <p class="form-control-static form-control-plaintext">{{ identity().displayName }}</p>
         </div>
     </div>
 
@@ -75,7 +75,7 @@
             <dd>{{ call }}</dd>
         {% endif %}
         <dt>{{ translate("txt-contact") }}</dt>
-        <dd>{{ zfcUserIdentity().displayName() }}</dd>
+        <dd>{{ identity().displayName() }}</dd>
         <dt>{{ translate("txt-download-nda") }}</dt>
         <dd>{{ ndaLink(nda,'download', 'text') }}</dd>
     </dl>

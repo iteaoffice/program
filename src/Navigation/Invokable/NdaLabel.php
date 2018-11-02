@@ -26,13 +26,8 @@ use Zend\Navigation\Page\Mvc;
  *
  * @package Program\Navigation\Invokable
  */
-class NdaLabel extends AbstractNavigationInvokable
+final class NdaLabel extends AbstractNavigationInvokable
 {
-    /**
-     * @param Mvc $page
-     *
-     * @return void;
-     */
     public function __invoke(Mvc $page): void
     {
         $label = $this->translate('txt-nav-nda');

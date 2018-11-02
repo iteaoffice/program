@@ -72,11 +72,6 @@ abstract class AbstractAssertion implements AssertionInterface
      */
     private $container;
 
-    /**
-     * AbstractAssertion constructor.
-     *
-     * @param ContainerInterface $container
-     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -89,28 +84,16 @@ abstract class AbstractAssertion implements AssertionInterface
         $this->contact = $container->get(AuthenticationService::class)->getIdentity();
     }
 
-
-    /**
-     * @param string $string
-     *
-     * @return bool
-     */
     public function routeHasString(string $string): bool
     {
         return $this->hasRouteMatch() && \strpos($this->getRouteMatch()->getMatchedRouteName(), $string) !== false;
     }
 
-    /**
-     * @return bool
-     */
     public function hasRouteMatch(): bool
     {
         return null !== $this->getRouteMatch()->getMatchedRouteName();
     }
 
-    /**
-     * @return RouteMatch
-     */
     protected function getRouteMatch(): RouteMatch
     {
         $routeMatch = $this->container->get('Application')->getMvcEvent()->getRouteMatch();
@@ -139,11 +122,6 @@ abstract class AbstractAssertion implements AssertionInterface
         return $this->privilege;
     }
 
-    /**
-     * @param string $privilege
-     *
-     * @return AbstractAssertion
-     */
     public function setPrivilege(?string $privilege): AbstractAssertion
     {
         $this->privilege = $privilege;
@@ -151,9 +129,6 @@ abstract class AbstractAssertion implements AssertionInterface
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getId(): ?int
     {
         if (null !== $this->request->getPost('id')) {
@@ -222,14 +197,13 @@ abstract class AbstractAssertion implements AssertionInterface
                     strtolower($this->adminService->findAccessByName($accessRoleOrCollection)->getAccess()),
                 ];
             }
+        } else {
+            $accessRoleOrCollection = $accessRoleOrCollection->toArray();
         }
 
         return $accessRoleOrCollection;
     }
 
-    /**
-     * @return bool
-     */
     public function hasContact(): bool
     {
         return null !== $this->contact;

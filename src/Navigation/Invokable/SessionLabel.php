@@ -23,26 +23,20 @@ use Zend\Navigation\Page\Mvc;
 
 /**
  * Class SessionLabel
+ *
  * @package Program\Navigation\Invokable
  */
-class SessionLabel extends AbstractNavigationInvokable
+final class SessionLabel extends AbstractNavigationInvokable
 {
-    /**
-     * Set the session navigation label
-     *
-     * @param Mvc $page
-     *
-     * @return void;
-     */
     public function __invoke(Mvc $page): void
     {
+        $label = $this->translate('txt-nav-view');
+
         if ($this->getEntities()->containsKey(Session::class)) {
             /** @var Session $session */
             $session = $this->getEntities()->get(Session::class);
             $page->setParams(array_merge($page->getParams(), ['id' => $session->getId()]));
             $label = $session->getSession();
-        } else {
-            $label = $this->translate('txt-nav-view');
         }
         $page->set('label', $label);
     }

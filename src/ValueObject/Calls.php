@@ -44,6 +44,9 @@ final class Calls
         return $this->call2;
     }
 
+    /**
+     * @return Call[]
+     */
     public function toArray(): array
     {
         if (!$this->isMultiple()) {

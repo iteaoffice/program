@@ -19,6 +19,7 @@ use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Program\Entity\AbstractEntity;
+use Program\Entity\Program;
 use Zend\Form\Annotation;
 
 /**
@@ -405,7 +406,7 @@ class Call extends AbstractEntity
         return \sprintf('%sC%s', $acronym, $this->call);
     }
 
-    public function getProgram()
+    public function getProgram(): ?Program
     {
         return $this->program;
     }
@@ -415,6 +416,11 @@ class Call extends AbstractEntity
         $this->program = $program;
 
         return $this;
+    }
+
+    public function hasIdeaTool(): bool
+    {
+        return !$this->ideaTool->isEmpty();
     }
 
     public function getProxyProject()

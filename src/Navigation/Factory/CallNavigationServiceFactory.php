@@ -29,7 +29,7 @@ use Zend\ServiceManager\Factory\FactoryInterface;
  *
  * @package Program\Navigation\Factory
  */
-class CallNavigationServiceFactory implements FactoryInterface
+final class CallNavigationServiceFactory implements FactoryInterface
 {
     public function __invoke(
         ContainerInterface $container,

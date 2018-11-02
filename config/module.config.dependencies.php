@@ -182,5 +182,8 @@ return [
             ProgramService::class,
             IdeaService::class
         ],
+        View\Helper\CallInformationBox::class              => [
+            CallService::class
+        ]
     ]
 ];

@@ -5,10 +5,10 @@
     <div class="col-md-8"><h1 class="display-4">{{ translate("txt-%s-overview")|format(call) }}</h1></div>
     <div class="col-md-4">
         {#{% if previousCall %}#}
-            {#<a href="{{ url('community/call/index',{'callId':previousCall.id}) }}">{{ previousCall }}</a>#}
+        {#<a href="{{ url('community/call/index',{'callId':previousCall.id}) }}">{{ previousCall }}</a>#}
         {#{% endif %}#}
         {#{% if nextCall %}#}
-            {#<a href="{{ url('community/call/index',{'callId':nextCall.id}) }}">{{ nextCall }}</a>#}
+        {#<a href="{{ url('community/call/index',{'callId':nextCall.id}) }}">{{ nextCall }}</a>#}
         {#{% endif %}#}
     </div>
 </div>
@@ -78,7 +78,8 @@
                     <div class="col-xs-6 col-md-3">
 
                         {% if projectItem.type is constant('\\Project\\ValueObject\\ProjectItem::TYPE_PROJECT') %}
-                            <a class="thumbnail" href="{{ projectLink(projectItem.project,'view-community','social') }}">
+                            <a class="thumbnail"
+                               href="{{ projectLink(projectItem.project,'view-community','social') }}">
                                 <div class="project-thumbnail {% if projectItem.isPending() %}project-thumbnail-blur{% endif %}"
                                      style="background: url('{{ projectLogo(projectItem.project,150, true) }}') no-repeat center 15px"></div>
 
@@ -125,127 +126,132 @@
             </div>
 
             <a class="btn btn-primary"
-               href="{{ url('community/project/list',{'call':call.id}) }}"><i class="fa fa-bars"></i> {{ translate("txt-list-projects-in-call-%s")|format(call) }}</a>
+               href="{{ url('community/project/list',{'call':call.id}) }}"><i
+                        class="fa fa-bars"></i> {{ translate("txt-list-projects-in-call-%s")|format(call) }}</a>
 
         {% endif %}
 
         {# Project ideas #}
-        <br><br>
-        <h2>{{ translate("txt-my-project-ideas-in-%s-and-project-idea-invitations")|format(call) }}</h2>
+        {% if call.hasIdeaTool() %}
+            <br><br>
+            <h2>{{ translate("txt-my-project-ideas-in-%s-and-project-idea-invitations")|format(call) }}</h2>
 
-        <div class="row">
-            {% for ideaItem in ideas %}
-                <div class="col-xs-6 col-md-3">
+            <div class="row">
+                {% for ideaItem in ideas %}
+                    <div class="col-xs-6 col-md-3">
 
-                    {% if ideaItem.type is constant('\\Project\\ValueObject\\IdeaItem::TYPE_IDEA') %}
-                        <a class="thumbnail" href="{{ ideaLink(ideaItem.idea,'view','social') }}">
-                            <div class="idea-thumbnail"></div>
+                        {% if ideaItem.type is constant('\\Project\\ValueObject\\IdeaItem::TYPE_IDEA') %}
+                            <a class="thumbnail" href="{{ ideaLink(ideaItem.idea,'view','social') }}">
+                                <div class="idea-thumbnail"></div>
 
-                            <div class="thumbnail-label">{{ ideaItem.label }}</div>
+                                <div class="thumbnail-label">{{ ideaItem.label }}</div>
 
-                            <div class="thumbnail-name"><p>{{ ideaItem.idea.parseName()|upper|truncate(25) }}</p>
-                            </div>
-                        </a>
-                    {% endif %}
-
-                    {% if ideaItem.type is constant('\\Project\\ValueObject\\IdeaItem::TYPE_INVITE') %}
-                        <a class="thumbnail thumbnail-action"
-                           href="{{ ideaInviteLink(ideaItem.invite,'accept','social') }}">
-                            <div class="idea-thumbnail idea-thumbnail-blur"></div>
-
-                            <div class="thumbnail-label">{{ ideaItem.label }}</div>
-
-                            <div class="thumbnail-name"><p>{{ ideaItem.idea.parseName()|upper|truncate(25) }}</p>
-                            </div>
-                        </a>
-                    {% endif %}
-
-                    {% if ideaItem.type is constant('\\Project\\ValueObject\\IdeaItem::TYPE_JOIN_REQUEST') %}
-                        <a class="thumbnail thumbnail-inactive" href="{{ ideaLink(ideaItem.idea,'view','social') }}">
-                            <div class="idea-thumbnail idea-thumbnail-blur"></div>
-
-                            <div class="thumbnail-label inactive">{{ ideaItem.label }}</div>
-
-                            <div class="thumbnail-name"><p>{{ ideaItem.idea.parseName()|upper|truncate(25) }}</p>
-                            </div>
-                        </a>
-                    {% endif %}
-                </div>
-            {% endfor %}
-
-            {% set newIdeaLink = ideaLink(null, 'new','social', tool) %}
-
-            {% if newIdeaLink %}
-                <div class="col-xs-6 col-md-3">
-                    <a class="thumbnail" href="{{ newIdeaLink }}">
-
-                        <div class="thumbnail-label new-item"><i class="fa fa-plus"></i></div>
-
-                        <div class="thumbnail-name"><p class="text-center">{{ translate("txt-create-new-idea") }}</p>
-                        </div>
-                    </a>
-                </div>
-            {% endif %}
-        </div>
-
-        {{ ideaToolLink(tool,'list-idea', 'button') }}
-
-        {# some extra stuff#}
-        <br><br>
-        <h2>{{ translate("txt-po-preparation") }}</h2>
-
-        <div class="row">
-
-
-
-            {% if tool.meeting %}
-                <div class="col-xs-6 col-md-3">
-                    {# Try to see if we can find a registration of the event #}
-                    {% set registration = registrationService.findRegistrationByMeetingAndContact(tool.meeting, identity() ) %}
-
-                    <a class="thumbnail {% if not meetingService.isPassed(tool.meeting) and ((registration and registrationService.isCancelled(registration)) or not registration) %}thumbnail-action{% endif %}"
-                       href="{{ meetingLink(tool.meeting,'view', 'social') }}">
-
-                        {% if registration is not null %}
-                            {# The user is registered #}
-                            <div class="thumbnail-label">{{ translate("txt-registered") }}</div>
-                        {% elseif (meetingService.isRegistrationOpen(tool.meeting)) %}
-                            {# The user will register now #}
-                            <div class="thumbnail-label">{{ translate("txt-register-now") }}</div>
+                                <div class="thumbnail-name"><p>{{ ideaItem.idea.parseName()|upper|truncate(25) }}</p>
+                                </div>
+                            </a>
                         {% endif %}
 
-                        <div class="thumbnail-name"><p>{{ tool.meeting }}</p></div>
+                        {% if ideaItem.type is constant('\\Project\\ValueObject\\IdeaItem::TYPE_INVITE') %}
+                            <a class="thumbnail thumbnail-action"
+                               href="{{ ideaInviteLink(ideaItem.invite,'accept','social') }}">
+                                <div class="idea-thumbnail idea-thumbnail-blur"></div>
+
+                                <div class="thumbnail-label">{{ ideaItem.label }}</div>
+
+                                <div class="thumbnail-name"><p>{{ ideaItem.idea.parseName()|upper|truncate(25) }}</p>
+                                </div>
+                            </a>
+                        {% endif %}
+
+                        {% if ideaItem.type is constant('\\Project\\ValueObject\\IdeaItem::TYPE_JOIN_REQUEST') %}
+                            <a class="thumbnail thumbnail-inactive"
+                               href="{{ ideaLink(ideaItem.idea,'view','social') }}">
+                                <div class="idea-thumbnail idea-thumbnail-blur"></div>
+
+                                <div class="thumbnail-label inactive">{{ ideaItem.label }}</div>
+
+                                <div class="thumbnail-name"><p>{{ ideaItem.idea.parseName()|upper|truncate(25) }}</p>
+                                </div>
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                {% set newIdeaLink = ideaLink(null, 'new','social', tool) %}
+
+                {% if newIdeaLink %}
+                    <div class="col-xs-6 col-md-3">
+                        <a class="thumbnail" href="{{ newIdeaLink }}">
+
+                            <div class="thumbnail-label new-item"><i class="fa fa-plus"></i></div>
+
+                            <div class="thumbnail-name"><p
+                                        class="text-center">{{ translate("txt-create-new-idea") }}</p>
+                            </div>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+
+            {{ ideaToolLink(tool,'list-idea', 'button') }}
+
+
+            {# some extra stuff#}
+            <br><br>
+            <h2>{{ translate("txt-po-preparation") }}</h2>
+
+            <div class="row">
+
+
+                {% if tool.meeting %}
+                    <div class="col-xs-6 col-md-3">
+                        {# Try to see if we can find a registration of the event #}
+                        {% set registration = registrationService.findRegistrationByMeetingAndContact(tool.meeting, identity() ) %}
+
+                        <a class="thumbnail {% if not meetingService.isPassed(tool.meeting) and ((registration and registrationService.isCancelled(registration)) or not registration) %}thumbnail-action{% endif %}"
+                           href="{{ meetingLink(tool.meeting,'view', 'social') }}">
+
+                            {% if registration is not null %}
+                                {# The user is registered #}
+                                <div class="thumbnail-label">{{ translate("txt-registered") }}</div>
+                            {% elseif (meetingService.isRegistrationOpen(tool.meeting)) %}
+                                {# The user will register now #}
+                                <div class="thumbnail-label">{{ translate("txt-register-now") }}</div>
+                            {% endif %}
+
+                            <div class="thumbnail-name"><p>{{ tool.meeting }}</p></div>
+                        </a>
+                    </div>
+                {% endif %}
+
+                <div class="col-xs-6 col-md-3">
+                    <a class="thumbnail" href="{{ ideaToolLink(tool,'list-idea', 'social') }}">
+                        <img src="https://image.itea3.org/7fB2tsMdjHdoDdBbYKSLlTtdcFA=/fit-in/150x150/https://itea3.org/img/i/1744-1430817993.jpg">
+
+                        <div class="thumbnail-name"><p>{{ translate("txt-project-ideas") }}<br>{{ tool }}</p></div>
                     </a>
+
                 </div>
-            {% endif %}
 
-            <div class="col-xs-6 col-md-3">
-                <a class="thumbnail" href="{{ ideaToolLink(tool,'list-idea', 'social') }}">
-                    <img src="https://image.itea3.org/7fB2tsMdjHdoDdBbYKSLlTtdcFA=/fit-in/150x150/https://itea3.org/img/i/1744-1430817993.jpg">
+                <div class="col-xs-6 col-md-3">
+                    <a class="thumbnail" href="{{ url('community/contact/search') }}">
+                        <img src="https://image.itea3.org/Zqv9wG7Yi4FVGJo_-NHxTgZtyAU=/fit-in/150x150/https://itea3.org/img/i/1746-1430818037.jpg">
 
-                    <div class="thumbnail-name"><p>{{ translate("txt-project-ideas") }}<br>{{ tool }}</p></div>
-                </a>
+                        <div class="thumbnail-name"><p>{{ translate("txt-partner-search") }}</p></div>
+                    </a>
 
+                </div>
+
+                <div class="col-xs-6 col-md-3">
+                    <a class="thumbnail" href="/call-documents.html">
+                        <img src="https://image.itea3.org/-Ul4jSuKtwTeDWrm9UyNBNGYyAM=/fit-in/150x150/https://itea3.org/img/i/1745-1430818012.jpg">
+
+                        <div class="thumbnail-name"><p>{{ translate("txt-call-documents") }}</p></div>
+                    </a>
+
+                </div>
             </div>
-
-            <div class="col-xs-6 col-md-3">
-                <a class="thumbnail" href="{{ url('community/contact/search') }}">
-                    <img src="https://image.itea3.org/Zqv9wG7Yi4FVGJo_-NHxTgZtyAU=/fit-in/150x150/https://itea3.org/img/i/1746-1430818037.jpg">
-
-                    <div class="thumbnail-name"><p>{{ translate("txt-partner-search") }}</p></div>
-                </a>
-
-            </div>
-
-            <div class="col-xs-6 col-md-3">
-                <a class="thumbnail" href="/call-documents.html">
-                    <img src="https://image.itea3.org/-Ul4jSuKtwTeDWrm9UyNBNGYyAM=/fit-in/150x150/https://itea3.org/img/i/1745-1430818012.jpg">
-
-                    <div class="thumbnail-name"><p>{{ translate("txt-call-documents") }}</p></div>
-                </a>
-
-            </div>
-        </div>
+        {% endif %}
 
 
     </div>
@@ -300,7 +306,8 @@
     }
 
     .thumbnail-inactive:hover, a.thumbnail-inactive:hover {
-        border-color: rgb(128, 130, 133); !important;
+        border-color: rgb(128, 130, 133);
+    !important;
         color: rgb(128, 130, 133) !important;
     }
 
@@ -343,7 +350,6 @@
         color: #00a651;
         font-size: 6em;
     }
-
 
 
     a:hover, a:active {

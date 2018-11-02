@@ -26,17 +26,12 @@ use Zend\Navigation\Page\Mvc;
  *
  * @package Program\Navigation\Invokable
  */
-class FunderLabel extends AbstractNavigationInvokable
+final class FunderLabel extends AbstractNavigationInvokable
 {
-    /**
-     * Set the Project navigation label
-     *
-     * @param Mvc $page
-     *
-     * @return void;
-     */
     public function __invoke(Mvc $page): void
     {
+        $label = $this->translate('txt-nav-view');
+
         if ($this->getEntities()->containsKey(Funder::class)) {
             /** @var Funder $funder */
             $funder = $this->getEntities()->get(Funder::class);
@@ -49,8 +44,6 @@ class FunderLabel extends AbstractNavigationInvokable
                 )
             );
             $label = (string)$funder;
-        } else {
-            $label = $this->translate('txt-nav-view');
         }
         $page->set('label', $label);
     }

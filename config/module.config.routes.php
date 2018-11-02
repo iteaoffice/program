@@ -37,7 +37,7 @@ return [
                                     ],
                                 ],
                                 'child_routes' => [
-                                    'download-pdf' => [
+                                    'download-pdf'         => [
                                         'type'    => 'Segment',
                                         'options' => [
                                             'route'       => '/download/[:id].pdf',
@@ -63,7 +63,7 @@ return [
                                             ],
                                         ],
                                     ],
-                                    'download-document' => [
+                                    'download-document'    => [
                                         'type'    => 'Segment',
                                         'options' => [
                                             'route'       => '/download/[:id].docx',
@@ -76,7 +76,7 @@ return [
                                             ],
                                         ],
                                     ],
-                                    'download' => [
+                                    'download'             => [
                                         'type'    => 'Segment',
                                         'options' => [
                                             'route'       => '/download/[:id].zip',
@@ -84,7 +84,7 @@ return [
                                                 'id' => '\d+',
                                             ],
                                             'defaults'    => [
-                                                'action'    => 'download'
+                                                'action' => 'download'
                                             ],
                                         ],
                                     ],
@@ -256,7 +256,7 @@ return [
                             'index' => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/index[/call-:callId].html',
+                                    'route'    => '/index[/call-:call].html',
                                     'defaults' => [
                                         'action' => 'index',
                                     ],
@@ -601,36 +601,36 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes'  => [
-                            'list' => [
-                                'type'     => 'Segment',
-                                'options'  => [
+                            'list'            => [
+                                'type'    => 'Segment',
+                                'options' => [
                                     'route'    => '/list[/f-:encodedFilter][/page-:page].html',
                                     'defaults' => [
                                         'action' => 'list',
                                     ],
                                 ],
                             ],
-                            'new'  => [
-                                'type'     => 'Literal',
-                                'options'  => [
+                            'new'             => [
+                                'type'    => 'Literal',
+                                'options' => [
                                     'route'    => '/new.html',
                                     'defaults' => [
                                         'action' => 'new',
                                     ],
                                 ],
                             ],
-                            'view' => [
-                                'type'     => 'Segment',
-                                'options'  => [
+                            'view'            => [
+                                'type'    => 'Segment',
+                                'options' => [
                                     'route'    => '/view/[:id].html',
                                     'defaults' => [
                                         'action' => 'view',
                                     ],
                                 ],
                             ],
-                            'edit' => [
-                                'type'     => 'Segment',
-                                'options'  => [
+                            'edit'            => [
+                                'type'    => 'Segment',
+                                'options' => [
                                     'route'    => '/edit/[:id].html',
                                     'defaults' => [
                                         'action' => 'edit',
@@ -645,11 +645,11 @@ return [
                                         'id' => '\d+',
                                     ],
                                     'defaults'    => [
-                                        'action'    => 'upload'
+                                        'action' => 'upload'
                                     ],
                                 ],
                             ],
-                            'idea-files' => [
+                            'idea-files'      => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'       => '/idea-files/[:id].html',
@@ -657,7 +657,7 @@ return [
                                         'id' => '\d+',
                                     ],
                                     'defaults'    => [
-                                        'action'    => 'idea-files'
+                                        'action' => 'idea-files'
                                     ],
                                 ],
                             ],

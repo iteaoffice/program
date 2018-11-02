@@ -118,7 +118,7 @@ class CallService extends AbstractService
         return $yearSpan;
     }
 
-    public function findActiveVersionTypeInCall(Call $call): ?Type
+    public function findActiveVersionTypeInCall(Call $call): Type
     {
         $today = new \DateTime();
 
@@ -126,11 +126,7 @@ class CallService extends AbstractService
             return $this->entityManager->find(Type::class, Type::TYPE_PO);
         }
 
-        if ($call->getFppOpenDate() < $today && $call->getFppCloseDate() > $today) {
-            return $this->entityManager->find(Type::class, Type::TYPE_FPP);
-        }
-
-        return null;
+        return $this->entityManager->find(Type::class, Type::TYPE_FPP);
     }
 
     public function findLastActiveCall(): ?Call

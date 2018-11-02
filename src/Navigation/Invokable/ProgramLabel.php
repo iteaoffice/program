@@ -22,21 +22,16 @@ use Program\Entity\Program;
 use Zend\Navigation\Page\Mvc;
 
 /**
- * Class CallLabel
+ * Class ProgramLabel
  *
  * @package Program\Navigation\Invokable
  */
-class ProgramLabel extends AbstractNavigationInvokable
+final class ProgramLabel extends AbstractNavigationInvokable
 {
-    /**
-     * Set the Project navigation label
-     *
-     * @param Mvc $page
-     *
-     * @return void;
-     */
     public function __invoke(Mvc $page): void
     {
+        $label = $this->translate('txt-nav-view');
+
         if ($this->getEntities()->containsKey(Program::class)) {
             /** @var Program $program */
             $program = $this->getEntities()->get(Program::class);
@@ -49,8 +44,6 @@ class ProgramLabel extends AbstractNavigationInvokable
                 )
             );
             $label = (string)$program;
-        } else {
-            $label = $this->translate('txt-nav-view');
         }
         $page->set('label', $label);
     }

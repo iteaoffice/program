@@ -84,7 +84,7 @@ final class CallController extends AbstractActionController
 
     public function indexAction()
     {
-        $callId = $this->params('callId');
+        $callId = $this->params('call');
         $call = $this->callService->findLastActiveCall();
 
         if (null !== $callId) {
@@ -104,9 +104,8 @@ final class CallController extends AbstractActionController
         if (null !== $call) {
             $projects = $this->projectService->findInvolvedProjectsByCallAndContact($call, $contact);
 
-            $tool = $call->getIdeaTool()->first();
-            if ($tool) {
-                $ideas = $this->ideaService->getInvolvedIdeaListByToolAndContact($tool, $contact);
+            if ($call->hasIdeaTool()) {
+                $ideas = $this->ideaService->getInvolvedIdeaAndInviteListByToolAndContact($tool, $contact);
             }
         }
 

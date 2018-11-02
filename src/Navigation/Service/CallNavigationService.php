@@ -18,9 +18,9 @@ declare(strict_types=1);
 namespace Program\Navigation\Service;
 
 use Program\Service\CallService;
-use Project\Entity\Idea\Tool;
 use Zend\Navigation\Navigation;
 use Zend\Navigation\Page\Mvc;
+use Zend\Navigation\Page\Uri;
 use Zend\Router\RouteMatch;
 
 /**
@@ -56,36 +56,48 @@ class CallNavigationService
             return;
         }
 
-        $activeCall = $this->callService->findLastActiveCall();
+        /** @var Mvc $ideaIndex */
+        $callIndex = $this->navigation->findOneBy('id', 'callindex');
 
-        if (null !== $activeCall) {
-            //Update the label of the call page
-            $callIndex = $this->navigation->findOneBy('id', 'callindex');
-
-            if (null !== $callIndex) {
-                $callIndex->setLabel((string)$activeCall);
-            }
-
-            /** @var Mvc $ideaIndex */
-            $ideaIndex = $this->navigation->findOneBy('id', 'idealist');
-            /** @var Tool|bool $tool */
-            $tool = $activeCall->getIdeaTool()->first();
-            if ($tool && null !== $ideaIndex) {
-                $ideaIndex->setParams(['toolId' => $tool->getId()]);
-            }
-
-            /** @var Mvc $versiondocumentlist */
-            $versiondocumentlist = $this->navigation->findOneBy('id', 'versiondocumentlist');
-            if (null !== $versiondocumentlist) {
-                $versiondocumentlist->setParams(['call' => $activeCall->getId()]);
-            }
-
-            /** @var Mvc $evaluationlist */
-            $evaluationlist = $this->navigation->findOneBy('id', 'evaluationlist');
-            if (null !== $evaluationlist) {
-                $evaluationlist->setParams(['call' => $activeCall->getId()]);
-                $evaluationlist->setLabel((string)$callIndex . ' Evaluations');
-            }
+        if (null === $callIndex) {
+            return;
         }
+
+        $pages = $callIndex->getPages();
+
+        foreach ($this->callService->findOpenCall()->toArray() as $key => $activeCall) {
+            $callPage = new Uri();
+            $callPage->setOrder($key);
+            $callPage->setId($key);
+            $callPage->setUri('#');
+            $callPage->setLabel((string)$activeCall);
+
+            /** @var Mvc $page */
+            foreach ($pages as $page) {
+                if (!$activeCall->hasIdeaTool()
+                    && \in_array(
+                        $page->getRoute(),
+                        ['community/idea/list', 'community/idea/invite/retrieve'],
+                        true
+                    )
+                ) {
+                    continue;
+                }
+
+                $page->setActive(false);
+
+                $page->setParams(
+                    [
+                        'toolId' => $activeCall->hasIdeaTool() ? $activeCall->getIdeaTool()->first()->getId() : '',
+                        'call'   => $activeCall->getId()
+                    ]
+                );
+
+                $callPage->addPage(clone $page);
+            }
+            $this->navigation->addPage($callPage);
+        }
+
+        $this->navigation->removePage($callIndex);
     }
 }

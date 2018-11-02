@@ -118,7 +118,7 @@ class Call extends EntityRepository
             ->andWhere('program_entity_call_call.fppCloseDate > :today')
             ->setParameter('today', $today);
 
-        $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::DESC);
+        $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::ASC);
 
         $queryBuilder->setMaxResults(2);
 

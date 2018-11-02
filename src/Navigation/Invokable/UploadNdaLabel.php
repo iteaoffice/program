@@ -23,26 +23,21 @@ use Program\Entity\Nda;
 use Zend\Navigation\Page\Mvc;
 
 /**
- * Class ProjectLabel
+ * Class UploadNdaLabel
  *
- * @package Project\Navigation\Invokable
+ * @package Program\Navigation\Invokable
  */
-class UploadNdaLabel extends AbstractNavigationInvokable
+final class UploadNdaLabel extends AbstractNavigationInvokable
 {
-    /**
-     * @param Mvc $page
-     *
-     * @return void;
-     */
     public function __invoke(Mvc $page): void
     {
+        $label = $this->translate('txt-nav-nda');
+
         if ($this->getEntities()->containsKey(Call::class)) {
             /** @var Nda $nda */
             $call = $this->getEntities()->get(Call::class);
 
-            $label = (string)$this->translate(sprintf("txt-view-nda-for-call-%s", $call));
-        } else {
-            $label = $this->translate('txt-nav-nda');
+            $label = sprintf($this->translate("txt-view-nda-for-call-%s"), $call);
         }
         $page->set('label', $label);
     }
