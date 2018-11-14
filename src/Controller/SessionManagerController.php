@@ -231,7 +231,7 @@ final class SessionManagerController extends AbstractActionController
         /** @var Request $request */
         $request =  $this->getRequest();
         /** @var IdeaSession $ideaSession */
-        $ideaSession = $this->ideaService->findEntityById(IdeaSession::class, (int) $this->params('id'));
+        $ideaSession = $this->ideaService->find(IdeaSession::class, (int) $this->params('id'));
         $data        = $request->getFiles()->toArray();
         $errors      = [];
 
@@ -254,7 +254,7 @@ final class SessionManagerController extends AbstractActionController
     public function ideaFilesAction(): JsonModel
     {
         /** @var IdeaSession $ideaSession */
-        $ideaSession = $this->ideaService->findEntityById(IdeaSession::class, (int) $this->params('id'));
+        $ideaSession = $this->ideaService->find(IdeaSession::class, (int) $this->params('id'));
         $data        = [];
         $sizeParser  = new ParseSizeExtension();
 
