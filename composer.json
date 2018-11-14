@@ -34,7 +34,8 @@
   "require-dev": {
     "iteaoffice/testing": "^1.2",
     "iteaoffice/project": "^4.1",
-    "iteaoffice/contact": "^4.0"
+    "iteaoffice/contact": "^4.0",
+    "iteaoffice/search": "^1.1"
   },
   "autoload": {
     "psr-4": {
