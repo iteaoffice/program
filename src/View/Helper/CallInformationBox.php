@@ -34,15 +34,25 @@ final class CallInformationBox extends AbstractHelper
 
     public function __invoke(Calls $calls): string
     {
+        $showCalls = [];
+
+        if ($calls->hasUpcoming()) {
+            $showCalls[] = $calls->getUpcoming();
+        }
+
+        if (!$calls->isEmpty()) {
+            $showCalls = $calls->toArray();
+        }
+
         $return = '';
 
-        foreach ($calls->toArray() as $call) {
+        foreach ($showCalls as $call) {
             $contents = [
-                CallService::PO_NOT_OPEN  => '%call% for Project Outlines will open %diff% from now (%time%)',
-                CallService::PO_OPEN      => '%call% for Project Outlines will close %diff% from now (deadline: %time%)',
+                CallService::PO_NOT_OPEN  => '%call% for Project Outlines will <strong>open</strong> %diff% from now (<strong>%time%</strong>)',
+                CallService::PO_OPEN      => '%call% for Project Outlines will <strong>close</strong> %diff% from now (deadline: <strong>%time%</strong>)',
                 CallService::PO_CLOSED    => '%call% for Project Outlines closed %diff% ago (deadline: %time%)',
-                CallService::FPP_NOT_OPEN => '%call% for Full Project Proposals will open %diff% from now (deadline: %time%)',
-                CallService::FPP_OPEN     => '%call% for Full Project Proposals will close %diff% from now (deadline: %time%)',
+                CallService::FPP_NOT_OPEN => '%call% for Full Project Proposals will <strong>open</strong> %diff% from now (deadline: <strong>%time%</strong>)',
+                CallService::FPP_OPEN     => '%call% for Full Project Proposals will <strong>close</strong> %diff% from now (deadline: <strong>%time%</strong>)',
                 CallService::FPP_CLOSED   => '%call% for Full Project Proposals closed %diff% ago (deadline: %time%)',
             ];
             $callStatus = $this->callService->getCallStatus($call);

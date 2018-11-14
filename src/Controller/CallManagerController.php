@@ -174,13 +174,12 @@ final class CallManagerController extends AbstractActionController
                 $call = $form->getData();
                 $this->callService->save($call);
 
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translator->translate("txt-call-%s-has-been-created-successfully"),
-                            $call
-                        )
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate("txt-call-%s-has-been-created-successfully"),
+                        $call
+                    )
+                );
 
                 return $this->redirect()->toRoute('zfcadmin/call/view', ['id' => $call->getId()]);
             }
@@ -212,13 +211,12 @@ final class CallManagerController extends AbstractActionController
                 /** @var Call $call */
                 $this->callService->save($call);
 
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translator->translate("txt-call-%s-has-been-updated-successfully"),
-                            $call
-                        )
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate("txt-call-%s-has-been-updated-successfully"),
+                        $call
+                    )
+                );
 
                 return $this->redirect()->toRoute('zfcadmin/call/view', ['id' => $call->getId()]);
             }

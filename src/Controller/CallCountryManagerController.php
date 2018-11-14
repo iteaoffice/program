@@ -109,15 +109,14 @@ final class CallCountryManagerController extends AbstractActionController
 
             if (isset($data['delete'])) {
                 $this->callService->delete($callCountry);
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translator->translate(
-                                "txt-call-country-information-%s-has-successfully-been-removed"
-                            ),
-                            $country
-                        )
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate(
+                            "txt-call-country-information-%s-has-successfully-been-removed"
+                        ),
+                        $country
+                    )
+                );
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/call/view',
@@ -135,15 +134,14 @@ final class CallCountryManagerController extends AbstractActionController
                 $entity = $form->getData();
 
                 $this->callService->save($entity);
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translator->translate(
-                                "txt-call-country-information-%s-has-successfully-been-updated"
-                            ),
-                            $callCountry->getCountry()
-                        )
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate(
+                            "txt-call-country-information-%s-has-successfully-been-updated"
+                        ),
+                        $callCountry->getCountry()
+                    )
+                );
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/call/country/view',
@@ -201,15 +199,14 @@ final class CallCountryManagerController extends AbstractActionController
                 $callCountry->setCountry($country);
 
                 $this->callService->save($callCountry);
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translator->translate(
-                                "txt-call-country-information-%s-has-successfully-been-updated"
-                            ),
-                            $country
-                        )
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate(
+                            "txt-call-country-information-%s-has-successfully-been-updated"
+                        ),
+                        $country
+                    )
+                );
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/call/country/view',

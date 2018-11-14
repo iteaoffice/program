@@ -137,8 +137,7 @@ final class NdaController extends AbstractActionController
                 $fileData = $form->getData('file');
                 $this->callService->uploadNda($fileData['file'], $contact, $call);
 
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf($this->translator->translate("txt-nda-has-been-uploaded-successfully")));
+                $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-nda-has-been-uploaded-successfully")));
             }
 
 
@@ -154,12 +153,11 @@ final class NdaController extends AbstractActionController
             if ($data['selfApprove'] === '1') {
                 $this->callService->submitNda($contact, $call);
 
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translator->translate("txt-nda-has-been-submitted-and-approved-successfully")
-                        )
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate("txt-nda-has-been-submitted-and-approved-successfully")
+                    )
+                );
 
                 return $this->redirect()->toRoute('community');
             }
@@ -222,8 +220,7 @@ final class NdaController extends AbstractActionController
 
                 $ndaObject->setNda($nda);
                 $this->programService->save($ndaObject);
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf($this->translator->translate("txt-nda-has-been-replaced-successfully")));
+                $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-nda-has-been-replaced-successfully")));
 
                 return $this->redirect()->toRoute('community/program/nda/view', ['id' => $nda->getId()]);
             }

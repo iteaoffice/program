@@ -95,7 +95,9 @@ class CallService extends AbstractService
     {
         $repository = $this->entityManager->getRepository(Call::class);
 
-        return new Calls($repository->findOpenCall());
+        $upcomingCall = $repository->findUpcomingCall();
+
+        return new Calls($repository->findOpenCall(), $upcomingCall ?? $repository->findLastCall());
     }
 
     public function hasOpenCall(int $type): bool

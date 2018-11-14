@@ -122,14 +122,13 @@ final class DoaController extends AbstractActionController
                 $doa->setProgram($program);
                 $doaObject->setDoa($doa);
                 $this->programService->save($doaObject);
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translator->translate("txt-doa-for-organisation-%s-in-program-%s-has-been-uploaded"),
-                            $organisation,
-                            $program
-                        )
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate("txt-doa-for-organisation-%s-in-program-%s-has-been-uploaded"),
+                        $organisation,
+                        $program
+                    )
+                );
 
                 return $this->redirect()
                     ->toRoute('community/program/doa/view', ['id' => $doaObject->getDoa()->getId()]);
@@ -189,14 +188,13 @@ final class DoaController extends AbstractActionController
 
                 $programDoaObject->setDoa($doa);
                 $this->programService->save($programDoaObject);
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translator->translate("txt-doa-for-organisation-%s-in-program-%s-has-been-uploaded"),
-                            $doa->getOrganisation(),
-                            $doa->getProgram()
-                        )
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate("txt-doa-for-organisation-%s-in-program-%s-has-been-uploaded"),
+                        $doa->getOrganisation(),
+                        $doa->getProgram()
+                    )
+                );
 
                 return $this->redirect()->toRoute('program/doa/view', ['id' => $doa->getId()]);
             }

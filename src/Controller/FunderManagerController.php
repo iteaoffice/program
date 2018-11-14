@@ -112,8 +112,7 @@ final class FunderManagerController extends AbstractActionController
             $funder = $form->getData();
             $this->programService->save($funder);
 
-            $this->flashMessenger()->setNamespace('success')
-                ->addMessage(sprintf($this->translator->translate("txt-funder-has-been-created-successfully")));
+            $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-funder-has-been-created-successfully")));
 
 
             return $this->redirect()->toRoute('zfcadmin/funder/view', ['id' => $funder->getId()]);
@@ -147,8 +146,7 @@ final class FunderManagerController extends AbstractActionController
                 $funder = $form->getData();
 
                 $this->programService->delete($funder);
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf($this->translator->translate("txt-funder-has-been-deleted-successfully")));
+                $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-funder-has-been-deleted-successfully")));
 
                 return $this->redirect()->toRoute('zfcadmin/funder/list');
             }
@@ -156,8 +154,7 @@ final class FunderManagerController extends AbstractActionController
             if (!isset($data['cancel'])) {
                 $this->programService->save($funder);
 
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf($this->translator->translate("txt-funder-has-been-updated-successfully")));
+                $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-funder-has-been-updated-successfully")));
             }
 
             return $this->redirect()->toRoute('zfcadmin/funder/view', ['id' => $funder->getId()]);

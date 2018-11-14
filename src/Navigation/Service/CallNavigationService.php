@@ -65,7 +65,18 @@ class CallNavigationService
 
         $pages = $callIndex->getPages();
 
-        foreach ($this->callService->findOpenCall()->toArray() as $key => $activeCall) {
+        $calls = $this->callService->findOpenCall();
+        $showCalls = [];
+
+        if ($calls->hasUpcoming()) {
+            $showCalls[] = $calls->getUpcoming();
+        }
+
+        if (!$calls->isEmpty()) {
+            $showCalls = $calls->toArray();
+        }
+
+        foreach ($showCalls as $key => $activeCall) {
             $callPage = new Uri();
             $callPage->setOrder($key);
             $callPage->setId($key);

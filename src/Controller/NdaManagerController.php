@@ -253,13 +253,12 @@ final class NdaManagerController extends AbstractActionController
 
                 $this->callService->save($nda);
 
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            _("txt-nda-for-contact-%s-has-been-updated"),
-                            $nda->getContact()->getDisplayName()
-                        )
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        _("txt-nda-for-contact-%s-has-been-updated"),
+                        $nda->getContact()->getDisplayName()
+                    )
+                );
 
                 return $this->redirect()->toRoute('zfcadmin/nda/view', ['id' => $nda->getId()]);
             }
@@ -310,8 +309,7 @@ final class NdaManagerController extends AbstractActionController
                     $this->adminService->flushPermitsByContact($contact);
                 }
 
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf($this->translator->translate("txt-nda-has-been-uploaded-successfully")));
+                $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-nda-has-been-uploaded-successfully")));
             }
 
 

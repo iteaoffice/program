@@ -423,6 +423,11 @@ class Call extends AbstractEntity
         return !$this->ideaTool->isEmpty();
     }
 
+    public function isActive(): bool
+    {
+        return $this->active === self::ACTIVE;
+    }
+
     public function getProxyProject()
     {
         return $this->proxyProject;

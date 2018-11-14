@@ -23,13 +23,8 @@ use Project\Entity\Version\Type;
 /**
  * @category    Program
  */
-class Call extends EntityRepository
+final class Call extends EntityRepository
 {
-    /**
-     * @param array $filter
-     *
-     * @return QueryBuilder
-     */
     public function findFiltered(array $filter): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
@@ -125,6 +120,45 @@ class Call extends EntityRepository
         return $queryBuilder->getQuery()->useQueryCache(true)->getResult();
     }
 
+    public function findUpcomingCall(): ?Entity\Call\Call
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('program_entity_call_call');
+        $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
+
+        //Filter here on the active calls
+        $queryBuilder->andWhere('program_entity_call_call.active = :active');
+        $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
+
+        $today = new \DateTime();
+
+        $queryBuilder->andWhere('program_entity_call_call.poOpenDate > :today')
+            ->setParameter('today', $today);
+
+        $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::ASC);
+
+        $queryBuilder->setMaxResults(1);
+
+        return $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult();
+    }
+
+    public function findLastCall(): ?Entity\Call\Call
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('program_entity_call_call');
+        $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
+
+        //Filter here on the active calls
+        $queryBuilder->andWhere('program_entity_call_call.active = :active');
+        $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
+
+        $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::DESC);
+
+        $queryBuilder->setMaxResults(1);
+
+        return $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult();
+    }
+
     public function findPreviousCall(Entity\Call\Call $call): ?Entity\Call\Call
     {
         $queryBuilder = $this->_em->createQueryBuilder();
@@ -188,6 +222,8 @@ class Call extends EntityRepository
         if ($program !== null) {
             $queryBuilder->andWhere('program_entity_call_call.program = :program')->setParameter('program', $program);
         }
+
+        $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::ASC);
 
         return $queryBuilder->getQuery()->useQueryCache(true)->getResult();
     }
