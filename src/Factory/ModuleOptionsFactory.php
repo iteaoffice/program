@@ -12,6 +12,8 @@
  *
  * @link        http://github.com/iteaoffice/main for the canonical source repository
  */
+declare(strict_types=1);
+
 namespace Program\Factory;
 
 use Interop\Container\ContainerInterface;
@@ -30,12 +32,14 @@ final class ModuleOptionsFactory implements FactoryInterface
      * @param string             $requestedName
      * @param array|null         $options
      *
-     * @return ModuleOptions
+     * @return object|ModuleOptions
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ModuleOptions
     {
         $config = $container->get('Config');
 
-        return new ModuleOptions(isset($config['program_option']) ? $config['program_option'] : []);
+        return new ModuleOptions($config['program_option'] ?? []);
     }
 }

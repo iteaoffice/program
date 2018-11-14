@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Program\View\Helper;
 
 use Program\Acl\Assertion\Funder as FunderAssertion;
@@ -18,24 +20,15 @@ use Program\Entity\Funder;
  *
  * @category    Funder
  */
-class FunderLink extends LinkAbstract
+class FunderLink extends AbstractLink
 {
     /**
-     * @var Funder
-     */
-    protected $funder;
-
-    /**
-     * @param Funder $funder
+     * @param Funder|null $funder
      * @param string $action
      * @param string $show
-     * @param null   $page
-     * @param null   $alternativeShow
-     *
+     * @param null $page
+     * @param null $alternativeShow
      * @return string
-     *
-     * @throws \RuntimeException
-     * @throws \Exception
      */
     public function __invoke(
         Funder $funder = null,
@@ -43,26 +36,25 @@ class FunderLink extends LinkAbstract
         $show = 'name',
         $page = null,
         $alternativeShow = null
-    ) {
+    ): string {
         $this->setFunder($funder);
         $this->setAction($action);
         $this->setShow($show);
         $this->setPage($page);
 
-        if (! $this->hasAccess($this->getFunder(), FunderAssertion::class, $this->getAction())) {
+        if (!$this->hasAccess($this->getFunder(), FunderAssertion::class, $this->getAction())) {
             return '';
         }
 
         /*
          * If the alternativeShow is not null, use it an otherwise take the page
          */
-        if (! is_null($alternativeShow)) {
+        $this->setAlternativeShow($page);
+        if (!\is_null($alternativeShow)) {
             $this->setAlternativeShow($alternativeShow);
-        } else {
-            $this->setAlternativeShow($page);
         }
 
-        if (! is_null($this->getFunder()->getContact())) {
+        if (!\is_null($this->getFunder()->getContact())) {
             $this->setShowOptions(
                 [
                     'name' => $this->getFunder()->getContact()->getDisplayName(),
@@ -76,29 +68,9 @@ class FunderLink extends LinkAbstract
     }
 
     /**
-     * @return Funder
-     */
-    public function getFunder()
-    {
-        if (is_null($this->funder)) {
-            $this->funder = new Funder();
-        }
-
-        return $this->funder;
-    }
-
-    /**
-     * @param Funder $funder
-     */
-    public function setFunder($funder)
-    {
-        $this->funder = $funder;
-    }
-
-    /**
      * @throws \Exception
      */
-    public function parseAction()
+    public function parseAction(): void
     {
         switch ($this->getAction()) {
             case 'new':

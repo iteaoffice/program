@@ -9,7 +9,7 @@
 
         <div class="row">
             <div class="col-md-3">
-                {{ contactPhoto(funder.contact) }}
+                {{ contactPhoto(funder.contact, 300, false, true) }}
             </div>
             <div class="col-md-9">
                 <dl>
@@ -26,8 +26,10 @@
 
                     {% if funder.website %}
                         <dt>{{ translate("txt-website") }}</dt>
-                        {# show only the first result#}
-                        <dd><a href="{{ funder.website }}">{{ funder.website }}</a></dd>
+
+                        {% set website = funder.website|split('|') %}
+
+                        <dd><a href="{{ website[0] }}">{% if website[1] %}{{ website[1] }}{% else %}{{ website[0] }}{% endif %}</a></dd>
                     {% endif %}
 
                     <dt>{{ translate("txt-extra-information") }}</dt>

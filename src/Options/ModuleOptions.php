@@ -12,6 +12,8 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\Options;
 
 use Zend\Stdlib\AbstractOptions;
@@ -59,6 +61,20 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
      * @var String
      */
     protected $displayName = 'name';
+
+    /**
+     * Header logo for Word documents
+     *
+     * @var string
+     */
+    protected $headerLogo = '';
+
+    /**
+     * Footer image for Word documents
+     *
+     * @var string
+     */
+    protected $footerImage = '';
 
     /**
      * @return string
@@ -157,6 +173,42 @@ class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
     {
         $this->blankTemplate = $blankTemplate;
 
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHeaderLogo(): string
+    {
+        return $this->headerLogo;
+    }
+
+    /**
+     * @param string $headerLogo
+     * @return ModuleOptions
+     */
+    public function setHeaderLogo(string $headerLogo): ModuleOptions
+    {
+        $this->headerLogo = $headerLogo;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFooterImage(): string
+    {
+        return $this->footerImage;
+    }
+
+    /**
+     * @param string $footerImage
+     * @return ModuleOptions
+     */
+    public function setFooterImage(string $footerImage): ModuleOptions
+    {
+        $this->footerImage = $footerImage;
         return $this;
     }
 }

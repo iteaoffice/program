@@ -17,15 +17,22 @@
 {{ ztbformelement(call.get('call')) }}
 {{ ztbformelement(call.get('poOpenDate')) }}
 {{ ztbformelement(call.get('poCloseDate')) }}
+{{ ztbformelement(call.get('loiSubmissionDate')) }}
 {{ ztbformelement(call.get('fppOpenDate')) }}
 {{ ztbformelement(call.get('fppCloseDate')) }}
+{{ ztbformelement(call.get('doaSubmissionDate')) }}
+{{ ztbformelement(call.get('labelAnnouncementDate')) }}
 {{ ztbformelement(call.get('active')) }}
 {{ ztbformelement(call.get('doaRequirement')) }}
 {{ ztbformelement(call.get('ndaRequirement')) }}
 {{ ztbformelement(call.get('loiRequirement')) }}
+{{ ztbformelement(call.get('projectReport')) }}
 
-<div class="form-group">
-    <div class="col-sm-offset-3 col-sm-9">
+
+{{ formelement(form.get('csrf')) }}
+
+<div class="form-group row">
+    <div class="offset-md-3 col-sm-offset-3 col-sm-9">
         {{ formelement(form.get('submit')) }}
         {{ formelement(form.get('cancel')) }}
     </div>
@@ -39,3 +46,5 @@
         dateFormat: 'yy-mm-dd'
     });
 </script>
+
+{{ form().closeTag()|raw }}

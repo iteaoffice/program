@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Program\Acl\Assertion;
 
 use Admin\Entity\Access;
@@ -18,7 +20,7 @@ use Zend\Permissions\Acl\Role\RoleInterface;
 /**
  * Class Program.
  */
-class Funder extends AssertionAbstract
+class Funder extends AbstractAssertion
 {
     /**
      * Returns true if and only if the assertion conditions are met.
@@ -34,8 +36,12 @@ class Funder extends AssertionAbstract
      *
      * @return bool
      */
-    public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
-    {
-        return $this->rolesHaveAccess([Access::ACCESS_OFFICE]);
+    public function assert(
+        Acl $acl,
+        RoleInterface $role = null,
+        ResourceInterface $resource = null,
+        $privilege = null
+    ): bool {
+        return $this->rolesHaveAccess(Access::ACCESS_OFFICE);
     }
 }

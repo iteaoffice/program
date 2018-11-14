@@ -11,14 +11,13 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\Entity;
 
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
 
 /**
  * ProjectDomain.
@@ -28,7 +27,7 @@ use Zend\InputFilter\InputFilterInterface;
  * @Annotation\Name("project_domain")
  * @ORM\Entity
  */
-class Domain extends EntityAbstract
+class Domain extends AbstractEntity
 {
     /**
      * @ORM\Column(name="domain_id", type="integer", nullable=false)
@@ -44,7 +43,6 @@ class Domain extends EntityAbstract
      * @Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-domain"})
      * @Annotation\Attributes({"required":"true","class":"span3"})
-     * @Annotation\Required(true)
      *
      * @var string
      */
@@ -67,8 +65,7 @@ class Domain extends EntityAbstract
     private $color;
     /**
      * @ORM\Column(name="main_id", type="integer", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\Text")
-     * @Annotation\Options({"label":"txt-mian_id"})
+     * @Annotation\Exclude()
      *
      * @var integer
      */
@@ -115,10 +112,10 @@ class Domain extends EntityAbstract
      */
     public function __construct()
     {
-        $this->project      = new Collections\ArrayCollection();
+        $this->project = new Collections\ArrayCollection();
         $this->organisation = new Collections\ArrayCollection();
-        $this->contact      = new Collections\ArrayCollection();
-        $this->idea         = new Collections\ArrayCollection();
+        $this->contact = new Collections\ArrayCollection();
+        $this->idea = new Collections\ArrayCollection();
     }
 
     /**
@@ -141,138 +138,20 @@ class Domain extends EntityAbstract
     }
 
     /**
-     * Returns the string identifier of the Resource.
-     *
-     * @return string
+     * @param $property
+     * @return bool
      */
-    public function getResourceId()
+    public function __isset($property)
     {
-        return __NAMESPACE__ . ':' . __CLASS__ . ':' . $this->id;
+        return isset($this->$property);
     }
 
     /**
-     * ToString.
-     *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->domain;
-    }
-
-    public function populate()
-    {
-        return $this->getArrayCopy();
-    }
-
-    /**
-     * Needed for the hydration of form elements.
-     *
-     * @return array
-     */
-    public function getArrayCopy()
-    {
-        return [
-            'id'           => $this->id,
-            'domain'       => $this->domain,
-            'description'  => $this->description,
-            'color'        => $this->color,
-            'mainId'       => $this->mainId,
-            'roadmap'      => $this->roadmap,
-            'project'      => $this->project,
-            'organisation' => $this->organisation,
-            'contact'      => $this->contact,
-        ];
-    }
-
-    /**
-     * @param InputFilterInterface $inputFilter
-     *
-     * @throws \Exception
-     */
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
-        throw new \Exception(sprintf("This class %s is unused", __CLASS__));
-    }
-
-    /**
-     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
-     */
-    public function getInputFilter()
-    {
-        if (! $this->inputFilter) {
-            $inputFilter = new InputFilter();
-            $factory     = new InputFactory();
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'       => 'domain',
-                        'required'   => true,
-                        'filters'    => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
-                        ],
-                        'validators' => [
-                            [
-                                'name'    => 'StringLength',
-                                'options' => [
-                                    'encoding' => 'UTF-8',
-                                    'min'      => 1,
-                                    'max'      => 100,
-                                ],
-                            ],
-                        ],
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'description',
-                        'required' => false,
-                        'filters'  => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
-                        ],
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'color',
-                        'required' => false,
-                        'filters'  => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
-                        ],
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'mainId',
-                        'required' => false,
-                        'filters'  => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
-                        ],
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'roadmap',
-                        'required' => true,
-                    ]
-                )
-            );
-            $this->inputFilter = $inputFilter;
-        }
-
-        return $this->inputFilter;
     }
 
     /**
@@ -372,7 +251,7 @@ class Domain extends EntityAbstract
     }
 
     /**
-     * @return \Contact\Entity\Contact[]
+     * @return \Contact\Entity\Contact[]|Collections\Collection
      */
     public function getContact()
     {
@@ -380,7 +259,7 @@ class Domain extends EntityAbstract
     }
 
     /**
-     * @param \Contact\Entity\Contact[] $contact
+     * @param \Contact\Entity\Contact[]|Collections\ArrayCollection $contact
      */
     public function setContact($contact)
     {

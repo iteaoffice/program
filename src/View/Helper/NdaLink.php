@@ -12,127 +12,86 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\View\Helper;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Contact\Entity\Contact;
 use Program\Acl\Assertion\Nda as NdaAssertion;
 use Program\Entity\Call\Call;
 use Program\Entity\Nda;
 
 /**
- * Create a link to an project.
+ * Class NdaLink
  *
- * @category   Program
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    https://itea3.org/licence.txt proprietary
- *
- * @link       https://itea3.org
+ * @package Program\View\Helper
  */
-class NdaLink extends LinkAbstract
+class NdaLink extends AbstractLink
 {
     /**
-     * @var Nda
-     */
-    protected $nda;
-    /**
-     * @var Call;
-     */
-    protected $call;
-
-    /**
-     * @param Nda|null  $nda
-     * @param string    $action
-     * @param string    $show
-     * @param Call|null $call
+     * @param Nda|null     $nda
+     * @param string       $action
+     * @param string       $show
+     * @param Call|null    $call
+     * @param Contact|null $contact
      *
      * @return string
      */
-    public function __invoke(Nda $nda = null, $action = 'upload', $show = 'text', Call $call = null)
-    {
+    public function __invoke(
+        Nda $nda = null,
+        $action = 'submit',
+        $show = 'text',
+        Call $call = null,
+        Contact $contact = null
+    ): string {
         $this->setNda($nda);
         $this->setCall($call);
         $this->setAction($action);
         $this->setShow($show);
-        if (! $this->hasAccess($this->getNda(), NdaAssertion::class, $this->getAction())) {
+        $this->setContact($contact);
+
+        if (!$this->hasAccess($this->getNda(), NdaAssertion::class, $this->getAction())) {
             return '';
         }
 
-        if (! is_null($this->getNda())) {
-            $this->addRouterParam('id', $this->getNda()->getId());
+        $this->addRouterParam('id', $this->getNda()->getId());
+        $this->addRouterParam('callId', $this->getCall()->getId());
+        $this->addRouterParam('contactId', $this->getContact()->getId());
+
+        /*
+         * Set the non-standard options needed to give an other link value
+         */
+        if (!$this->getNda()->isEmpty()) {
+            $this->setShowOptions(
+                [
+                    'name' => $this->getNda()->parseFileName(),
+                ]
+            );
+        }
+
+
+        if (!\is_null($this->getNda()->getId()) && !\is_null($this->getNda()->getContentType())) {
+            $this->addRouterParam('ext', $this->getNda()->getContentType()->getExtension());
         }
 
         return $this->createLink();
     }
 
     /**
-     * @return Nda
-     */
-    public function getNda()
-    {
-        if (is_null($this->nda)) {
-            $this->nda = new Nda();
-        }
-
-        if (! is_null($this->getCall())) {
-            $arrayCollection = new ArrayCollection([$this->getCall()]);
-            $this->nda->setCall($arrayCollection);
-        }
-
-        return $this->nda;
-    }
-
-    /**
-     * @param Nda $nda
-     */
-    public function setNda($nda)
-    {
-        $this->nda = $nda;
-    }
-
-    /**
-     * @return Call
-     */
-    public function getCall()
-    {
-        return $this->call;
-    }
-
-    /**
-     * @param Call $call
-     *
-     * @return NdaLink
-     */
-    public function setCall($call)
-    {
-        $this->call = $call;
-
-        return $this;
-    }
-
-
-    /**
      * Extract the relevant parameters based on the action.
      */
-    public function parseAction()
+    public function parseAction(): void
     {
         switch ($this->getAction()) {
-            case 'upload':
-                $this->setRouter('community/program/nda/upload');
-                if (! is_null($this->getCall())) {
-                    $this->setText(sprintf($this->translate("txt-upload-nda-for-call-%s-title"), $this->getCall()));
-                    $this->addRouterParam('id', $this->getCall()->getId());
-                } elseif (! is_null($this->getNda()->getCall())) {
-                    $this->setText(
-                        sprintf(
-                            $this->translate("txt-upload-nda-for-call-%s-title"),
-                            $this->getNda()->getCall()
-                        )
-                    );
-                    $this->addRouterParam('id', $this->getNda()->getCall()->getId());
-                } else {
-                    $this->setText(sprintf($this->translate("txt-upload-nda-title")));
+            case 'submit':
+                $this->setRouter('community/program/nda/submit');
+                $this->setText(sprintf($this->translate("txt-submit-nda-title")));
+
+
+                if (!\is_null($this->getCall()->getId())) {
+                    $this->setText(sprintf($this->translate("txt-submit-nda-for-call-%s-title"), $this->getCall()));
                 }
+
                 break;
             case 'replace':
                 $this->setRouter('community/program/nda/replace');
@@ -141,19 +100,24 @@ class NdaLink extends LinkAbstract
             case 'render':
                 $this->setRouter('community/program/nda/render');
                 $this->setText(sprintf($this->translate("txt-render-general-nda-title")));
-                /**
-                 * Produce special texts for call-dedicated NDA's
-                 */
-                if ($call = $this->getNda()->getCall()) {
-                    $this->setText(sprintf($this->translate("txt-render-nda-for-call-%s-title"), $call));
-                    $this->addRouterParam('callId', $call->getId());
-                } elseif (! is_null($this->getCall())) {
+
+                if (null !== $this->getCall()->getId()) {
                     $this->setText(sprintf($this->translate("txt-render-nda-for-call-%s-title"), $this->getCall()));
-                    $this->addRouterParam('callId', $this->getCall()->getId());
                 }
+
+                break;
+            case 'render-admin':
+                $this->setRouter('zfcadmin/nda/render');
+                $this->setText(sprintf($this->translate("txt-render-general-nda-title-for-%s"), $this->getContact()->parseFullName()));
+
+                if (null !== $this->getCall()->getId()) {
+                    $this->setText(sprintf($this->translate("txt-render-nda-for-call-%s-for-%s-title"), $this->getCall(), $this->getContact()->parseFullName()));
+                }
+
                 break;
             case 'download':
                 $this->setRouter('community/program/nda/download');
+
                 $this->setText(sprintf($this->translate("txt-download-nda-%s-title"), $this->getNda()));
                 break;
             case 'approval-admin':
@@ -162,25 +126,29 @@ class NdaLink extends LinkAbstract
                 break;
             case 'view-admin':
                 $this->setRouter('zfcadmin/nda/view');
+
                 $this->setText(
                     sprintf(
-                        $this->translate("txt-view-nda-for-%s-for-%s-title"),
-                        ! is_null($this->getNda()->getCall()) ? $this->getNda()->getCall() : 'LR',
-                        $this->getNda()->getContact()->getDisplayName()
+                        $this->translate("txt-view-nda-%s-title"),
+                        $this->getNda()->parseFileName()
                     )
                 );
+
                 break;
             case 'edit-admin':
                 $this->setRouter('zfcadmin/nda/edit');
                 $this->setText(
                     sprintf(
-                        $this->translate("txt-edit-nda-for-%s-for-%s-link-title"),
-                        ! is_null($this->getNda()->getCall()) ? $this->getNda()->getCall() : 'LR',
-                        $this->getNda()->getContact()->getDisplayName()
+                        $this->translate("txt-edit-nda-%s-title"),
+                        $this->getNda()->parseFileName()
                     )
                 );
                 break;
+            case 'upload-admin':
+                $this->setRouter('zfcadmin/nda/upload');
+                $this->setText(sprintf($this->translate("txt-upload-nda")));
 
+                break;
             default:
                 throw new \InvalidArgumentException(
                     sprintf(

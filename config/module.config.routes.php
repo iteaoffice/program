@@ -7,6 +7,7 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
+
 use Program\Controller;
 
 return [
@@ -36,7 +37,7 @@ return [
                                     ],
                                 ],
                                 'child_routes' => [
-                                    'download' => [
+                                    'download-pdf'         => [
                                         'type'    => 'Segment',
                                         'options' => [
                                             'route'       => '/download/[:id].pdf',
@@ -44,8 +45,46 @@ return [
                                                 'id' => '\d+',
                                             ],
                                             'defaults'    => [
-                                                'action'    => 'download',
+                                                'action'    => 'download-pdf',
                                                 'privilege' => 'download-session',
+                                            ],
+                                        ],
+                                    ],
+                                    'download-spreadsheet' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'       => '/download/[:id].xlsx',
+                                            'constraints' => [
+                                                'id' => '\d+',
+                                            ],
+                                            'defaults'    => [
+                                                'action'    => 'download-spreadsheet',
+                                                'privilege' => 'download-session',
+                                            ],
+                                        ],
+                                    ],
+                                    'download-document'    => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'       => '/download/[:id].docx',
+                                            'constraints' => [
+                                                'id' => '\d+',
+                                            ],
+                                            'defaults'    => [
+                                                'action'    => 'download-document',
+                                                'privilege' => 'download-session',
+                                            ],
+                                        ],
+                                    ],
+                                    'download'             => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'       => '/download/[:id].zip',
+                                            'constraints' => [
+                                                'id' => '\d+',
+                                            ],
+                                            'defaults'    => [
+                                                'action' => 'download'
                                             ],
                                         ],
                                     ],
@@ -72,6 +111,19 @@ return [
                                             'defaults'    => [
                                                 'action'    => 'upload',
                                                 'privilege' => 'upload',
+                                            ],
+                                        ],
+                                    ],
+                                    'submit'   => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'       => '/submit[/call-:callId].html',
+                                            'constraints' => [
+                                                'id' => '\d+',
+                                            ],
+                                            'defaults'    => [
+                                                'action'    => 'submit',
+                                                'privilege' => 'submit',
                                             ],
                                         ],
                                     ],
@@ -114,7 +166,7 @@ return [
                                     'download' => [
                                         'type'    => 'Segment',
                                         'options' => [
-                                            'route'       => '/download/nda-[:id].pdf',
+                                            'route'       => '/download/nda-[:id].[:ext]',
                                             'constraints' => [
                                                 'id' => '\d+',
                                             ],
@@ -185,6 +237,28 @@ return [
                                                 'privilege' => 'download',
                                             ],
                                         ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'call'    => [
+                        'type'         => 'Literal',
+                        'priority'     => 1000,
+                        'options'      => [
+                            'route'    => '/call',
+                            'defaults' => [
+                                'controller' => Controller\CallController::class,
+                                'action'     => 'index',
+                            ],
+                        ],
+                        'child_routes' => [
+                            'index' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/index[/call-:call].html',
+                                    'defaults' => [
+                                        'action' => 'index',
                                     ],
                                 ],
                             ],
@@ -432,6 +506,33 @@ return [
                                     ],
                                 ],
                             ],
+                            'upload'   => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'priority'    => 100,
+                                    'route'       => '/upload/contact-[:contactId].html',
+                                    'constraints' => [
+                                        'contactId' => '[0-9_-]+',
+                                    ],
+                                    'defaults'    => [
+                                        'action'    => 'upload',
+                                        'privilege' => 'upload-admin',
+                                    ],
+                                ],
+                            ],
+                            'render'   => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'       => '/render/contact-[:contactId][/call-:callId].pdf',
+                                    'constraints' => [
+                                        'id' => '\d+',
+                                    ],
+                                    'defaults'    => [
+                                        'action'    => 'render',
+                                        'privilege' => 'render',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                     'funder'  => [
@@ -483,6 +584,80 @@ return [
                                     'route'    => '/edit/[:id].html',
                                     'defaults' => [
                                         'action' => 'edit',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'session' => [
+                        'type'          => 'Segment',
+                        'options'       => [
+                            'route'    => '/session',
+                            'defaults' => [
+                                'controller' => Controller\SessionManagerController::class,
+                                'action'     => 'list',
+                                'page'       => 1,
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes'  => [
+                            'list'            => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/list[/f-:encodedFilter][/page-:page].html',
+                                    'defaults' => [
+                                        'action' => 'list',
+                                    ],
+                                ],
+                            ],
+                            'new'             => [
+                                'type'    => 'Literal',
+                                'options' => [
+                                    'route'    => '/new.html',
+                                    'defaults' => [
+                                        'action' => 'new',
+                                    ],
+                                ],
+                            ],
+                            'view'            => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/view/[:id].html',
+                                    'defaults' => [
+                                        'action' => 'view',
+                                    ],
+                                ],
+                            ],
+                            'edit'            => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/edit/[:id].html',
+                                    'defaults' => [
+                                        'action' => 'edit',
+                                    ],
+                                ],
+                            ],
+                            'upload-document' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'       => '/upload/[:id].html',
+                                    'constraints' => [
+                                        'id' => '\d+',
+                                    ],
+                                    'defaults'    => [
+                                        'action' => 'upload'
+                                    ],
+                                ],
+                            ],
+                            'idea-files'      => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'       => '/idea-files/[:id].html',
+                                    'constraints' => [
+                                        'id' => '\d+',
+                                    ],
+                                    'defaults'    => [
+                                        'action' => 'idea-files'
                                     ],
                                 ],
                             ],

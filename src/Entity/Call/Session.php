@@ -11,22 +11,23 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\Entity\Call;
 
-use Doctrine\Common\Collections;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Program\Entity\EntityAbstract;
+use Program\Entity\AbstractEntity;
 use Zend\Form\Annotation;
 
 /**
  * @ORM\Table(name="programcall_session")
- * @ORM\Entity
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
- * @Annotation\Name("programcall_session")
+ * @ORM\Entity(repositoryClass="Program\Repository\Call\Session")
  *
  * @category    Program
  */
-class Session extends EntityAbstract
+class Session extends AbstractEntity
 {
     /**
      * @ORM\Column(name="session_id", type="integer", nullable=false)
@@ -49,12 +50,41 @@ class Session extends EntityAbstract
      * @ORM\ManyToOne(targetEntity="Program\Entity\Call\Call", cascade={"persist"}, inversedBy="session")
      * @ORM\JoinColumn(name="programcall_id", referencedColumnName="programcall_id", nullable=false)
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
-     * @Annotation\Options({"target_class":"Program\Entity\Call\Call"})
-     * @Annotation\Attributes({"label":"txt-program-call"})
+     * @Annotation\Options({
+     *     "label":"txt-program-call",
+     *     "target_class": "Program\Entity\Call\Call",
+     *     "find_method": {
+     *         "name": "findBy",
+     *         "params": {
+     *             "criteria": {},
+     *             "orderBy": {"id": "DESC"}
+     *         }
+     *     }
+     * })
      *
      * @var \Program\Entity\Call\Call
      */
     private $call;
+    /**
+     * @ORM\ManyToOne(targetEntity="Project\Entity\Idea\Tool", cascade={"persist"}, inversedBy="session")
+     * @ORM\JoinColumn(name="tool_id", referencedColumnName="tool_id", nullable=true)
+     * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
+     * @Annotation\Options({
+     *     "label":"txt-idea-tool",
+     *     "help-block":"txt-idea-tool-help-block",
+     *     "target_class":"Project\Entity\Idea\Tool",
+     *     "find_method": {
+     *         "name": "findBy",
+     *         "params": {
+     *             "criteria": {},
+     *             "orderBy": {"id": "DESC"}
+     *         }
+     *     }
+     * })
+     *
+     * @var \Project\Entity\Idea\Tool|null
+     */
+    private $tool;
     /**
      * @ORM\Column(name="date", type="datetime", nullable=false)
      * @Annotation\Type("\Zend\Form\Element\Date")
@@ -71,15 +101,24 @@ class Session extends EntityAbstract
      * )
      * @Annotation\Exclude()
      *
-     * @var \Event\Entity\Track[]|Collections\ArrayCollection
+     * @var \Event\Entity\Track[]|Collection
      */
     private $track;
     /**
-     * @ORM\OneToMany(targetEntity="\Project\Entity\Idea\Session", cascade={"persist"}, mappedBy="session")
+     * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Session", cascade={"persist", "remove"}, mappedBy="session", orphanRemoval=true)
      * @ORM\OrderBy({"schedule" = "ASC"})
-     * @Annotation\Exclude()
+     * @Annotation\ComposedObject({
+     *     "target_object":"Project\Entity\Idea\Session",
+     *     "is_collection":"true"
+     * })
+     * @Annotation\Options({
+     *     "allow_add":"true",
+     *     "allow_remove":"true",
+     *     "count":0,
+     *     "label":"txt-ideas"
+     * })
      *
-     * @var \Project\Entity\Idea\Session[]|Collections\ArrayCollection
+     * @var \Project\Entity\Idea\Session[]|Collection
      */
     private $ideaSession;
 
@@ -88,8 +127,8 @@ class Session extends EntityAbstract
      */
     public function __construct()
     {
-        $this->track       = new Collections\ArrayCollection();
-        $this->ideaSession = new Collections\ArrayCollection();
+        $this->track       = new ArrayCollection();
+        $this->ideaSession = new ArrayCollection();
     }
 
     /**
@@ -116,6 +155,15 @@ class Session extends EntityAbstract
     }
 
     /**
+     * @param $property
+     * @return bool
+     */
+    public function __isset($property)
+    {
+        return isset($this->$property);
+    }
+
+    /**
      * @return int
      */
     public function getId()
@@ -125,10 +173,9 @@ class Session extends EntityAbstract
 
     /**
      * @param int $id
-     *
      * @return Session
      */
-    public function setId($id)
+    public function setId(int $id): Session
     {
         $this->id = $id;
 
@@ -138,17 +185,16 @@ class Session extends EntityAbstract
     /**
      * @return string
      */
-    public function getSession()
+    public function getSession(): ?string
     {
         return $this->session;
     }
 
     /**
      * @param string $session
-     *
      * @return Session
      */
-    public function setSession($session)
+    public function setSession(string $session): Session
     {
         $this->session = $session;
 
@@ -158,17 +204,16 @@ class Session extends EntityAbstract
     /**
      * @return Call
      */
-    public function getCall()
+    public function getCall(): ?Call
     {
         return $this->call;
     }
 
     /**
      * @param Call $call
-     *
      * @return Session
      */
-    public function setCall($call)
+    public function setCall(Call $call): Session
     {
         $this->call = $call;
 
@@ -176,19 +221,37 @@ class Session extends EntityAbstract
     }
 
     /**
+     * @return null|\Project\Entity\Idea\Tool
+     */
+    public function getTool(): ?\Project\Entity\Idea\Tool
+    {
+        return $this->tool;
+    }
+
+    /**
+     * @param null|\Project\Entity\Idea\Tool $tool
+     * @return Session
+     */
+    public function setTool($tool): Session
+    {
+        $this->tool = $tool;
+
+        return $this;
+    }
+
+    /**
      * @return \DateTime
      */
-    public function getDate()
+    public function getDate(): ?\DateTime
     {
         return $this->date;
     }
 
     /**
      * @param \DateTime $date
-     *
      * @return Session
      */
-    public function setDate($date)
+    public function setDate(\DateTime $date): Session
     {
         $this->date = $date;
 
@@ -196,7 +259,7 @@ class Session extends EntityAbstract
     }
 
     /**
-     * @return Collections\ArrayCollection|\Event\Entity\Track[]
+     * @return Collection|\Event\Entity\Track[]
      */
     public function getTrack()
     {
@@ -204,11 +267,10 @@ class Session extends EntityAbstract
     }
 
     /**
-     * @param Collections\ArrayCollection|\Event\Entity\Track[] $track
-     *
+     * @param Collection|\Event\Entity\Track[] $track
      * @return Session
      */
-    public function setTrack($track)
+    public function setTrack($track): Session
     {
         $this->track = $track;
 
@@ -216,7 +278,7 @@ class Session extends EntityAbstract
     }
 
     /**
-     * @return Collections\ArrayCollection|\Project\Entity\Idea\Session[]
+     * @return Collection|\Project\Entity\Idea\Session[]
      */
     public function getIdeaSession()
     {
@@ -224,8 +286,7 @@ class Session extends EntityAbstract
     }
 
     /**
-     * @param Collections\ArrayCollection|\Project\Entity\Idea\Session[] $ideaSession
-     *
+     * @param Collection|\Project\Entity\Idea\Session[] $ideaSession
      * @return Session
      */
     public function setIdeaSession($ideaSession)
@@ -233,5 +294,29 @@ class Session extends EntityAbstract
         $this->ideaSession = $ideaSession;
 
         return $this;
+    }
+
+    /**
+     * New function needed to make the hydrator happy
+     *
+     * @param Collection $ideaSessions
+     * @return void
+     */
+    public function addIdeaSession(Collection $ideaSessions): void
+    {
+        foreach ($ideaSessions as $ideaSession) {
+            $this->ideaSession->add($ideaSession);
+        }
+    }
+
+    /**
+     * @param Collection $ideaSessions
+     * @return void
+     */
+    public function removeIdeaSession(Collection $ideaSessions): void
+    {
+        foreach ($ideaSessions as $ideaSession) {
+            $this->ideaSession->removeElement($ideaSession);
+        }
     }
 }

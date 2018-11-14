@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Program\Navigation\Invokable;
 
 use Admin\Navigation\Invokable\AbstractNavigationInvokable;
@@ -25,17 +27,12 @@ use Zend\Navigation\Page\Mvc;
  *
  * @package Program\Navigation\Invokable
  */
-class CountryLabel extends AbstractNavigationInvokable
+final class CountryLabel extends AbstractNavigationInvokable
 {
-    /**
-     * Set the Project navigation label
-     *
-     * @param Mvc $page
-     *
-     * @return void;
-     */
-    public function __invoke(Mvc $page)
+    public function __invoke(Mvc $page): void
     {
+        $label = $this->translate('txt-nav-view');
+
         if ($this->getEntities()->containsKey(Country::class)) {
             /** @var Country $country */
             $country = $this->getEntities()->get(Country::class);
@@ -48,9 +45,7 @@ class CountryLabel extends AbstractNavigationInvokable
                     ]
                 )
             );
-            $label = (string)sprintf("txt-country-%s", $country);
-        } else {
-            $label = $this->translate('txt-nav-view');
+            $label = sprintf("txt-country-%s", $country);
         }
         $page->set('label', $label);
     }

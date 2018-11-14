@@ -11,81 +11,80 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\Entity\Call;
 
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Program\Entity\EntityAbstract;
+use Program\Entity\AbstractEntity;
+use Program\Entity\Program;
 use Zend\Form\Annotation;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * @ORM\Table(name="programcall")
  * @ORM\Entity(repositoryClass="Program\Repository\Call\Call")
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("program_call")
  *
  * @category    Program
  */
-class Call extends EntityAbstract implements ResourceInterface
+class Call extends AbstractEntity
 {
     /**
      * Produce a list of different statuses in a call, which are required for representation and access control.
      */
-    const FPP_CLOSED = 'FPP_CLOSED';
-    const FPP_NOT_OPEN = 'FPP_NOT_OPEN';
-    const FPP_GRACE_PERIOD = 'FPP_GRACE_PERIOD';
-    const FPP_OPEN = 'FPP_OPEN';
-    const PO_CLOSED = 'PO_CLOSED';
-    const PO_NOT_OPEN = 'PO_NOT_OPEN';
-    const PO_GRACE_PERIOD = 'PO_GRACE_PERIOD';
-    const PO_OPEN = 'PO_OPEN';
+    public const FPP_CLOSED = 'FPP_CLOSED';
+    public const FPP_NOT_OPEN = 'FPP_NOT_OPEN';
+    public const FPP_OPEN = 'FPP_OPEN';
+    public const PO_CLOSED = 'PO_CLOSED';
+    public const PO_NOT_OPEN = 'PO_NOT_OPEN';
+    public const PO_OPEN = 'PO_OPEN';
 
-    const INACTIVE = 0;
-    const ACTIVE = 1;
-    const DOA_REQUIREMENT_NOT_APPLICABLE = 1;
-    const DOA_REQUIREMENT_PER_PROGRAM = 2;
-    const DOA_REQUIREMENT_PER_PROJECT = 3;
-    const NDA_REQUIREMENT_NOT_APPLICABLE = 1;
-    const NDA_REQUIREMENT_PER_CALL = 2;
-    const NDA_REQUIREMENT_PER_PROJECT = 3;
-    const LOI_NOI_REQUIRED = 0;
-    const LOI_REQUIRED = 1;
+    public const INACTIVE = 0;
+    public const ACTIVE = 1;
+    public const DOA_REQUIREMENT_NOT_APPLICABLE = 1;
+    public const DOA_REQUIREMENT_PER_PROGRAM = 2;
+    public const DOA_REQUIREMENT_PER_PROJECT = 3;
+    public const NDA_REQUIREMENT_NOT_APPLICABLE = 1;
+    public const NDA_REQUIREMENT_PER_CALL = 2;
+    public const NDA_REQUIREMENT_PER_PROJECT = 3;
+    public const LOI_NOI_REQUIRED = 0;
+    public const LOI_REQUIRED = 1;
 
-    /**
-     * @var array
-     */
+    public const PROJECT_REPORT_SINGLE = 1;
+    public const PROJECT_REPORT_DOUBLE = 2;
+
     protected static $activeTemplates
         = [
             self::INACTIVE => 'txt-inactive-for-projects',
             self::ACTIVE   => 'txt-active-for-projects',
         ];
-    /**
-     * @var array
-     */
+
     protected static $doaRequirementTemplates
         = [
             self::DOA_REQUIREMENT_NOT_APPLICABLE => 'txt-no-doa-required',
             self::DOA_REQUIREMENT_PER_PROGRAM    => 'txt-doa-per-program-required',
             self::DOA_REQUIREMENT_PER_PROJECT    => 'txt-doa-per-project-required',
         ];
-    /**
-     * @var array
-     */
+
     protected static $ndaRequirementTemplates
         = [
-            self::NDA_REQUIREMENT_NOT_APPLICABLE => 'txt-no-dna-required',
+            self::NDA_REQUIREMENT_NOT_APPLICABLE => 'txt-no-nda-required',
             self::NDA_REQUIREMENT_PER_CALL       => 'txt-nda-per-call-required',
             self::NDA_REQUIREMENT_PER_PROJECT    => 'txt-nda-per-project-required',
         ];
-    /**
-     * @var array
-     */
+
     protected static $loiRequirementTemplates
         = [
             self::LOI_NOI_REQUIRED => 'txt-no-loi-required',
             self::LOI_REQUIRED     => 'txt-loi-required',
+        ];
+
+    protected static $projectReportTemplates
+        = [
+            self::PROJECT_REPORT_SINGLE => 'txt-project-report-single',
+            self::PROJECT_REPORT_DOUBLE => 'txt-project-report-double',
         ];
 
     /**
@@ -132,14 +131,14 @@ class Call extends EntityAbstract implements ResourceInterface
      */
     private $poCloseDate;
     /**
-     * @ORM\Column(name="po_grace_date", type="datetime", nullable=true)
+     * @ORM\Column(name="loi_submission_date", type="datetime", nullable=true)
      * @Annotation\Type("\Zend\Form\Element\DateTime")
      * @Annotation\Attributes({"step":"any"})
-     * @Annotation\Options({"label":"txt-po-grace-date", "format":"Y-m-d H:i:s","help-block":"txt-po-grace-date-inline-help"})
+     * @Annotation\Options({"label":"txt-loi-submission-date-label", "format":"Y-m-d H:i:s","help-block":"txt-loi-submission-help-block"})
      *
      * @var \DateTime
      */
-    private $poGraceDate;
+    private $loiSubmissionDate;
     /**
      * @ORM\Column(name="fpp_open_date", type="datetime", nullable=true)
      * @Annotation\Type("\Zend\Form\Element\DateTime")
@@ -159,14 +158,23 @@ class Call extends EntityAbstract implements ResourceInterface
      */
     private $fppCloseDate;
     /**
-     * @ORM\Column(name="fpp_grace_date", type="datetime", nullable=true)
+     * @ORM\Column(name="doa_submission_date", type="datetime", nullable=true)
      * @Annotation\Type("\Zend\Form\Element\DateTime")
      * @Annotation\Attributes({"step":"any"})
-     * @Annotation\Options({"label":"txt-fpp-grace-date", "format":"Y-m-d H:i:s","help-block":"txt-fpp-grace-date-inline-help"})
+     * @Annotation\Options({"label":"txt-doa-submission-date-label", "format":"Y-m-d H:i:s","help-block":"txt-doa-submission-help-block"})
      *
      * @var \DateTime
      */
-    private $fppGraceDate;
+    private $doaSubmissionDate;
+    /**
+     * @ORM\Column(name="label_announcement_date", type="datetime", nullable=true)
+     * @Annotation\Type("\Zend\Form\Element\DateTime")
+     * @Annotation\Attributes({"step":"any"})
+     * @Annotation\Options({"label":"txt-label-announcement-date-label", "format":"Y-m-d H:i:s","help-block":"txt-label-announcement-help-block"})
+     *
+     * @var \DateTime
+     */
+    private $labelAnnouncementDate;
     /**
      * @ORM\Column(name="doa_requirement", type="smallint", nullable=false)
      * @Annotation\Type("Zend\Form\Element\Radio")
@@ -185,6 +193,15 @@ class Call extends EntityAbstract implements ResourceInterface
      * @var int
      */
     private $loiRequirement;
+    /**
+     * @ORM\Column(name="project_report", type="smallint", nullable=false)
+     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Attributes({"array":"projectReportTemplates"})
+     * @Annotation\Options({"label":"txt-call-project-report-label","help-block":"txt-call-project-report-help-block"})
+     *
+     * @var int
+     */
+    private $projectReport;
     /**
      * @ORM\Column(name="nda_requirement", type="smallint", nullable=false)
      * @Annotation\Type("Zend\Form\Element\Radio")
@@ -220,6 +237,12 @@ class Call extends EntityAbstract implements ResourceInterface
      * @var \Project\Entity\Project[]|Collections\ArrayCollection
      */
     private $project;
+    /**
+     * @ORM\ManyToMany(targetEntity="\Project\Entity\Project", cascade={"persist"}, mappedBy="proxyCall")
+     * @Annotation\Exclude()
+     * @var \Project\Entity\Project[]|Collections\ArrayCollection
+     */
+    private $proxyProject;
     /**
      * @ORM\ManyToOne(targetEntity="Program\Entity\Roadmap", inversedBy="call")
      * @ORM\JoinColumns({
@@ -265,14 +288,8 @@ class Call extends EntityAbstract implements ResourceInterface
      */
     private $doa;
     /**
-     * @ORM\OneToMany(targetEntity="Program\Entity\Call\Image", cascade={"persist"}, mappedBy="call")
-     * @Annotation\Exclude()
-     *
-     * @var \Program\Entity\Call\Image[]|Collections\ArrayCollection
-     */
-    private $image;
-    /**
      * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Idea", cascade={"persist"}, mappedBy="call")
+     * @ORM\OrderBy({"number" = "ASC"})
      * @Annotation\Exclude()
      *
      * @var \Project\Entity\Idea\Idea[]|Collections\ArrayCollection
@@ -285,13 +302,6 @@ class Call extends EntityAbstract implements ResourceInterface
      * @var \Project\Entity\Idea\Tool[]|Collections\ArrayCollection
      */
     private $ideaTool;
-    /**
-     * @ORM\OneToMany(targetEntity="Project\Entity\Idea\MessageBoard", cascade={"persist"}, mappedBy="call")
-     * @Annotation\Exclude()
-     *
-     * @var \Project\Entity\Idea\MessageBoard[]|Collections\ArrayCollection
-     */
-    private $ideaMessageBoard;
     /**
      * @ORM\OneToMany(targetEntity="Program\Entity\Call\Session", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
@@ -306,6 +316,13 @@ class Call extends EntityAbstract implements ResourceInterface
      * @var \Program\Entity\Call\Country[]|Collections\ArrayCollection
      */
     private $callCountry;
+    /**
+     * @ORM\ManyToMany(targetEntity="General\Entity\Challenge", cascade={"persist"}, mappedBy="call")
+     * @Annotation\Exclude()
+     *
+     * @var \General\Entity\Challenge[]|Collections\ArrayCollection
+     */
+    private $challenge;
 
     /**
      * Class constructor.
@@ -318,561 +335,350 @@ class Call extends EntityAbstract implements ResourceInterface
         $this->nda = new Collections\ArrayCollection();
         $this->calendar = new Collections\ArrayCollection();
         $this->doa = new Collections\ArrayCollection();
-        $this->image = new Collections\ArrayCollection();
         $this->idea = new Collections\ArrayCollection();
         $this->ideaTool = new Collections\ArrayCollection();
-        $this->ideaMessageBoard = new Collections\ArrayCollection();
         $this->session = new Collections\ArrayCollection();
         $this->callCountry = new Collections\ArrayCollection();
+        $this->challenge = new Collections\ArrayCollection();
+        $this->proxyProject = new Collections\ArrayCollection();
 
         $this->doaRequirement = self::DOA_REQUIREMENT_PER_PROJECT;
         $this->ndaRequirement = self::NDA_REQUIREMENT_PER_CALL;
         $this->loiRequirement = self::LOI_REQUIRED;
+        $this->projectReport = self::PROJECT_REPORT_SINGLE;
         $this->active = self::ACTIVE;
     }
 
-    /**
-     * @return array
-     */
     public static function getDoaRequirementTemplates(): array
     {
         return self::$doaRequirementTemplates;
     }
 
-    /**
-     * @return array
-     */
     public static function getNdaRequirementTemplates(): array
     {
         return self::$ndaRequirementTemplates;
     }
 
-    /**
-     * @return mixed
-     */
-    public static function getLoiRequirementTemplates()
+    public static function getLoiRequirementTemplates(): array
     {
         return self::$loiRequirementTemplates;
     }
 
-    /**
-     * @return array
-     */
     public static function getActiveTemplates(): array
     {
         return self::$activeTemplates;
     }
 
-    /**
-     * Magic Getter.
-     *
-     * @param $property
-     *
-     * @return mixed
-     */
+    public static function getProjectReportTemplates(): array
+    {
+        return self::$projectReportTemplates;
+    }
+
     public function __get($property)
     {
         return $this->$property;
     }
 
-    /**
-     * Magic Setter.
-     *
-     * @param $property
-     * @param $value
-     */
     public function __set($property, $value)
     {
         $this->$property = $value;
     }
 
-    /**
-     * @param $property
-     *
-     * @return bool
-     */
     public function __isset($property)
     {
         return isset($this->$property);
     }
 
-    /**
-     * toString returns the name.
-     *
-     * @return string
-     */
     public function __toString(): string
     {
-        return sprintf("%s Call %s", $this->getProgram()->getProgram(), $this->call);
+        return sprintf('%s Call %s', $this->program->getProgram(), $this->call);
     }
 
-    /**
-     * @return \Program\Entity\Program
-     */
-    public function getProgram()
+    public function shortName(): string
+    {
+        $words = \explode(' ', $this->getProgram()->getProgram());
+        $acronym = '';
+
+        foreach ($words as $w) {
+            $acronym .= \strtoupper($w[0]);
+        }
+
+        return \sprintf('%sC%s', $acronym, $this->call);
+    }
+
+    public function getProgram(): ?Program
     {
         return $this->program;
     }
 
-    /**
-     * @param \Program\Entity\Program $program
-     */
-    public function setProgram($program)
+    public function setProgram($program): Call
     {
         $this->program = $program;
+
+        return $this;
     }
 
-    /**
-     * Create a short name.
-     *
-     * @return string
-     */
-    public function shortName()
+    public function hasIdeaTool(): bool
     {
-        $words = explode(" ", $this->getProgram()->getProgram());
-        $acronym = "";
-
-        foreach ($words as $w) {
-            $acronym .= strtoupper($w[0]);
-        }
-
-        return sprintf("%sC%s", $acronym, $this->call);
+        return !$this->ideaTool->isEmpty();
     }
 
-    /**
-     * @return string
-     */
-    public function parseInvoiceName()
+    public function isActive(): bool
     {
-        return sprintf("%s %s", $this->call, $this->program->getProgram());
+        return $this->active === self::ACTIVE;
     }
 
-    /**
-     * @return int
-     */
+    public function getProxyProject()
+    {
+        return $this->proxyProject;
+    }
+
+    public function setProxyProject($proxyProject): Call
+    {
+        $this->proxyProject = $proxyProject;
+        return $this;
+    }
+
+    public function parseInvoiceName(): string
+    {
+        return sprintf('%s %s', $this->call, $this->program->getProgram());
+    }
+
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return Call
-     */
-    public function setId($id)
+    public function setId($id): Call
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCall()
+    public function getCall(): ?string
     {
         return $this->call;
     }
 
-    /**
-     * @param string $call
-     *
-     * @return Call
-     */
-    public function setCall($call)
+    public function setCall($call): Call
     {
         $this->call = $call;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDocRef()
+    public function getDocRef(): ?string
     {
         return $this->docRef;
     }
 
-    /**
-     * @param string $docRef
-     *
-     * @return Call
-     */
-    public function setDocRef($docRef)
+    public function setDocRef(string $docRef): Call
     {
         $this->docRef = $docRef;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getPoOpenDate()
+    public function getPoOpenDate(): ?\DateTime
     {
         return $this->poOpenDate;
     }
 
-    /**
-     * @param \DateTime $poOpenDate
-     *
-     * @return Call
-     */
-    public function setPoOpenDate($poOpenDate)
+    public function setPoOpenDate($poOpenDate): Call
     {
         $this->poOpenDate = $poOpenDate;
-
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getPoCloseDate()
+    public function getPoCloseDate(): ?\DateTime
     {
         return $this->poCloseDate;
     }
 
-    /**
-     * @param \DateTime $poCloseDate
-     *
-     * @return Call
-     */
-    public function setPoCloseDate($poCloseDate)
+    public function setPoCloseDate($poCloseDate): Call
     {
         $this->poCloseDate = $poCloseDate;
-
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getPoGraceDate()
+    public function getLoiSubmissionDate(): ?\DateTime
     {
-        return $this->poGraceDate;
+        return $this->loiSubmissionDate;
     }
 
-    /**
-     * @param \DateTime $poGraceDate
-     *
-     * @return Call
-     */
-    public function setPoGraceDate($poGraceDate)
+    public function setLoiSubmissionDate($loiSubmissionDate): Call
     {
-        $this->poGraceDate = $poGraceDate;
-
+        $this->loiSubmissionDate = $loiSubmissionDate;
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getFppOpenDate()
     {
         return $this->fppOpenDate;
     }
 
-    /**
-     * @param \DateTime $fppOpenDate
-     *
-     * @return Call
-     */
-    public function setFppOpenDate($fppOpenDate)
+    public function setFppOpenDate($fppOpenDate): Call
     {
         $this->fppOpenDate = $fppOpenDate;
-
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getFppCloseDate()
     {
         return $this->fppCloseDate;
     }
 
-    /**
-     * @param \DateTime $fppCloseDate
-     *
-     * @return Call
-     */
-    public function setFppCloseDate($fppCloseDate)
+    public function setFppCloseDate($fppCloseDate): Call
     {
         $this->fppCloseDate = $fppCloseDate;
+        return $this;
+    }
+
+    public function getDoaSubmissionDate()
+    {
+        return $this->doaSubmissionDate;
+    }
+
+    public function setDoaSubmissionDate($doaSubmissionDate): Call
+    {
+        $this->doaSubmissionDate = $doaSubmissionDate;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getFppGraceDate()
+    public function getLabelAnnouncementDate()
     {
-        return $this->fppGraceDate;
+        return $this->labelAnnouncementDate;
     }
 
-    /**
-     * @param \DateTime $fppGraceDate
-     *
-     * @return Call
-     */
-    public function setFppGraceDate($fppGraceDate)
+    public function setLabelAnnouncementDate($labelAnnouncementDate): Call
     {
-        $this->fppGraceDate = $fppGraceDate;
-
+        $this->labelAnnouncementDate = $labelAnnouncementDate;
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|\Project\Entity\Project[]
-     */
     public function getProject()
     {
         return $this->project;
     }
 
-    /**
-     * @param Collections\ArrayCollection|\Project\Entity\Project[] $project
-     *
-     * @return Call
-     */
-    public function setProject($project)
+    public function setProject($project): Call
     {
         $this->project = $project;
 
         return $this;
     }
 
-    /**
-     * @return \Program\Entity\Roadmap
-     */
     public function getRoadmap()
     {
         return $this->roadmap;
     }
 
-    /**
-     * @param \Program\Entity\Roadmap $roadmap
-     *
-     * @return Call
-     */
-    public function setRoadmap($roadmap)
+    public function setRoadmap($roadmap): Call
     {
         $this->roadmap = $roadmap;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|\Program\Entity\Nda[]
-     */
     public function getNda()
     {
         return $this->nda;
     }
 
-    /**
-     * @param Collections\ArrayCollection|\Program\Entity\Nda[] $nda
-     *
-     * @return Call
-     */
-    public function setNda($nda)
+    public function setNda($nda): Call
     {
         $this->nda = $nda;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|\Publication\Entity\Publication[]
-     */
     public function getPublication()
     {
         return $this->publication;
     }
 
-    /**
-     * @param Collections\ArrayCollection|\Publication\Entity\Publication[] $publication
-     *
-     * @return Call
-     */
-    public function setPublication($publication)
+    public function setPublication($publication): Call
     {
         $this->publication = $publication;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|\Event\Entity\Meeting\Meeting[]
-     */
     public function getMeeting()
     {
         return $this->meeting;
     }
 
-    /**
-     * @param Collections\ArrayCollection|\Event\Entity\Meeting\Meeting[] $meeting
-     *
-     * @return Call
-     */
-    public function setMeeting($meeting)
+    public function setMeeting($meeting): Call
     {
         $this->meeting = $meeting;
 
         return $this;
     }
 
-    /**
-     * @return \Calendar\Entity\Calendar[]|Collections\ArrayCollection
-     */
     public function getCalendar()
     {
         return $this->calendar;
     }
 
-    /**
-     * @param \Calendar\Entity\Calendar[]|Collections\ArrayCollection $calendar
-     *
-     * @return Call
-     */
-    public function setCalendar($calendar)
+    public function setCalendar($calendar): Call
     {
         $this->calendar = $calendar;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|Doa[]
-     */
     public function getDoa()
     {
         return $this->doa;
     }
 
-    /**
-     * @param Collections\ArrayCollection|Doa[] $doa
-     *
-     * @return Call
-     */
-    public function setDoa($doa)
+    public function setDoa($doa): Call
     {
         $this->doa = $doa;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|Image[]
-     */
-    public function getImage()
-    {
-        return $this->image;
-    }
-
-    /**
-     * @param Collections\ArrayCollection|Image[] $image
-     *
-     * @return Call
-     */
-    public function setImage($image)
-    {
-        $this->image = $image;
-
-        return $this;
-    }
-
-    /**
-     * @return Collections\ArrayCollection|\Project\Entity\Idea\Idea[]
-     */
     public function getIdea()
     {
         return $this->idea;
     }
 
-    /**
-     * @param Collections\ArrayCollection|\Project\Entity\Idea\Idea[] $idea
-     *
-     * @return Call
-     */
-    public function setIdea($idea)
+    public function setIdea($idea): Call
     {
         $this->idea = $idea;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|\Project\Entity\Idea\MessageBoard[]
-     */
-    public function getIdeaMessageBoard()
-    {
-        return $this->ideaMessageBoard;
-    }
-
-    /**
-     * @param Collections\ArrayCollection|\Project\Entity\Idea\MessageBoard[] $ideaMessageBoard
-     *
-     * @return Call
-     */
-    public function setIdeaMessageBoard($ideaMessageBoard)
-    {
-        $this->ideaMessageBoard = $ideaMessageBoard;
-
-        return $this;
-    }
-
-    /**
-     * @return Collections\ArrayCollection|Session[]
-     */
     public function getSession()
     {
         return $this->session;
     }
 
-    /**
-     * @param Collections\ArrayCollection|Session[] $session
-     *
-     * @return Call
-     */
-    public function setSession($session)
+    public function setSession($session): Call
     {
         $this->session = $session;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|Country[]
-     */
     public function getCallCountry()
     {
         return $this->callCountry;
     }
 
-    /**
-     * @param Collections\ArrayCollection|Country[] $callCountry
-     *
-     * @return Call
-     */
-    public function setCallCountry($callCountry)
+    public function setCallCountry($callCountry): Call
     {
         $this->callCountry = $callCountry;
 
         return $this;
     }
 
-    /**
-     * @param bool $textual
-     *
-     * @return int|string
-     */
-    public function getNdaRequirement($textual = false)
+    public function getNdaRequirement(bool $textual = false)
     {
         if ($textual) {
             return self::$ndaRequirementTemplates[$this->ndaRequirement];
@@ -881,20 +687,14 @@ class Call extends EntityAbstract implements ResourceInterface
         return $this->ndaRequirement;
     }
 
-    /**
-     * @param int $ndaRequirement
-     */
-    public function setNdaRequirement($ndaRequirement)
+    public function setNdaRequirement($ndaRequirement): Call
     {
         $this->ndaRequirement = $ndaRequirement;
+
+        return $this;
     }
 
-    /**
-     * @param bool $textual
-     *
-     * @return int|string
-     */
-    public function getDoaRequirement($textual = false)
+    public function getDoaRequirement(bool $textual = false)
     {
         if ($textual) {
             return self::$doaRequirementTemplates[$this->doaRequirement];
@@ -903,40 +703,26 @@ class Call extends EntityAbstract implements ResourceInterface
         return $this->doaRequirement;
     }
 
-    /**
-     * @param int $doaRequirement
-     */
-    public function setDoaRequirement($doaRequirement)
+    public function setDoaRequirement($doaRequirement): Call
     {
         $this->doaRequirement = $doaRequirement;
+
+        return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|\Project\Entity\Idea\Tool[]
-     */
     public function getIdeaTool()
     {
         return $this->ideaTool;
     }
 
-    /**
-     * @param Collections\ArrayCollection|\Project\Entity\Idea\Tool[] $ideaTool
-     *
-     * @return Call
-     */
-    public function setIdeaTool($ideaTool)
+    public function setIdeaTool($ideaTool): Call
     {
         $this->ideaTool = $ideaTool;
 
         return $this;
     }
 
-    /**
-     * @param bool $textual
-     *
-     * @return int|string
-     */
-    public function getActive($textual = false)
+    public function getActive(bool $textual = false)
     {
         if ($textual) {
             return self::$activeTemplates[$this->active];
@@ -945,22 +731,13 @@ class Call extends EntityAbstract implements ResourceInterface
         return $this->active;
     }
 
-    /**
-     * @param int $active
-     *
-     * @return Call
-     */
-    public function setActive($active)
+    public function setActive($active): Call
     {
         $this->active = $active;
 
         return $this;
     }
 
-    /**
-     * @param bool $textual
-     * @return int|string
-     */
     public function getLoiRequirement(bool $textual = false)
     {
         if ($textual) {
@@ -970,13 +747,37 @@ class Call extends EntityAbstract implements ResourceInterface
         return $this->loiRequirement;
     }
 
-    /**
-     * @param int $loiRequirement
-     * @return Call
-     */
     public function setLoiRequirement($loiRequirement): Call
     {
         $this->loiRequirement = $loiRequirement;
+
+        return $this;
+    }
+
+    public function getProjectReport(bool $textual = false)
+    {
+        if ($textual) {
+            return self::$projectReportTemplates[$this->projectReport];
+        }
+
+        return $this->projectReport;
+    }
+
+    public function setProjectReport(int $projectReport): Call
+    {
+        $this->projectReport = $projectReport;
+
+        return $this;
+    }
+
+    public function getChallenge()
+    {
+        return $this->challenge;
+    }
+
+    public function setChallenge($challenge): Call
+    {
+        $this->challenge = $challenge;
 
         return $this;
     }

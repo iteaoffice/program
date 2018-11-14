@@ -12,6 +12,8 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\View\Helper;
 
 use Organisation\Entity\Organisation;
@@ -20,27 +22,19 @@ use Program\Entity\Doa;
 use Program\Entity\Program;
 
 /**
- * Create a link to an project.
- *
- * @category   Program
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    https://itea3.org/licence.txt proprietary
- *
- * @link       https://itea3.org
+ * Class DoaLink
+ * @package Program\View\Helper
  */
-class DoaLink extends LinkAbstract
+class DoaLink extends AbstractLink
 {
     /**
-     * @param Doa          $doa
-     * @param string       $action
-     * @param string       $show
-     * @param Organisation $organisation
-     * @param Program      $program
+     * @param Doa|null $doa
+     * @param string $action
+     * @param string $show
+     * @param Organisation|null $organisation
+     * @param Program|null $program
      *
      * @return string
-     *
-     * @throws \Exception
      */
     public function __invoke(
         Doa $doa = null,
@@ -48,26 +42,22 @@ class DoaLink extends LinkAbstract
         $show = 'text',
         Organisation $organisation = null,
         Program $program = null
-    ) {
+    ): string {
         $this->setDoa($doa);
         $this->setOrganisation($organisation);
         $this->setProgram($program);
         $this->setAction($action);
         $this->setShow($show);
-        if (! $this->hasAccess($this->getDoa(), DoaAssertion::class, $this->getAction())) {
-            return 'Access denied';
+        if (!$this->hasAccess($this->getDoa(), DoaAssertion::class, $this->getAction())) {
+            return '';
         }
 
-        /*
-        * Set the non-standard options needed to give an other link value
-        */
-        $this->setShowOptions(
-            [
-                'name' => $this->getDoa(),
-            ]
-        );
+        // Set the non-standard options needed to give an other link value
+        $this->setShowOptions([
+            'name' => $this->getDoa(),
+        ]);
 
-        if (! is_null($this->getDoa())) {
+        if (!\is_null($this->getDoa())) {
             $this->addRouterParam('id', $this->getDoa()->getId());
         }
 
@@ -78,7 +68,7 @@ class DoaLink extends LinkAbstract
     /**
      * Extract the relevant parameters based on the action.
      */
-    public function parseAction()
+    public function parseAction(): void
     {
         switch ($this->getAction()) {
             case 'upload':
@@ -99,7 +89,7 @@ class DoaLink extends LinkAbstract
                  * The $doa can be null, we then use the $organisation and $program to produce the link
                  */
                 $renderText = _("txt-render-doa-for-organisation-%s-in-program-%s-link-title");
-                if (is_null($this->getDoa()->getId())) {
+                if (\is_null($this->getDoa()->getId())) {
                     $this->setText(sprintf($renderText, $this->getOrganisation(), $this->getProgram()));
                     $this->addRouterParam('organisationId', $this->getOrganisation()->getId());
                     $this->addRouterParam('programId', $this->getProgram()->getId());

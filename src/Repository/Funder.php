@@ -13,23 +13,27 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Program\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Program\Entity;
 
 /**
- * @category    Funder
+ * Class Funder
+ *
+ * @package Program\Repository
  */
 class Funder extends EntityRepository
 {
     /**
      * @param array $filter
      *
-     * @return Query
+     * @return QueryBuilder
      */
-    public function findFiltered(array $filter)
+    public function findFiltered(array $filter): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('funder_entity_funder');
@@ -39,9 +43,13 @@ class Funder extends EntityRepository
 
         $direction = 'DESC';
         if (isset($filter['direction'])
-            && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'])
+            && \in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)
         ) {
             $direction = strtoupper($filter['direction']);
+        }
+
+        if (null !== $filter) {
+            $queryBuilder = $this->applyFilter($queryBuilder, $filter);
         }
 
         switch ($filter['order']) {
@@ -55,6 +63,40 @@ class Funder extends EntityRepository
                 $queryBuilder->addOrderBy('funder_entity_funder.country', 'ASC');
         }
 
-        return $queryBuilder->getQuery();
+        return $queryBuilder;
+    }
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @param array        $filter
+     *
+     * @return QueryBuilder
+     */
+    public function applyFilter(QueryBuilder $queryBuilder, array $filter): QueryBuilder
+    {
+        if (!empty($filter['search'])) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->orX(
+                    $queryBuilder->expr()->like('contact_entity_contact.firstName', ':like'),
+                    $queryBuilder->expr()->like('contact_entity_contact.lastName', ':like'),
+                    $queryBuilder->expr()->like('contact_entity_contact.email', ':like'),
+                    $queryBuilder->expr()->like('general_entity_country.country', ':like')
+                )
+            );
+
+            $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
+        }
+
+
+        if (!empty($filter['showOnWebsite'])) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->in(
+                    'funder_entity_funder.showOnWebsite',
+                    $filter['showOnWebsite']
+                )
+            );
+        }
+
+        return $queryBuilder;
     }
 }

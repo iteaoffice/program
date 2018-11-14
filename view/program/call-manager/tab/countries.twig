@@ -1,0 +1,29 @@
+<h2>{{ translate("txt-countries-active-in-call-%s")|format(call) }}</h2>
+
+{% if countries|length > 0 %}
+    <table class="table table-hover table-striped table-condensed table-sm">
+        <thead>
+        <tr>
+            <th>{{ translate("txt-country") }}</th>
+            <th>{{ translate("txt-date-national-application") }}</th>
+            <th>{{ translate("txt-date-expected-funding-decision") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for country in countries %}
+            <tr>
+                <td>{{ countryLink(country,'view-admin','name') }}</td>
+                {% for callCountry in call.callCountry if callCountry.country.id == country.id %}
+                    <td>{{ callCountry.dateNationalApplication|default('-') }} {{ callCountryLink(callCountry,'edit-admin','icon') }}</td>
+                    <td>{{ callCountry.dateExpectedFundingDecision|default('-') }}</td>
+                {% else %}
+                    <td>{{ translate("txt-not-provided-yet") }} {{ callCountryLink(null,'new-admin','icon', call, country) }}</td>
+                    <td>{{ translate("txt-not-provided-yet") }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    {{ ztbalert().info(translate("txt-there-are-currently-no-countries-active-in-this-call"))|raw }}
+{% endif %}

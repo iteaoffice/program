@@ -12,41 +12,39 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\View\Helper;
 
 use Program\Entity\Call\Call;
 
 /**
- * Create a link to an project.
+ * Class CallLink
  *
- * @category   Program
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    https://itea3.org/licence.txt proprietary
- *
- * @link       https://itea3.org
+ * @package Program\View\Helper
  */
-class CallLink extends LinkAbstract
+class CallLink extends AbstractLink
 {
     /**
-     * @param Call   $call
-     * @param string $action
-     * @param string $show
+     * @param Call|null $call
+     * @param string    $action
+     * @param string    $show
+     * @param array     $classes
      *
      * @return string
-     *
-     * @throws \Exception
      */
-    public function __invoke(Call $call = null, $action = 'view', $show = 'name')
+    public function __invoke(Call $call = null, $action = 'view', $show = 'name', array $classes = []): string
     {
         $this->setCall($call);
         $this->setAction($action);
         $this->setShow($show);
 
+        $this->addClasses($classes);
+
         /*
          * Set the non-standard options needed to give an other link value
          */
-        if (! is_null($call)) {
+        if (null !== $call) {
             $this->addRouterParam('id', $this->getCall()->getId());
 
             $this->setShowOptions(
@@ -56,7 +54,6 @@ class CallLink extends LinkAbstract
                 ]
             );
         }
-        $this->addRouterParam('entity', 'call');
 
         return $this->createLink();
     }
@@ -64,7 +61,7 @@ class CallLink extends LinkAbstract
     /**
      * Parse te action and fill the correct parameters.
      */
-    public function parseAction()
+    public function parseAction(): void
     {
         switch ($this->getAction()) {
             case 'new':
@@ -94,12 +91,6 @@ class CallLink extends LinkAbstract
             case 'list-admin':
                 $this->setRouter('zfcadmin/call/list');
                 $this->setText(sprintf($this->translate("txt-call-list")));
-                break;
-            case 'external':
-                $this->addRouterParam('docRef', $this->getCall()->getDocRef());
-                $this->setRouter('route-program_entity_call_call');
-                $this->addRouterParam('call', $this->getCall()->getId());
-                $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));
                 break;
             case 'view-list':
                 /*

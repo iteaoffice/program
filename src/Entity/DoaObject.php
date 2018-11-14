@@ -11,11 +11,11 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
 
 /**
  * @ORM\Table(name="program_doa_object")
@@ -23,7 +23,7 @@ use Zend\InputFilter\InputFilterInterface;
  *
  * @category    Program
  */
-class DoaObject extends EntityAbstract
+class DoaObject extends AbstractEntity
 {
     /**
      * @ORM\Column(name="object_id", type="integer", nullable=false)
@@ -73,28 +73,13 @@ class DoaObject extends EntityAbstract
     }
 
     /**
-     * Set input filter.
+     * @param $property
      *
-     * @param InputFilterInterface $inputFilter
-     *
-     * @throws \Exception
+     * @return bool
      */
-    public function setInputFilter(InputFilterInterface $inputFilter)
+    public function __isset($property)
     {
-        throw new \Exception("Setting an inputFilter is currently not supported");
-    }
-
-    /**
-     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
-     */
-    public function getInputFilter()
-    {
-        if (! $this->inputFilter) {
-            $inputFilter       = new InputFilter();
-            $this->inputFilter = $inputFilter;
-        }
-
-        return $this->inputFilter;
+        return isset($this->$property);
     }
 
     /**

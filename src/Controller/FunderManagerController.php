@@ -8,12 +8,20 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Program\Controller;
 
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
+use Program\Controller\Plugin\GetFilter;
 use Program\Entity\Funder;
 use Program\Form\FunderFilter;
+use Program\Service\FormService;
+use Program\Service\ProgramService;
+use Zend\I18n\Translator\TranslatorInterface;
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 
@@ -21,17 +29,39 @@ use Zend\View\Model\ViewModel;
  * Class FunderManagerController
  *
  * @package Program\Controller
+ * @method GetFilter getProgramFilter()
+ * @method FlashMessenger flashMessenger()
  */
-class FunderManagerController extends ProgramAbstractController
+final class FunderManagerController extends AbstractActionController
 {
     /**
-     * @return \Zend\View\Model\ViewModel
+     * @var ProgramService
      */
-    public function listAction()
+    private $programService;
+    /**
+     * @var FormService
+     */
+    private $formService;
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(
+        ProgramService $programService,
+        FormService $formService,
+        TranslatorInterface $translator
+    ) {
+        $this->programService = $programService;
+        $this->formService = $formService;
+        $this->translator = $translator;
+    }
+
+    public function listAction(): ViewModel
     {
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getProgramFilter();
-        $contactQuery = $this->getProgramService()->findEntitiesFiltered(Funder::class, $filterPlugin->getFilter());
+        $contactQuery = $this->programService->findFiltered(Funder::class, $filterPlugin->getFilter());
 
         $paginator
             = new Paginator(new PaginatorAdapter(new ORMPaginator($contactQuery, false)));
@@ -53,15 +83,13 @@ class FunderManagerController extends ProgramAbstractController
         );
     }
 
-    /**
-     * @return ViewModel
-     */
-    public function viewAction()
+    public function viewAction(): ViewModel
     {
-        /*
-         * @var Funder
-         */
-        $funder = $this->getProgramService()->findEntityById(Funder::class, $this->params('id'));
+        $funder = $this->programService->find(Funder::class, (int)$this->params('id'));
+
+        if (null === $funder) {
+            return $this->notFoundAction();
+        }
 
         return new ViewModel(
             [
@@ -70,29 +98,22 @@ class FunderManagerController extends ProgramAbstractController
         );
     }
 
-    /**
-     * Create a new funder.
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
     public function newAction()
     {
-        $data = array_merge_recursive(
-            $this->getRequest()->getPost()->toArray(),
-            $this->getRequest()->getFiles()->toArray()
-        );
+        $data = $this->getRequest()->getPost()->toArray();
 
         $funder = new Funder();
-        $form = $this->getFormService()->prepare($funder, null, $data);
+        $form = $this->formService->prepare($funder, $data);
 
         $form->remove('delete');
 
         if ($this->getRequest()->isPost() && $form->isValid()) {
-            /**
-             * @var $funder Funder
-             */
+            /** @var Funder $funder */
             $funder = $form->getData();
-            $funder = $this->getProgramService()->newEntity($funder);
+            $this->programService->save($funder);
+
+            $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-funder-has-been-created-successfully")));
+
 
             return $this->redirect()->toRoute('zfcadmin/funder/view', ['id' => $funder->getId()]);
         }
@@ -100,24 +121,16 @@ class FunderManagerController extends ProgramAbstractController
         return new ViewModel(['form' => $form]);
     }
 
-    /**
-     * Edit an funder by finding it and call the corresponding form.
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
     public function editAction()
     {
         /**
          * @var $funder Funder
          */
-        $funder = $this->getProgramService()->findEntityById(Funder::class, $this->params('id'));
+        $funder = $this->programService->find(Funder::class, (int)$this->params('id'));
 
-        $data = array_merge_recursive(
-            $this->getRequest()->getPost()->toArray(),
-            $this->getRequest()->getFiles()->toArray()
-        );
+        $data = $this->getRequest()->getPost()->toArray();
 
-        $form = $this->getFormService()->prepare($funder, $funder, $data);
+        $form = $this->formService->prepare($funder, $data);
 
         $form->get($funder->get('underscore_entity_name'))->get('contact')->setValueOptions(
             [
@@ -132,15 +145,16 @@ class FunderManagerController extends ProgramAbstractController
                  */
                 $funder = $form->getData();
 
-                $this->getProgramService()->removeEntity($funder);
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf($this->translate("txt-funder-has-successfully-been-deleted")));
+                $this->programService->delete($funder);
+                $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-funder-has-been-deleted-successfully")));
 
                 return $this->redirect()->toRoute('zfcadmin/funder/list');
             }
 
             if (!isset($data['cancel'])) {
-                $funder = $this->getProgramService()->updateEntity($funder);
+                $this->programService->save($funder);
+
+                $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-funder-has-been-updated-successfully")));
             }
 
             return $this->redirect()->toRoute('zfcadmin/funder/view', ['id' => $funder->getId()]);

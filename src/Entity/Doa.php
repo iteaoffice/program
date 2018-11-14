@@ -11,6 +11,8 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -27,7 +29,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  *
  * @category    Program
  */
-class Doa extends EntityAbstract implements ResourceInterface
+class Doa extends AbstractEntity
 {
     /**
      * @ORM\Column(name="doa_id", type="integer", nullable=false)

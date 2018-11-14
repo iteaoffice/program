@@ -13,23 +13,27 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Program\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Program\Entity;
 
 /**
- * @category    Program
+ * Class Program
+ *
+ * @package Program\Repository
  */
 class Program extends EntityRepository
 {
     /**
      * @param array $filter
      *
-     * @return Query
+     * @return QueryBuilder
      */
-    public function findFiltered(array $filter)
+    public function findFiltered(array $filter): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('program_entity_program');
@@ -37,7 +41,7 @@ class Program extends EntityRepository
 
         $direction = 'DESC';
         if (isset($filter['direction'])
-            && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'])
+            && \in_array(strtoupper($filter['direction']), ['ASC', 'DESC'])
         ) {
             $direction = strtoupper($filter['direction']);
         }
@@ -53,7 +57,7 @@ class Program extends EntityRepository
                 $queryBuilder->addOrderBy('program_entity_program.id', $direction);
         }
 
-        return $queryBuilder->getQuery();
+        return $queryBuilder;
     }
 
     /**
@@ -67,7 +71,7 @@ class Program extends EntityRepository
         $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
 
         $dql
-                = 'SELECT
+            = 'SELECT
                         MIN(YEAR(project_entity_version_version.dateSubmitted)) AS minYear,
                         MAX(YEAR(project_entity_project.dateEndActual)) AS maxYear
                    FROM Project\Entity\Project project_entity_project

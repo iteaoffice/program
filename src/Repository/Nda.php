@@ -8,31 +8,30 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Program\Repository;
 
 use Contact\Entity\Contact;
 use Doctrine\ORM\EntityRepository;
-use Program\Entity\Call\Call;
-use Program\Repository\Nda as NdaEntity;
+use Program\Entity;
 
 /**
- * @category    Program
+ * Class Nda
+ * @package Program\Repository
  */
 class Nda extends EntityRepository
 {
     /**
-     * @param Call    $call
+     * @param Entity\Call\Call $call
      * @param Contact $contact
-     *
-     * @return null|NdaEntity
-     *
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @return Entity\Nda|null
      */
-    public function findNdaByCallAndContact(Call $call, Contact $contact)
+    public function findNdaByCallAndContact(Entity\Call\Call $call, Contact $contact): ?Entity\Nda
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('program_entity_nda');
-        $qb->from("Program\Entity\Nda", 'program_entity_nda');
+        $qb->from(Entity\Nda::class, 'program_entity_nda');
         $qb->join('program_entity_nda.call', 'call');
         $qb->andWhere($qb->expr()->in('call', [$call->getId()]));
         $qb->andWhere('program_entity_nda.contact = ?2');
@@ -45,16 +44,14 @@ class Nda extends EntityRepository
 
     /**
      * @param Contact $contact
-     *
-     * @return mixed
-     *
+     * @return null|Entity\Nda
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findNdaByContact(Contact $contact)
+    public function findNdaByContact(Contact $contact): ?Entity\Nda
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('program_entity_nda');
-        $qb->from("Program\Entity\Nda", 'program_entity_nda');
+        $qb->from(Entity\Nda::class, 'program_entity_nda');
         $qb->andWhere('program_entity_nda.contact = ?2');
         $qb->addOrderBy('program_entity_nda.dateCreated', 'DESC');
         $qb->setMaxResults(1);
@@ -64,13 +61,13 @@ class Nda extends EntityRepository
     }
 
     /**
-     * @return NdaEntity[]
+     * @return array|Entity\Nda[]
      */
-    public function findNotApprovedNda()
+    public function findNotApprovedNda(): array
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('program_entity_nda');
-        $qb->from("Program\Entity\Nda", 'program_entity_nda');
+        $qb->from(Entity\Nda::class, 'program_entity_nda');
         $qb->andWhere($qb->expr()->isNull('program_entity_nda.dateApproved'));
 
         $qb->addOrderBy('program_entity_nda.dateCreated', 'ASC');

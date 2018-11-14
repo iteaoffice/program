@@ -11,6 +11,8 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\Entity;
 
 use Doctrine\Common\Collections;
@@ -26,7 +28,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  *
  * @category    Program
  */
-class Program extends EntityAbstract implements ResourceInterface
+class Program extends AbstractEntity
 {
     /**
      * @ORM\Column(name="program_id", type="integer", nullable=false)
@@ -105,16 +107,32 @@ class Program extends EntityAbstract implements ResourceInterface
      * @var \Invoice\Entity\Method[]|Collections\ArrayCollection
      */
     private $invoiceMethod;
+    /**
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\Parent\Invoice", cascade={"persist"}, mappedBy="program")
+     * @Annotation\Exclude()
+     *
+     * @var \Organisation\Entity\Parent\Invoice[]|Collections\ArrayCollection
+     */
+    private $parentInvoice;
+    /**
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\Parent\InvoiceExtra", cascade={"persist"}, mappedBy="program")
+     * @Annotation\Exclude()
+     *
+     * @var \Organisation\Entity\Parent\InvoiceExtra[]|Collections\ArrayCollection
+     */
+    private $parentInvoiceExtra;
 
     /**
      * Class constructor.
      */
     public function __construct()
     {
-        $this->call          = new Collections\ArrayCollection();
-        $this->doa           = new Collections\ArrayCollection();
-        $this->parentDoa     = new Collections\ArrayCollection();
+        $this->call = new Collections\ArrayCollection();
+        $this->doa = new Collections\ArrayCollection();
+        $this->parentDoa = new Collections\ArrayCollection();
         $this->invoiceMethod = new Collections\ArrayCollection();
+        $this->parentInvoice = new Collections\ArrayCollection();
+        $this->parentInvoiceExtra = new Collections\ArrayCollection();
     }
 
     /**
@@ -165,7 +183,7 @@ class Program extends EntityAbstract implements ResourceInterface
      *
      * @param Collections\Collection $invoiceMethodCollection
      */
-    public function addInvoiceMethod(Collections\Collection $invoiceMethodCollection)
+    public function addInvoiceMethod(Collections\Collection $invoiceMethodCollection): void
     {
         foreach ($invoiceMethodCollection as $invoiceMethod) {
             $this->invoiceMethod->add($invoiceMethod);
@@ -177,7 +195,7 @@ class Program extends EntityAbstract implements ResourceInterface
      *
      * @param Collections\Collection $invoiceMethodCollection
      */
-    public function removeInvoiceMethod(Collections\Collection $invoiceMethodCollection)
+    public function removeInvoiceMethod(Collections\Collection $invoiceMethodCollection): void
     {
         foreach ($invoiceMethodCollection as $single) {
             $this->invoiceMethod->removeElement($single);
@@ -313,6 +331,44 @@ class Program extends EntityAbstract implements ResourceInterface
     public function setParentDoa($parentDoa)
     {
         $this->parentDoa = $parentDoa;
+
+        return $this;
+    }
+
+    /**
+     * @return \Organisation\Entity\Parent\Invoice[]|Collections\ArrayCollection
+     */
+    public function getParentInvoice()
+    {
+        return $this->parentInvoice;
+    }
+
+    /**
+     * @param \Organisation\Entity\Parent\Invoice $parentInvoice
+     * @return Program
+     */
+    public function setParentInvoice(\Organisation\Entity\Parent\Invoice $parentInvoice): Program
+    {
+        $this->parentInvoice = $parentInvoice;
+
+        return $this;
+    }
+
+    /**
+     * @return \Organisation\Entity\Parent\InvoiceExtra[]|Collections\ArrayCollection
+     */
+    public function getParentInvoiceExtra()
+    {
+        return $this->parentInvoiceExtra;
+    }
+
+    /**
+     * @param \Organisation\Entity\Parent\InvoiceExtra $parentInvoiceExtra
+     * @return Program
+     */
+    public function setParentInvoiceExtra(\Organisation\Entity\Parent\InvoiceExtra $parentInvoiceExtra): Program
+    {
+        $this->parentInvoiceExtra = $parentInvoiceExtra;
 
         return $this;
     }

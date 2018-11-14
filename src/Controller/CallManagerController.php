@@ -13,36 +13,107 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Program\Controller;
 
 use Affiliation\Service\AffiliationService;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
+use General\Service\CountryService;
+use General\Service\GeneralService;
+use Program\Controller\Plugin\CreateCallFundingOverview;
+use Program\Controller\Plugin\CreateFundingDownload;
+use Program\Controller\Plugin\GetFilter;
 use Program\Entity\Call\Call;
 use Program\Form\CallFilter;
 use Program\Form\FundingFilter;
+use Program\Service\CallService;
+use Program\Service\FormService;
 use Project\Entity\Project;
 use Project\Entity\Version\Version;
 use Project\Service\ProjectService;
+use Project\Service\VersionService;
+use Zend\Http\Request;
+use Zend\Http\Response;
+use Zend\I18n\Translator\TranslatorInterface;
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 
 /**
+ * Class CallManagerController
  *
+ * @package Program\Controller
+ * @method FlashMessenger flashMessenger()
+ * @method GetFilter getProgramFilter()
+ * @method CreateCallFundingOverview createCallFundingOverview($projects, $year)
+ * @method CreateFundingDownload createFundingDownload(Call $call)
  */
-class CallManagerController extends ProgramAbstractController
+final class CallManagerController extends AbstractActionController
 {
     /**
-     * @return \Zend\View\Model\ViewModel
+     * @var CallService
      */
-    public function listAction()
-    {
-        $page         = $this->params()->fromRoute('page', 1);
-        $filterPlugin = $this->getProgramFilter();
-        $contactQuery = $this->getProgramService()->findEntitiesFiltered(Call::class, $filterPlugin->getFilter());
+    private $callService;
+    /**
+     * @var FormService
+     */
+    private $formService;
+    /**
+     * @var ProjectService
+     */
+    private $projectService;
+    /**
+     * @var VersionService
+     */
+    private $versionService;
+    /**
+     * @var GeneralService
+     */
+    private $generalService;
+    /**
+     * @var CountryService
+     */
+    private $countryService;
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
-        $paginator
-            = new Paginator(new PaginatorAdapter(new ORMPaginator($contactQuery, false)));
+    public function __construct(
+        CallService $callService,
+        FormService $formService,
+        ProjectService $projectService,
+        VersionService $versionService,
+        GeneralService $generalService,
+        CountryService $countryService,
+        EntityManager $entityManager,
+        TranslatorInterface $translator
+    ) {
+        $this->callService = $callService;
+        $this->formService = $formService;
+        $this->projectService = $projectService;
+        $this->versionService = $versionService;
+        $this->generalService = $generalService;
+        $this->countryService = $countryService;
+        $this->entityManager = $entityManager;
+        $this->translator = $translator;
+    }
+
+    public function listAction(): ViewModel
+    {
+        $page = $this->params()->fromRoute('page', 1);
+        $filterPlugin = $this->getProgramFilter();
+        $callQuery = $this->callService->findFiltered(Call::class, $filterPlugin->getFilter());
+
+        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($callQuery, false)));
         $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 20);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
@@ -61,42 +132,39 @@ class CallManagerController extends ProgramAbstractController
         );
     }
 
-    /**
-     * @return array|ViewModel
-     */
-    public function viewAction()
+    public function viewAction(): ViewModel
     {
-        $call = $this->getProgramService()->findEntityById(Call::class, $this->params('id'));
-        if (is_null($call)) {
+        $call = $this->callService->findCallById((int)$this->params('id'));
+
+        if (null === $call) {
             return $this->notFoundAction();
         }
 
-        //We need the countries active in the call, to store the funding decisions
-        $countries = $this->getGeneralService()->findCountryByCall($call, AffiliationService::WHICH_ALL);
+        // We need the countries active in the call, to store the funding decisions
+        $countries = $this->countryService->findCountryByCall($call, AffiliationService::WHICH_ALL);
 
         return new ViewModel(
             [
-                'call'      => $call,
-                'countries' => $countries,
+                'call'           => $call,
+                'countries'      => $countries,
+                'generalService' => $this->generalService
             ]
         );
     }
 
     /**
-     * Create a new template.
-     *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Zend\Http\Response|ViewModel
      */
     public function newAction()
     {
-        $data = array_merge($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
+        /** @var Request $request */
+        $request = $this->getRequest();
+        $data = $request->getPost()->toArray();
 
-        $form = $this->getFormService()->prepare(Call::class, null, $data);
+        $form = $this->formService->prepare(Call::class, $data);
         $form->remove('delete');
 
-        $form->setAttribute('class', 'form-horizontal');
-
-        if ($this->getRequest()->isPost()) {
+        if ($request->isPost()) {
             if (isset($data['cancel'])) {
                 $this->redirect()->toRoute('zfcadmin/call/list');
             }
@@ -104,14 +172,16 @@ class CallManagerController extends ProgramAbstractController
             if ($form->isValid()) {
                 /* @var $call Call */
                 $call = $form->getData();
+                $this->callService->save($call);
 
-                $call = $this->getProgramService()->newEntity($call);
-                $this->redirect()->toRoute(
-                    'zfcadmin/call/view',
-                    [
-                        'id' => $call->getId(),
-                    ]
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate("txt-call-%s-has-been-created-successfully"),
+                        $call
+                    )
                 );
+
+                return $this->redirect()->toRoute('zfcadmin/call/view', ['id' => $call->getId()]);
             }
         }
 
@@ -119,18 +189,17 @@ class CallManagerController extends ProgramAbstractController
     }
 
     /**
-     * Edit an template by finding it and call the corresponding form.
-     *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Zend\Http\Response|ViewModel
      */
     public function editAction()
     {
-        $call = $this->getProgramService()->findEntityById(Call::class, $this->params('id'));
-        $data = array_merge($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
+        /** @var Request $request */
+        $request = $this->getRequest();
+        $call = $this->callService->find(Call::class, (int)$this->params('id'));
+        $data = $request->getPost()->toArray();
+        $form = $this->formService->prepare($call, $data);
 
-        $form = $this->getFormService()->prepare($call, $call, $data);
-
-        if ($this->getRequest()->isPost()) {
+        if ($request->isPost()) {
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute('zfcadmin/program/vat/call/list');
             }
@@ -140,15 +209,16 @@ class CallManagerController extends ProgramAbstractController
                 $call = $form->getData();
 
                 /** @var Call $call */
-                $call = $this->getCallService()->updateEntity($call);
-                $this->redirect()->toRoute(
-                    'zfcadmin/call/view',
-                    [
-                        'id' => $call->getId(),
-                    ]
+                $this->callService->save($call);
+
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate("txt-call-%s-has-been-updated-successfully"),
+                        $call
+                    )
                 );
-            } else {
-                var_dump($form->getInputFilter()->getMessages());
+
+                return $this->redirect()->toRoute('zfcadmin/call/view', ['id' => $call->getId()]);
             }
         }
 
@@ -156,32 +226,32 @@ class CallManagerController extends ProgramAbstractController
     }
 
     /**
-     * Edit an template by finding it and call the corresponding form.
-     *
-     * @return \Zend\View\Model\ViewModel
+     * @return ViewModel
      */
-    public function sizeAction()
+    public function sizeAction(): ViewModel
     {
-        $call = $this->getCallService()->findCallById($this->params('id'));
+        $call = $this->callService->findCallById((int)$this->params('id'));
 
-        //Only add the active projects
-        $activeProjects = $this->getProjectService()->findProjectsByCall($call, ProjectService::WHICH_LABELLED);
-        $projects       = $activeProjects->getQuery()->getResult();
+        if (null === $call) {
+            return $this->notFoundAction();
+        }
 
-        //Find the span of the call, because otherwise the matrix will be filled with numbers of year before the call
-        $minMaxYearCall = $this->getCallService()->findMinAndMaxYearInCall($call);
-        $yearSpan       = range($minMaxYearCall->minYear, $minMaxYearCall->maxYear);
+        // Only add the active projects
+        $activeProjects = $this->projectService->findProjectsByCall($call, ProjectService::WHICH_LABELLED);
+        $projects = $activeProjects->getQuery()->getResult();
 
-
+        // Find the span of the call, because otherwise the matrix will be filled with numbers of year before the call
+        $minMaxYearCall = $this->callService->findMinAndMaxYearInCall($call);
+        $yearSpan = range($minMaxYearCall->minYear, $minMaxYearCall->maxYear);
         $versionOverview = [];
 
         /** @var Project $project */
         foreach ($projects as $project) {
             /** @var Version $version */
-            foreach (array_reverse($this->getVersionService()->findVersionsByProject($project)) as $version) {
+            foreach (array_reverse($this->versionService->findVersionsByProject($project)) as $version) {
                 $versionOverview[$project->getId()][$version->getDateSubmitted()->format('Y')][] = [
                     'version' => $version,
-                    'cost'    => $this->getVersionService()->findTotalCostVersionByProjectVersion($version),
+                    'cost'    => $this->versionService->findTotalCostVersionByProjectVersion($version),
                 ];
             }
         };
@@ -190,7 +260,7 @@ class CallManagerController extends ProgramAbstractController
             [
                 'call'            => $call,
                 'yearSpan'        => $yearSpan,
-                'projectService'  => $this->getProjectService(),
+                'projectService'  => $this->projectService,
                 'versionOverview' => $versionOverview,
                 'projects'        => $projects,
             ]
@@ -198,36 +268,36 @@ class CallManagerController extends ProgramAbstractController
     }
 
     /**
-     * Edit an template by finding it and call the corresponding form.
-     *
-     * @return \Zend\View\Model\ViewModel
+     * @return ViewModel
      */
-    public function fundingAction()
+    public function fundingAction(): ViewModel
     {
-        $callId = $this->params('id', $this->getCallService()->findFirstAndLastCall()->lastCall->getId());
+        /** @var Request $request */
+        $request = $this->getRequest();
+        $callId = (int)$this->params('id', $this->callService->findFirstAndLastCall()->lastCall->getId());
+        $call = $this->callService->findCallById($callId);
 
+        if (null === $call) {
+            return $this->notFoundAction();
+        }
 
-        $call       = $this->getCallService()->findCallById($callId);
-        $minMaxYear = $this->getCallService()->findMinAndMaxYearInCall($call);
+        $minMaxYear = $this->callService->findMinAndMaxYearInCall($call);
 
         $year = $this->params('year', $minMaxYear->maxYear);
         /*
          * The form can be used to overrule some parameters. We therefore need to check if the form is set
          * posted correctly and need to update the params when the form has been post
          */
-        $form = new FundingFilter($this->getEntityManager(), $minMaxYear);
-        $form->setData($this->getRequest()->getPost()->toArray());
+        $form = new FundingFilter($this->entityManager, $minMaxYear);
+        $form->setData($request->getPost()->toArray());
 
-        if ($this->getRequest()->isPost() && $form->isValid()) {
+        if ($request->isPost() && $form->isValid()) {
             $formData = $form->getData();
-
             $this->redirect()->toRoute(
                 'zfcadmin/call/funding',
                 [
                     'id'   => (int)$formData['call'],
                     'year' => (int)$formData['year'],
-
-
                 ]
             );
         } else {
@@ -239,12 +309,12 @@ class CallManagerController extends ProgramAbstractController
             );
         }
 
-        $projects = $this->getProjectService()->findProjectsByCall($call)->getQuery()->getResult();
+        $projects = $this->projectService->findProjectsByCall($call)->getQuery()->getResult();
 
         return new ViewModel(
             [
                 'projects'      => $projects,
-                'fundingResult' => $this->createCallFundingOverview()->create($projects, $year),
+                'fundingResult' => $this->createCallFundingOverview($projects, $year),
                 'year'          => $year,
                 'call'          => $call,
                 'form'          => $form,
@@ -253,27 +323,34 @@ class CallManagerController extends ProgramAbstractController
     }
 
     /**
-     * @return \Zend\Http\PhpEnvironment\Response|\Zend\Stdlib\ResponseInterface
+     * @return Response
      */
-    public function downloadFundingAction()
+    public function downloadFundingAction(): Response
     {
-        $callId = $this->params('id');
-        $call   = $this->getCallService()->findCallById($callId);
+        $call = $this->callService->findCallById((int)$this->params('id'));
 
-        $string = $this->createFundingDownload()->create($call);
-
-        //To be able to open the file correctly in Excel, we need to convert it to UTF-16LE
-        $string = mb_convert_encoding($string, 'UTF-16LE', 'UTF8');
-
+        /** @var Response $response */
         $response = $this->getResponse();
-        $headers  = $response->getHeaders();
+
+        if (null === $call) {
+            return $response->setStatusCode(Response::STATUS_CODE_404);
+        }
+
+        $string = $this->createFundingDownload($call);
+        // Convert to UTF-16LE
+        $string = mb_convert_encoding($string, 'UTF-16LE', 'UTF-8');
+        // Prepend BOM
+        $string = "\xFF\xFE" . $string;
+
+
+        $headers = $response->getHeaders();
         $headers->addHeaderLine('Content-Type', 'text/csv');
         $headers->addHeaderLine(
             'Content-Disposition',
             "attachment; filename=\"funding_call_$call.csv\""
         );
         $headers->addHeaderLine('Accept-Ranges', 'bytes');
-        $headers->addHeaderLine('Content-Length', strlen($string));
+        $headers->addHeaderLine('Content-Length', \strlen($string));
 
         $response->setContent($string);
 

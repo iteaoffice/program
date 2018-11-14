@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Program\Service;
 
 use General\Entity\Country;
@@ -17,85 +19,49 @@ use Program\Entity\Funder;
 use Program\Entity\Program;
 
 /**
- * ProgramService.
+ * Class ProgramService
  *
- * this is a generic wrapper service for all the other services
- *
- * First parameter of all methods (lowercase, underscore_separated)
- * will be used to fetch the correct model service, one exception is the 'linkModel'
- * method.
+ * @package Program\Service
  */
-class ProgramService extends ServiceAbstract
+class ProgramService extends AbstractService
 {
-
-    /**
-     * @param $id
-     *
-     * @return null|Program
-     */
-    public function findProgramById($id)
+    public function findProgramById(int $id): ?Program
     {
-        return $this->getEntityManager()->getRepository(Program::class)->find($id);
+        return $this->entityManager->getRepository(Program::class)->find($id);
     }
 
-    /**
-     * @param string $name
-     *
-     * @return null|Program
-     */
-    public function findProgramByName($name)
+    public function findProgramByName(string $name): ?Program
     {
-        return $this->getEntityManager()->getRepository(Program::class)->findOneBy(['program' => $name]);
+        return $this->entityManager->getRepository(Program::class)->findOneBy(['program' => $name]);
     }
 
-    /**
-     * Find the last open program and check which versionType is active.
-     *
-     * @return Program
-     */
-    public function findLastProgram()
+    public function findLastProgram(): ?Program
     {
-        return $this->getEntityManager()->getRepository(Program::class)->findOneBy([], ['id' => 'DESC']);
+        return $this->entityManager->getRepository(Program::class)->findOneBy([], ['id' => 'DESC']);
     }
 
-    /**
-     * @param Program $program
-     *
-     * @return \stdClass
-     */
-    public function findMinAndMaxYearInProgram(Program $program)
+    public function findMinAndMaxYearInProgram(Program $program): \stdClass
     {
         /** @var \Program\Repository\Program $repository */
-        $repository = $this->getEntityManager()->getRepository(Program::class);
+        $repository = $this->entityManager->getRepository(Program::class);
 
-        $yearSpanResult    = $repository->findMinAndMaxYearInProgram($program);
-        $yearSpan          = new \stdClass();
+        $yearSpanResult = $repository->findMinAndMaxYearInProgram($program);
+        $yearSpan = new \stdClass();
         $yearSpan->minYear = (int)$yearSpanResult['minYear'];
         $yearSpan->maxYear = (int)$yearSpanResult['maxYear'];
 
         return $yearSpan;
     }
 
-    /**
-     * @param Country $country
-     *
-     * @return Funder[]
-     */
-    public function findFunderByCountry(Country $country)
+    public function findFunderByCountry(Country $country): array
     {
-        return $this->getEntityManager()->getRepository(Funder::class)
-                    ->findBy(['country' => $country], ['position' => 'ASC']);
+        return $this->entityManager->getRepository(Funder::class)
+            ->findBy(['country' => $country], ['position' => 'ASC']);
     }
 
-    /**
-     * @param Program      $program
-     * @param Organisation $organisation
-     *
-     * @return null|Doa
-     */
-    public function findProgramDoaByProgramAndOrganisation(Program $program, Organisation $organisation)
+    public function findProgramDoaByProgramAndOrganisation(Program $program, Organisation $organisation): ?Doa
     {
-        return $this->getEntityManager()->getRepository(Doa::class)->findOneBy(
+        return $this->entityManager->getRepository(Doa::class)->findOneBy(
             [
                 'program'      => $program,
                 'organisation' => $organisation,

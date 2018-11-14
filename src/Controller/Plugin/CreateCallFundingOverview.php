@@ -13,48 +13,71 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Program\Controller\Plugin;
 
 use Affiliation\Service\AffiliationService;
-use General\Service\GeneralService;
+use General\Service\CountryService;
 use Project\Entity\Funding\Source;
 use Project\Entity\Funding\Status;
 use Project\Service\EvaluationService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\Mvc\Controller\PluginManager;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Special plugin to produce an array with the evaluation.
  *
  * Class CreateEvaluation
  */
-class CreateCallFundingOverview extends AbstractPlugin
+final class CreateCallFundingOverview extends AbstractPlugin
 {
     /**
-     * @var ServiceLocatorInterface|PluginManager
+     * @var CountryService
      */
-    protected $serviceLocator;
+    private $countryService;
+    /**
+     * @var VersionService
+     */
+    private $versionService;
+    /**
+     * @var ProjectService
+     */
+    private $projectService;
+    /**
+     * @var EvaluationService
+     */
+    private $evaluationService;
+    /**
+     * @var AffiliationService
+     */
+    private $affiliationService;
     /**
      * @var array
      */
-    protected $countries = [];
+    private $countries = [];
 
-    /**
-     * @param array $projects
-     * @param null  $year
-     *
-     * @return array
-     */
-    public function create(array $projects, $year)
+    public function __construct(
+        CountryService $countryService,
+        VersionService $versionService,
+        ProjectService $projectService,
+        EvaluationService $evaluationService,
+        AffiliationService $affiliationService
+    ) {
+        $this->countryService = $countryService;
+        $this->versionService = $versionService;
+        $this->projectService = $projectService;
+        $this->evaluationService = $evaluationService;
+        $this->affiliationService = $affiliationService;
+    }
+
+    public function __invoke(array $projects, $year): array
     {
         $evaluationResult = [];
 
         foreach ($projects as $project) {
-            $countries = $this->getGeneralService()
-                              ->findCountryByProject($project, AffiliationService::WHICH_ONLY_ACTIVE);
+            $countries = $this->countryService->findCountryByProject($project, AffiliationService::WHICH_ONLY_ACTIVE);
             foreach ($countries as $country) {
                 /*
                  * Create an array of countries to serialize it normally
@@ -63,7 +86,7 @@ class CreateCallFundingOverview extends AbstractPlugin
                     'id'      => $country->getId(),
                     'country' => $country->getCountry(),
                     'object'  => $country,
-                    'iso3'    => ucwords($country->getIso3()),
+                    'iso3'    => ucwords((string)$country->getIso3()),
 
                 ];
 
@@ -87,62 +110,37 @@ class CreateCallFundingOverview extends AbstractPlugin
     }
 
     /**
-     * Gateway to the General Service.
-     *
-     * @return GeneralService
-     */
-    public function getGeneralService()
-    {
-        return $this->getServiceLocator()->get(GeneralService::class);
-    }
-
-    /**
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param ServiceLocatorInterface|PluginManager $serviceLocator
-     *
-     * @return $this
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-
-        return $this;
-    }
-
-    /**
      * @param $project
      * @param $country
+     * @param $year
      *
-     * @return float
+     * @return array
      */
-    private function getValue($project, $country, $year)
+    private function getValue($project, $country, $year): array
     {
-        $version = $this->getProjectService()->getLatestProjectVersion($project);
+        $version = $this->projectService->getLatestProjectVersion($project);
+
+        if (null === $version) {
+            return [];
+        }
 
         //Funding status separation
         /** @var Status $allGood */
-        $allGood = $this->getEvaluationService()->findEntityById(Status::class, Status::STATUS_ALL_GOOD);
+        $allGood = $this->evaluationService->find(Status::class, Status::STATUS_ALL_GOOD);
         /** @var Status $selfFunded */
-        $selfFunded = $this->getEvaluationService()->findEntityById(Status::class, Status::STATUS_SELF_FUNDED);
+        $selfFunded = $this->evaluationService->find(Status::class, Status::STATUS_SELF_FUNDED);
         /** @var Status $default */
-        $default = $this->getEvaluationService()->findEntityById(Status::class, Status::STATUS_DEFAULT);
+        $default = $this->evaluationService->find(Status::class, Status::STATUS_DEFAULT);
 
-        $costAllGood    = 0;
+        $costAllGood = 0;
         $costSelfFunded = 0;
-        $otherCost      = 0;
+        $otherCost = 0;
 
         //Go over the partners in the project and calculate the cost, group it by funding status
-        foreach ($this->getAffiliationService()->findAffiliationByProjectAndCountryAndWhich($project, $country) as
+        foreach ($this->affiliationService->findAffiliationByProjectAndCountryAndWhich($project, $country) as
             $affiliation) {
             //Find the costs of this affiliation (in the given year)
-            $costsPerYear = $this->getVersionService()->findTotalCostVersionByAffiliationAndVersionPerYear(
+            $costsPerYear = $this->versionService->findTotalCostVersionByAffiliationAndVersionPerYear(
                 $affiliation,
                 $version
             );
@@ -157,7 +155,7 @@ class CreateCallFundingOverview extends AbstractPlugin
                         $costs = $costsPerYear[$year];
                     }
 
-                    if (! is_null($affiliation->getDateSelfFunded())) {
+                    if (null !== $affiliation->getDateSelfFunded()) {
                         $costSelfFunded += $costs;
                     } else {
                         //We have now the funding in the given year (office version)
@@ -178,7 +176,7 @@ class CreateCallFundingOverview extends AbstractPlugin
         }
 
 
-        $value['allGood']    = [
+        $value['allGood'] = [
             'status' => $allGood,
             'value'  => $costAllGood,
         ];
@@ -186,52 +184,12 @@ class CreateCallFundingOverview extends AbstractPlugin
             'status' => $selfFunded,
             'value'  => $costSelfFunded,
         ];
-        $value['other']      = [
+        $value['other'] = [
             'status' => $default,
             'value'  => $otherCost,
         ];
 
 
         return $value;
-    }
-
-    /**
-     * Gateway to the Project Service.
-     *
-     * @return ProjectService
-     */
-    public function getProjectService()
-    {
-        return $this->getServiceLocator()->get(ProjectService::class);
-    }
-
-    /**
-     * Gateway to the Evaluation Service.
-     *
-     * @return EvaluationService
-     */
-    public function getEvaluationService()
-    {
-        return $this->getServiceLocator()->get(EvaluationService::class);
-    }
-
-    /**
-     * Gateway to the Affiliation Service.
-     *
-     * @return AffiliationService
-     */
-    public function getAffiliationService()
-    {
-        return $this->getServiceLocator()->get(AffiliationService::class);
-    }
-
-    /**
-     * Gateway to the Version Service.
-     *
-     * @return VersionService
-     */
-    public function getVersionService()
-    {
-        return $this->getServiceLocator()->get(VersionService::class);
     }
 }

@@ -11,6 +11,8 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\View\Helper;
 
 use Content\Entity\Content;
@@ -42,7 +44,7 @@ class ProgramHandler extends AbstractViewHelper
      *
      * @return string
      */
-    public function __invoke(Content $content)
+    public function __invoke(Content $content): string
     {
         $this->extractContentParam($content);
 
@@ -63,7 +65,7 @@ class ProgramHandler extends AbstractViewHelper
     /**
      * @param Content $content
      */
-    public function extractContentParam(Content $content)
+    public function extractContentParam(Content $content): void
     {
         /**
          * Go over the handler params and try to see if it is hardcoded or just set via the route
@@ -73,14 +75,14 @@ class ProgramHandler extends AbstractViewHelper
                 case 'session':
                     $session = $this->findParamValueFromContent($content, $parameter);
 
-                    if (! is_null($session)) {
-                        $this->setsessionById($session);
+                    if (null !== $session) {
+                        $this->setSessionById($session);
                     }
                     break;
                 case 'call':
                     $call = $this->findParamValueFromContent($content, $parameter);
 
-                    if (! is_null($call)) {
+                    if (null !== $call) {
                         $this->setCallById($call);
                     }
                     break;
@@ -90,21 +92,21 @@ class ProgramHandler extends AbstractViewHelper
 
     /**
      * @param Content $content
-     * @param Param   $param
+     * @param Param $param
      *
      * @return null|string
      */
-    private function findParamValueFromContent(Content $content, Param $param)
+    private function findParamValueFromContent(Content $content, Param $param):?string
     {
         //Hardcoded is always first,If it cannot be found, try to find it from the docref (rule 2)
         foreach ($content->getContentParam() as $contentParam) {
-            if ($contentParam->getParameter() === $param && ! empty($contentParam->getParameterId())) {
+            if ($contentParam->getParameter() === $param && !empty($contentParam->getParameterId())) {
                 return $contentParam->getParameterId();
             }
         }
 
         //Try first to see if the param can be found from the route (rule 1)
-        if (! is_null($this->getRouteMatch()->getParam($param->getParam()))) {
+        if (!\is_null($this->getRouteMatch()->getParam($param->getParam()))) {
             return $this->getRouteMatch()->getParam($param->getParam());
         }
 
@@ -116,10 +118,10 @@ class ProgramHandler extends AbstractViewHelper
     /**
      * @param $sessionId
      */
-    public function setSessionById($sessionId)
+    public function setSessionById($sessionId): void
     {
         /** @var Session $session */
-        $session = $this->getCallService()->findEntityById(Session::class, $sessionId);
+        $session = $this->getCallService()->find(Session::class, (int) $sessionId);
         $this->setSession($session);
     }
 
@@ -134,14 +136,14 @@ class ProgramHandler extends AbstractViewHelper
     /**
      * @param $callId
      */
-    public function setCallById($callId)
+    public function setCallById($callId): void
     {
-        $call = $this->getCallService()->findCallById($callId);
+        $call = $this->getCallService()->findCallById((int) $callId);
         $this->setCall($call);
     }
 
     /**
-     * @param Call    $call
+     * @param Call $call
      * @param Program $program
      *
      * @return string
@@ -153,7 +155,7 @@ class ProgramHandler extends AbstractViewHelper
             [
                 'displayNameCall' => 'name',
                 'calls'           => $this->getCallService()->findNonEmptyAndActiveCalls($program),
-                'callId'          => ! is_null($call) ? $call->getId() : null,
+                'callId'          => null !== $call ? $call->getId() : null,
             ]
         );
     }

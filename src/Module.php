@@ -13,32 +13,38 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Program;
 
+use Program\Navigation\Service\CallNavigationService;
+use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature;
+use Zend\Mvc\Application;
+use Zend\Mvc\MvcEvent;
 
 /**
  *
  */
-class Module implements Feature\AutoloaderProviderInterface, Feature\ConfigProviderInterface
+class Module implements Feature\ConfigProviderInterface
 {
-    /**
-     * @return array
-     */
-    public function getAutoloaderConfig()
-    {
-        return [
-            'Zend\Loader\ClassMapAutoloader' => [
-                __DIR__ . '/../autoload_classmap.php',
-            ],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function getConfig()
+    public function getConfig(): array
     {
         return include __DIR__ . '/../config/module.config.php';
+    }
+
+    public function onBootstrap(EventInterface $e): void
+    {
+        /**
+         * @var $app Application
+         */
+        $app = $e->getParam('application');
+        $em = $app->getEventManager();
+        $em->attach(
+            MvcEvent::EVENT_RENDER,
+            function (MvcEvent $event) {
+                $event->getApplication()->getServiceManager()->get(CallNavigationService::class)();
+            }
+        );
     }
 }

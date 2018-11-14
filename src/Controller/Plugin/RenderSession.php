@@ -11,81 +11,41 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\Controller\Plugin;
 
-use Contact\Service\ContactService;
-use General\Service\GeneralService;
 use Program\Entity\Call\Session;
 use Program\Options\ModuleOptions;
-use Project\Service\IdeaService;
-use Zend\I18n\View\Helper\Translate;
+use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
-/**
- * Create a link to an project.
+/***
+ * Class RenderSession
  *
- * @category   Program
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    https://itea3.org/licence.txt proprietary
- *
- * @link       https://itea3.org
+ * @package Program\Controller\Plugin
  */
-class RenderSession extends AbstractPlugin
+final class RenderSession extends AbstractPlugin
 {
     /**
-     * @var ServiceLocatorInterface
+     * @var ModuleOptions
      */
-    protected $serviceLocator;
-
+    private $moduleOptions;
     /**
-     * Gateway to the Contact Service.
-     *
-     * @return ContactService
+     * @var TranslatorInterface
      */
-    public function getContactService()
+    private $translator;
+
+    public function __construct(ModuleOptions $moduleOptions, TranslatorInterface $translator)
     {
-        return $this->getServiceLocator()->get(ContactService::class);
+        $this->moduleOptions = $moduleOptions;
+        $this->translator = $translator;
     }
 
-    /**
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return $this
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-
-        return $this;
-    }
-
-    /**
-     * @return array|object
-     */
-    public function getIdeaService()
-    {
-        return $this->getServiceLocator()->get(IdeaService::class);
-    }
-
-    /**
-     * @param Session $session
-     *
-     * @return ProgramPdf
-     */
-    public function __invoke(Session $session)
+    public function __invoke(Session $session): ProgramPdf
     {
         $pdf = new ProgramPdf();
-        $pdf->setTemplate($this->getModuleOptions()->getBlankTemplate());
+        $pdf->setTemplate($this->moduleOptions->getBlankTemplate());
         $pdf->AddPage();
         $pdf->SetFontSize(8);
         $pdf->SetTopMargin(30);
@@ -108,7 +68,7 @@ class RenderSession extends AbstractPlugin
             0,
             '',
             '',
-            $session->getDate()->format("d-m-Y"),
+            $session->getDate()->format('d-m-Y'),
             0,
             1,
             0,
@@ -123,11 +83,11 @@ class RenderSession extends AbstractPlugin
 
         //Funding information
         $header = [
-            $this->translate("txt-time"),
-            $this->translate("txt-no"),
-            $this->translate("txt-idea"),
-            $this->translate("txt-title"),
-            $this->translate("txt-presenter"),
+            $this->translator->translate("txt-time"),
+            $this->translator->translate("txt-no"),
+            $this->translator->translate("txt-idea"),
+            $this->translator->translate("txt-title"),
+            $this->translator->translate("txt-presenter"),
 
         ];
 
@@ -146,44 +106,5 @@ class RenderSession extends AbstractPlugin
         $pdf->coloredTable($header, $pitches, [15, 10, 25, 110, 30]);
 
         return $pdf;
-    }
-
-    /**
-     * @return ModuleOptions
-     */
-    public function getModuleOptions()
-    {
-        return $this->getServiceLocator()->get(ModuleOptions::class);
-    }
-
-    /**
-     *
-     */
-
-    /**
-     * Proxy for the flash messenger helper to have the string translated earlier.
-     *
-     * @param $string
-     *
-     * @return string
-     */
-    protected function translate($string)
-    {
-        /**
-         * @var $translate Translate
-         */
-        $translate = $this->getServiceLocator()->get('ViewHelperManager')->get('translate');
-
-        return $translate($string);
-    }
-
-    /**
-     * Gateway to the General Service.
-     *
-     * @return GeneralService
-     */
-    public function getGeneralService()
-    {
-        return $this->getServiceLocator()->get(GeneralService::class);
     }
 }

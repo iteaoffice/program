@@ -1,9 +1,9 @@
 {% do headTitle().append(translate("txt-upload-nda-title")) %}
 
 {% if call %}
-    <h1>{{ translate("txt-submit-non-disclosure-agreement-for-call-%s")|format(call) }}</h1>
+    <h1 class="display-4">{{ translate("txt-submit-non-disclosure-agreement-for-call-%s")|format(call) }}</h1>
 {% else %}
-    <h1>{{ translate("txt-submit-a-general-non-disclosure-agreement") }}</h1>
+    <h1 class="display-4">{{ translate("txt-submit-a-general-non-disclosure-agreement") }}</h1>
 {% endif %}
 
 {% if not nda %}
@@ -24,33 +24,33 @@
     {% do form.prepare() %}
     {{ form().openTag(form)|raw }}
 
-    <div class="form-group">
-        <label class="col-sm-3 control-label">{{ translate("txt-contact") }}</label>
+    <div class="form-group row">
+        <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-contact") }}</label>
 
         <div class="col-sm-9">
-            <p class="form-control-static">{{ zfcUserIdentity().displayName }}</p>
+            <p class="form-control-static form-control-plaintext">{{ identity().displayName }}</p>
         </div>
     </div>
 
     {% if call %}
-        <div class="form-group">
-            <label class="col-sm-3 control-label">{{ translate("txt-program-call") }}</label>
+        <div class="form-group row">
+            <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-program-call") }}</label>
 
             <div class="col-sm-9">
-                <p class="form-control-static">{{ call }}</p>
+                <p class="form-control-static form-control-plaintext">{{ call }}</p>
             </div>
         </div>
     {% endif %}
 
     {{ ztbformelement(form.get('file')) }}
 
-    <div class="form-group">
-        <div class="col-sm-offset-3 col-sm-9">
+    <div class="form-group row">
+        <div class="offset-md-3 col-sm-offset-3 col-sm-9">
             {{ ndaLink(nda, 'render', 'button', call ) }} {{ formelement(form.get('submit')) }}
         </div>
     </div>
 
-
+    {{ formelement(form.get('csrf')) }}
     {{ form().closeTag()|raw }}
 
 {% else %}
@@ -75,7 +75,7 @@
             <dd>{{ call }}</dd>
         {% endif %}
         <dt>{{ translate("txt-contact") }}</dt>
-        <dd>{{ zfcUserIdentity().displayName() }}</dd>
+        <dd>{{ identity().displayName() }}</dd>
         <dt>{{ translate("txt-download-nda") }}</dt>
         <dd>{{ ndaLink(nda,'download', 'text') }}</dd>
     </dl>

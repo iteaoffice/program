@@ -1,12 +1,12 @@
 {% do headTitle().append(translate("txt-program-size")) %}
-<h1>{{ translate("txt-program-size-%s")|format(program) }}</h1>
+<h1 class="display-4">{{ translate("txt-program-size-%s")|format(program) }}</h1>
 
 {% do form.prepare() %}
 
 {{ form().openTag(form)|raw }}
 
 
-<table class="table table-condensed table-striped table-hover">
+<table class="table table-hover table-striped table-condensed table-sm">
     <thead>
     <tr>
         <th>{{ programLink(program,'view-admin','name') }}</th>

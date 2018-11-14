@@ -12,11 +12,12 @@ return [
         'community' => [
             'idea' => [
                 'pages' => [
-                    'upload-nda' => [
-                        'label'     => _("txt-nav-upload-nda"),
-                        'route'     => 'community/program/nda/upload',
-                        'resource'  => 'route/community/program/nda/upload',
-                        'privilege' => 'upload',
+                    'submit-nda' => [
+                        'order'     => 20,
+                        'label'     => _("txt-nav-submit-nda"),
+                        'route'     => 'community/program/nda/submit',
+                        'resource'  => 'route/community/program/nda/submit',
+                        'privilege' => 'submit',
                     ],
                     'view-nda'   => [
                         'label'   => _("txt-nav-view-nda"),
@@ -180,7 +181,45 @@ return [
                             ],
                         ],
                     ],
-
+                    'session-list' => [
+                        'label' => _("txt-nav-program-call-sessions"),
+                        'route' => 'zfcadmin/session/list',
+                        'pages' => [
+                            'view' => [
+                                'route'   => 'zfcadmin/session/view',
+                                'visible' => false,
+                                'params'  => [
+                                    'entities'   => [
+                                        'id' => Program\Entity\Call\Session::class,
+                                    ],
+                                    'invokables' => [
+                                        Program\Navigation\Invokable\SessionLabel::class,
+                                    ],
+                                ],
+                                'pages'   => [
+                                    'edit' => [
+                                        'label'   => _('txt-nav-edit'),
+                                        'route'   => 'zfcadmin/session/edit',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities' => [
+                                                'id' => Program\Entity\Call\Session::class,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'new'  => [
+                                'route'   => 'zfcadmin/session/new',
+                                'label'   => _("txt-add-session"),
+                                'visible' => false,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'tools'   => [
+                'pages' => [
                     'nda-approval' => [
                         'label' => _("txt-nav-nda-approval"),
                         'route' => 'zfcadmin/nda/approval',
@@ -193,19 +232,17 @@ return [
                                         'id' => Program\Entity\Nda::class,
                                     ],
                                     'invokables' => [
-                                        Program\Navigation\Invokable\CountryLabel::class,
+                                        Program\Navigation\Invokable\NdaLabel::class,
                                     ],
                                 ],
                                 'pages'   => [
                                     'edit' => [
+                                        'label'   => _("txt-edit-nda"),
                                         'route'   => 'zfcadmin/nda/edit',
                                         'visible' => false,
                                         'params'  => [
-                                            'entities'   => [
+                                            'entities' => [
                                                 'id' => Program\Entity\Nda::class,
-                                            ],
-                                            'invokables' => [
-                                                Program\Navigation\Invokable\NdaLabel::class,
                                             ],
                                         ],
                                     ],
@@ -213,7 +250,11 @@ return [
                             ],
                         ],
                     ],
-                    'funder'       => [
+                ]
+            ],
+            'config'  => [
+                'pages' => [
+                    'funder' => [
                         'label' => _("txt-nav-funder-list"),
                         'route' => 'zfcadmin/funder/list',
                         'pages' => [
@@ -253,8 +294,8 @@ return [
                             ],
                         ],
                     ],
-                ],
-            ],
+                ]
+            ]
         ],
     ],
 ];

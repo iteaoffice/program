@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Program\Form;
 
 use Zend\Form\Form;
@@ -16,14 +18,9 @@ use Zend\Validator\File\Extension;
 use Zend\Validator\File\Size;
 
 /**
- * Create a link to an project.
+ * Class UploadDoa
  *
- * @category   Program
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    https://itea3.org/licence.txt proprietary
- *
- * @link       https://itea3.org
+ * @package Program\Form
  */
 class UploadDoa extends Form implements InputFilterProviderInterface
 {
@@ -75,7 +72,7 @@ class UploadDoa extends Form implements InputFilterProviderInterface
      *
      * @return array
      */
-    public function getInputFilterSpecification()
+    public function getInputFilterSpecification(): array
     {
         return [
             'file' => [

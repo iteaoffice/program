@@ -11,25 +11,22 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Zend\Form\Annotation;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
- * Entity for a nda.
- *
  * @ORM\Table(name="nda")
  * @ORM\Entity(repositoryClass="Program\Repository\Nda")
  * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("nda")
- *
- * @category    Contact
  */
-class Nda extends EntityAbstract implements ResourceInterface
+class Nda extends AbstractEntity
 {
     /**
      * @ORM\Column(name="nda_id", type="integer", nullable=false)
@@ -46,6 +43,15 @@ class Nda extends EntityAbstract implements ResourceInterface
      */
     private $dateApproved;
     /**
+     * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", cascade={"persist"}, inversedBy="ndaApprover")
+     * @ORM\JoinColumns({
+     * @ORM\JoinColumn(name="approve_contact_id", referencedColumnName="contact_id")
+     * })
+     *
+     * @var \Contact\Entity\Contact
+     */
+    private $approver;
+    /**
      * @ORM\Column(name="date_signed", type="date", nullable=true)
      * @Gedmo\Timestampable(on="create")
      *
@@ -54,15 +60,15 @@ class Nda extends EntityAbstract implements ResourceInterface
     private $dateSigned;
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\ContentType", cascade={"persist"}, inversedBy="programNna")
-     * @ORM\JoinColumn(name="contenttype_id", referencedColumnName="contenttype_id", nullable=false)
+     * @ORM\JoinColumn(name="contenttype_id", referencedColumnName="contenttype_id", nullable=true)
      *
      * @var \General\Entity\ContentType
      */
     private $contentType;
     /**
-     * @ORM\Column(name="size", type="integer", nullable=false)
+     * @ORM\Column(name="size", type="integer", nullable=true)
      *
-     * @var integer
+     * @var integer|null
      */
     private $size;
     /**
@@ -106,82 +112,62 @@ class Nda extends EntityAbstract implements ResourceInterface
      */
     private $object;
 
-    /**
-     * Class constructor.
-     */
     public function __construct()
     {
-        $this->version = new ArrayCollection();
+        $this->call = new ArrayCollection();
     }
 
-    /**
-     * @param $property
-     *
-     * @return mixed
-     */
     public function __get($property)
     {
         return $this->$property;
     }
 
-    /**
-     * @param $property
-     * @param $value
-     */
     public function __set($property, $value)
     {
         $this->$property = $value;
     }
 
-    /**
-     * ToString.
-     *
-     * @return string
-     */
-    public function __toString()
+    public function __isset($property)
     {
-        /*
-         * Return an empty value when no id is known
-         */
-        if (is_null($this->id)) {
-            return sprintf("NDA_EMPTY");
+        return isset($this->$property);
+    }
+
+    public function __toString(): string
+    {
+        if (null === $this->id) {
+            return \sprintf('NDA_EMPTY');
         }
 
         return $this->parseFileName();
     }
 
-    /**
-     * Parse a filename.
-     *
-     * @return string
-     */
-    public function parseFileName()
+    public function parseFileName(): string
     {
-        if (is_null($this->getCall())) {
-            return sprintf("NDA_SEQ_%s", $this->getContact()->getId());
+        if ($this->getCall()->isEmpty()) {
+            return \sprintf('NDA_SEQ_%s', $this->getContact()->getId());
         }
 
-        return str_replace(' ', '_', sprintf("NDA_%s_SEQ_%s", $this->getCall(), $this->getContact()->getId()));
+        return \str_replace(' ', '_', \sprintf('NDA_%s_SEQ_%s', $this->parseCall(), $this->getContact()->getId()));
     }
 
     /**
-     * @return null|\Program\Entity\Call\Call
+     * @return ArrayCollection|Call\Call[]
      */
     public function getCall()
     {
-        if (is_null($this->call)) {
-            return null;
-        }
-
-        return $this->call->first();
+        return $this->call;
     }
 
     /**
-     * @param \Program\Entity\Call\Call[]|ArrayCollection $call
+     * @param ArrayCollection|Call\Call[] $call
+     *
+     * @return Nda
      */
-    public function setCall($call)
+    public function setCall($call): Nda
     {
         $this->call = $call;
+
+        return $this;
     }
 
     /**
@@ -192,22 +178,35 @@ class Nda extends EntityAbstract implements ResourceInterface
         return $this->contact;
     }
 
-    /**
-     * @param \Contact\Entity\Contact $contact
-     */
-    public function setContact($contact)
+    public function setContact($contact): Nda
     {
         $this->contact = $contact;
+
+        return $this;
     }
 
-    /**
-     * Returns the string identifier of the Resource.
-     *
-     * @return string
-     */
-    public function getResourceId()
+    public function parseCall(): ?Call\Call
     {
-        return sprintf('%s:%s', __CLASS__, $this->id);
+        if (!$this->hasCall()) {
+            return null;
+        }
+
+        return $this->getCall()->first();
+    }
+
+    public function hasCall(): bool
+    {
+        return !$this->getCall()->isEmpty();
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**
@@ -240,6 +239,26 @@ class Nda extends EntityAbstract implements ResourceInterface
     public function setDateApproved($dateApproved)
     {
         $this->dateApproved = $dateApproved;
+    }
+
+    /**
+     * @return \Contact\Entity\Contact
+     */
+    public function getApprover(): ?\Contact\Entity\Contact
+    {
+        return $this->approver;
+    }
+
+    /**
+     * @param \Contact\Entity\Contact $approver
+     *
+     * @return Nda
+     */
+    public function setApprover(\Contact\Entity\Contact $approver): Nda
+    {
+        $this->approver = $approver;
+
+        return $this;
     }
 
     /**
@@ -277,33 +296,16 @@ class Nda extends EntityAbstract implements ResourceInterface
     /**
      * @return \DateTime
      */
-    public function getDateUpdated()
+    public function getDateUpdated(): ?\DateTime
     {
         return $this->dateUpdated;
     }
 
-    /**
-     * @param \DateTime $dateUpdated
-     */
-    public function setDateUpdated($dateUpdated)
+    public function setDateUpdated($dateUpdated): Nda
     {
         $this->dateUpdated = $dateUpdated;
-    }
 
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
+        return $this;
     }
 
     /**

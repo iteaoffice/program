@@ -1,0 +1,459 @@
+{% do headTitle().append(translate("txt-call-portal")) %}
+{% do headTitle().append(call.__toString()) %}
+
+<div class="row">
+    <div class="col-md-8"><h1 class="display-4">{{ translate("txt-%s-overview")|format(call) }}</h1></div>
+    <div class="col-md-4">
+        {#{% if previousCall %}#}
+        {#<a href="{{ url('community/call/index',{'callId':previousCall.id}) }}">{{ previousCall }}</a>#}
+        {#{% endif %}#}
+        {#{% if nextCall %}#}
+        {#<a href="{{ url('community/call/index',{'callId':nextCall.id}) }}">{{ nextCall }}</a>#}
+        {#{% endif %}#}
+    </div>
+</div>
+
+<h2 class="display-4">{{ translate("txt-%s-calendar")|format(call) }}</h2>
+
+<ul class="timeline" id="timeline">
+    <li class="li {% if call.poOpenDate < date() %}complete{% endif %}">
+        <div class="timestamp">
+            <span class="author">Opening {{ call }}</span>
+            <span class="date">{{ call.poOpenDate|date('d M Y') }}</span>
+        </div>
+        <div class="status"></div>
+    </li>
+    <li class="li {% if call.poCloseDate < date() %}complete{% endif %}">
+        <div class="timestamp">
+            <span class="author">PO submission deadline</span>
+            <span class="date">{{ call.poCloseDate|date('d M Y') }}</span>
+        </div>
+        <div class="status"></div>
+    </li>
+    <li class="li {% if call.loiSubmissionDate < date() %}complete{% endif %}">
+        <div class="timestamp">
+            <span class="author">LOI submission deadline</span>
+            <span class="date">{{ call.loiSubmissionDate|date('d M Y') }}</span>
+        </div>
+        <div class="status status-small"></div>
+    </li>
+    <li class="li {% if call.fppOpenDate < date() %}complete{% endif %}">
+        <div class="timestamp">
+            <span class="author">Announcement FPP invitation</span>
+            <span class="date">{{ call.fppOpenDate|date('d M Y') }}</span>
+        </div>
+        <div class="status"></div>
+    </li>
+    <li class="li {% if call.fppCloseDate < date() %}complete{% endif %}">
+        <div class="timestamp">
+            <span class="author">FPP submission deadline</span>
+            <span class="date">{{ call.fppCloseDate|date('d M Y') }}</span>
+        </div>
+        <div class="status"></div>
+    </li>
+    <li class="li {% if call.doaSubmissionDate < date() %}complete{% endif %}">
+        <div class="timestamp">
+            <span class="author">DoA submission deadline</span>
+            <span class="date">{{ call.doaSubmissionDate|date('d M Y') }}</span>
+        </div>
+        <div class="status status-small"></div>
+    </li>
+    <li class="li {% if call.labelAnnouncementDate < date() %}complete{% endif %}">
+        <div class="timestamp">
+            <span class="author">Announcement of labelled ITEA projects</span>
+            <span class="date">{{ call.labelAnnouncementDate|date('d M Y') }}</span>
+        </div>
+        <div class="status"></div>
+    </li>
+</ul>
+
+<div class="row">
+    <div class="col-md-9">
+
+        {% if call.poOpenDate < date() %}
+            <h2>{{ translate("txt-my-projects-in-call-%s")|format(call) }}</h2>
+
+            <div class="row">
+                {% for projectItem in projects %}
+                    <div class="col-xs-6 col-md-3">
+
+                        {% if projectItem.type is constant('\\Project\\ValueObject\\ProjectItem::TYPE_PROJECT') %}
+                            <a class="thumbnail"
+                               href="{{ projectLink(projectItem.project,'view-community','social') }}">
+                                <div class="project-thumbnail {% if projectItem.isPending() %}project-thumbnail-blur{% endif %}"
+                                     style="background: url('{{ projectLogo(projectItem.project,150, true) }}') no-repeat center 15px"></div>
+
+                                <div class="thumbnail-label">{{ projectItem.label }}</div>
+
+                                <div class="thumbnail-name"><p
+                                            class="text-center">{{ projectItem.project.parseFullName()|upper }}</p>
+                                </div>
+                            </a>
+                        {% endif %}
+
+                        {% if projectItem.type is constant('\\Project\\ValueObject\\ProjectItem::TYPE_INVITE') %}
+                            <a class="thumbnail thumbnail-action"
+                               href="{{ inviteLink(projectItem.invite,'accept','social') }}">
+                                <div class="project-thumbnail {% if projectItem.isPending() %}project-thumbnail-blur{% endif %}"></div>
+
+                                <div class="thumbnail-label">{{ projectItem.label }}</div>
+
+                                <div class="thumbnail-name"><p
+                                            class="text-center">{{ projectItem.project.parseFullName()|upper }}</p>
+                                </div>
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+
+
+
+                {% set newProjectLink = projectLink(null, 'new-community','social') %}
+
+                {% if newProjectLink %}
+                    <div class="col-xs-6 col-md-3">
+                        <a class="thumbnail" href="{{ newProjectLink }}">
+
+                            <div class="thumbnail-label new-item"><i class="fa fa-plus"></i></div>
+
+                            <div class="thumbnail-name"><p
+                                        class="text-center">{{ translate("txt-create-new-project") }}</p>
+                            </div>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+
+            <a class="btn btn-primary"
+               href="{{ url('community/project/list',{'call':call.id}) }}"><i
+                        class="fa fa-bars"></i> {{ translate("txt-list-projects-in-call-%s")|format(call) }}</a>
+
+        {% endif %}
+
+        {# Project ideas #}
+        {% if call.hasIdeaTool() %}
+            <br><br>
+            <h2>{{ translate("txt-my-project-ideas-in-%s-and-project-idea-invitations")|format(call) }}</h2>
+
+            <div class="row">
+                {% for ideaItem in ideas %}
+                    <div class="col-xs-6 col-md-3">
+
+                        {% if ideaItem.type is constant('\\Project\\ValueObject\\IdeaItem::TYPE_IDEA') %}
+                            <a class="thumbnail" href="{{ ideaLink(ideaItem.idea,'view','social') }}">
+                                <div class="idea-thumbnail"></div>
+
+                                <div class="thumbnail-label">{{ ideaItem.label }}</div>
+
+                                <div class="thumbnail-name"><p>{{ ideaItem.idea.parseName()|upper|truncate(25) }}</p>
+                                </div>
+                            </a>
+                        {% endif %}
+
+                        {% if ideaItem.type is constant('\\Project\\ValueObject\\IdeaItem::TYPE_INVITE') %}
+                            <a class="thumbnail thumbnail-action"
+                               href="{{ ideaInviteLink(ideaItem.invite,'accept','social') }}">
+                                <div class="idea-thumbnail idea-thumbnail-blur"></div>
+
+                                <div class="thumbnail-label">{{ ideaItem.label }}</div>
+
+                                <div class="thumbnail-name"><p>{{ ideaItem.idea.parseName()|upper|truncate(25) }}</p>
+                                </div>
+                            </a>
+                        {% endif %}
+
+                        {% if ideaItem.type is constant('\\Project\\ValueObject\\IdeaItem::TYPE_JOIN_REQUEST') %}
+                            <a class="thumbnail thumbnail-inactive"
+                               href="{{ ideaLink(ideaItem.idea,'view','social') }}">
+                                <div class="idea-thumbnail idea-thumbnail-blur"></div>
+
+                                <div class="thumbnail-label inactive">{{ ideaItem.label }}</div>
+
+                                <div class="thumbnail-name"><p>{{ ideaItem.idea.parseName()|upper|truncate(25) }}</p>
+                                </div>
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                {% set newIdeaLink = ideaLink(null, 'new','social', tool) %}
+
+                {% if newIdeaLink %}
+                    <div class="col-xs-6 col-md-3">
+                        <a class="thumbnail" href="{{ newIdeaLink }}">
+
+                            <div class="thumbnail-label new-item"><i class="fa fa-plus"></i></div>
+
+                            <div class="thumbnail-name"><p
+                                        class="text-center">{{ translate("txt-create-new-idea") }}</p>
+                            </div>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+
+            {{ ideaToolLink(tool,'list-idea', 'button') }}
+
+
+            {# some extra stuff#}
+            <br><br>
+            <h2>{{ translate("txt-po-preparation") }}</h2>
+
+            <div class="row">
+
+
+                {% if tool.meeting %}
+                    <div class="col-xs-6 col-md-3">
+                        {# Try to see if we can find a registration of the event #}
+                        {% set registration = registrationService.findRegistrationByMeetingAndContact(tool.meeting, identity() ) %}
+
+                        <a class="thumbnail {% if not meetingService.isPassed(tool.meeting) and ((registration and registrationService.isCancelled(registration)) or not registration) %}thumbnail-action{% endif %}"
+                           href="{{ meetingLink(tool.meeting,'view', 'social') }}">
+
+                            {% if registration is not null %}
+                                {# The user is registered #}
+                                <div class="thumbnail-label">{{ translate("txt-registered") }}</div>
+                            {% elseif (meetingService.isRegistrationOpen(tool.meeting)) %}
+                                {# The user will register now #}
+                                <div class="thumbnail-label">{{ translate("txt-register-now") }}</div>
+                            {% endif %}
+
+                            <div class="thumbnail-name"><p>{{ tool.meeting }}</p></div>
+                        </a>
+                    </div>
+                {% endif %}
+
+                <div class="col-xs-6 col-md-3">
+                    <a class="thumbnail" href="{{ ideaToolLink(tool,'list-idea', 'social') }}">
+                        <img src="https://image.itea3.org/7fB2tsMdjHdoDdBbYKSLlTtdcFA=/fit-in/150x150/https://itea3.org/img/i/1744-1430817993.jpg">
+
+                        <div class="thumbnail-name"><p>{{ translate("txt-project-ideas") }}<br>{{ tool }}</p></div>
+                    </a>
+
+                </div>
+
+                <div class="col-xs-6 col-md-3">
+                    <a class="thumbnail" href="{{ url('community/contact/search') }}">
+                        <img src="https://image.itea3.org/Zqv9wG7Yi4FVGJo_-NHxTgZtyAU=/fit-in/150x150/https://itea3.org/img/i/1746-1430818037.jpg">
+
+                        <div class="thumbnail-name"><p>{{ translate("txt-partner-search") }}</p></div>
+                    </a>
+
+                </div>
+
+                <div class="col-xs-6 col-md-3">
+                    <a class="thumbnail" href="/call-documents.html">
+                        <img src="https://image.itea3.org/-Ul4jSuKtwTeDWrm9UyNBNGYyAM=/fit-in/150x150/https://itea3.org/img/i/1745-1430818012.jpg">
+
+                        <div class="thumbnail-name"><p>{{ translate("txt-call-documents") }}</p></div>
+                    </a>
+
+                </div>
+            </div>
+        {% endif %}
+
+
+    </div>
+
+
+    <div class="col-md-3">
+        {% include 'project/project-details/partial/help' %}
+    </div>
+</div>
+
+<style type="text/css">
+    .thumbnail {
+        height: 187px;
+        padding: 0;
+        position: relative;
+    }
+
+    .thumbnail img {
+        width: 120px;
+        padding-top: 10px;
+    }
+
+    .idea-thumbnail {
+        background: url('https://image.itea3.org/kLYYeap9A0Viobx5Q-GhlEVdpJw=/https://itea3.org/img/i/4186-1533726717.png') center center;
+        background-size: cover;
+        height: 100%;
+    }
+
+    .project-thumbnail {
+        height: 100%;
+    }
+
+    .thumbnail-action {
+        color: rgba(255, 108, 34, 0.9);;
+    }
+
+    .thumbnail-action:hover, a.thumbnail-action:hover {
+        border-color: rgb(167, 75, 26) !important;
+        color: rgb(167, 75, 26) !important;
+    }
+
+    .thumbnail-action .thumbnail-label {
+        background: rgba(255, 108, 34, 0.75);
+    }
+
+    .thumbnail-inactive {
+        color: rgba(128, 130, 133, 0.75);
+    }
+
+    .thumbnail-inactive .thumbnail-label {
+        background: rgba(128, 130, 133, 0.75);
+    }
+
+    .thumbnail-inactive:hover, a.thumbnail-inactive:hover {
+        border-color: rgb(128, 130, 133);
+    !important;
+        color: rgb(128, 130, 133) !important;
+    }
+
+    .idea-thumbnail-blur {
+        opacity: 0.3;
+    }
+
+    .idea-thumbnail:hover {
+        background-size: 110%;
+    }
+
+    .thumbnail-name {
+        background: rgba(255, 255, 255, .9);
+        border-radius: 4px;
+        position: absolute;
+        bottom: 0;
+        left: 5px;
+        padding: 5px 0 0 0;
+        width: 95%;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .thumbnail-label {
+        background: rgba(17, 150, 71, 0.75);
+        color: white;
+        text-align: center;
+        border-radius: 4px;
+        position: absolute;
+        padding: 5px;
+        top: 50%;
+        left: 10%;
+        width: 80%;
+        z-index: 100;
+    }
+
+    .new-item {
+        background: none;
+        top: 0px;
+        color: #00a651;
+        font-size: 6em;
+    }
+
+
+    a:hover, a:active {
+        text-decoration: none !important;
+    }
+
+    .timeline {
+        list-style-type: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px 0;
+    }
+
+    .li {
+        transition: all 200ms ease-in;
+    }
+
+    .timestamp {
+        margin-bottom: 20px;
+        padding: 0px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-weight: 100;
+    }
+
+    .status {
+        padding: 0px 20px;
+        display: flex;
+        justify-content: center;
+        border-top: 2px solid #D6DCE0;
+        position: relative;
+        transition: all 200ms ease-in;
+    }
+
+    .status:before {
+        content: "";
+        width: 25px;
+        height: 25px;
+        background-color: white;
+        border-radius: 25px;
+        border: 1px solid #ddd;
+        position: absolute;
+        top: -15px;
+        left: 42%;
+        transition: all 200ms ease-in;
+    }
+
+    .status-small:before {
+        content: "";
+        width: 15px;
+        height: 15px;
+        background-color: white;
+        border-radius: 25px;
+        border: 1px solid #ddd;
+        position: absolute;
+        top: -8px;
+        left: 42%;
+        transition: all 200ms ease-in;
+    }
+
+    .li.complete .status {
+        border-top: 2px solid #00a651;
+    }
+
+    .li.complete .status:before {
+        background-color: #00a651;
+        border: none;
+        transition: all 200ms ease-in;
+    }
+
+    .author {
+        color: #00a651;
+        text-align: center;
+        font-size: 0.9em;
+    }
+
+    .date {
+        color: #828487;
+        font-size: 0.8em;
+    }
+
+    @media (min-device-width: 320px) and (max-device-width: 700px) {
+        .timeline {
+            list-style-type: none;
+            display: block;
+        }
+
+        .li {
+            transition: all 200ms ease-in;
+            display: flex;
+            width: inherit;
+        }
+
+        .timestamp {
+            width: 100px;
+        }
+
+        .status:before {
+            left: -8%;
+            top: 30%;
+            transition: all 200ms ease-in;
+        }
+    }
+
+</style>

@@ -1,0 +1,106 @@
+{% do headLink().appendStylesheet(
+    '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css'
+) %}
+
+{% do form.prepare() %}
+
+{{ form().openTag(form)|raw }}
+
+{% set sessionFieldset = form.get('program_entity_call_session') %}
+
+{{ ztbformelement(sessionFieldset.get('session')) }}
+{{ ztbformelement(sessionFieldset.get('date')) }}
+{{ ztbformelement(sessionFieldset.get('call')) }}
+{{ ztbformelement(sessionFieldset.get('tool')) }}
+
+{% if edit %}
+    <fieldset>
+        <legend>{{ translate("txt-ideas") }}</legend>
+        <div class="col-md-6">
+            <p><select id="sel-idea" class="form-control">
+                {% for idea in ideas %}
+                    <option data-link="{{ ideaLink(idea, 'view-admin')|escape }}" value="{{ idea.id }}">{{ idea }}</option>
+                {% endfor %}
+                </select></p>
+            <p><button id="btn-add" title="{{ translate("txt-add") }}" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> {{ translate("txt-add-idea") }}</button></p>
+        </div>
+        <div class="col-md-6">
+        <table class="table table-hover table-striped table-condensed table-sm">
+            <thead>
+            <tr>
+                <th colspan="2" class="col-md-3 col-sm-4">{{ translate("txt-schedule") }}</th>
+                <th class="col-md-9 col-sm-8">{{ translate("txt-idea") }}</th>
+                <th></th>
+            </thead>
+            <tfoot>
+            </tfoot>
+            <tbody id="sortable-table">
+                {% for key, fieldset in sessionFieldset.get('ideaSession').getFieldsets() %}
+                <tr id="idea-{{ sessionFieldset.get('ideaSession').object[key].idea.id }}">
+                    <td><span class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>
+                    <td><input type="text" name="{{ fieldset.get('schedule').getAttribute('name') }}" class="form-control" value="{{ fieldset.get('schedule').getValue() }}"></td>
+                    <td><input type="hidden" name="{{ fieldset.get('idea').getAttribute('name') }}" value="{{ sessionFieldset.get('ideaSession').object[key].idea.id }}">
+                        {{ ideaLink(sessionFieldset.get('ideaSession').object[key].idea, 'view-admin') }}
+                    </td>
+                    <td><button title="{{ translate("txt-remove") }}" type="button" class="btn btn-danger btn-sm pull-right"><i class="fa fa-trash"></i></button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </fieldset>
+    <hr>
+    {{ formelement(form.get('submit')) }}
+    {{ formelement(form.get('cancel')) }}
+    {{ formelement(form.get('csrf')) }}
+    {{ form().closeTag()|raw }}
+
+    <script>
+    $(function(){
+        var $table = $('#sortable-table'), $sel = $('#sel-idea'), $template = $('#template');
+        var count = $table.find('tr').length;
+
+        $table.sortable().disableSelection();
+        $table.on('click', 'button', function(){
+            $(this).closest('tr').fadeOut(300, function(){ $(this).remove(); });
+        });
+        $('#btn-add').click(function(){
+            var opt = $sel.find('option:selected');
+            if ($('#idea-'+opt.val()).length === 0) {
+                var html = $template.find('tbody').html()
+                    .replace(/__id__/g, opt.val())
+                    .replace(/__index__/g, count)
+                    .replace('__idea__', opt.data('link'));
+                $(html).hide().appendTo($table).fadeIn(300);
+                count++;
+            } else {
+                alert('{{ translate("txt-idea-has-already-been-added") }}');
+            }
+        });
+    });
+    </script>
+
+    <div id="template" class="hidden">
+        <table>
+            <tbody>
+                <tr id="idea-__id__">
+                    <td><span class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>
+                    <td><input type="text" name="program_entity_call_session[ideaSession][__index__][schedule]" class="form-control" value=""></td>
+                    <td><input type="hidden" name="program_entity_call_session[ideaSession][__index__][idea]" value="__id__">
+                        __idea__
+                    </td>
+                    <td><button title="{{ translate("txt-remove") }}" type="button" class="btn btn-danger btn-sm pull-right"><i class="fa fa-trash"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="form-group row">
+        <div class="offset-md-3 col-sm-offset-3 col-sm-9">
+            {{ formelement(form.get('submit')) }}
+            {{ formelement(form.get('cancel')) }}
+        </div>
+    </div>
+    {{ formelement(form.get('csrf')) }}
+    {{ form().closeTag()|raw }}
+{% endif %}

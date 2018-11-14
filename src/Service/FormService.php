@@ -7,75 +7,80 @@
  * @category    Program
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2018 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/program for the canonical source repository
+ * @link        http://github.com/iteaoffice/main for the canonical source repository
  */
+declare(strict_types=1);
 
 namespace Program\Service;
 
-use Program\Entity\EntityAbstract;
+use Doctrine\ORM\EntityManager;
+use Program\Entity\AbstractEntity;
 use Program\Form\CreateObject;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class FormService
  *
- * @package Program\Service
+ * @package Application\Service
  */
-class FormService extends ServiceAbstract
+class FormService
 {
     /**
-     * @param string         $className
-     * @param EntityAbstract $entity
-     * @param array          $data
-     *
-     * @return Form
+     * @var ServiceLocatorInterface
      */
-    public function prepare($className, EntityAbstract $entity = null, $data = [])
+    private $serviceLocator;
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    public function __construct(ServiceLocatorInterface $serviceLocator, EntityManager $entityManager)
     {
-        $form = $this->getForm($className, $entity, true);
+        $this->serviceLocator = $serviceLocator;
+        $this->entityManager = $entityManager;
+    }
+
+    public function prepare($classNameOrEntity, array $data = [], array $options = []): Form
+    {
+        /**
+         * The form can be created from an empty element, we then expect the $formClassName to be filled
+         * This should be a string, indicating the class
+         *
+         * But if the class a class is injected, we will change it into the className but hint the user to use a string
+         */
+        if (!$classNameOrEntity instanceof AbstractEntity) {
+            $classNameOrEntity = new $classNameOrEntity();
+        }
+
+        $form = $this->getForm($classNameOrEntity, $options);
         $form->setData($data);
 
         return $form;
     }
 
-    /**
-     * @param null           $className
-     * @param EntityAbstract $entity
-     * @param bool           $bind
-     *
-     * @return Form
-     */
-    public function getForm($className = null, EntityAbstract $entity = null, bool $bind = true): Form
+    private function getForm(AbstractEntity $entity, array $options = []): Form
     {
-        if (! is_null($className) && is_null($entity)) {
-            $entity = new $className();
-        }
+        $formName = $entity->get('entity_form_name');
+        $filterName = $entity->get('entity_inputfilter_name');
 
-        if (! is_object($entity)) {
-            throw new \InvalidArgumentException("No entity created given");
-        }
-
-        $formName   = 'Program\\Form\\' . $entity->get('entity_name') . 'Form';
-        $filterName = 'Program\\InputFilter\\' . $entity->get('entity_name') . 'Filter';
-
-        /*
+        /**
          * The filter and the form can dynamically be created by pulling the form from the serviceManager
          * if the form or filter is not give in the serviceManager we will create it by default
          */
-        if (! $this->getServiceLocator()->has($formName)) {
-            $form = new CreateObject($this->getEntityManager(), new $entity());
+        if ($this->serviceLocator->has($formName)) {
+            $form = $this->serviceLocator->build($formName, $options);
         } else {
-            $form = $this->getServiceLocator()->get($formName);
+            $form = new CreateObject($this->entityManager, $entity, $this->serviceLocator);
         }
 
-
-        if ($this->getServiceLocator()->has($filterName)) {
+        if ($this->serviceLocator->has($filterName)) {
             /** @var InputFilter $filter */
-            $filter = $this->getServiceLocator()->get($filterName);
+            $filter = $this->serviceLocator->get($filterName);
             $form->setInputFilter($filter);
         }
 
@@ -83,9 +88,7 @@ class FormService extends ServiceAbstract
         $form->setAttribute('action', '');
         $form->setAttribute('class', 'form-horizontal');
 
-        if ($bind) {
-            $form->bind($entity);
-        }
+        $form->bind($entity);
 
         return $form;
     }

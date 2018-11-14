@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Program\InputFilter;
 
 use Doctrine\ORM\EntityManager;
@@ -21,9 +23,9 @@ use Program\Entity\Program;
 use Zend\InputFilter\InputFilter;
 
 /**
- * Class ArticleFilter
+ * Class ProgramFilter
  *
- * @package Content\InputFilter
+ * @package Program\InputFilter
  */
 class ProgramFilter extends InputFilter
 {
@@ -91,6 +93,12 @@ class ProgramFilter extends InputFilter
                         ],
                     ],
                 ],
+            ]
+        );
+        $inputFilter->add(
+            [
+                'name'     => 'invoiceMethod',
+                'required' => false,
             ]
         );
         $this->add($inputFilter, 'program_entity_program');

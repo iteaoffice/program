@@ -1,7 +1,7 @@
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-nda")) %}
 
-<h1>{{ translate("txt-nda") }}</h1>
+<h1 class="display-4">{{ translate("txt-nda-%s")|format(nda.parseFilename()) }}</h1>
 
 <dl class="dl-horizontal">
     <dt>{{ translate("txt-nda-id") }}</dt>
@@ -23,17 +23,23 @@
         <dd>{{ translate("txt-this-nda-has-not-been-approved") }}</dd>
     {% endif %}
     <dt>{{ translate("txt-program-call") }}</dt>
-    {% if nda.call %}
-        <dd>{{ nda.call }}</dd>
+    {% if nda.hasCall %}
+        <dd>{{ callLink(nda.parseCall(),'view-admin','name') }}</dd>
     {% else %}
         <dd>{{ translate("txt-this-nda-is-not-connected-to-a-call") }}</dd>
     {% endif %}
-    {% if nda.contentType %}
-        <dt>{{ translate("txt-content-type") }}</dt>
-        <dd>{{ contentTypeIcon(nda.contentType) }} {{ nda.contentType.description }} ({{ nda.size|parse_size }})</dd>
+    {% if not nda.object.isEmpty() %}
+        {% if nda.contentType %}
+            <dt>{{ translate("txt-content-type") }}</dt>
+            <dd>{{ contentTypeIcon(nda.contentType) }} {{ nda.contentType.description }} ({{ nda.size|parse_size }})
+            </dd>
+        {% endif %}
+        <dt>{{ translate("txt-download") }}</dt>
+        <dd>{{ ndaLink(nda,'download','text') }}</dd>
+    {% else %}
+        <dt>{{ translate("txt-download") }}</dt>
+        <dd>{{ translate("txt-no-file-has-been-uploaded") }}</dd>
     {% endif %}
-    <dt>{{ translate("txt-download") }}</dt>
-    <dd>{{ ndaLink(nda,'download','text') }}</dd>
 </dl>
 
 {{ ndaLink(nda,'edit-admin','button') }}

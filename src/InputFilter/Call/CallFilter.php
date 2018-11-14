@@ -13,9 +13,10 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Program\InputFilter\Call;
 
-use Doctrine\ORM\EntityManager;
 use Zend\InputFilter\InputFilter;
 
 /**
@@ -27,10 +28,8 @@ class CallFilter extends InputFilter
 {
     /**
      * CallFilter constructor.
-     *
-     * @param EntityManager $entityManager
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct()
     {
         $inputFilter = new InputFilter();
         $inputFilter->add(
@@ -91,7 +90,7 @@ class CallFilter extends InputFilter
         );
         $inputFilter->add(
             [
-                'name'       => 'poGraceDate',
+                'name'       => 'loiSubmissionDate',
                 'required'   => false,
                 'filters'    => [
                     ['name' => 'StripTags'],
@@ -127,7 +126,7 @@ class CallFilter extends InputFilter
         );
         $inputFilter->add(
             [
-                'name'       => 'fppGraceDate',
+                'name'       => 'doaSubmissionDate',
                 'required'   => false,
                 'filters'    => [
                     ['name' => 'StripTags'],
@@ -147,6 +146,24 @@ class CallFilter extends InputFilter
             [
                 'name'       => 'fppCloseDate',
                 'required'   => true,
+                'filters'    => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+                'validators' => [
+                    [
+                        'name'    => 'DateTime',
+                        'options' => [
+                            'pattern' => 'yyyy-mm-dd H:mm:ss',
+                        ],
+                    ],
+                ],
+            ]
+        );
+        $inputFilter->add(
+            [
+                'name'       => 'labelAnnouncementDate',
+                'required'   => false,
                 'filters'    => [
                     ['name' => 'StripTags'],
                     ['name' => 'StringTrim'],

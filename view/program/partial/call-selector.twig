@@ -2,11 +2,14 @@
 
 {% set programId = 0 %}
 
-<ul class="nav nav-pills nav-stacked">
+<ul class="nav flex-column nav-pills nav-stacked">
     {% for call in calls|reverse %}
-        <li {% if callId == call.id %}class="active"{% endif %}>{{ callLink(call, 'view-list', 'name') }}</li>
-        {% if call.program.id != programId %}
+
+        {% set classes = ['nav-link'] %}
+        {% if callId == call.id %}
+            {% set classes = classes|merge(['active']) %}
         {% endif %}
-        {% set programId = call.program.id %}
+
+        <li class="nav-item {% if callId == call.id %}active{% endif %}">{{ callLink(call, 'view-list', 'name', classes) }}</li>
     {% endfor %}
 </ul>

@@ -14,18 +14,16 @@
  * @link        http://github.com/iteaoffice/program for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Program\Form;
 
 use Zend\Form\Fieldset;
 use Zend\Form\Form;
 
 /**
- * Jield copyright message placeholder.
- *
- * @category  Program
- *
- * @author    Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * Class CallFilter
+ * @package Program\Form
  */
 class CallFilter extends Form
 {

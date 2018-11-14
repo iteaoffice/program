@@ -11,7 +11,7 @@
 <div class="row">
 
     <div class="col-md-10">
-        <h1>{{ translate("txt-program-list") }} {{ programLink(null, 'new','button') }}</h1>
+        <h1 class="display-4">{{ translate("txt-program-list") }} {{ programLink(null, 'new','button') }}</h1>
 
         <div class="row">
             <div class="col-md-6">
@@ -25,7 +25,7 @@
         </div>
 
         {% if paginator.pageRange > 0 %}
-            <table class="table table-hover table-striped table-condensed">
+            <table class="table table-hover table-striped table-condensed table-sm">
                 <thead>
                 <tr>
                     <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/program/list', 'criteria': 'id', 'text': translate('txt-id')} %}</th>
@@ -33,6 +33,7 @@
                     <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/program/list', 'criteria': 'number', 'text': translate('txt-number')} %}</th>
                     <th>{{ translate("txt-amount-of-calls") }}</th>
                     <th>{{ translate("txt-eurkeka-export") }}</th>
+                    <th>{{ translate("txt-invoice-method") }}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -44,6 +45,7 @@
                         <td>{{ program.call.count }}</td>
                         <td><a href="{{ url('zfcadmin/project/export/program',{'id': program.id}) }}"><i
                                         class="fa fa-exchange"></i></a></td>
+                        <td>{% for method in program.invoiceMethod %}{{ method }}{% endfor %}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -57,7 +59,7 @@
         <div class="well well-sm">
             <fieldset>
 
-                <div class="form-group">
+                <div class="form-group row">
                     {{ ztbformelement(form.get('submit')) }}
                     {{ ztbformelement(form.get('clear')) }}
                 </div>

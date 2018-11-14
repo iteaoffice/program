@@ -8,38 +8,33 @@
  * @copyright   Copyright (program_entity_call_call) Copyright (c) 2004-2017 ITEA Office (https://itea3.org) (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Program\Repository\Call;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
-use Program\Entity\Call\Call as CallEntity;
-use Program\Entity\Program as ProgramEntity;
+use Doctrine\ORM\QueryBuilder;
+use DoctrineExtensions\Query\Mysql\Year;
+use Program\Entity;
+use Project\Entity\Project;
 use Project\Entity\Version\Type;
 
 /**
  * @category    Program
  */
-class Call extends EntityRepository
+final class Call extends EntityRepository
 {
-    /**
-     * @param array $filter
-     *
-     * @return Query
-     */
-    public function findFiltered(array $filter)
+    public function findFiltered(array $filter): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('program_entity_call_call');
-        $queryBuilder->from(CallEntity::class, 'program_entity_call_call');
-        $queryBuilder->join("program_entity_call_call.program", 'p');
-
-        //Filter here on the active calls @todo: see if this makes sense here
-//        $queryBuilder->andWhere('program_entity_call_call.active = :active');
-//        $queryBuilder->setParameter('active', \Program\Entity\Call\Call::ACTIVE);
+        $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
+        $queryBuilder->join('program_entity_call_call.program', 'program_entity_program');
 
         $direction = 'DESC';
         if (isset($filter['direction'])
-            && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)
+            && \in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)
         ) {
             $direction = strtoupper($filter['direction']);
         }
@@ -49,7 +44,7 @@ class Call extends EntityRepository
                 $queryBuilder->addOrderBy('program_entity_call_call.id', $direction);
                 break;
             case 'program':
-                $queryBuilder->addOrderBy('p.program', $direction);
+                $queryBuilder->addOrderBy('program_entity_program.program', $direction);
                 break;
             case 'po-open-date':
                 $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', $direction);
@@ -64,69 +59,143 @@ class Call extends EntityRepository
                 $queryBuilder->addOrderBy('program_entity_call_call.fppCloseDate', $direction);
                 break;
             case 'fpp-program-date':
-                $queryBuilder->addOrderBy('p.program', $direction);
+                $queryBuilder->addOrderBy('program_entity_program.program', $direction);
                 break;
             default:
                 $queryBuilder->addOrderBy('program_entity_call_call.id', $direction);
         }
 
-        return $queryBuilder->getQuery();
+        return $queryBuilder;
     }
 
-    /**
-     * @param $type
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return null|CallEntity
-     */
-    public function findOpenCall($type)
+    public function hasOpenCall(int $type): bool
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('program_entity_call_call');
-        $queryBuilder->from(CallEntity::class, 'program_entity_call_call');
+        $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
 
         //Filter here on the active calls
         $queryBuilder->andWhere('program_entity_call_call.active = :active');
-        $queryBuilder->setParameter('active', \Program\Entity\Call\Call::ACTIVE);
+        $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
 
         $today = new \DateTime();
         switch ($type) {
             case Type::TYPE_PO:
                 $queryBuilder->andWhere('program_entity_call_call.poOpenDate < :today')
-                    ->andWhere(
-                        'program_entity_call_call.poCloseDate > :today OR program_entity_call_call.poGraceDate > :today'
-                    )->setParameter('today', $today);
+                    ->andWhere('program_entity_call_call.poCloseDate > :today')
+                    ->setParameter('today', $today);
                 break;
             case Type::TYPE_FPP:
                 $queryBuilder->andWhere('program_entity_call_call.fppOpenDate < :today')
-                    ->andWhere(
-                        'program_entity_call_call.fppCloseDate > :today OR program_entity_call_call.fppGraceDate > :today'
-                    )->setParameter('today', $today);
-                break;
-            default:
-                throw new \InvalidArgumentException(sprintf("This selected type %s is invalid", $type));
+                    ->andWhere('program_entity_call_call.fppCloseDate > :today')
+                    ->setParameter('today', $today);
                 break;
         }
+
+        $queryBuilder->setMaxResults(1);
+
+        return null !== $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult();
+    }
+
+    public function findOpenCall(): array
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('program_entity_call_call');
+        $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
+
+        //Filter here on the active calls
+        $queryBuilder->andWhere('program_entity_call_call.active = :active');
+        $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
+
+        $today = new \DateTime();
+
+        $queryBuilder->andWhere('program_entity_call_call.poOpenDate < :today')
+            ->andWhere('program_entity_call_call.fppCloseDate > :today')
+            ->setParameter('today', $today);
+
+        $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::ASC);
+
+        $queryBuilder->setMaxResults(2);
+
+        return $queryBuilder->getQuery()->useQueryCache(true)->getResult();
+    }
+
+    public function findUpcomingCall(): ?Entity\Call\Call
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('program_entity_call_call');
+        $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
+
+        //Filter here on the active calls
+        $queryBuilder->andWhere('program_entity_call_call.active = :active');
+        $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
+
+        $today = new \DateTime();
+
+        $queryBuilder->andWhere('program_entity_call_call.poOpenDate > :today')
+            ->setParameter('today', $today);
+
+        $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::ASC);
+
+        $queryBuilder->setMaxResults(1);
 
         return $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult();
     }
 
-    /**
-     * @param ProgramEntity|null $program
-     *
-     * @return array
-     */
-    public function findNonEmptyAndActiveCalls(ProgramEntity $program = null)
+    public function findLastCall(): ?Entity\Call\Call
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('program_entity_call_call');
-        $queryBuilder->from(CallEntity::class, 'program_entity_call_call');
+        $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
+
+        //Filter here on the active calls
+        $queryBuilder->andWhere('program_entity_call_call.active = :active');
+        $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
+
+        $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::DESC);
+
+        $queryBuilder->setMaxResults(1);
+
+        return $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult();
+    }
+
+    public function findPreviousCall(Entity\Call\Call $call): ?Entity\Call\Call
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('program_entity_call_call');
+        $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
+        $queryBuilder->andWhere('program_entity_call_call.poOpenDate < :poOpenDate');
+        $queryBuilder->setParameter('poOpenDate', $call->getPoOpenDate());
+        $queryBuilder->setMaxResults(1);
+        $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::DESC);
+
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
+
+    public function findNextCall(Entity\Call\Call $call): ?Entity\Call\Call
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('program_entity_call_call');
+        $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
+        $queryBuilder->andWhere('program_entity_call_call.poOpenDate > :poOpenDate');
+        $queryBuilder->setParameter('poOpenDate', $call->getPoOpenDate());
+        $queryBuilder->setMaxResults(1);
+        $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::ASC);
+
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
+
+    public function findNonEmptyAndActiveCalls(Entity\Program $program = null): array
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('program_entity_call_call');
+        $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
+
         //Show only calls which are already in projects
         $subSelect = $this->_em->createQueryBuilder();
         $subSelect->select('call.id');
-        $subSelect->from('Project\Entity\Project', 'project');
-        $subSelect->join('project.call', 'call');
+        $subSelect->from(Project::class, 'project_entity_project');
+        $subSelect->join('project_entity_project.call', 'call');
         $queryBuilder->andWhere($queryBuilder->expr()->in('program_entity_call_call.id', $subSelect->getDQL()));
 
         //Filter here on the active calls
@@ -140,14 +209,30 @@ class Call extends EntityRepository
         return $queryBuilder->getQuery()->useQueryCache(true)->getResult();
     }
 
-    /**
-     * @return CallEntity[]
-     */
-    public function findWithAchievement()
+    public function findActiveCalls(Entity\Program $program = null): array
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('program_entity_call_call');
-        $queryBuilder->from(CallEntity::class, 'program_entity_call_call');
+        $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
+
+        //Filter here on the active calls
+        $queryBuilder->andWhere('program_entity_call_call.active = :active');
+        $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
+
+        if ($program !== null) {
+            $queryBuilder->andWhere('program_entity_call_call.program = :program')->setParameter('program', $program);
+        }
+
+        $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::ASC);
+
+        return $queryBuilder->getQuery()->useQueryCache(true)->getResult();
+    }
+
+    public function findWithAchievement(): array
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('program_entity_call_call');
+        $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
         $queryBuilder->join('program_entity_call_call.project', 'project_entity_project');
         $queryBuilder->join('project_entity_project.achievement', 'project_entityachievement');
 
@@ -155,103 +240,10 @@ class Call extends EntityRepository
     }
 
 
-    /**
-     * @return array
-     */
-    public function findLastCallAndActiveVersionType()
-    {
-        $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('program_entity_call_call');
-        $queryBuilder->from(CallEntity::class, 'program_entity_call_call');
-        $today = new \DateTime();
-        $queryBuilder->where('program_entity_call_call.poOpenDate < :today')->andWhere(
-            'program_entity_call_call.poCloseDate > :today OR program_entity_call_call.poGraceDate > :today'
-        )
-            ->setParameter('today', $today);
-
-        //Filter here on the active calls
-        $queryBuilder->andWhere('program_entity_call_call.active = :active');
-        $queryBuilder->setParameter('active', \Program\Entity\Call\Call::ACTIVE);
-
-        $queryBuilder->setMaxResults(1);
-
-        /**
-         * Check first if we find an open PO
-         */
-        if (!is_null($queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult())) {
-            /*
-             * We have found an open PO and call, return the result
-             */
-            return [
-                'call'        => $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult(),
-                'versionType' => Type::TYPE_PO,
-            ];
-        }
-
-        $queryBuilder->andWhere('program_entity_call_call.fppOpenDate < :today')->andWhere(
-            'program_entity_call_call.fppCloseDate > :today OR program_entity_call_call.fppGraceDate > :today'
-        )
-            ->setParameter('today', $today);
-        /*
-         * Check first if we find an open FPP
-         */
-        if (!is_null($queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult())) {
-            /*
-             * We have found an open PO and call, return the result
-             */
-            return [
-                'call'        => $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult(),
-                'versionType' => Type::TYPE_FPP,
-            ];
-        }
-
-        /*
-         * Still no result? Then no period is active open, but we will no try to find if
-         * We are _between_ an PO and FPP
-         */
-        $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('program_entity_call_call');
-        $queryBuilder->from(CallEntity::class, 'program_entity_call_call');
-
-        $queryBuilder->where('program_entity_call_call.fppOpenDate > :today')->setParameter('today', $today);
-        $queryBuilder->orderBy('program_entity_call_call.fppOpenDate', 'DESC');
-        $queryBuilder->andWhere('program_entity_call_call.active = :active');
-        $queryBuilder->setParameter('active', \Program\Entity\Call\Call::ACTIVE);
-        $queryBuilder->setMaxResults(1);
-
-        if (!is_null($queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult())) {
-            return [
-                'call'        => $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult(),
-                'versionType' => Type::TYPE_PO,
-            ];
-        }
-
-        /*
-         * Still no result? Return the latest FPP (and reset the previous settings)
-         */
-        $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('program_entity_call_call');
-        $queryBuilder->from(CallEntity::class, 'program_entity_call_call');
-        $queryBuilder->orderBy('program_entity_call_call.fppCloseDate', 'DESC');
-        $queryBuilder->andWhere('program_entity_call_call.active = :active');
-        $queryBuilder->setParameter('active', \Program\Entity\Call\Call::ACTIVE);
-        $queryBuilder->setMaxResults(1);
-
-        return [
-            'call'        => $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult(),
-            'versionType' => Type::TYPE_FPP,
-        ];
-    }
-
-    /**
-     * @param CallEntity $call
-     *
-     * @return mixed
-     */
-    public function findMinAndMaxYearInCall(CallEntity $call)
+    public function findMinAndMaxYearInCall(Entity\Call\Call $call)
     {
         $emConfig = $this->getEntityManager()->getConfiguration();
-        $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
+        $emConfig->addCustomDatetimeFunction('YEAR', Year::class);
 
         $dql
             = 'SELECT
@@ -266,17 +258,7 @@ class Call extends EntityRepository
         return array_shift($result);
     }
 
-    /**
-     * This function returns an array with three elements.
-     *
-     * 'partners' which contains the amount of partners
-     * 'projects' which contains the amount of projects
-     *
-     * @param CallEntity $call
-     *
-     * @return array
-     */
-    public function findProjectAndPartners(CallEntity $call)
+    public function findProjectAndPartners(Entity\Call\Call $call): array
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('COUNT(DISTINCT a.organisation) partners');

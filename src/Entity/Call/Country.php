@@ -13,11 +13,14 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Program\Entity\Call;
 
 use Doctrine\ORM\Mapping as ORM;
-use Program\Entity\EntityAbstract;
+use Program\Entity\AbstractEntity;
 use Zend\Form\Annotation;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * @ORM\Table(name="programcall_country")
@@ -27,7 +30,7 @@ use Zend\Form\Annotation;
  *
  * @category    Program
  */
-class Country extends EntityAbstract
+class Country extends AbstractEntity
 {
     /**
      * @ORM\Column(name="programcall_country_id", type="integer", nullable=false)
@@ -51,7 +54,7 @@ class Country extends EntityAbstract
      * @ORM\JoinColumn(name="country_id", referencedColumnName="country_id", nullable=false)
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\Country
+     * @var \General\Entity\Country
      */
     private $country;
     /**
@@ -102,15 +105,24 @@ class Country extends EntityAbstract
     }
 
     /**
+     * @param $property
+     * @return bool
+     */
+    public function __isset($property)
+    {
+        return isset($this->$property);
+    }
+
+    /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return (string)$this->getCountry();
     }
 
     /**
-     * @return Country
+     * @return \General\Entity\Country
      */
     public function getCountry()
     {

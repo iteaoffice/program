@@ -11,6 +11,8 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Program\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -27,16 +29,16 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  *
  * @category    Program
  */
-class Funder extends EntityAbstract implements ResourceInterface
+class Funder extends AbstractEntity
 {
     /**
      * Constant for hideOnWebsite = 0.
      */
-    const HIDE_ON_WEBSITE = 0;
+    public const HIDE_ON_WEBSITE = 0;
     /**
      * Constant for hideOnWebsite = 1.
      */
-    const SHOW_ON_WEBSITE = 1;
+    public const SHOW_ON_WEBSITE = 1;
     /**
      * Textual versions of the showOnWebsite.
      *
@@ -113,7 +115,7 @@ class Funder extends EntityAbstract implements ResourceInterface
      * @Annotation\Attributes({"label":"txt-show-on-website"})
      * @Annotation\Options({"help-block":"txt-funder-show-on-website-help-block"})
      *
-     * @var \int
+     * @var int
      */
     private $showOnWebsite;
     /**
@@ -298,7 +300,7 @@ class Funder extends EntityAbstract implements ResourceInterface
      *
      * @return int
      */
-    public function getShowOnWebsite($textual = false)
+    public function getShowOnWebsite(bool $textual = false)
     {
         if ($textual) {
             return self::$showOnWebsiteTemplates[$this->showOnWebsite];

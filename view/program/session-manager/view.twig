@@ -1,0 +1,42 @@
+{% do headScript().appendFile('//cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/min/dropzone.min.js', 'text/javascript') %}
+{% do headScript().appendFile('//cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.js', 'text/javascript') %}
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-session-%s")|format(session.session)) %}
+
+<h1 class="display-4">{{ session.session }} {{ callSessionLink(session,'edit-admin','button') }}</h1>
+
+<dl class="dl-horizontal">
+    <dt>{{ translate("txt-session") }}</dt>
+    <dd>{{ session.session }}</dd>
+    <dt>{{ translate("txt-call") }}</dt>
+    <dd>{{ callLink(session.call, 'view-admin') }}</dd>
+    <dt>{{ translate("txt-date") }}</dt>
+    <dd>{{ session.date|string_date }}</dd>
+    <dt>{{ translate("txt-ideas") }}</dt>
+    <dd>{{ session.ideaSession|length }}</dd>
+</dl>
+
+<div role="tabpanel">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item active">
+            <a class="nav-link active" href="#presentations" aria-controls="presentations" role="tab" data-toggle="tab">
+            {{ translate("txt-presentations") }}
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#files" aria-controls="files" role="tab" data-toggle="tab">
+            {{ translate("txt-files") }}
+            </a>
+        </li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="presentations">
+            {% include 'program/session-manager/tab/presentations' %}
+        </div>
+        <div role="tabpanel" class="tab-pane" id="files">
+            {% include 'program/session-manager/tab/files' %}
+        </div>
+    </div>
+</div>
