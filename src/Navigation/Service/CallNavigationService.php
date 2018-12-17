@@ -45,7 +45,7 @@ class CallNavigationService
 
     public function __construct(Navigation $navigation, ?RouteMatch $routeMatch, CallService $callService)
     {
-        $this->navigation = $navigation;
+        $this->navigation = $navigation->current();
         $this->routeMatch = $routeMatch;
         $this->callService = $callService;
     }

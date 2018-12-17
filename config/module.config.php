@@ -63,7 +63,7 @@ $config = [
     'view_helpers'       => [
         'aliases'   => [
             'callSessionLink'    => View\Helper\CallSessionLink::class,
-            'programHandler'     => View\Helper\ProgramHandler::class,
+            'programHandler'     => View\Handler\ProgramHandler::class,
             'callInformationBox' => View\Helper\CallInformationBox::class,
             'programLink'        => View\Helper\ProgramLink::class,
             'programDoaLink'     => View\Helper\DoaLink::class,
@@ -74,8 +74,9 @@ $config = [
         ],
         'factories' => [
             View\Handler\SessionHandler::class    => ConfigAbstractFactory::class,
+            View\Handler\ProgramHandler::class    => ConfigAbstractFactory::class,
             View\Helper\CallSessionLink::class    => View\Factory\ViewHelperFactory::class,
-            View\Helper\ProgramHandler::class     => View\Factory\ViewHelperFactory::class,
+
             View\Helper\CallInformationBox::class => ConfigAbstractFactory::class,
             View\Helper\ProgramLink::class        => View\Factory\ViewHelperFactory::class,
             View\Helper\DoaLink::class            => View\Factory\ViewHelperFactory::class,

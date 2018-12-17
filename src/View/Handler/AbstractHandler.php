@@ -81,11 +81,6 @@ abstract class AbstractHandler extends AbstractHelper
         $this->request                 = $application->getMvcEvent()->getRequest();
     }
 
-    /**
-     * @param Content $content
-     *
-     * @return array
-     */
     public function extractContentParam(Content $content): array
     {
         $params = [
@@ -124,52 +119,32 @@ abstract class AbstractHandler extends AbstractHelper
         return $params;
     }
 
-    /**
-     * @return bool
-     */
     public function hasDocRef(): bool
     {
         return null !== $this->getDocRef();
     }
 
-    /**
-     * @return null|string
-     */
     public function getDocRef(): ?string
     {
         return $this->routeMatch->getParam('routeMatch');
     }
 
-    /**
-     * @return HeadTitle|AbstractContainer
-     */
     public function getHeadTitle(): HeadTitle
     {
         return $this->helperPluginManager->get('headTitle');
     }
 
-    /**
-     * @return HeadMeta
-     */
     public function getHeadMeta(): HeadMeta
     {
         return $this->helperPluginManager->get('headMeta');
     }
 
-    /**
-     * @return HeadStyle
-     */
     public function getHeadStyle(): HeadStyle
     {
         return $this->helperPluginManager->get('headStyle');
     }
 
-    /**
-     * @param string $string
-     *
-     * @return string
-     */
-    public function translate($string): string
+    public function translate(string $string): string
     {
         return $this->translator->translate($string);
     }

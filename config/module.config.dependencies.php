@@ -182,6 +182,14 @@ return [
             ProgramService::class,
             IdeaService::class
         ],
+        View\Handler\ProgramHandler::class                 => [
+            'Application',
+            'ViewHelperManager',
+            TwigRenderer::class,
+            AuthenticationService::class,
+            TranslatorInterface::class,
+            ProgramService::class
+        ],
         View\Helper\CallInformationBox::class              => [
             CallService::class
         ]

@@ -62,33 +62,23 @@ final class SessionHandler extends AbstractHandler
     {
         $params = $this->extractContentParam($content);
 
-        switch ($content->getHandler()->getHandler()) {
-            case 'session_idea':
-                /** @var Session $session */
-                $session = $this->programService->find(Session::class, (int) $params['id']);
+        /** @var Session $session */
+        $session = $this->programService->find(Session::class, (int)$params['id']);
 
-                if ($session === null) {
-                    $this->response->setStatusCode(Response::STATUS_CODE_404);
-                    return 'The selected session cannot be found';
-                }
-
-                $this->getHeadTitle()->append($this->translate("txt-session"));
-                $this->getHeadTitle()->append($session->getSession());
-
-                return $this->renderer->render(
-                    'cms/call/session',
-                    [
-                        'session'     => $session,
-                        'ideaService' => $this->ideaService
-                    ]
-                );
-
-            default:
-                return sprintf(
-                    'No handler available for <code>%s</code> in class <code>%s</code>',
-                    $content->getHandler()->getHandler(),
-                    __CLASS__
-                );
+        if ($session === null) {
+            $this->response->setStatusCode(Response::STATUS_CODE_404);
+            return 'The selected session cannot be found';
         }
+
+        $this->getHeadTitle()->append($this->translate("txt-session"));
+        $this->getHeadTitle()->append($session->getSession());
+
+        return $this->renderer->render(
+            'cms/call/session',
+            [
+                'session'     => $session,
+                'ideaService' => $this->ideaService
+            ]
+        );
     }
 }

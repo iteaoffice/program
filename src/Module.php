@@ -24,7 +24,9 @@ use Zend\Mvc\Application;
 use Zend\Mvc\MvcEvent;
 
 /**
+ * Class Module
  *
+ * @package Program
  */
 class Module implements Feature\ConfigProviderInterface
 {

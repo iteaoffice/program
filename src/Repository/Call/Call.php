@@ -228,6 +228,42 @@ final class Call extends EntityRepository
         return $queryBuilder->getQuery()->useQueryCache(true)->getResult();
     }
 
+    public function findAmountOfActiveCalls(): int
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select($queryBuilder->expr()->count('program_entity_call_call'));
+        $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
+
+        //Filter here on the active calls
+        $queryBuilder->andWhere('program_entity_call_call.active = :active');
+        $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
+
+        return (int)$queryBuilder->getQuery()->useQueryCache(true)->useResultCache(true)->getSingleScalarResult();
+    }
+
+    public function findAmountOfYears(): int
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('program_entity_call_call.poOpenDate');
+        $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
+
+        //Filter here on the active calls
+        $queryBuilder->andWhere('program_entity_call_call.active = :active');
+        $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
+
+        $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::ASC);
+        $queryBuilder->setMaxResults(1);
+
+        /** @var \DateTime $firstPoOpen */
+        $firstPoOpen = $queryBuilder->getQuery()->useQueryCache(true)->useResultCache(true)->getResult();
+
+        if (\count($firstPoOpen) === 0) {
+            return 0;
+        }
+
+        return (int)$firstPoOpen[0]['poOpenDate']->diff(new \DateTime())->y;
+    }
+
     public function findWithAchievement(): array
     {
         $queryBuilder = $this->_em->createQueryBuilder();

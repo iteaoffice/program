@@ -5,7 +5,6 @@ return array(
     'program/partial/pagination-control'        => __DIR__ . '//view/program/partial/pagination-control.twig',
     'program/partial/sortable-table-header'     => __DIR__ . '//view/program/partial/sortable-table-header.twig',
     'program/partial/list/funder'               => __DIR__ . '//view/program/partial/list/funder.twig',
-    'program/partial/call-selector'             => __DIR__ . '//view/program/partial/call-selector.twig',
     'program/partial/form/session'              => __DIR__ . '//view/program/partial/form/session.twig',
     'program/partial/form/funder'               => __DIR__ . '//view/program/partial/form/funder.twig',
     'program/partial/form/program'              => __DIR__ . '//view/program/partial/form/program.twig',

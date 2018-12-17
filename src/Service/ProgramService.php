@@ -14,9 +14,12 @@ namespace Program\Service;
 
 use General\Entity\Country;
 use Organisation\Entity\Organisation;
+use Program\Entity\Call\Call;
 use Program\Entity\Doa;
 use Program\Entity\Funder;
 use Program\Entity\Program;
+use Program\ValueObject\ProgramData;
+use Project\Entity\Project;
 
 /**
  * Class ProgramService
@@ -51,6 +54,17 @@ class ProgramService extends AbstractService
         $yearSpan->maxYear = (int)$yearSpanResult['maxYear'];
 
         return $yearSpan;
+    }
+
+    public function findProgramData(): ProgramData
+    {
+        $calls = $this->entityManager->getRepository(Call::class)->findAmountOfActiveCalls();
+        $years = $this->entityManager->getRepository(Call::class)->findAmountOfYears();
+        $organisations = $this->entityManager->getRepository(Organisation::class)->findAmountOfActiveOrganisations();
+        $countries = $this->entityManager->getRepository(Country::class)->findAmountOfActiveCountries();
+        $projects = $this->entityManager->getRepository(Project::class)->findAmountOfActiveProjects();
+
+        return new ProgramData($calls, $projects, $organisations, $countries, $years);
     }
 
     public function findFunderByCountry(Country $country): array
