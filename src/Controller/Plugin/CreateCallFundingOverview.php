@@ -137,8 +137,7 @@ final class CreateCallFundingOverview extends AbstractPlugin
         $otherCost = 0;
 
         //Go over the partners in the project and calculate the cost, group it by funding status
-        foreach ($this->affiliationService->findAffiliationByProjectAndCountryAndWhich($project, $country) as
-            $affiliation) {
+        foreach ($this->affiliationService->findAffiliationByProjectAndCountryAndWhich($project, $country) as $affiliation) {
             //Find the costs of this affiliation (in the given year)
             $costsPerYear = $this->versionService->findTotalCostVersionByAffiliationAndVersionPerYear(
                 $affiliation,
