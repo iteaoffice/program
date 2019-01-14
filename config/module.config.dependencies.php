@@ -28,6 +28,7 @@ use Event\Service\RegistrationService;
 use General\Service\CountryService;
 use General\Service\EmailService;
 use General\Service\GeneralService;
+use Organisation\Search\Service\OrganisationSearchService;
 use Organisation\Service\OrganisationService;
 use Program\Options\ModuleOptions;
 use Program\Service\CallService;
@@ -166,7 +167,8 @@ return [
             EntityManager::class
         ],
         Service\ProgramService::class                      => [
-            EntityManager::class
+            EntityManager::class,
+            OrganisationSearchService::class
         ],
         Service\CallService::class                         => [
             EntityManager::class,

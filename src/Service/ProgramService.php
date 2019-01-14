@@ -12,8 +12,10 @@ declare(strict_types=1);
 
 namespace Program\Service;
 
+use Doctrine\ORM\EntityManager;
 use General\Entity\Country;
 use Organisation\Entity\Organisation;
+use Organisation\Search\Service\OrganisationSearchService;
 use Program\Entity\Call\Call;
 use Program\Entity\Doa;
 use Program\Entity\Funder;
@@ -28,6 +30,19 @@ use Project\Entity\Project;
  */
 class ProgramService extends AbstractService
 {
+    /**
+     * @var OrganisationSearchService
+     */
+    private $organisationSearchService;
+
+    public function __construct(EntityManager $entityManager, OrganisationSearchService $organisationSearchService)
+    {
+        parent::__construct($entityManager);
+
+        $this->organisationSearchService = $organisationSearchService;
+    }
+
+
     public function findProgramById(int $id): ?Program
     {
         return $this->entityManager->getRepository(Program::class)->find($id);
@@ -60,7 +75,11 @@ class ProgramService extends AbstractService
     {
         $calls = $this->entityManager->getRepository(Call::class)->findAmountOfActiveCalls();
         $years = $this->entityManager->getRepository(Call::class)->findAmountOfYears();
-        $organisations = $this->entityManager->getRepository(Organisation::class)->findAmountOfActiveOrganisations();
+        $organisations = $this->organisationSearchService->findAmountOfActiveOrganisations();
+
+
+
+
         $countries = $this->entityManager->getRepository(Country::class)->findAmountOfActiveCountries();
         $projects = $this->entityManager->getRepository(Project::class)->findAmountOfActiveProjects();
 
