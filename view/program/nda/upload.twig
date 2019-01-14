@@ -1,9 +1,9 @@
 {% do headTitle().append(translate("txt-upload-nda-title")) %}
 
 {% if call %}
-    <h1 class="display-4">{{ translate("txt-submit-non-disclosure-agreement-for-call-%s")|format(call) }}</h1>
+    <h1>{{ translate("txt-submit-non-disclosure-agreement-for-call-%s")|format(call) }}</h1>
 {% else %}
-    <h1 class="display-4">{{ translate("txt-submit-a-general-non-disclosure-agreement") }}</h1>
+    <h1>{{ translate("txt-submit-a-general-non-disclosure-agreement") }}</h1>
 {% endif %}
 
 {% if not nda %}
@@ -25,7 +25,7 @@
     {{ form().openTag(form)|raw }}
 
     <div class="form-group row">
-        <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-contact") }}</label>
+        <label class="col-sm-3 col-form-label">{{ translate("txt-contact") }}</label>
 
         <div class="col-sm-9">
             <p class="form-control-static form-control-plaintext">{{ identity().displayName }}</p>
@@ -34,7 +34,7 @@
 
     {% if call %}
         <div class="form-group row">
-            <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-program-call") }}</label>
+            <label class="col-sm-3 col-form-label">{{ translate("txt-program-call") }}</label>
 
             <div class="col-sm-9">
                 <p class="form-control-static form-control-plaintext">{{ call }}</p>
@@ -45,7 +45,7 @@
     {{ ztbformelement(form.get('file')) }}
 
     <div class="form-group row">
-        <div class="offset-md-3 col-sm-offset-3 col-sm-9">
+        <div class="offset-sm-3 col-sm-9">
             {{ ndaLink(nda, 'render', 'button', call ) }} {{ formelement(form.get('submit')) }}
         </div>
     </div>

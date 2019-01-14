@@ -10,7 +10,7 @@
 
 <div class="row">
     <div class="col-md-10">
-        <h1 class="display-4">{{ translate("txt-funder-list") }} {{ funderLink(null, 'new','button') }}</h1>
+        <h1>{{ translate("txt-funder-list") }} {{ funderLink(null, 'new','button') }}</h1>
 
         <div class="row">
             <div class="col-md-6">
@@ -27,7 +27,7 @@
         </div>
 
         {% if paginator.pageRange > 0 %}
-            <table class="table table-hover table-striped table-condensed table-sm">
+            <table class="table table-hover table-striped table-sm">
                 <thead>
                 <tr>
                     <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/funder/list', 'criteria': 'contact', 'text': translate('txt-contact')} %}</th>
@@ -55,12 +55,10 @@
     <div class="col-md-2">
         <div class="well well-sm">
             <fieldset>
-                {{ ztbformelement(filter.get('showOnWebsite')) }}
+                {{ ztbformelement(filter.get('showOnWebsite'), true) }}
 
-                <div class="form-group row">
-                    {{ ztbformelement(form.get('submit')) }}
+                                   {{ ztbformelement(form.get('submit')) }}
                     {{ ztbformelement(form.get('clear')) }}
-                </div>
             </fieldset>
         </div>
     </div>

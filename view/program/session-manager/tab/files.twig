@@ -1,86 +1,94 @@
 <h2>{{ translate("txt-files") }}</h2>
 <p>{{ translate("txt-drop-files-explaination") }}</p>
 <div id="idea-panels">
-{% if orderedIdeaSessions|length > 0 %}
-    {% set itemsPerRow = 3 %}
-    {% for ideaSession in orderedIdeaSessions %}
-        {% if loop.first or loop.index0 is divisible by(itemsPerRow)  %}
-            <div class="row">
-        {% endif %}
-        <div class="col-md-{{ 12/itemsPerRow }}">
-            <div class="panel panel-default">
-                <div class="panel-heading">{{ ideaLink(ideaSession.session.idea, 'view-admin') }}</div>
-                <div class="panel-body">
-                    <div data-files-url="{{ url('zfcadmin/session/idea-files', {'id': ideaSession.session.id}) }}"
-                         data-upload-url="{{ url('zfcadmin/session/upload-document', {'id': ideaSession.session.id}) }}"
-                         class="well drop">
-                        {{ translate("txt-drop-files-here") }}
-                    </div>
-                    <div class="files">
-                        {% if ideaSession.files is not empty %}
-                        <table class="table table-condensed table-striped">
-                            <tbody>
-                            {% for file in ideaSession.files %}
-                                <tr>
-                                    {% if file.type == 'document' %}
-                                    <td><small>{{ file.object.parseFilename() }}</small></td>
-                                    <td><small>{{ file.object.size|parse_size }}</small></td>
-                                    <td>
-                                        {{ ideaDocumentLink(file.object, 'download', 'icon') }}
-                                        {{ ideaDocumentLink(file.object, 'delete', 'icon') }}
-                                    </td>
-                                    {% elseif file.type == 'image' %}
-                                    <td>{{ file.object.getImage() }}</td>
-                                    <td>{{ file.object.size|parse_size }}</td>
-                                    <td>
-                                        {{ ideaImageLink(file.object, 'delete', 'icon') }}
-                                    </td>
-                                    {% endif %}
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                        {% endif %}
+    {% if orderedIdeaSessions|length > 0 %}
+        {% set itemsPerRow = 3 %}
+        <div class="row card-deck-row">
+            {% for ideaSession in orderedIdeaSessions %}
+
+                <div class="col-3 mb-4">
+                    <div class="card">
+                        <div class="card-header">{{ ideaLink(ideaSession.session.idea, 'view-admin') }}</div>
+                        <div class="card-body">
+                            <div data-files-url="{{ url('zfcadmin/session/idea-files', {'id': ideaSession.session.id}) }}"
+                                 data-upload-url="{{ url('zfcadmin/session/upload-document', {'id': ideaSession.session.id}) }}"
+                                 class="bg-light border p-3 mb-2 drop">
+                                {{ translate("txt-drop-files-here") }}
+                            </div>
+                            <div class="files">
+                                {% if ideaSession.files is not empty %}
+                                    <table class="table table-sm table-striped">
+                                        <tbody>
+                                        {% for file in ideaSession.files %}
+                                            <tr>
+                                                {% if file.type == 'document' %}
+                                                    <td>
+                                                        <small>{{ file.object.parseFilename() }}</small>
+                                                    </td>
+                                                    <td>
+                                                        <small>{{ file.object.size|parse_size }}</small>
+                                                    </td>
+                                                    <td>
+                                                        {{ ideaDocumentLink(file.object, 'download', 'icon') }}
+                                                        {{ ideaDocumentLink(file.object, 'delete', 'icon') }}
+                                                    </td>
+                                                {% elseif file.type == 'image' %}
+                                                    <td>{{ file.object.getImage() }}</td>
+                                                    <td>{{ file.object.size|parse_size }}</td>
+                                                    <td>
+                                                        {{ ideaImageLink(file.object, 'delete', 'icon') }}
+                                                    </td>
+                                                {% endif %}
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endfor %}
         </div>
-        {% if loop.last or loop.index is divisible by(itemsPerRow)  %}
-            </div>
-        {% endif %}
-    {% endfor %}
-    {{ callSessionLink(session, 'download', 'button') }}
-{% else %}
-    {{ ztbalert().info(translate("txt-no-ideas-found"))|raw }}
-{% endif %}
+        {{ callSessionLink(session, 'download', 'button') }}
+    {% else %}
+        {{ ztbalert().info(translate("txt-no-ideas-found"))|raw }}
+    {% endif %}
 </div>
 
 <style type="text/css">
-    div.dz-preview { display:none; }
-    div.drop:hover { cursor:pointer; }
+    div.dz-preview {
+        display: none;
+    }
+
+    div.drop:hover {
+        cursor: pointer;
+    }
 </style>
 
 <script>
-    $(function(){
+    $(function () {
         var $template = $('#files-template');
-        $('.drop').each(function(){
+        $('.drop').each(function () {
             var $self = $(this);
             $self.dropzone({
                 uploadMultiple: true,
                 url: $self.data('upload-url'),
-                success: function(){
-                    $.get($self.data('files-url'), function(data){
+                success: function () {
+                    $.get($self.data('files-url'), function (data) {
                         var html = Mustache.render($template.html(), data);
                         $self.siblings('.files').html(html);
                     });
                 }
             });
         });
-        $('#idea-panels').on('click', '.btn-del', function(e){
+        $('#idea-panels').on('click', '.btn-del', function (e) {
             e.preventDefault();
             var $self = $(this);
-            $.get($self.data('delete-url'), function(){
-                $self.closest('tr').fadeOut(function(){ $(this).remove(); });
+            $.get($self.data('delete-url'), function () {
+                $self.closest('tr').fadeOut(function () {
+                    $(this).remove();
+                });
             });
         });
     });
@@ -88,7 +96,7 @@
 
 {% verbatim %}
 <template id="files-template">
-    <table class="table table-condensed table-striped">
+    <table class="table table-sm table-striped">
         <tbody>
         <!--{{#files}}-->
             <tr>

@@ -1,9 +1,9 @@
 {% do headTitle().append(translate("txt-upload-nda-title")) %}
 
 {% if call %}
-    <h1 class="display-4">{{ translate("txt-submit-non-disclosure-agreement-for-call-%s")|format(call) }}</h1>
+    <h1>{{ translate("txt-submit-non-disclosure-agreement-for-call-%s")|format(call) }}</h1>
 {% else %}
-    <h1 class="display-4">{{ translate("txt-submit-a-general-non-disclosure-agreement") }}</h1>
+    <h1>{{ translate("txt-submit-a-general-non-disclosure-agreement") }}</h1>
 {% endif %}
 
 {% if not nda %}
@@ -35,7 +35,7 @@
         {{ ztbformelement(form.get('file')) }}
 
         <div class="form-group row">
-            <div class="offset-md-3 col-sm-offset-3 col-sm-9">
+            <div class="offset-sm-3 col-sm-9">
                 {{ ndaLink(nda, 'render', 'button', call ) }} {{ formelement(form.get('submit')) }}
             </div>
         </div>
@@ -45,7 +45,7 @@
         <legend>{{ translate("txt-sign-online-version") }}</legend>
 
         <div class="form-group row">
-            <div class="offset-md-3 col-sm-offset-3 col-sm-9">
+            <div class="offset-sm-3 col-sm-9">
                 <p>{{ translate("txt-please-read-the-text-below-before-signing-the-nda") }}</p>
                 <div style="max-height: 400px; overflow-y: scroll; background-color: #f8f8f8; padding: 10px;">
                     {{ ndaContent|raw }}
@@ -54,7 +54,7 @@
         </div>
 
         <div class="form-group {% if form.get('selfApprove').getMessages() %}has-error{% endif %}">
-            <div class="offset-md-3 col-sm-offset-3 col-sm-9">
+            <div class="offset-sm-3 col-sm-9">
                 <div class="checkbox">
                     <label>
                         {{ formelement(form.get('selfApprove')) }} {{ translate("txt-self-approve-nda-checkbox-help-text") }}
@@ -67,7 +67,7 @@
 
 
         <div class="form-group row">
-            <div class="offset-md-3 col-sm-offset-3 col-sm-9">
+            <div class="offset-sm-3 col-sm-9">
                 {{ formelement(form.get('approve')) }}
             </div>
         </div>

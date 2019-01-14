@@ -1,11 +1,11 @@
 {% if nda.call %}
-    <h1 class="display-4">{{ translate("txt-view-nda-(%s)-for-contact-%s-for-call-%s")|
+    <h1>{{ translate("txt-view-nda-(%s)-for-contact-%s-for-call-%s")|
         format(nda, nda.contact.displayName, nda.call)|raw }}</h1>
 
     <p class="lead">{{ translate("txt-view-nda-for-contact-%s-for-call-%s-explanation")|
         format(nda.contact.displayName, nda.call)|raw }}</p>
 {% else %}
-    <h1 class="display-4">{{ translate("txt-view-general-nda-(%s)-for-contact-%s")|
+    <h1>{{ translate("txt-view-general-nda-(%s)-for-contact-%s")|
         format(nda, nda.contact.displayName)|raw }}</h1>
 
     <p class="lead">{{ translate("txt-view-general-nda-for-contact-%s")|

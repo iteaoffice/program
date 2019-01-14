@@ -1,12 +1,11 @@
 {% do headTitle().append(translate("txt-program-size")) %}
-<h1 class="display-4">{{ translate("txt-program-size-%s")|format(program) }}</h1>
+<h1>{{ translate("txt-program-size-%s")|format(program) }}</h1>
 
 {% do form.prepare() %}
 
 {{ form().openTag(form)|raw }}
 
-
-<table class="table table-hover table-striped table-condensed table-sm">
+<table class="table table-hover table-striped table-sm">
     <thead>
     <tr>
         <th>{{ programLink(program,'view-admin','name') }}</th>
@@ -15,11 +14,7 @@
         {% endfor %}
     </tr>
     </thead>
-    <tfoot>
-
-    </tfoot>
     <tbody>
-
     {% for call in program.call %}
         <tr>
             <td>{{ callLink(call,'size','name') }} {{ callLink(call, 'funding', 'icon') }}</td>
@@ -32,10 +27,8 @@
 </table>
 
 {% set filter = form.get('filter') %}
-            {{ ztbformelement(filter.get('program')) }}
-
-            {{ ztbformelement(form.get('submit')) }}
-            {{ ztbformelement(form.get('clear')) }}
-
+{{ ztbformelement(filter.get('program'), true) }}
+{{ ztbformelement(form.get('submit')) }}
+{{ ztbformelement(form.get('clear')) }}
 
 {{ form().closeTag()|raw }}

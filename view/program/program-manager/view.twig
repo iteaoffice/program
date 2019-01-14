@@ -1,7 +1,7 @@
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-program-%s")|format(program)) %}
 
-<h1 class="display-4">{{ translate("txt-program-%s")|format(program) }} {{ programLink(program,'edit-admin','button') }} {{ programLink(program,'size','button') }}</h1>
+<h1>{{ translate("txt-program-%s")|format(program) }} {{ programLink(program,'edit-admin','button') }} {{ programLink(program,'size','button') }}</h1>
 
 <h2>{{ translate("txt-program-information") }}</h2>
 <dl class="dl-horizontal">
@@ -32,7 +32,7 @@
 {% if not program.call.isEmpty() %}
     <h2>{{ translate("txt-overview-of-calls") }}</h2>
 
-    <table class="table table-hover table-striped table-condensed table-sm">
+    <table class="table table-hover table-striped table-sm">
         <thead>
         <tr>
             <th>{{ translate("txt-call-id") }}</th>

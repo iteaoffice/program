@@ -396,7 +396,7 @@ class Call extends AbstractEntity
 
     public function shortName(): string
     {
-        $words = \explode(' ', $this->getProgram()->getProgram());
+        $words = \explode(' ', $this->program->getProgram());
         $acronym = '';
 
         foreach ($words as $w) {
@@ -416,6 +416,11 @@ class Call extends AbstractEntity
         $this->program = $program;
 
         return $this;
+    }
+
+    public function searchName(): string
+    {
+        return \sprintf('%s Call %s', $this->program->searchName(), $this->call);
     }
 
     public function hasIdeaTool(): bool

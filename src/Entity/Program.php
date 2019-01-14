@@ -18,7 +18,6 @@ namespace Program\Entity;
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * @ORM\Table(name="program")
@@ -122,9 +121,6 @@ class Program extends AbstractEntity
      */
     private $parentInvoiceExtra;
 
-    /**
-     * Class constructor.
-     */
     public function __construct()
     {
         $this->call = new Collections\ArrayCollection();
@@ -135,54 +131,37 @@ class Program extends AbstractEntity
         $this->parentInvoiceExtra = new Collections\ArrayCollection();
     }
 
-    /**
-     * Magic Getter.
-     *
-     * @param $property
-     *
-     * @return mixed
-     */
+    public function searchName(): string
+    {
+        $programName = $this->getProgram();
+
+        if (!\is_numeric(\substr($programName, -1))) {
+            $programName .= ' 1';
+        }
+
+        return $programName;
+    }
+
     public function __get($property)
     {
         return $this->$property;
     }
 
-    /**
-     * @param $property
-     * @param $value
-     *
-     * @return void
-     */
     public function __set($property, $value)
     {
         $this->$property = $value;
     }
 
-    /**
-     * @param $property
-     *
-     * @return bool
-     */
     public function __isset($property)
     {
         return isset($this->$property);
     }
 
-    /**
-     * toString returns the name.
-     *
-     * @return string
-     */
     public function __toString(): string
     {
         return (string)$this->program;
     }
 
-    /**
-     * New function needed to make the hydrator happy
-     *
-     * @param Collections\Collection $invoiceMethodCollection
-     */
     public function addInvoiceMethod(Collections\Collection $invoiceMethodCollection): void
     {
         foreach ($invoiceMethodCollection as $invoiceMethod) {
@@ -190,11 +169,6 @@ class Program extends AbstractEntity
         }
     }
 
-    /**
-     * New function needed to make the hydrator happy
-     *
-     * @param Collections\Collection $invoiceMethodCollection
-     */
     public function removeInvoiceMethod(Collections\Collection $invoiceMethodCollection): void
     {
         foreach ($invoiceMethodCollection as $single) {
@@ -202,10 +176,6 @@ class Program extends AbstractEntity
         }
     }
 
-    /**
-     * @return \Program\Entity\Call\Call[]|Collections\ArrayCollection
-     *
-     */
     public function getCall()
     {
         return $this->call;
@@ -345,6 +315,7 @@ class Program extends AbstractEntity
 
     /**
      * @param \Organisation\Entity\Parent\Invoice $parentInvoice
+     *
      * @return Program
      */
     public function setParentInvoice(\Organisation\Entity\Parent\Invoice $parentInvoice): Program
@@ -364,6 +335,7 @@ class Program extends AbstractEntity
 
     /**
      * @param \Organisation\Entity\Parent\InvoiceExtra $parentInvoiceExtra
+     *
      * @return Program
      */
     public function setParentInvoiceExtra(\Organisation\Entity\Parent\InvoiceExtra $parentInvoiceExtra): Program
