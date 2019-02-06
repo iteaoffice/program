@@ -21,20 +21,12 @@ use Zend\Validator\File\Extension;
 use Zend\Validator\File\Size;
 
 /**
- * Special NDA upload form to handle NDAs in the backend
- *
- *
  * Class AdminUploadNda
  *
  * @package Program\Form
  */
-class AdminUploadNda extends Form\Form implements InputFilterProviderInterface
+final class AdminUploadNda extends Form\Form implements InputFilterProviderInterface
 {
-    /**
-     * AdminUploadNda constructor.
-     *
-     * @param EntityManager $entityManager
-     */
     public function __construct(EntityManager $entityManager)
     {
         parent::__construct();
@@ -72,7 +64,7 @@ class AdminUploadNda extends Form\Form implements InputFilterProviderInterface
                     'object_manager'     => $entityManager,
                     'target_class'       => Call::class,
                     'display_empty_item' => true,
-                    'empty_item_label'   => "-- " . _("txt-not-connected-to-a-call"),
+                    'empty_item_label'   => "-- No call specific NDA",
                     "help-block"         => _("txt-nda-program-call-help-block"),
                     'find_method'        => [
                         'name'   => 'findBy',

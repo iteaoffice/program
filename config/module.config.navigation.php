@@ -9,36 +9,41 @@
  */
 return [
     'navigation' => [
-        'community' => [
-            'idea' => [
+        'community2' => [
+            'index' => [
                 'pages' => [
-                    'submit-nda' => [
-                        'order'     => 20,
-                        'label'     => _("txt-nav-submit-nda"),
-                        'route'     => 'community/program/nda/submit',
-                        'resource'  => 'route/community/program/nda/submit',
-                        'privilege' => 'submit',
-                    ],
-                    'view-nda'   => [
-                        'label'   => _("txt-nav-view-nda"),
-                        'route'   => 'community/program/nda/view',
-                        'visible' => false,
-                        'params'  => [
-                            'entities'   => [
-                                'id' => Program\Entity\Nda::class,
+                    'call' => [
+                        'pages' => [
+                            'submit-nda' => [
+                                'order'     => 20,
+                                'label'     => _("txt-nav-submit-nda"),
+                                'route'     => 'community/program/nda/submit',
+                                'resource'  => 'route/community/program/nda/submit',
+                                'privilege' => 'submit',
+                                'visible'   => false,
                             ],
-                            'invokables' => [
-                                Program\Navigation\Invokable\NdaLabel::class,
-                            ],
-                        ],
-                        'pages'   => [
-                            'replace-nda' => [
-                                'label'   => _("txt-nav-replace-nda"),
-                                'route'   => 'community/program/nda/replace',
+                            'view-nda'   => [
+                                'label'   => _("txt-nav-view-nda"),
+                                'route'   => 'community/program/nda/view',
                                 'visible' => false,
                                 'params'  => [
-                                    'entities' => [
+                                    'entities'   => [
                                         'id' => Program\Entity\Nda::class,
+                                    ],
+                                    'invokables' => [
+                                        Program\Navigation\Invokable\NdaLabel::class,
+                                    ],
+                                ],
+                                'pages'   => [
+                                    'replace-nda' => [
+                                        'label'   => _("txt-nav-replace-nda"),
+                                        'route'   => 'community/program/nda/replace',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities' => [
+                                                'id' => Program\Entity\Nda::class,
+                                            ],
+                                        ],
                                     ],
                                 ],
                             ],
@@ -47,7 +52,7 @@ return [
                 ],
             ],
         ],
-        'admin'     => [
+        'admin'      => [
             // And finally, here is where we define our page hierarchy
             'project' => [
                 'order' => 20,
@@ -252,11 +257,12 @@ return [
                     ],
                 ]
             ],
-            'config'  => [
+            'contact' => [
                 'pages' => [
                     'funder' => [
                         'label' => _("txt-nav-funder-list"),
                         'route' => 'zfcadmin/funder/list',
+                        'order' => 1000,
                         'pages' => [
                             'funder-view' => [
                                 'route'   => 'zfcadmin/funder/view',

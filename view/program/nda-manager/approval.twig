@@ -3,8 +3,8 @@
 
 
 {% do headLink().appendStylesheet(
-'//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css'
-) %}
+    '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css'
+    ) %}
 
 
 <h1>{{ translate("txt-unapproved-nda") }}</h1>
@@ -47,9 +47,7 @@
                 </td>
                 <td>{{ formElement(form.get('nda_' ~ nda.id).get('dateSigned')) }}</td>
                 <td>
-                    <button type="button" rel="{{ nda.id }}" data-complete-text="Approved"
-                            class="btn btn-info approveButton"
-                            autocomplete="off"><i class="fa fa-check"></i>
+                    <button type="button" data-nda-id="{{ nda.id }}" class="btn btn-info approveButton">
                         {{ translate("txt-approve") }}</button>
                 </td>
             </tr>
@@ -71,10 +69,11 @@
         e.preventDefault();
 
         var btn = $(this);
-        btn.button('loading');
+        btn.data('original-text', btn.html());
+        btn.html('<i class="fa fa-circle-o-notch fa-spin"></i> loading...');
 
         //NdaId
-        var ndaId = btn.attr('rel');
+        var ndaId = btn.data('nda-id');
 
         $.ajax({
             url: '{{ serverUrl() }}{{ url('zfcadmin/nda/approve') }}',
@@ -87,21 +86,19 @@
                 'sendEmail': $("#send-mail-checkbox").prop("checked")
             },
             success: function (response) {
-                if (response.result == 'success') {
-                    btn.addClass('complete');
-                    $("#nda-" + ndaId).addClass('success');
-                    btn.button('complete'); // button text will be "finished!"
+                if (response.result === 'success') {
+                    btn.attr('class', 'btn btn-success');
+                    btn.html('<i class="fa fa-check"></i> Approved');
+                    $("#nda-" + ndaId).addClass('table-success');
                 }
 
-                if (response.result == 'error') {
-                    btn.button('reset');
+                if (response.result === 'error') {
+                    btn.html(btn.data('original-text'));
                     alert(response.error);
                 }
-
             },
             error: function (xhr) {
-                console.log(xhr);
-                alert('Error! Did you enable adblock????? Status = ' + xhr.status);
+                alert('Error! Did you enable adblock? Status = ' + xhr.status);
             }
         });
 

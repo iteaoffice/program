@@ -28,7 +28,7 @@ use Zend\Router\RouteMatch;
  *
  * @package Program\Navigation\Service
  */
-class CallNavigationService
+final class CallNavigationService
 {
     /**
      * @var Navigation
@@ -80,7 +80,7 @@ class CallNavigationService
             $callPage = new Uri();
             $callPage->setOrder($key);
             $callPage->setId($key);
-            $callPage->setUri('#');
+            $callPage->setUri('community/call/index/call-'. $activeCall->getId() . '.html');
             $callPage->setLabel((string)$activeCall);
 
             /** @var Mvc $page */

@@ -31,9 +31,9 @@
             <table class="table table-hover table-striped table-sm">
                 <thead>
                 <tr>
-                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/program/list', 'criteria': 'id', 'text': translate('txt-id')} %}</th>
-                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/program/list', 'criteria': 'name', 'text': translate('txt-name')} %}</th>
-                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/program/list', 'criteria': 'number', 'text': translate('txt-number')} %}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/program/list', 'criteria': 'id', 'text': translate('txt-id')} %}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/program/list', 'criteria': 'name', 'text': translate('txt-name')} %}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/program/list', 'criteria': 'number', 'text': translate('txt-number')} %}</th>
                     <th>{{ translate("txt-amount-of-calls") }}</th>
                     <th>{{ translate("txt-eurkeka-export") }}</th>
                     <th>{{ translate("txt-invoice-method") }}</th>
@@ -53,7 +53,7 @@
                 {% endfor %}
                 </tbody>
             </table>
-            {% include 'program/partial/pagination-control' %}
+            {% include 'application/partial/pagination-control' %}
         {% else %}
             {{ ztbalert().info(translate("txt-no-program-could-be-found"))|raw }}
         {% endif %}

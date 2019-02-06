@@ -196,7 +196,7 @@ final class NdaManagerController extends AbstractActionController
 
             if (isset($data['delete'])) {
                 $this->flashMessenger()->addSuccessMessage(
-                    sprintf(
+                    \sprintf(
                         $this->translator->translate("txt-nda-for-contact-%s-has-been-removed"),
                         $nda->getContact()->getDisplayName()
                     )
@@ -254,8 +254,8 @@ final class NdaManagerController extends AbstractActionController
                 $this->callService->save($nda);
 
                 $this->flashMessenger()->addSuccessMessage(
-                    sprintf(
-                        _("txt-nda-for-contact-%s-has-been-updated"),
+                    \sprintf(
+                        $this->translator->translate("txt-nda-for-contact-%s-has-been-updated"),
                         $nda->getContact()->getDisplayName()
                     )
                 );
@@ -281,15 +281,20 @@ final class NdaManagerController extends AbstractActionController
             return $this->notFoundAction();
         }
 
-        $data = array_merge_recursive(
+        $data = \array_merge_recursive(
             $this->getRequest()->getPost()->toArray(),
             $this->getRequest()->getFiles()->toArray()
         );
 
         $form = new AdminUploadNda($this->entityManager);
         $form->setData($data);
-        if ($this->getRequest()->isPost() && $form->isValid()) {
-            if (isset($data['submit'])) {
+        if ($this->getRequest()->isPost()) {
+            if (isset($data['cancel'])) {
+                return $this->redirect()->toRoute('zfcadmin/contact-admin/view', ['id' => $contact->getId()]);
+            }
+
+
+            if ($form->isValid()) {
                 $fileData = $form->getData('file');
 
                 $call = $this->callService->findCallById((int)$data['call']);
@@ -309,7 +314,9 @@ final class NdaManagerController extends AbstractActionController
                     $this->adminService->flushPermitsByContact($contact);
                 }
 
-                $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-nda-has-been-uploaded-successfully")));
+                $this->flashMessenger()->addSuccessMessage(
+                    \sprintf($this->translator->translate("txt-nda-has-been-uploaded-successfully"))
+                );
             }
 
 

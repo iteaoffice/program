@@ -30,13 +30,13 @@
             <table class="table table-hover table-striped table-sm">
                 <thead>
                 <tr>
-                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'id', 'text': translate('txt-id')} %}</th>
-                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'call', 'text': translate('txt-call-name')} %}</th>
-                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'program', 'text': translate('txt-program')} %}</th>
-                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'po-open-date', 'text': translate('txt-call-po-open')} %}</th>
-                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'po-close-date', 'text': translate('txt-call-po-close')} %}</th>
-                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'fpp-open-date', 'text': translate('txt-call-fpp-open')} %}</th>
-                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'fpp-close-date', 'text': translate('txt-call-fpp-close')} %}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'id', 'text': translate('txt-id')} %}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'call', 'text': translate('txt-call-name')} %}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'program', 'text': translate('txt-program')} %}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'po-open-date', 'text': translate('txt-call-po-open')} %}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'po-close-date', 'text': translate('txt-call-po-close')} %}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'fpp-open-date', 'text': translate('txt-call-fpp-open')} %}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'fpp-close-date', 'text': translate('txt-call-fpp-close')} %}</th>
                     {#<th>{{ translate("txt-doa-requirement") }}</th>#}
                     {#<th>{{ translate("txt-nda-requirement") }}</th>#}
                     <th>{{ translate("txt-#projects") }}</th>
@@ -59,7 +59,7 @@
                 {% endfor %}
                 </tbody>
             </table>
-            {% include 'program/partial/pagination-control' %}
+            {% include 'application/partial/pagination-control' %}
         {% else %}
             {{ ztbalert().info(translate("txt-no-call-could-be-found"))|raw }}
         {% endif %}

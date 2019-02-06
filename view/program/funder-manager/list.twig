@@ -30,8 +30,8 @@
             <table class="table table-hover table-striped table-sm">
                 <thead>
                 <tr>
-                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/funder/list', 'criteria': 'contact', 'text': translate('txt-contact')} %}</th>
-                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/funder/list', 'criteria': 'country', 'text': translate('txt-country')} %}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/funder/list', 'criteria': 'contact', 'text': translate('txt-contact')} %}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/funder/list', 'criteria': 'country', 'text': translate('txt-country')} %}</th>
                     <th>{{ translate("txt-position") }}</th>
                     <th>{{ translate("txt-show-on-website") }}</th>
                 </tr>
@@ -47,7 +47,7 @@
                 {% endfor %}
                 </tbody>
             </table>
-            {% include 'program/partial/pagination-control' %}
+            {% include 'application/partial/pagination-control' %}
         {% else %}
             {{ ztbalert().info(translate("txt-no-call-could-be-found"))|raw }}
         {% endif %}

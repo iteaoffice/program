@@ -75,7 +75,7 @@
 
             <div class="row py-3">
                 {% for projectItem in projects %}
-                    <div class="col-md-3">
+                    <div class="col-md-3 pb-3">
 
                         {% if projectItem.type is constant('\\Project\\ValueObject\\ProjectItem::TYPE_PROJECT') %}
                             <a class="card"
@@ -134,8 +134,7 @@
 
             <div class="row py-3">
                 {% for ideaItem in ideas %}
-                    <div class="col-md-3">
-
+                    <div class="col-md-3 pb-3">
                         {% if ideaItem.type is constant('\\Project\\ValueObject\\IdeaItem::TYPE_IDEA') %}
                             <a class="card" href="{{ ideaLink(ideaItem.idea,'view','social') }}">
                                 <div class="idea-card"></div>

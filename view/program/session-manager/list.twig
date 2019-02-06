@@ -30,10 +30,10 @@
             <table class="table table-hover table-striped table-sm">
                 <thead>
                 <tr>
-                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/session/list', 'criteria': 'id', 'text': translate('txt-id')} %}</th>
-                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/session/list', 'criteria': 'session', 'text': translate('txt-session')} %}</th>
-                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/session/list', 'criteria': 'call', 'text': translate('txt-call')} %}</th>
-                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/session/list', 'criteria': 'date', 'text': translate('txt-date')} %}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/session/list', 'criteria': 'id', 'text': translate('txt-id')} %}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/session/list', 'criteria': 'session', 'text': translate('txt-session')} %}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/session/list', 'criteria': 'call', 'text': translate('txt-call')} %}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/session/list', 'criteria': 'date', 'text': translate('txt-date')} %}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -47,7 +47,7 @@
                 {% endfor %}
                 </tbody>
             </table>
-            {% include 'program/partial/pagination-control' %}
+            {% include 'application/partial/pagination-control' %}
         {% else %}
             {{ ztbalert().info(translate("txt-no-sessions-found"))|raw }}
         {% endif %}
