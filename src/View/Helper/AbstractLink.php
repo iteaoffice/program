@@ -21,10 +21,10 @@ use BjyAuthorize\View\Helper\IsAllowed;
 use Contact\Entity\Contact;
 use General\Entity\Country;
 use Organisation\Entity\Organisation;
+use Program\Entity\AbstractEntity;
 use Program\Entity\Call\Call;
 use Program\Entity\Call\Country as CallCountry;
 use Program\Entity\Doa;
-use Program\Entity\AbstractEntity;
 use Program\Entity\Funder;
 use Program\Entity\Nda;
 use Program\Entity\Program;
@@ -34,6 +34,7 @@ use Zend\View\Helper\Url;
 
 /**
  * Class AbstractLink
+ *
  * @package Program\View\Helper
  */
 abstract class AbstractLink extends AbstractViewHelper
@@ -127,10 +128,6 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     protected $page;
 
-    /**
-     * @return string
-     * @throws \Exception
-     */
     public function createLink(): string
     {
         /** @var $url Url */
@@ -149,10 +146,10 @@ abstract class AbstractLink extends AbstractViewHelper
 
         if ('social' === $this->getShow()) {
             return $serverUrl() . $url(
-                $this->router,
-                $this->routerParams,
-                ['query' => $this->query, 'fragment' => $this->fragment]
-            );
+                    $this->router,
+                    $this->routerParams,
+                    ['query' => $this->query, 'fragment' => $this->fragment]
+                );
         }
         $uri = '<a href="%s" title="%s" class="%s">%s</a>';
 
@@ -163,7 +160,7 @@ abstract class AbstractLink extends AbstractViewHelper
                 $this->routerParams,
                 ['query' => $this->query, 'fragment' => $this->fragment]
             ),
-            \htmlentities((string) $this->text),
+            \htmlentities((string)$this->text),
             \implode(' ', $this->classes),
             \in_array($this->getShow(), ['icon', 'button', 'alternativeShow']) ? \implode('', $this->linkContent)
                 : \htmlentities(\implode('', $this->linkContent))
@@ -221,6 +218,7 @@ abstract class AbstractLink extends AbstractViewHelper
                         $this->addLinkContent('<i class="fa fa-eur" aria-hidden="true"></i>');
                         break;
                     case 'download-funding':
+                    case 'export-size':
                         $this->addLinkContent('<i class="fa fa-file-excel-o" aria-hidden="true"></i>');
                         break;
                     case 'size':
@@ -344,7 +342,7 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     public function addClasses($classes)
     {
-        foreach ((array) $classes as $class) {
+        foreach ((array)$classes as $class) {
             $this->classes[] = $class;
         }
 
@@ -377,8 +375,8 @@ abstract class AbstractLink extends AbstractViewHelper
 
     /**
      * @param AbstractEntity $entity
-     * @param string $assertion
-     * @param string $action
+     * @param string         $assertion
+     * @param string         $action
      *
      * @return bool
      */
@@ -416,7 +414,7 @@ abstract class AbstractLink extends AbstractViewHelper
 
     /**
      * @param null|AbstractEntity $resource
-     * @param string $privilege
+     * @param string              $privilege
      *
      * @return bool
      */
@@ -435,7 +433,7 @@ abstract class AbstractLink extends AbstractViewHelper
      *
      * @param string $key
      * @param        $value
-     * @param bool $allowNull
+     * @param bool   $allowNull
      */
     public function addRouterParam($key, $value, $allowNull = true): void
     {

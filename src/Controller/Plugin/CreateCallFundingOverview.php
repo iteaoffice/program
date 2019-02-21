@@ -19,6 +19,7 @@ namespace Program\Controller\Plugin;
 
 use Affiliation\Service\AffiliationService;
 use General\Service\CountryService;
+use Project\Entity\Funding\Funding;
 use Project\Entity\Funding\Source;
 use Project\Entity\Funding\Status;
 use Project\Service\EvaluationService;
@@ -102,20 +103,13 @@ final class CreateCallFundingOverview extends AbstractPlugin
             }
         }
 
-        ksort($this->countries);
+        \ksort($this->countries);
 
         $evaluationResult['countries'] = $this->countries;
 
         return $evaluationResult;
     }
 
-    /**
-     * @param $project
-     * @param $country
-     * @param $year
-     *
-     * @return array
-     */
     private function getValue($project, $country, $year): array
     {
         $version = $this->projectService->getLatestProjectVersion($project);
@@ -144,7 +138,7 @@ final class CreateCallFundingOverview extends AbstractPlugin
                 $version
             );
 
-
+            /** @var Funding $funding */
             foreach ($affiliation->getFunding() as $funding) {
                 if ($funding->getSource()->getId() === Source::SOURCE_OFFICE
                     && $funding->getDateStart()->format('Y') == $year

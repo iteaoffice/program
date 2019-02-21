@@ -5,75 +5,55 @@
 {{ form().openTag(form)|raw }}
 {% set filter = form.get('filter') %}
 
-<input type="hidden" name="filter[order]" value="{{ order }}">
-<input type="hidden" name="filter[direction]" value="{{ direction }}">
+<h1>{{ translate("txt-call-list") }} {{ callLink(null, 'new','button') }}</h1>
 
 <div class="row">
-    <div class="col-md-10">
-        <h1>{{ translate("txt-call-list") }} {{ callLink(null, 'new','button') }}</h1>
-
-        <div class="row">
-            <div class="col-md-6">
-                <p class="lead">{{ translate("txt-call-list-explanation") }}</p>
-            </div>
-            <div class="col-md-6">
-                <div class="input-group">
-                    {{ formelement(filter.get('search')) }}
-                    <div class="input-group-append input-group-btn">
-                        {{ formelement(form.get('submit')) }}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {% if paginator.pageRange > 0 %}
-            <table class="table table-hover table-striped table-sm">
-                <thead>
-                <tr>
-                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'id', 'text': translate('txt-id')} %}</th>
-                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'call', 'text': translate('txt-call-name')} %}</th>
-                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'program', 'text': translate('txt-program')} %}</th>
-                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'po-open-date', 'text': translate('txt-call-po-open')} %}</th>
-                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'po-close-date', 'text': translate('txt-call-po-close')} %}</th>
-                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'fpp-open-date', 'text': translate('txt-call-fpp-open')} %}</th>
-                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'fpp-close-date', 'text': translate('txt-call-fpp-close')} %}</th>
-                    {#<th>{{ translate("txt-doa-requirement") }}</th>#}
-                    {#<th>{{ translate("txt-nda-requirement") }}</th>#}
-                    <th>{{ translate("txt-#projects") }}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for call in paginator.getCurrentItems() %}
-                    <tr>
-                        <td>{{ call.id }} {{ callLink(call,'edit', 'icon') }}</td>
-                        <td>{{ callLink(call,'view-admin','name') }}</td>
-                        <td>{{ programLink(call.program,'view-admin','name') }}</td>
-                        <td>{% if call.poOpenDate %}{{ call.poOpenDate|string_date }}{% endif %}</td>
-                        <td>{% if call.poCloseDate %}{{ call.poCloseDate|string_date }}{% endif %}</td>
-                        <td>{% if call.fppOpenDate %}{{ call.fppOpenDate|string_date }}{% endif %}</td>
-                        <td>{% if call.fppCloseDate %}{{ call.fppCloseDate|string_date }}{% endif %}</td>
-                        {#<td>{{ translate(call.doaRequirement(true)) }}</td>#}
-                        {#<td>{{ translate(call.ndaRequirement(true)) }}</td>#}
-                        <td>{{ call.project.count }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            {% include 'application/partial/pagination-control' %}
-        {% else %}
-            {{ ztbalert().info(translate("txt-no-call-could-be-found"))|raw }}
-        {% endif %}
+    <div class="col-md-6">
+        <p class="lead">{{ translate("txt-call-list-explanation") }}</p>
     </div>
-    <div class="col-md-2">
-        <div class="well well-sm">
-            <fieldset>
-
-                                   {{ ztbformelement(form.get('submit')) }}
-                    {{ ztbformelement(form.get('clear')) }}
-            </fieldset>
+    <div class="col-md-6">
+        <div class="input-group">
+            {{ formelement(filter.get('search')) }}
+            <div class="input-group-append input-group-btn">
+                {{ formelement(form.get('submit')) }}
+            </div>
         </div>
     </div>
 </div>
+
+{% if paginator.pageRange > 0 %}
+    <table class="table table-hover table-striped table-sm">
+        <thead>
+        <tr>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'id', 'text': translate('txt-id')} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'call', 'text': translate('txt-call-name')} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'program', 'text': translate('txt-program')} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'po-open-date', 'text': translate('txt-call-po-open')} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'po-close-date', 'text': translate('txt-call-po-close')} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'fpp-open-date', 'text': translate('txt-call-fpp-open')} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'fpp-close-date', 'text': translate('txt-call-fpp-close')} %}</th>
+            <th>{{ translate("txt-#projects") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for call in paginator.getCurrentItems() %}
+            <tr>
+                <td>{{ call.id }} {{ callLink(call,'edit', 'icon') }}</td>
+                <td>{{ callLink(call,'view-admin','name') }}</td>
+                <td>{{ programLink(call.program,'view-admin','name') }}</td>
+                <td>{% if call.poOpenDate %}{{ call.poOpenDate|string_date }}{% endif %}</td>
+                <td>{% if call.poCloseDate %}{{ call.poCloseDate|string_date }}{% endif %}</td>
+                <td>{% if call.fppOpenDate %}{{ call.fppOpenDate|string_date }}{% endif %}</td>
+                <td>{% if call.fppCloseDate %}{{ call.fppCloseDate|string_date }}{% endif %}</td>
+                <td>{{ call.project.count }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% include 'application/partial/pagination-control' %}
+{% else %}
+    {{ ztbalert().info(translate("txt-no-call-could-be-found"))|raw }}
+{% endif %}
 
 {{ form().closeTag()|raw }}
 

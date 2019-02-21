@@ -25,14 +25,6 @@ use Program\Entity\Call\Call;
  */
 class CallLink extends AbstractLink
 {
-    /**
-     * @param Call|null $call
-     * @param string    $action
-     * @param string    $show
-     * @param array     $classes
-     *
-     * @return string
-     */
     public function __invoke(Call $call = null, $action = 'view', $show = 'name', array $classes = []): string
     {
         $this->setCall($call);
@@ -41,9 +33,6 @@ class CallLink extends AbstractLink
 
         $this->addClasses($classes);
 
-        /*
-         * Set the non-standard options needed to give an other link value
-         */
         if (null !== $call) {
             $this->addRouterParam('id', $this->getCall()->getId());
 
@@ -58,9 +47,6 @@ class CallLink extends AbstractLink
         return $this->createLink();
     }
 
-    /**
-     * Parse te action and fill the correct parameters.
-     */
     public function parseAction(): void
     {
         switch ($this->getAction()) {
@@ -75,6 +61,10 @@ class CallLink extends AbstractLink
             case 'size':
                 $this->setRouter('zfcadmin/call/size');
                 $this->setText(sprintf($this->translate("txt-call-size-%s"), $this->getCall()));
+                break;
+            case 'export-size':
+                $this->setRouter('zfcadmin/call/export-size');
+                $this->setText(sprintf($this->translate("txt-call-export-size-%s"), $this->getCall()));
                 break;
             case 'funding':
                 $this->setRouter('zfcadmin/call/funding');
@@ -92,16 +82,6 @@ class CallLink extends AbstractLink
                 $this->setRouter('zfcadmin/call/list');
                 $this->setText(sprintf($this->translate("txt-call-list")));
                 break;
-            case 'view-list':
-                /*
-                 * For a list in the front-end simply use the MatchedRouteName
-                 */
-                $this->addRouterParam('docRef', $this->getRouteMatch()->getParam('docRef'));
-                $this->setRouter($this->getRouteMatch()->getMatchedRouteName());
-                $this->addRouterParam('call', $this->getCall()->getId());
-                $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));
-                break;
-
             default:
                 throw new \InvalidArgumentException(
                     sprintf(

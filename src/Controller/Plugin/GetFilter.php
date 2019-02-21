@@ -19,52 +19,35 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\Router\Http\RouteMatch;
 
 /**
- * @category    Application
+ * Class GetFilter
+ *
+ * @package Program\Controller\Plugin
  */
-class GetFilter extends AbstractPlugin
+final class GetFilter extends AbstractPlugin
 {
     /**
      * @var Request
      */
-    protected $request;
+    private $request;
     /**
      * @var RouteMatch
      */
-    protected $routeMatch;
+    private $routeMatch;
     /**
      * @var array
      */
-    protected $filter = [];
+    private $filter = [];
     /**
      * @var string|null
      */
-    protected $order = 'name';
-    /**
-     * @var string|null
-     */
-    protected $direction = 'asc';
-    /**
-     * @var string|null
-     */
-    protected $query;
+    private $query;
 
-    /**
-     * GetFilter constructor.
-     *
-     * @param Application $application
-     */
     public function __construct(Application $application)
     {
         $this->routeMatch = $application->getMvcEvent()->getRouteMatch();
         $this->request = $application->getMvcEvent()->getRequest();
     }
 
-
-    /**
-     * Instantiate the filter
-     *
-     * @return GetFilter
-     */
     public function __invoke(): self
     {
         $encodedFilter = urldecode((string)$this->routeMatch->getParam('encodedFilter'));
@@ -73,7 +56,7 @@ class GetFilter extends AbstractPlugin
         $direction = $this->request->getQuery('direction');
 
         //Take the filter from the URL
-        $filter = (array)json_decode(base64_decode($encodedFilter));
+        $filter = (array)\json_decode(\base64_decode($encodedFilter));
 
 
         //If the form is submitted, refresh the URL
@@ -95,6 +78,7 @@ class GetFilter extends AbstractPlugin
         //Overrule the order if set in the query
         if (null !== $order) {
             $filter['order'] = $order;
+
         }
 
         //Overrule the direction if set in the query
@@ -107,44 +91,26 @@ class GetFilter extends AbstractPlugin
         return $this;
     }
 
-    /**
-     * Give the compressed version of the filter
-     *
-     * @return string
-     */
     public function getHash(): string
     {
-        return base64_encode(json_encode($this->filter));
+        return \base64_encode(\json_encode($this->filter));
     }
 
-    /**
-     * @return array
-     */
     public function getFilter(): array
     {
         return $this->filter;
     }
 
-
-    /**
-     * @return null|string
-     */
     public function getOrder(): ?string
     {
-        return $this->order;
+        return $this->filter['order'];
     }
 
-    /**
-     * @return null|string
-     */
     public function getDirection(): ?string
     {
-        return $this->direction;
+        return $this->filter['direction'];
     }
 
-    /**
-     * @return null|string
-     */
     public function getQuery(): ?string
     {
         return $this->query;

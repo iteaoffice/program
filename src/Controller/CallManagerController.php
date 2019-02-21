@@ -23,6 +23,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use General\Service\CountryService;
 use General\Service\GeneralService;
+use Program\Controller\Plugin\CallSizeSpreadsheet;
 use Program\Controller\Plugin\CreateCallFundingOverview;
 use Program\Controller\Plugin\CreateFundingDownload;
 use Program\Controller\Plugin\GetFilter;
@@ -50,6 +51,7 @@ use Zend\View\Model\ViewModel;
  * @method FlashMessenger flashMessenger()
  * @method GetFilter getProgramFilter()
  * @method CreateCallFundingOverview createCallFundingOverview($projects, $year)
+ * @method CallSizeSpreadsheet callSizeSpreadsheet(Call $call)
  * @method CreateFundingDownload createFundingDownload(Call $call)
  */
 final class CallManagerController extends AbstractActionController
@@ -111,10 +113,11 @@ final class CallManagerController extends AbstractActionController
     {
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getProgramFilter();
+
         $callQuery = $this->callService->findFiltered(Call::class, $filterPlugin->getFilter());
 
         $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($callQuery, false)));
-        $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 20);
+        $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
@@ -152,9 +155,6 @@ final class CallManagerController extends AbstractActionController
         );
     }
 
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     */
     public function newAction()
     {
         /** @var Request $request */
@@ -188,9 +188,6 @@ final class CallManagerController extends AbstractActionController
         return new ViewModel(['form' => $form]);
     }
 
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     */
     public function editAction()
     {
         /** @var Request $request */
@@ -225,9 +222,6 @@ final class CallManagerController extends AbstractActionController
         return new ViewModel(['form' => $form, 'call' => $call]);
     }
 
-    /**
-     * @return ViewModel
-     */
     public function sizeAction(): ViewModel
     {
         $call = $this->callService->findCallById((int)$this->params('id'));
@@ -237,7 +231,7 @@ final class CallManagerController extends AbstractActionController
         }
 
         // Only add the active projects
-        $activeProjects = $this->projectService->findProjectsByCall($call, ProjectService::WHICH_LABELLED);
+        $activeProjects = $this->projectService->findProjectsByCall($call, ProjectService::WHICH_ALL);
         $projects = $activeProjects->getQuery()->getResult();
 
         // Find the span of the call, because otherwise the matrix will be filled with numbers of year before the call
@@ -267,9 +261,20 @@ final class CallManagerController extends AbstractActionController
         );
     }
 
-    /**
-     * @return ViewModel
-     */
+    public function exportSizeAction(): Response
+    {
+        $call = $this->callService->findCallById((int)$this->params('id'));
+
+        /** @var Response $response */
+        $response = $this->getResponse();
+
+        if (null === $call) {
+            return $response;
+        }
+
+        return $this->callSizeSpreadsheet($call)->parseResponse();
+    }
+
     public function fundingAction(): ViewModel
     {
         /** @var Request $request */
@@ -322,9 +327,6 @@ final class CallManagerController extends AbstractActionController
         );
     }
 
-    /**
-     * @return Response
-     */
     public function downloadFundingAction(): Response
     {
         $call = $this->callService->findCallById((int)$this->params('id'));

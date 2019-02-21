@@ -25,6 +25,7 @@ use Contact\Service\ContactService;
 use Doctrine\ORM\EntityManager;
 use Event\Service\MeetingService;
 use Event\Service\RegistrationService;
+use General\Search\Service\CountrySearchService;
 use General\Service\CountryService;
 use General\Service\EmailService;
 use General\Service\GeneralService;
@@ -34,6 +35,8 @@ use Program\Options\ModuleOptions;
 use Program\Service\CallService;
 use Program\Service\FormService;
 use Program\Service\ProgramService;
+use Project\Search\Service\ProjectSearchService;
+use Project\Service\ContractService;
 use Project\Service\EvaluationService;
 use Project\Service\HelpService;
 use Project\Service\IdeaService;
@@ -81,6 +84,13 @@ return [
             Authorize::class,
             TranslatorInterface::class,
             'ViewHelperManager'
+        ],
+        Controller\Plugin\CallSizeSpreadsheet::class       => [
+            ProjectService::class,
+            VersionService::class,
+            AffiliationService::class,
+            ContractService::class,
+            TranslatorInterface::class
         ],
         Controller\Plugin\SessionDocument::class           => [
             EntityManager::class,
@@ -168,7 +178,9 @@ return [
         ],
         Service\ProgramService::class                      => [
             EntityManager::class,
-            OrganisationSearchService::class
+            OrganisationSearchService::class,
+            ProjectSearchService::class,
+            CountrySearchService::class
         ],
         Service\CallService::class                         => [
             EntityManager::class,

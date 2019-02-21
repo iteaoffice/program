@@ -384,6 +384,15 @@ return [
                                     ],
                                 ],
                             ],
+                            'export-size'      => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/export-size[/program-:id].html',
+                                    'defaults' => [
+                                        'action' => 'export-size',
+                                    ],
+                                ],
+                            ],
                             'funding'          => [
                                 'type'    => 'Segment',
                                 'options' => [

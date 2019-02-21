@@ -14,6 +14,7 @@ namespace Program\Service;
 
 use Doctrine\ORM\EntityManager;
 use General\Entity\Country;
+use General\Search\Service\CountrySearchService;
 use Organisation\Entity\Organisation;
 use Organisation\Search\Service\OrganisationSearchService;
 use Program\Entity\Call\Call;
@@ -21,7 +22,7 @@ use Program\Entity\Doa;
 use Program\Entity\Funder;
 use Program\Entity\Program;
 use Program\ValueObject\ProgramData;
-use Project\Entity\Project;
+use Project\Search\Service\ProjectSearchService;
 
 /**
  * Class ProgramService
@@ -34,12 +35,23 @@ class ProgramService extends AbstractService
      * @var OrganisationSearchService
      */
     private $organisationSearchService;
+    /**
+     * @var ProjectSearchService
+     */
+    private $projectSearchService;
+    /**
+     * @var CountrySearchService
+     */
+    private $countrySearchService;
 
-    public function __construct(EntityManager $entityManager, OrganisationSearchService $organisationSearchService)
-    {
+    public function __construct(EntityManager $entityManager, OrganisationSearchService $organisationSearchService,
+        ProjectSearchService $projectSearchService, CountrySearchService $countrySearchService
+    ) {
         parent::__construct($entityManager);
 
         $this->organisationSearchService = $organisationSearchService;
+        $this->projectSearchService = $projectSearchService;
+        $this->countrySearchService = $countrySearchService;
     }
 
 
@@ -77,11 +89,8 @@ class ProgramService extends AbstractService
         $years = $this->entityManager->getRepository(Call::class)->findAmountOfYears();
         $organisations = $this->organisationSearchService->findAmountOfActiveOrganisations();
 
-
-
-
-        $countries = $this->entityManager->getRepository(Country::class)->findAmountOfActiveCountries();
-        $projects = $this->entityManager->getRepository(Project::class)->findAmountOfActiveProjects();
+        $countries = $this->countrySearchService->findAmountOfActiveCountries();
+        $projects = $this->projectSearchService->findAmountOfActiveProjects();
 
         return new ProgramData($calls, $projects, $organisations, $countries, $years);
     }

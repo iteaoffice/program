@@ -21,11 +21,13 @@ return [
                 ['route' => 'zfcadmin/program/new', 'roles' => ['office']],
                 ['route' => 'zfcadmin/program/list', 'roles' => ['office']],
                 ['route' => 'zfcadmin/program/size', 'roles' => ['office']],
+
                 ['route' => 'zfcadmin/call/edit', 'roles' => ['office']],
                 ['route' => 'zfcadmin/call/view', 'roles' => ['office']],
                 ['route' => 'zfcadmin/call/new', 'roles' => ['office']],
                 ['route' => 'zfcadmin/call/list', 'roles' => ['office']],
                 ['route' => 'zfcadmin/call/size', 'roles' => ['office']],
+                ['route' => 'zfcadmin/call/export-size', 'roles' => ['office']],
                 ['route' => 'zfcadmin/call/funding', 'roles' => ['office']],
                 ['route' => 'zfcadmin/call/download-funding', 'roles' => ['office']],
                 ['route' => 'zfcadmin/call/country/edit', 'roles' => ['office']],
