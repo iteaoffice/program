@@ -14,8 +14,8 @@
 {{ ztbformelement(sessionFieldset.get('tool')) }}
 
 {% if edit %}
-    <fieldset>
-        <legend>{{ translate("txt-ideas") }}</legend>
+    <h2>{{ translate("txt-ideas") }}</h2>
+    <div class="row">
         <div class="col-md-6">
             <p><select id="sel-idea" class="form-control">
                 {% for idea in ideas %}
@@ -25,30 +25,30 @@
             <p><button id="btn-add" title="{{ translate("txt-add") }}" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> {{ translate("txt-add-idea") }}</button></p>
         </div>
         <div class="col-md-6">
-        <table class="table table-hover table-striped table-sm">
-            <thead>
-            <tr>
-                <th colspan="2" class="col-md-3 col-sm-4">{{ translate("txt-schedule") }}</th>
-                <th class="col-md-9 col-sm-8">{{ translate("txt-idea") }}</th>
-                <th></th>
-            </thead>
-            <tfoot>
-            </tfoot>
-            <tbody id="sortable-table">
-                {% for key, fieldset in sessionFieldset.get('ideaSession').getFieldsets() %}
-                <tr id="idea-{{ sessionFieldset.get('ideaSession').object[key].idea.id }}">
-                    <td><span class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>
-                    <td><input type="text" name="{{ fieldset.get('schedule').getAttribute('name') }}" class="form-control" value="{{ fieldset.get('schedule').getValue() }}"></td>
-                    <td><input type="hidden" name="{{ fieldset.get('idea').getAttribute('name') }}" value="{{ sessionFieldset.get('ideaSession').object[key].idea.id }}">
-                        {{ ideaLink(sessionFieldset.get('ideaSession').object[key].idea, 'view-admin') }}
-                    </td>
-                    <td><button title="{{ translate("txt-remove") }}" type="button" class="btn btn-danger btn-sm pull-right"><i class="fa fa-trash"></i></button></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+            <table class="table table-hover table-striped table-sm">
+                <thead>
+                <tr>
+                    <th colspan="2" class="col-md-3 col-sm-4">{{ translate("txt-schedule") }}</th>
+                    <th class="col-md-9 col-sm-8">{{ translate("txt-idea") }}</th>
+                    <th></th>
+                </thead>
+                <tfoot>
+                </tfoot>
+                <tbody id="sortable-table">
+                    {% for key, fieldset in sessionFieldset.get('ideaSession').getFieldsets() %}
+                    <tr id="idea-{{ sessionFieldset.get('ideaSession').object[key].idea.id }}">
+                        <td><span class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>
+                        <td><input type="text" name="{{ fieldset.get('schedule').getAttribute('name') }}" class="form-control" value="{{ fieldset.get('schedule').getValue() }}"></td>
+                        <td><input type="hidden" name="{{ fieldset.get('idea').getAttribute('name') }}" value="{{ sessionFieldset.get('ideaSession').object[key].idea.id }}">
+                            {{ ideaLink(sessionFieldset.get('ideaSession').object[key].idea, 'view-admin') }}
+                        </td>
+                        <td><button title="{{ translate("txt-remove") }}" type="button" class="btn btn-danger btn-sm pull-right"><i class="fa fa-trash"></i></button></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-    </fieldset>
+    </div>
     <hr>
     {{ formelement(form.get('submit')) }}
     {{ formelement(form.get('cancel')) }}
@@ -80,7 +80,7 @@
     });
     </script>
 
-    <div id="template" class="hidden">
+    <div id="template" class="d-none">
         <table>
             <tbody>
                 <tr id="idea-__id__">
