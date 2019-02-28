@@ -90,6 +90,7 @@ return [
             VersionService::class,
             AffiliationService::class,
             ContractService::class,
+            EntityManager::class,
             TranslatorInterface::class
         ],
         Controller\Plugin\SessionDocument::class           => [

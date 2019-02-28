@@ -19,6 +19,7 @@ use Program\Entity\Program;
 
 /**
  * Class ProgramLink
+ *
  * @package Program\View\Helper
  */
 class ProgramLink extends AbstractLink
@@ -43,10 +44,12 @@ class ProgramLink extends AbstractLink
         $this->setShow($show);
 
         // Set the non-standard options needed to give an other link value
-        $this->setShowOptions([
-            'name' => $this->getProgram(),
+        $this->setShowOptions(
+            [
+                'name' => $this->getProgram(),
 
-        ]);
+            ]
+        );
 
         if (!\is_null($program)) {
             $this->addRouterParam('id', $this->getProgram()->getId());
@@ -69,6 +72,10 @@ class ProgramLink extends AbstractLink
                 $this->setRouter('zfcadmin/program/size');
                 $this->setText(sprintf($this->translate("txt-program-size-%s"), $this->getProgram()));
                 break;
+            case 'export-size':
+                $this->setRouter('zfcadmin/program/export-size');
+                $this->setText(sprintf($this->translate("txt-export-program-size-%s"), $this->getProgram()));
+                break;
             case 'view-admin':
                 $this->setRouter('zfcadmin/program/view');
                 $this->setText(sprintf($this->translate("txt-view-program-%s"), $this->getProgram()));
@@ -84,13 +91,6 @@ class ProgramLink extends AbstractLink
             case 'edit':
                 $this->setRouter('zfcadmin/program/edit');
                 $this->setText(sprintf($this->translate("txt-edit-program-%s"), $this->getProgram()));
-                break;
-            case 'view-list':
-                // For a list in the front-end simply use the MatchedRouteName
-                $this->setRouter($this->getRouteMatch()->getMatchedRouteName());
-                $this->addRouterParam('docRef', $this->getRouteMatch()->getParam('docRef'));
-                $this->addRouterParam('program', $this->getProgram()->getId());
-                $this->setText(sprintf(_("txt-view-program-%s"), $this->getProgram()));
                 break;
             default:
                 throw new \InvalidArgumentException(

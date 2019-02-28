@@ -78,7 +78,6 @@ final class GetFilter extends AbstractPlugin
         //Overrule the order if set in the query
         if (null !== $order) {
             $filter['order'] = $order;
-
         }
 
         //Overrule the direction if set in the query

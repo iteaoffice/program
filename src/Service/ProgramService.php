@@ -44,8 +44,11 @@ class ProgramService extends AbstractService
      */
     private $countrySearchService;
 
-    public function __construct(EntityManager $entityManager, OrganisationSearchService $organisationSearchService,
-        ProjectSearchService $projectSearchService, CountrySearchService $countrySearchService
+    public function __construct(
+        EntityManager $entityManager,
+        OrganisationSearchService $organisationSearchService,
+        ProjectSearchService $projectSearchService,
+        CountrySearchService $countrySearchService
     ) {
         parent::__construct($entityManager);
 

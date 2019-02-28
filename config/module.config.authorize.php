@@ -21,7 +21,7 @@ return [
                 ['route' => 'zfcadmin/program/new', 'roles' => ['office']],
                 ['route' => 'zfcadmin/program/list', 'roles' => ['office']],
                 ['route' => 'zfcadmin/program/size', 'roles' => ['office']],
-
+                ['route' => 'zfcadmin/program/export-size', 'roles' => ['office']],
                 ['route' => 'zfcadmin/call/edit', 'roles' => ['office']],
                 ['route' => 'zfcadmin/call/view', 'roles' => ['office']],
                 ['route' => 'zfcadmin/call/new', 'roles' => ['office']],

@@ -1,7 +1,7 @@
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-program-%s")|format(program)) %}
 
-<h1>{{ translate("txt-program-%s")|format(program) }} {{ programLink(program,'edit-admin','button') }} {{ programLink(program,'size','button') }}</h1>
+<h1>{{ translate("txt-program-%s")|format(program) }} {{ programLink(program,'edit-admin','button') }} {{ programLink(program,'size','button') }} {{ programLink(program,'export-size','button') }}</h1>
 
 <h2>{{ translate("txt-program-information") }}</h2>
 <dl class="dl-horizontal">
@@ -42,6 +42,7 @@
             <th>{{ translate("txt-call-fpp-open") }}</th>
             <th>{{ translate("txt-call-fpp-close") }}</th>
             <th>{{ translate("txt-#projects") }}</th>
+            <th>{{ translate("txt-export-size") }}</th>
         </tr>
         </thead>
         <tbody>
@@ -54,6 +55,7 @@
                 <td>{% if call.fppOpenDate %}{{ call.fppOpenDate|string_date }}{% endif %}</td>
                 <td>{% if call.fppCloseDate %}{{ call.fppCloseDate|string_date }}{% endif %}</td>
                 <td>{{ call.project.count }}</td>
+                <td>{{ callLink(call,'export-size','icon') }}</td>
             </tr>
         {% endfor %}
         </tbody>

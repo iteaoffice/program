@@ -146,10 +146,10 @@ abstract class AbstractLink extends AbstractViewHelper
 
         if ('social' === $this->getShow()) {
             return $serverUrl() . $url(
-                    $this->router,
-                    $this->routerParams,
-                    ['query' => $this->query, 'fragment' => $this->fragment]
-                );
+                $this->router,
+                $this->routerParams,
+                ['query' => $this->query, 'fragment' => $this->fragment]
+            );
         }
         $uri = '<a href="%s" title="%s" class="%s">%s</a>';
 

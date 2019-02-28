@@ -20,7 +20,9 @@ namespace Program\Controller;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
+use Program\Controller\Plugin\CallSizeSpreadsheet;
 use Program\Controller\Plugin\GetFilter;
+use Program\Entity\Call\Call;
 use Program\Entity\Program;
 use Program\Form\ProgramFilter;
 use Program\Form\SizeSelect;
@@ -30,6 +32,7 @@ use Program\Service\ProgramService;
 use Project\Entity\Project;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
+use Zend\Http\Response;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
@@ -42,6 +45,7 @@ use Zend\View\Model\ViewModel;
  * @package Program\Controller
  * @method FlashMessenger flashMessenger()
  * @method GetFilter getProgramFilter()
+ * @method CallSizeSpreadsheet callSizeSpreadsheet(Program $program = null, Call $call = null)
  */
 final class ProgramManagerController extends AbstractActionController
 {
@@ -211,7 +215,7 @@ final class ProgramManagerController extends AbstractActionController
         }
 
         if (isset($filter['filter']['program']) && $this->getRequest()->isPost()) {
-            $program = $this->programService->findProgramById((int) $filter['filter']['program']);
+            $program = $this->programService->findProgramById((int)$filter['filter']['program']);
         }
 
         $form->get('filter')->get('program')->setValue($program->getId());
@@ -277,5 +281,20 @@ final class ProgramManagerController extends AbstractActionController
                 'totals'          => $totals,
             ]
         );
+    }
+
+    public function exportSizeAction(): Response
+    {
+        /** @var Program $program */
+        $program = $this->programService->find(Program::class, (int)$this->params('id'));
+
+        /** @var Response $response */
+        $response = $this->getResponse();
+
+        if (null === $program) {
+            return $response;
+        }
+
+        return $this->callSizeSpreadsheet($program)->parseResponse();
     }
 }
