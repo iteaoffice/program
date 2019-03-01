@@ -185,12 +185,8 @@ final class SessionManagerController extends AbstractActionController
 
         /** @var Request $request */
         $request = $this->getRequest();
-        $data = $request->getPost()->toArray();
-        // Set to empty array to allow removing all ideas
-        if ($request->isPost() && !isset($data['program_entity_call_session']['ideaSession'])) {
-            $data['program_entity_call_session']['ideaSession'] = [];
-        }
-        $form = $this->formService->prepare($session, $data);
+        $data    = $request->getPost()->toArray();
+        $form    = $this->formService->prepare($session, $data);
 
         if ($request->isPost()) {
             if (isset($data['cancel'])) {
