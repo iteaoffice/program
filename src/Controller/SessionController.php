@@ -71,8 +71,7 @@ final class SessionController extends AbstractActionController
         /** @var ProgramPdf $sessionPdf */
         $sessionPdf = $this->sessionPdf($session);
 
-        $response->getHeaders()->addHeaderLine('Expires: ' . \gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-            ->addHeaderLine('Cache-Control: max-age=36000, must-revalidate')->addHeaderLine('Pragma: public')
+        $response->getHeaders()
             ->addHeaderLine('Content-Disposition', 'attachment; filename="Session_' . $session->getId() . '.pdf"')
             ->addHeaderLine('Content-Type: application/pdf')
             ->addHeaderLine('Content-Length', \strlen($sessionPdf->getPDFData()));
