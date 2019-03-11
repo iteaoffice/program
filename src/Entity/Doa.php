@@ -32,7 +32,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
 class Doa extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="doa_id", type="integer", nullable=false)
+     * @ORM\Column(name="doa_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
@@ -67,7 +67,7 @@ class Doa extends AbstractEntity
      */
     private $contentType;
     /**
-     * @ORM\Column(name="size", type="integer", nullable=false)
+     * @ORM\Column(name="size", type="integer", options={"unsigned":true})
      *
      * @var integer
      */
@@ -104,18 +104,14 @@ class Doa extends AbstractEntity
     private $contact;
     /**
      * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="programDoa")
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")
-     * })
      *
      * @var \Organisation\Entity\Organisation
      */
     private $organisation;
     /**
      * @ORM\ManyToOne(targetEntity="Program\Entity\Program", inversedBy="doa")
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="program_id", referencedColumnName="program_id")
-     * })
      *
      * @var \Program\Entity\Program
      */

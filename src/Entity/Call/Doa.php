@@ -30,7 +30,7 @@ use Zend\Form\Annotation;
 class Doa extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="doa_id", type="integer", nullable=false)
+     * @ORM\Column(name="doa_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *

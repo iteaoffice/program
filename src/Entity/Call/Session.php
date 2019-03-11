@@ -30,7 +30,7 @@ use Zend\Form\Annotation;
 class Session extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="session_id", type="integer", nullable=false)
+     * @ORM\Column(name="session_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Exclude()
@@ -94,17 +94,6 @@ class Session extends AbstractEntity
      */
     private $date;
     /**
-     * @ORM\ManyToMany(targetEntity="Event\Entity\Track", cascade={"persist"}, inversedBy="session")
-     * @ORM\JoinTable(name="programcall_session_track",
-     *    joinColumns={@ORM\JoinColumn(name="session_id", referencedColumnName="session_id")},
-     *    inverseJoinColumns={@ORM\JoinColumn(name="track_id", referencedColumnName="track_id")}
-     * )
-     * @Annotation\Exclude()
-     *
-     * @var \Event\Entity\Track[]|Collection
-     */
-    private $track;
-    /**
      * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Session", cascade={"persist", "remove"}, mappedBy="session", orphanRemoval=true)
      * @ORM\OrderBy({"schedule" = "ASC"})
      * @Annotation\ComposedObject({
@@ -122,59 +111,31 @@ class Session extends AbstractEntity
      */
     private $ideaSession;
 
-    /**
-     * Class constructor.
-     */
     public function __construct()
     {
-        $this->track       = new ArrayCollection();
         $this->ideaSession = new ArrayCollection();
     }
 
-    /**
-     * Magic Getter.
-     *
-     * @param $property
-     *
-     * @return mixed
-     */
     public function __get($property)
     {
         return $this->$property;
     }
 
-    /**
-     * Magic Setter.
-     *
-     * @param $property
-     * @param $value
-     */
     public function __set($property, $value)
     {
         $this->$property = $value;
     }
 
-    /**
-     * @param $property
-     * @return bool
-     */
     public function __isset($property)
     {
         return isset($this->$property);
     }
 
-    /**
-     * @return int
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     * @return Session
-     */
     public function setId(int $id): Session
     {
         $this->id = $id;
@@ -182,18 +143,11 @@ class Session extends AbstractEntity
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getSession(): ?string
     {
         return $this->session;
     }
 
-    /**
-     * @param string $session
-     * @return Session
-     */
     public function setSession(string $session): Session
     {
         $this->session = $session;
@@ -201,18 +155,11 @@ class Session extends AbstractEntity
         return $this;
     }
 
-    /**
-     * @return Call
-     */
     public function getCall(): ?Call
     {
         return $this->call;
     }
 
-    /**
-     * @param Call $call
-     * @return Session
-     */
     public function setCall(Call $call): Session
     {
         $this->call = $call;
@@ -220,18 +167,11 @@ class Session extends AbstractEntity
         return $this;
     }
 
-    /**
-     * @return null|\Project\Entity\Idea\Tool
-     */
     public function getTool(): ?\Project\Entity\Idea\Tool
     {
         return $this->tool;
     }
 
-    /**
-     * @param null|\Project\Entity\Idea\Tool $tool
-     * @return Session
-     */
     public function setTool($tool): Session
     {
         $this->tool = $tool;
@@ -239,18 +179,11 @@ class Session extends AbstractEntity
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getDate(): ?\DateTime
     {
         return $this->date;
     }
 
-    /**
-     * @param \DateTime $date
-     * @return Session
-     */
     public function setDate(\DateTime $date): Session
     {
         $this->date = $date;
@@ -258,50 +191,18 @@ class Session extends AbstractEntity
         return $this;
     }
 
-    /**
-     * @return Collection|\Event\Entity\Track[]
-     */
-    public function getTrack()
-    {
-        return $this->track;
-    }
-
-    /**
-     * @param Collection|\Event\Entity\Track[] $track
-     * @return Session
-     */
-    public function setTrack($track): Session
-    {
-        $this->track = $track;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|\Project\Entity\Idea\Session[]
-     */
     public function getIdeaSession()
     {
         return $this->ideaSession;
     }
 
-    /**
-     * @param Collection|\Project\Entity\Idea\Session[] $ideaSession
-     * @return Session
-     */
-    public function setIdeaSession($ideaSession)
+    public function setIdeaSession($ideaSession): Session
     {
         $this->ideaSession = $ideaSession;
 
         return $this;
     }
 
-    /**
-     * New function needed to make the hydrator happy
-     *
-     * @param Collection $ideaSessions
-     * @return void
-     */
     public function addIdeaSession(Collection $ideaSessions): void
     {
         foreach ($ideaSessions as $ideaSession) {
@@ -309,10 +210,6 @@ class Session extends AbstractEntity
         }
     }
 
-    /**
-     * @param Collection $ideaSessions
-     * @return void
-     */
     public function removeIdeaSession(Collection $ideaSessions): void
     {
         foreach ($ideaSessions as $ideaSession) {

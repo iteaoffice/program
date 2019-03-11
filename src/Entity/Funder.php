@@ -52,7 +52,7 @@ class Funder extends AbstractEntity
     /**
      * @var integer
      *
-     * @ORM\Column(name="funder_id", type="integer", nullable=false)
+     * @ORM\Column(name="funder_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */

@@ -29,7 +29,7 @@ use Zend\Form\Annotation;
 class Nda extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="nda_id", type="integer", nullable=false)
+     * @ORM\Column(name="nda_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
@@ -44,9 +44,7 @@ class Nda extends AbstractEntity
     private $dateApproved;
     /**
      * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", cascade={"persist"}, inversedBy="ndaApprover")
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="approve_contact_id", referencedColumnName="contact_id")
-     * })
      *
      * @var \Contact\Entity\Contact
      */
@@ -72,7 +70,7 @@ class Nda extends AbstractEntity
      */
     private $size;
     /**
-     * @ORM\Column(name="date_created", type="datetime", nullable=false)
+     * @ORM\Column(name="date_created", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="create")
      *
      * @var \DateTime
@@ -87,9 +85,7 @@ class Nda extends AbstractEntity
     private $dateUpdated;
     /**
      * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", cascade={"persist"}, inversedBy="nda")
-     * @ORM\JoinColumns({
-     * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id")
-     * })
+     * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id", nullable=false)
      *
      * @var \Contact\Entity\Contact
      */

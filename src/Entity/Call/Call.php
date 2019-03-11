@@ -88,7 +88,7 @@ class Call extends AbstractEntity
         ];
 
     /**
-     * @ORM\Column(name="programcall_id", type="integer", nullable=false)
+     * @ORM\Column(name="programcall_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Type("\Zend\Form\Element\Hidden")
@@ -105,7 +105,7 @@ class Call extends AbstractEntity
      */
     private $call;
     /**
-     * @ORM\Column(name="docref", type="string", length=255, nullable=false, unique=true)
+     * @ORM\Column(name="docref", type="string", nullable=true, unique=true)
      * @Gedmo\Slug(fields={"call"})
      * @Annotation\Exclude()
      *
@@ -243,15 +243,6 @@ class Call extends AbstractEntity
      * @var \Project\Entity\Project[]|Collections\ArrayCollection
      */
     private $proxyProject;
-    /**
-     * @ORM\ManyToOne(targetEntity="Program\Entity\Roadmap", inversedBy="call")
-     * @ORM\JoinColumns({
-     * @ORM\JoinColumn(name="roadmap_id", referencedColumnName="roadmap_id")
-     * })
-     *
-     * @var \Program\Entity\Roadmap
-     */
-    private $roadmap;
     /**
      * @ORM\ManyToMany(targetEntity="Program\Entity\Nda", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
@@ -571,18 +562,6 @@ class Call extends AbstractEntity
     public function setProject($project): Call
     {
         $this->project = $project;
-
-        return $this;
-    }
-
-    public function getRoadmap()
-    {
-        return $this->roadmap;
-    }
-
-    public function setRoadmap($roadmap): Call
-    {
-        $this->roadmap = $roadmap;
 
         return $this;
     }

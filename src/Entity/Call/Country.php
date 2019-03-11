@@ -33,7 +33,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
 class Country extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="programcall_country_id", type="integer", nullable=false)
+     * @ORM\Column(name="programcall_country_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Exclude()

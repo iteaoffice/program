@@ -30,7 +30,7 @@ use Zend\Form\Annotation;
 class Program extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="program_id", type="integer", nullable=false)
+     * @ORM\Column(name="program_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Type("\Zend\Form\Element\Hidden")
