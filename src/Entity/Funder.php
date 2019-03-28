@@ -17,7 +17,6 @@ namespace Program\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * Program.
@@ -137,12 +136,11 @@ class Funder extends AbstractEntity
      */
     private $website;
 
-    /**
-     * Class constructor
-     */
+
     public function __construct()
     {
         $this->position = 1;
+        $this->showOnWebsite = self::SHOW_ON_WEBSITE;
     }
 
     /**
@@ -178,6 +176,7 @@ class Funder extends AbstractEntity
 
     /**
      * @param $property
+     *
      * @return bool
      */
     public function __isset($property)
@@ -347,6 +346,7 @@ class Funder extends AbstractEntity
 
     /**
      * @param string $website
+     *
      * @return Funder
      */
     public function setWebsite(string $website = null): Funder

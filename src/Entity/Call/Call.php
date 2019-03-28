@@ -97,7 +97,7 @@ class Call extends AbstractEntity
      */
     private $id;
     /**
-     * @ORM\Column(name="programcall", type="string", length=5, nullable=true)
+     * @ORM\Column(name="programcall", type="string", nullable=true)
      * @Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-program-call"})
      *
