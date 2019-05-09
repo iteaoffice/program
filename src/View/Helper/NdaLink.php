@@ -85,51 +85,51 @@ class NdaLink extends AbstractLink
         switch ($this->getAction()) {
             case 'submit':
                 $this->setRouter('community/program/nda/submit');
-                $this->setText(sprintf($this->translate("txt-submit-nda-title")));
+                $this->setText(sprintf($this->translate('txt-submit-nda-title')));
 
 
                 if (!\is_null($this->getCall()->getId())) {
-                    $this->setText(sprintf($this->translate("txt-submit-nda-for-call-%s-title"), $this->getCall()));
+                    $this->setText(sprintf($this->translate('txt-submit-nda-for-call-%s-title'), $this->getCall()));
                 }
 
                 break;
             case 'replace':
                 $this->setRouter('community/program/nda/replace');
-                $this->setText(sprintf($this->translate("txt-replace-nda-%s-title"), $this->getNda()));
+                $this->setText(sprintf($this->translate('txt-replace-nda-%s-title'), $this->getNda()));
                 break;
             case 'render':
                 $this->setRouter('community/program/nda/render');
-                $this->setText(sprintf($this->translate("txt-render-general-nda-title")));
+                $this->setText(sprintf($this->translate('txt-render-general-nda-title')));
 
                 if (null !== $this->getCall()->getId()) {
-                    $this->setText(sprintf($this->translate("txt-render-nda-for-call-%s-title"), $this->getCall()));
+                    $this->setText(sprintf($this->translate('txt-render-nda-for-call-%s-title'), $this->getCall()));
                 }
 
                 break;
             case 'render-admin':
                 $this->setRouter('zfcadmin/nda/render');
-                $this->setText(sprintf($this->translate("txt-render-general-nda-title-for-%s"), $this->getContact()->parseFullName()));
+                $this->setText(sprintf($this->translate('txt-render-general-nda-title-for-%s'), $this->getContact()->parseFullName()));
 
                 if (null !== $this->getCall()->getId()) {
-                    $this->setText(sprintf($this->translate("txt-render-nda-for-call-%s-for-%s-title"), $this->getCall(), $this->getContact()->parseFullName()));
+                    $this->setText(sprintf($this->translate('txt-render-nda-for-call-%s-for-%s-title'), $this->getCall(), $this->getContact()->parseFullName()));
                 }
 
                 break;
             case 'download':
                 $this->setRouter('community/program/nda/download');
 
-                $this->setText(sprintf($this->translate("txt-download-nda-%s-title"), $this->getNda()));
+                $this->setText(sprintf($this->translate('txt-download-nda-%s-title'), $this->getNda()));
                 break;
             case 'approval-admin':
                 $this->setRouter('zfcadmin/nda/approval');
-                $this->setText($this->translate("txt-approval-doa"));
+                $this->setText($this->translate('txt-approval-doa'));
                 break;
             case 'view-admin':
                 $this->setRouter('zfcadmin/nda/view');
 
                 $this->setText(
                     sprintf(
-                        $this->translate("txt-view-nda-%s-title"),
+                        $this->translate('txt-view-nda-%s-title'),
                         $this->getNda()->parseFileName()
                     )
                 );
@@ -139,20 +139,20 @@ class NdaLink extends AbstractLink
                 $this->setRouter('zfcadmin/nda/edit');
                 $this->setText(
                     sprintf(
-                        $this->translate("txt-edit-nda-%s-title"),
+                        $this->translate('txt-edit-nda-%s-title'),
                         $this->getNda()->parseFileName()
                     )
                 );
                 break;
             case 'upload-admin':
                 $this->setRouter('zfcadmin/nda/upload');
-                $this->setText(sprintf($this->translate("txt-upload-nda")));
+                $this->setText(sprintf($this->translate('txt-upload-nda')));
 
                 break;
             default:
                 throw new \InvalidArgumentException(
                     sprintf(
-                        "%s is an incorrect action for %s",
+                        '%s is an incorrect action for %s',
                         $this->getAction(),
                         __CLASS__
                     )

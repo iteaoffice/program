@@ -19,24 +19,12 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
 use Zend\Permissions\Acl\Role\RoleInterface;
 
 /**
- * Class Program.
+ * Class Nda
+ *
+ * @package Program\Acl\Assertion
  */
-class Nda extends AbstractAssertion
+final class Nda extends AbstractAssertion
 {
-    /**
-     * Returns true if and only if the assertion conditions are met.
-     *
-     * This method is passed the ACL, Role, Resource, and privilege to which the authorization query applies. If the
-     * $role, $nda, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
-     * privileges, respectively.
-     *
-     * @param Acl               $acl
-     * @param RoleInterface     $role
-     * @param ResourceInterface $nda
-     * @param string            $privilege
-     *
-     * @return bool
-     */
     public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $nda = null, $privilege = null): bool
     {
         $this->setPrivilege($privilege);
@@ -47,7 +35,7 @@ class Nda extends AbstractAssertion
          */
         if (!$nda instanceof Entity\Nda && null !== $id) {
             /** @var Entity\Nda $nda */
-            $nda = $this->programService->find(Entity\Nda::class, (int) $id);
+            $nda = $this->programService->find(Entity\Nda::class, (int)$id);
         }
 
         switch ($this->getPrivilege()) {

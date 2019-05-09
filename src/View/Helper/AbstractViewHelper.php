@@ -19,7 +19,6 @@ namespace Program\View\Helper;
 
 use Interop\Container\ContainerInterface;
 use Zend\Router\Http\RouteMatch;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\HelperPluginManager;
 use ZfcTwig\View\TwigRenderer;

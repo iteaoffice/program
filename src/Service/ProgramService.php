@@ -23,6 +23,7 @@ use Program\Entity\Funder;
 use Program\Entity\Program;
 use Program\ValueObject\ProgramData;
 use Project\Search\Service\ProjectSearchService;
+use stdClass;
 
 /**
  * Class ProgramService
@@ -73,13 +74,13 @@ class ProgramService extends AbstractService
         return $this->entityManager->getRepository(Program::class)->findOneBy([], ['id' => 'DESC']);
     }
 
-    public function findMinAndMaxYearInProgram(Program $program): \stdClass
+    public function findMinAndMaxYearInProgram(Program $program): stdClass
     {
         /** @var \Program\Repository\Program $repository */
         $repository = $this->entityManager->getRepository(Program::class);
 
         $yearSpanResult = $repository->findMinAndMaxYearInProgram($program);
-        $yearSpan = new \stdClass();
+        $yearSpan = new stdClass();
         $yearSpan->minYear = (int)$yearSpanResult['minYear'];
         $yearSpan->maxYear = (int)$yearSpanResult['maxYear'];
 

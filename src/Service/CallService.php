@@ -14,9 +14,10 @@ namespace Program\Service;
 
 use Admin\Service\AdminService;
 use Contact\Entity\Contact;
+use DateInterval;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
-use General\Entity\Country;
 use General\Service\GeneralService;
 use Program\Entity\Call\Call;
 use Program\Entity\Nda;
@@ -26,6 +27,7 @@ use Program\ValueObject\Calls;
 use Program\ValueObject\CallStatus;
 use Program\ValueObject\LastCall;
 use Project\Entity\Version\Type;
+use stdClass;
 use Zend\Validator\File\MimeType;
 
 /**
@@ -91,15 +93,6 @@ class CallService extends AbstractService
         return $this->entityManager->getRepository(Call::class)->findPreviousCall($call);
     }
 
-    public function findOpenCall(): Calls
-    {
-        $repository = $this->entityManager->getRepository(Call::class);
-
-        $upcomingCall = $repository->findUpcomingCall();
-
-        return new Calls($repository->findOpenCall(), $upcomingCall ?? $repository->findLastCall());
-    }
-
     public function hasOpenCall(int $type): bool
     {
         $repository = $this->entityManager->getRepository(Call::class);
@@ -107,13 +100,13 @@ class CallService extends AbstractService
         return $repository->hasOpenCall($type);
     }
 
-    public function findMinAndMaxYearInCall(Call $call): \stdClass
+    public function findMinAndMaxYearInCall(Call $call): stdClass
     {
         /** @var \Program\Repository\Call\Call $repository */
         $repository = $this->entityManager->getRepository(Call::class);
 
         $yearSpanResult = $repository->findMinAndMaxYearInCall($call);
-        $yearSpan = new \stdClass();
+        $yearSpan = new stdClass();
         $yearSpan->minYear = (int)$yearSpanResult['minYear'];
         $yearSpan->maxYear = (int)$yearSpanResult['maxYear'];
 
@@ -122,7 +115,7 @@ class CallService extends AbstractService
 
     public function findActiveVersionTypeInCall(Call $call): Type
     {
-        $today = new \DateTime();
+        $today = new DateTime();
 
         if ($call->getPoOpenDate() < $today && $call->getPoCloseDate() > $today) {
             return $this->entityManager->find(Type::class, Type::TYPE_PO);
@@ -133,7 +126,20 @@ class CallService extends AbstractService
 
     public function findLastActiveCall(): ?Call
     {
-        return $this->findOpenCall()->getFirst();
+        if (null !== $this->findOpenCall()->getFirst()) {
+            return $this->findOpenCall()->getFirst();
+        }
+
+        return $this->findOpenCall()->getUpcoming();
+    }
+
+    public function findOpenCall(): Calls
+    {
+        $repository = $this->entityManager->getRepository(Call::class);
+
+        $upcomingCall = $repository->findUpcomingCall();
+
+        return new Calls($repository->findOpenCall(), $upcomingCall ?? $repository->findLastCall());
     }
 
     public function isOpen(Call $call, Type $type): bool
@@ -151,9 +157,9 @@ class CallService extends AbstractService
     public function getCallStatus(Call $call): CallStatus
     {
         $type = null;
-        $today = new \DateTime();
-        $dateTime = new \DateTime();
-        $notificationDeadline = $dateTime->sub(new \DateInterval('P1W'));
+        $today = new DateTime();
+        $dateTime = new DateTime();
+        $notificationDeadline = $dateTime->sub(new DateInterval('P1W'));
 
         if ($call->getPoOpenDate() > $today) {
             $referenceDate = $call->getPoOpenDate();
@@ -204,11 +210,11 @@ class CallService extends AbstractService
         return $call->getLoiRequirement() === Call::LOI_REQUIRED;
     }
 
-    public function findFirstAndLastCall(): \stdClass
+    public function findFirstAndLastCall(): stdClass
     {
         $firstCall = $this->entityManager->getRepository(Call::class)->findOneBy([], ['id' => 'ASC']);
         $lastCall = $this->entityManager->getRepository(Call::class)->findOneBy([], ['id' => 'DESC']);
-        $callSpan = new \stdClass();
+        $callSpan = new stdClass();
         $callSpan->firstCall = $firstCall;
         $callSpan->lastCall = $lastCall;
 
@@ -258,8 +264,8 @@ class CallService extends AbstractService
             return false;
         }
 
-        $today = new \DateTime();
-        $twoYearsAgo = $today->sub(new \DateInterval('P2Y'));
+        $today = new DateTime();
+        $twoYearsAgo = $today->sub(new DateInterval('P2Y'));
 
         return $nda->getDateSigned() > $twoYearsAgo;
     }
@@ -290,8 +296,8 @@ class CallService extends AbstractService
         $nda = new Nda();
         $nda->setContact($contact);
         $nda->setApprover($contact);
-        $nda->setDateSigned(new \DateTime());
-        $nda->setDateApproved(new \DateTime());
+        $nda->setDateSigned(new DateTime());
+        $nda->setDateApproved(new DateTime());
         if (null !== $call) {
             $nda->setCall([$call]);
         }

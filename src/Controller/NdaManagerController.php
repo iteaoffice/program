@@ -18,8 +18,10 @@ declare(strict_types=1);
 namespace Program\Controller;
 
 use Admin\Service\AdminService;
+use function array_merge_recursive;
 use Contact\Entity\Contact;
 use Contact\Service\ContactService;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use General\Service\EmailService;
@@ -33,6 +35,8 @@ use Program\Form\AdminUploadNda;
 use Program\Form\NdaApproval;
 use Program\Service\CallService;
 use Program\Service\FormService;
+use function sprintf;
+use function strlen;
 use Zend\Http\Response;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -158,7 +162,7 @@ final class NdaManagerController extends AbstractActionController
         $response->getHeaders()->addHeaderLine('Pragma: public')
             ->addHeaderLine('Content-Disposition', 'attachment; filename="' . $nda->parseFileName() . '.pdf"')
             ->addHeaderLine('Content-Type: application/pdf')
-            ->addHeaderLine('Content-Length', \strlen($renderNda->getPDFData()));
+            ->addHeaderLine('Content-Length', strlen($renderNda->getPDFData()));
         $response->setContent($renderNda->getPDFData());
 
         return $response;
@@ -195,8 +199,8 @@ final class NdaManagerController extends AbstractActionController
 
             if (isset($data['delete'])) {
                 $this->flashMessenger()->addSuccessMessage(
-                    \sprintf(
-                        $this->translator->translate("txt-nda-for-contact-%s-has-been-removed"),
+                    sprintf(
+                        $this->translator->translate('txt-nda-for-contact-%s-has-been-removed'),
                         $nda->getContact()->getDisplayName()
                     )
                 );
@@ -253,8 +257,8 @@ final class NdaManagerController extends AbstractActionController
                 $this->callService->save($nda);
 
                 $this->flashMessenger()->addSuccessMessage(
-                    \sprintf(
-                        $this->translator->translate("txt-nda-for-contact-%s-has-been-updated"),
+                    sprintf(
+                        $this->translator->translate('txt-nda-for-contact-%s-has-been-updated'),
                         $nda->getContact()->getDisplayName()
                     )
                 );
@@ -280,7 +284,7 @@ final class NdaManagerController extends AbstractActionController
             return $this->notFoundAction();
         }
 
-        $data = \array_merge_recursive(
+        $data = array_merge_recursive(
             $this->getRequest()->getPost()->toArray(),
             $this->getRequest()->getFiles()->toArray()
         );
@@ -300,21 +304,21 @@ final class NdaManagerController extends AbstractActionController
                 $nda = $this->callService->uploadNda($fileData['file'], $contact, $call);
 
                 //if the date-signed is set, arrange that
-                $dateSigned = \DateTime::createFromFormat('Y-m-d', $data['dateSigned']);
+                $dateSigned = DateTime::createFromFormat('Y-m-d', $data['dateSigned']);
 
                 if ($dateSigned) {
                     $nda->setDateSigned($dateSigned);
                 }
 
                 if ($data['approve'] === '1') {
-                    $nda->setDateApproved(new \DateTime());
+                    $nda->setDateApproved(new DateTime());
                     $nda->setApprover($this->identity());
 
                     $this->adminService->flushPermitsByContact($contact);
                 }
 
                 $this->flashMessenger()->addSuccessMessage(
-                    \sprintf($this->translator->translate("txt-nda-has-been-uploaded-successfully"))
+                    sprintf($this->translator->translate('txt-nda-has-been-uploaded-successfully'))
                 );
             }
 
@@ -340,24 +344,24 @@ final class NdaManagerController extends AbstractActionController
             return new JsonModel(
                 [
                     'result' => 'error',
-                    'error'  => $this->translator->translate("txt-date-signed-is-empty"),
+                    'error'  => $this->translator->translate('txt-date-signed-is-empty'),
                 ]
             );
         }
 
-        if (!\DateTime::createFromFormat('Y-m-d', $dateSigned)) {
+        if (!DateTime::createFromFormat('Y-m-d', $dateSigned)) {
             return new JsonModel(
                 [
                     'result' => 'error',
-                    'error'  => $this->translator->translate("txt-incorrect-date-format-should-be-yyyy-mm-dd"),
+                    'error'  => $this->translator->translate('txt-incorrect-date-format-should-be-yyyy-mm-dd'),
                 ]
             );
         }
 
         /** @var Nda $nda */
         $nda = $this->callService->find(Nda::class, (int)$this->params()->fromPost('nda'));
-        $nda->setDateSigned(\DateTime::createFromFormat('Y-m-d', $dateSigned));
-        $nda->setDateApproved(new \DateTime());
+        $nda->setDateSigned(DateTime::createFromFormat('Y-m-d', $dateSigned));
+        $nda->setDateApproved(new DateTime());
         $nda->setApprover($this->identity());
         $this->callService->save($nda);
 
@@ -368,12 +372,12 @@ final class NdaManagerController extends AbstractActionController
          * Send the email tot he user
          */
         if ($sendEmail === 'true') {
-            $this->emailService->setWebInfo("/program/nda/approved");
+            $this->emailService->setWebInfo('/program/nda/approved');
             $this->emailService->addTo($nda->getContact());
             $this->emailService->setTemplateVariable('filename', $nda->parseFileName());
             $this->emailService->setTemplateVariable('date_signed', $nda->getDateSigned()->format('d-m-Y'));
             if (!$nda->getCall()->isEmpty()) {
-                $this->emailService->setTemplateVariable('call', (string)$nda->getCall());
+                $this->emailService->setTemplateVariable('call', (string)$nda->getCall()->first());
             }
 
             $this->emailService->send();

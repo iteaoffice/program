@@ -27,6 +27,10 @@ use Zend\Authentication\AuthenticationService;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Permissions\Acl\Assertion\AssertionInterface;
 use Zend\Router\Http\RouteMatch;
+use function count;
+use function in_array;
+use function is_array;
+use function strpos;
 
 /**
  * Class AbstractAssertion
@@ -86,7 +90,7 @@ abstract class AbstractAssertion implements AssertionInterface
 
     public function routeHasString(string $string): bool
     {
-        return $this->hasRouteMatch() && \strpos($this->getRouteMatch()->getMatchedRouteName(), $string) !== false;
+        return $this->hasRouteMatch() && strpos($this->getRouteMatch()->getMatchedRouteName(), $string) !== false;
     }
 
     public function hasRouteMatch(): bool
@@ -154,7 +158,7 @@ abstract class AbstractAssertion implements AssertionInterface
     public function rolesHaveAccess($accessRoleOrCollection): bool
     {
         $accessRoles = $this->prepareAccessRoles($accessRoleOrCollection);
-        if (\count($accessRoles) === 0) {
+        if (count($accessRoles) === 0) {
             return true;
         }
 
@@ -163,7 +167,7 @@ abstract class AbstractAssertion implements AssertionInterface
                 return true;
             }
             if ($this->hasContact()
-                && \in_array(
+                && in_array(
                     $access,
                     $this->adminService->findAccessRolesByContactAsArray($this->contact),
                     true
@@ -182,7 +186,7 @@ abstract class AbstractAssertion implements AssertionInterface
             /*
              * We only have a string or array, so we need to lookup the role
              */
-            if (\is_array($accessRoleOrCollection)) {
+            if (is_array($accessRoleOrCollection)) {
                 foreach ($accessRoleOrCollection as $key => $accessItem) {
                     $access = $this->adminService->findAccessByName($accessItem);
 

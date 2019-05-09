@@ -18,55 +18,20 @@ namespace Program\Options;
 
 /**
  * Interface ProgramOptionsInterface
+ *
  * @package Program\Options
  */
 interface ProgramOptionsInterface
 {
-    /**
-     * @param $ndaTemplate
-     *
-     * @return ProgramOptionsInterface
-     */
-    public function setNdaTemplate($ndaTemplate);
+    public function setNdaTemplate(string $ndaTemplate);
 
-    /**
-     * @return bool
-     */
-    public function getNdaTemplate();
+    public function getNdaTemplate(): string;
 
-    /**
-     * @param $hasNda
-     *
-     * @return ProgramOptionsInterface
-     */
-    public function setHasNda($hasNda);
+    public function setHasNda(bool $hasNda);
 
-    /**
-     * @return bool
-     */
-    public function getHasNda();
+    public function getHasNda(): bool;
 
-    /**
-     * @param $doaTemplate
-     *
-     * @return ProgramOptionsInterface
-     */
-    public function setDoaTemplate($doaTemplate);
+    public function setDoaTemplate(string $doaTemplate);
 
-    /**
-     * @return string
-     */
-    public function getDoaTemplate();
-
-    /**
-     * @param $displayName
-     *
-     * @return ProgramOptionsInterface
-     */
-    public function setDisplayName($displayName);
-
-    /**
-     * @return string
-     */
-    public function getDisplayName();
+    public function getDoaTemplate(): string;
 }

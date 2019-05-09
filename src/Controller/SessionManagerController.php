@@ -195,7 +195,7 @@ final class SessionManagerController extends AbstractActionController
 
             if (isset($data['delete'])) {
                 $this->programService->delete($session);
-                $this->flashMessenger()->setNamespace('success')->addMessage(
+                $this->flashMessenger()->addSuccessMessage(
                     sprintf(
                         $this->translator->translate("txt-session-has-successfully-been-deleted")
                     )

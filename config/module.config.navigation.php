@@ -7,6 +7,7 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
+
 return [
     'navigation' => [
         'community2' => [
@@ -16,27 +17,14 @@ return [
                         'pages' => [
                             'submit-nda' => [
                                 'order'     => 20,
-                                'label'     => _("txt-nav-submit-nda"),
+                                'label'     => _('txt-nav-submit-nda'),
                                 'route'     => 'community/program/nda/submit',
                                 'resource'  => 'route/community/program/nda/submit',
                                 'privilege' => 'submit',
                                 'visible'   => false,
-                            ],
-                            'view-nda'   => [
-                                'label'   => _("txt-nav-view-nda"),
-                                'route'   => 'community/program/nda/view',
-                                'visible' => false,
-                                'params'  => [
-                                    'entities'   => [
-                                        'id' => Program\Entity\Nda::class,
-                                    ],
-                                    'invokables' => [
-                                        Program\Navigation\Invokable\NdaLabel::class,
-                                    ],
-                                ],
-                                'pages'   => [
+                                'pages'     => [
                                     'replace-nda' => [
-                                        'label'   => _("txt-nav-replace-nda"),
+                                        'label'   => _('txt-nav-replace-nda'),
                                         'route'   => 'community/program/nda/replace',
                                         'visible' => false,
                                         'params'  => [
@@ -58,7 +46,7 @@ return [
                 'order' => 20,
                 'pages' => [
                     'program-list' => [
-                        'label' => _("txt-nav-program-list"),
+                        'label' => _('txt-nav-program-list'),
                         'route' => 'zfcadmin/program/list',
                         'pages' => [
                             'program-view' => [
@@ -87,17 +75,17 @@ return [
                             ],
                             'program-new'  => [
                                 'route'   => 'zfcadmin/program/new',
-                                'label'   => _("txt-add-program"),
+                                'label'   => _('txt-add-program'),
                                 'visible' => false,
                             ],
                         ],
                     ],
                     'program-size' => [
-                        'label' => _("txt-nav-program-size"),
+                        'label' => _('txt-nav-program-size'),
                         'route' => 'zfcadmin/program/size',
                     ],
                     'call-list'    => [
-                        'label' => _("txt-nav-program-calls"),
+                        'label' => _('txt-nav-program-calls'),
                         'route' => 'zfcadmin/call/list',
                         'pages' => [
                             'program-call-view' => [
@@ -123,7 +111,7 @@ return [
                                         ],
                                     ],
                                     'call-size'    => [
-                                        'label'  => _("txt-nav-call-size"),
+                                        'label'  => _('txt-nav-call-size'),
                                         'route'  => 'zfcadmin/call/size',
                                         'params' => [
                                             'entities' => [
@@ -132,7 +120,7 @@ return [
                                         ],
                                     ],
                                     'call-funding' => [
-                                        'label'  => _("txt-nav-call-funding"),
+                                        'label'  => _('txt-nav-call-funding'),
                                         'route'  => 'zfcadmin/call/funding',
                                         'params' => [
                                             'entities' => [
@@ -153,7 +141,7 @@ return [
                                         ],
                                     ],
                                     'new-country'  => [
-                                        'label'   => _("txt-nav-add-country-information-to-call"),
+                                        'label'   => _('txt-nav-add-country-information-to-call'),
                                         'route'   => 'zfcadmin/call/country/new',
                                         'visible' => false,
                                         'params'  => [
@@ -181,13 +169,13 @@ return [
                             ],
                             'call-new'          => [
                                 'route'   => 'zfcadmin/call/new',
-                                'label'   => _("txt-add-call"),
+                                'label'   => _('txt-add-call'),
                                 'visible' => false,
                             ],
                         ],
                     ],
                     'session-list' => [
-                        'label' => _("txt-nav-program-call-sessions"),
+                        'label' => _('txt-nav-program-call-sessions'),
                         'route' => 'zfcadmin/session/list',
                         'pages' => [
                             'view' => [
@@ -216,7 +204,7 @@ return [
                             ],
                             'new'  => [
                                 'route'   => 'zfcadmin/session/new',
-                                'label'   => _("txt-add-session"),
+                                'label'   => _('txt-add-session'),
                                 'visible' => false,
                             ],
                         ],
@@ -226,7 +214,7 @@ return [
             'tools'   => [
                 'pages' => [
                     'nda-approval' => [
-                        'label' => _("txt-nav-nda-approval"),
+                        'label' => _('txt-nav-nda-approval'),
                         'route' => 'zfcadmin/nda/approval',
                         'pages' => [
                             'nda' => [
@@ -242,7 +230,7 @@ return [
                                 ],
                                 'pages'   => [
                                     'edit' => [
-                                        'label'   => _("txt-edit-nda"),
+                                        'label'   => _('txt-edit-nda'),
                                         'route'   => 'zfcadmin/nda/edit',
                                         'visible' => false,
                                         'params'  => [
@@ -260,7 +248,7 @@ return [
             'contact' => [
                 'pages' => [
                     'funder' => [
-                        'label' => _("txt-nav-funder-list"),
+                        'label' => _('txt-nav-funder-list'),
                         'route' => 'zfcadmin/funder/list',
                         'order' => 1000,
                         'pages' => [
@@ -289,7 +277,7 @@ return [
                                 ],
                             ],
                             'funder-new'  => [
-                                'label'   => _("txt-add-funder"),
+                                'label'   => _('txt-add-funder'),
                                 'route'   => 'zfcadmin/funder/new',
                                 'visible' => false,
                                 'params'  => [

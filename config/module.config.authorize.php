@@ -54,7 +54,6 @@ return [
                 ['route' => 'community/program/session/download-document', 'roles' => ['user']],
                 ['route' => 'community/program/session/download', 'roles' => ['user']],
                 ['route' => 'community/program/nda/submit', 'roles' => [], 'assertion' => NdaAssertion::class],
-                ['route' => 'community/program/nda/view', 'roles' => [], 'assertion' => NdaAssertion::class],
                 ['route' => 'community/program/nda/render', 'roles' => [], 'assertion' => NdaAssertion::class],
                 ['route' => 'community/program/nda/replace', 'roles' => [], 'assertion' => NdaAssertion::class],
                 ['route' => 'community/program/nda/download', 'roles' => [], 'assertion' => NdaAssertion::class],

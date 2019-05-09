@@ -20,195 +20,90 @@ use Zend\Stdlib\AbstractOptions;
 
 /**
  * Class ModuleOptions
+ *
  * @package Program\Options
  */
-class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
+final  class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
 {
-    /**
-     * Turn off strict options mode.
-     */
     protected $__strictMode__ = false;
-    /**
-     * Location of the PDF having the NDA template.
-     *
-     * @var string
-     */
+
     protected $ndaTemplate = '';
 
-    /**
-     * Boolean to turn the NDA functionality on or off.
-     *
-     * @var bool
-     */
     protected $hasNda = true;
 
-    /**
-     * Location of the PDF having the DOA template.
-     *
-     * @var string
-     */
     protected $doaTemplate = '';
 
-    /**
-     * Location of the PDF having the DOA template.
-     *
-     * @var string
-     */
     protected $blankTemplate = '';
-    /**
-     * How program calls to be displayed.
-     *
-     * @var String
-     */
-    protected $displayName = 'name';
 
-    /**
-     * Header logo for Word documents
-     *
-     * @var string
-     */
     protected $headerLogo = '';
 
-    /**
-     * Footer image for Word documents
-     *
-     * @var string
-     */
     protected $footerImage = '';
 
-    /**
-     * @return string
-     */
-    public function getNdaTemplate()
+    public function getNdaTemplate(): string
     {
         return $this->ndaTemplate;
     }
 
-    /**
-     * @param $ndaTemplate
-     *
-     * @return ModuleOptions
-     */
-    public function setNdaTemplate($ndaTemplate)
+    public function setNdaTemplate(string $ndaTemplate): ModuleOptions
     {
         $this->ndaTemplate = $ndaTemplate;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getHasNda()
+    public function getHasNda(): bool
     {
         return $this->hasNda;
     }
 
-    /**
-     * @param $hasNda
-     *
-     * @return ModuleOptions
-     */
-    public function setHasNda($hasNda)
+    public function setHasNda(bool $hasNda): ModuleOptions
     {
         $this->hasNda = $hasNda;
-
         return $this;
     }
 
-    /**
-     * @return String
-     */
-    public function getDisplayName()
-    {
-        return $this->displayName;
-    }
-
-    /**
-     * @param $displayName
-     *
-     * @return $this
-     */
-    public function setDisplayName($displayName)
-    {
-        $this->displayName = $displayName;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDoaTemplate()
+    public function getDoaTemplate(): string
     {
         return $this->doaTemplate;
     }
 
-    /**
-     * @param $doaTemplate
-     *
-     * @return ModuleOptions
-     */
-    public function setDoaTemplate($doaTemplate)
+    public function setDoaTemplate(string $doaTemplate): ModuleOptions
     {
         $this->doaTemplate = $doaTemplate;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getBlankTemplate()
+    public function getBlankTemplate(): string
     {
         return $this->blankTemplate;
     }
 
-    /**
-     * @param $blankTemplate
-     *
-     * @return ModuleOptions
-     */
-    public function setBlankTemplate($blankTemplate)
+    public function setBlankTemplate(string $blankTemplate): ModuleOptions
     {
         $this->blankTemplate = $blankTemplate;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getHeaderLogo(): string
     {
         return $this->headerLogo;
     }
 
-    /**
-     * @param string $headerLogo
-     * @return ModuleOptions
-     */
     public function setHeaderLogo(string $headerLogo): ModuleOptions
     {
         $this->headerLogo = $headerLogo;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getFooterImage(): string
     {
         return $this->footerImage;
     }
 
-    /**
-     * @param string $footerImage
-     * @return ModuleOptions
-     */
     public function setFooterImage(string $footerImage): ModuleOptions
     {
         $this->footerImage = $footerImage;
         return $this;
     }
+
+
 }

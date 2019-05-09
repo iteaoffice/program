@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Program\ValueObject;
 
+use InvalidArgumentException;
 use Program\Entity\Call\Call;
 
 final class Calls
@@ -22,14 +23,14 @@ final class Calls
     {
         if (isset($calls[0])) {
             if (!$calls[0] instanceof Call) {
-                throw new \InvalidArgumentException('The object should be an instance of the Program Call');
+                throw new InvalidArgumentException('The object should be an instance of the Program Call');
             }
 
             $this->call1 = $calls[0];
         }
         if (isset($calls[1])) {
             if (!$calls[0] instanceof Call) {
-                throw new \InvalidArgumentException('The object should be an instance of the Program Call');
+                throw new InvalidArgumentException('The object should be an instance of the Program Call');
             }
 
             $this->call2 = $calls[1];

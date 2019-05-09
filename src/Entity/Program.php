@@ -15,8 +15,15 @@ declare(strict_types=1);
 
 namespace Program\Entity;
 
+use Contact\Entity\Dnd;
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
+use Invoice\Entity\Method;
+use function is_numeric;
+use Organisation\Entity\Parent\Invoice;
+use Organisation\Entity\Parent\InvoiceExtra;
+use Program\Entity\Call\Call;
+use function substr;
 use Zend\Form\Annotation;
 
 /**
@@ -58,7 +65,7 @@ class Program extends AbstractEntity
      * @ORM\OneToMany(targetEntity="\Program\Entity\Call\Call", cascade={"persist"}, mappedBy="program")
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\Call\Call[]
+     * @var Call[]
      */
     private $call;
     /**
@@ -79,7 +86,7 @@ class Program extends AbstractEntity
      * @ORM\OneToMany(targetEntity="\Contact\Entity\Dnd", cascade={"persist"}, mappedBy="program")
      * @Annotation\Exclude()
      *
-     * @var \Contact\Entity\Dnd[]
+     * @var Dnd[]
      */
     private $contactDnd;
     /**
@@ -103,21 +110,21 @@ class Program extends AbstractEntity
      * )
      * @Annotation\Attributes({"label":"txt-program-invoice-method-label","help-block":"txt-program-invoice-method-help-block"})
      *
-     * @var \Invoice\Entity\Method[]|Collections\ArrayCollection
+     * @var Method[]|Collections\ArrayCollection
      */
     private $invoiceMethod;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Parent\Invoice", cascade={"persist"}, mappedBy="program")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Parent\Invoice[]|Collections\ArrayCollection
+     * @var Invoice[]|Collections\ArrayCollection
      */
     private $parentInvoice;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Parent\InvoiceExtra", cascade={"persist"}, mappedBy="program")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Parent\InvoiceExtra[]|Collections\ArrayCollection
+     * @var InvoiceExtra[]|Collections\ArrayCollection
      */
     private $parentInvoiceExtra;
 
@@ -135,7 +142,7 @@ class Program extends AbstractEntity
     {
         $programName = $this->getProgram();
 
-        if (!\is_numeric(\substr($programName, -1))) {
+        if (!is_numeric(substr($programName, -1))) {
             $programName .= ' 1';
         }
 
@@ -182,7 +189,7 @@ class Program extends AbstractEntity
     }
 
     /**
-     * @param \Program\Entity\Call\Call[] $call
+     * @param Call[] $call
      */
     public function setCall($call)
     {
@@ -238,7 +245,7 @@ class Program extends AbstractEntity
     }
 
     /**
-     * @return \Contact\Entity\Dnd[]
+     * @return Dnd[]
      */
     public function getContactDnd()
     {
@@ -246,7 +253,7 @@ class Program extends AbstractEntity
     }
 
     /**
-     * @param \Contact\Entity\Dnd[] $contactDnd
+     * @param Dnd[] $contactDnd
      */
     public function setContactDnd($contactDnd)
     {
@@ -270,7 +277,7 @@ class Program extends AbstractEntity
     }
 
     /**
-     * @return Collections\ArrayCollection|\Invoice\Entity\Method[]
+     * @return Collections\ArrayCollection|Method[]
      */
     public function getInvoiceMethod()
     {
@@ -278,7 +285,7 @@ class Program extends AbstractEntity
     }
 
     /**
-     * @param Collections\ArrayCollection|\Invoice\Entity\Method[] $invoiceMethod
+     * @param Collections\ArrayCollection|Method[] $invoiceMethod
      */
     public function setInvoiceMethod($invoiceMethod)
     {
@@ -306,7 +313,7 @@ class Program extends AbstractEntity
     }
 
     /**
-     * @return \Organisation\Entity\Parent\Invoice[]|Collections\ArrayCollection
+     * @return Invoice[]|Collections\ArrayCollection
      */
     public function getParentInvoice()
     {
@@ -314,11 +321,11 @@ class Program extends AbstractEntity
     }
 
     /**
-     * @param \Organisation\Entity\Parent\Invoice $parentInvoice
+     * @param Invoice $parentInvoice
      *
      * @return Program
      */
-    public function setParentInvoice(\Organisation\Entity\Parent\Invoice $parentInvoice): Program
+    public function setParentInvoice(Invoice $parentInvoice): Program
     {
         $this->parentInvoice = $parentInvoice;
 
@@ -326,7 +333,7 @@ class Program extends AbstractEntity
     }
 
     /**
-     * @return \Organisation\Entity\Parent\InvoiceExtra[]|Collections\ArrayCollection
+     * @return InvoiceExtra[]|Collections\ArrayCollection
      */
     public function getParentInvoiceExtra()
     {
@@ -334,11 +341,11 @@ class Program extends AbstractEntity
     }
 
     /**
-     * @param \Organisation\Entity\Parent\InvoiceExtra $parentInvoiceExtra
+     * @param InvoiceExtra $parentInvoiceExtra
      *
      * @return Program
      */
-    public function setParentInvoiceExtra(\Organisation\Entity\Parent\InvoiceExtra $parentInvoiceExtra): Program
+    public function setParentInvoiceExtra(InvoiceExtra $parentInvoiceExtra): Program
     {
         $this->parentInvoiceExtra = $parentInvoiceExtra;
 

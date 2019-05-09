@@ -34,10 +34,9 @@ use Zend\Validator\File\FilesSize;
 use Zend\Validator\File\MimeType;
 use Zend\View\Model\ViewModel;
 use ZfcTwig\View\TwigRenderer;
+use function count;
 
 /**
- * Class NdaController
- *
  * @package Program\Controller
  * @method GetFilter getProgramFilter()
  * @method FlashMessenger flashMessenger()
@@ -87,18 +86,6 @@ final class NdaController extends AbstractActionController
         $this->renderer = $renderer;
     }
 
-    public function viewAction(): ViewModel
-    {
-        /** @var Entity\Nda $nda */
-        $nda = $this->programService->find(Entity\Nda::class, (int)$this->params('id'));
-
-        if (null === $nda || \count($nda->getObject()) === 0) {
-            return $this->notFoundAction();
-        }
-
-        return new ViewModel(['nda' => $nda]);
-    }
-
     public function submitAction()
     {
         //We only want the active call, having the requirement that this call also requires an NDA
@@ -135,13 +122,18 @@ final class NdaController extends AbstractActionController
         if ($this->getRequest()->isPost() && !isset($data['approve']) && $form->isValid()) {
             if (isset($data['submit'])) {
                 $fileData = $form->getData('file');
-                $this->callService->uploadNda($fileData['file'], $contact, $call);
+                $nda = $this->callService->uploadNda($fileData['file'], $contact, $call);
 
-                $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-nda-has-been-uploaded-successfully")));
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate(
+                            'txt-nda-has-been-uploaded-successfully'
+                        )
+                    )
+                );
             }
 
-
-            return $this->redirect()->toRoute('community');
+            return $this->redirect()->toRoute('community/program/nda/submit');
         }
 
         if ($this->getRequest()->isPost() && isset($data['approve'])) {
@@ -151,15 +143,15 @@ final class NdaController extends AbstractActionController
             }
 
             if ($data['selfApprove'] === '1') {
-                $this->callService->submitNda($contact, $call);
+                $nda = $this->callService->submitNda($contact, $call);
 
                 $this->flashMessenger()->addSuccessMessage(
                     sprintf(
-                        $this->translator->translate("txt-nda-has-been-submitted-and-approved-successfully")
+                        $this->translator->translate('txt-nda-has-been-submitted-and-approved-successfully')
                     )
                 );
 
-                return $this->redirect()->toRoute('community');
+                return $this->redirect()->toRoute('community/program/nda/submit');
             }
         }
 
@@ -187,7 +179,7 @@ final class NdaController extends AbstractActionController
         /** @var Entity\Nda $nda */
         $nda = $this->programService->find(Entity\Nda::class, (int)$this->params('id'));
 
-        if (null === $nda || \count($nda->getObject()) === 0) {
+        if (null === $nda || count($nda->getObject()) === 0) {
             return $this->notFoundAction();
         }
         $data = array_merge_recursive(
@@ -220,13 +212,19 @@ final class NdaController extends AbstractActionController
 
                 $ndaObject->setNda($nda);
                 $this->programService->save($ndaObject);
-                $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-nda-has-been-replaced-successfully")));
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate(
+                            'txt-nda-has-been-replaced-successfully'
+                        )
+                    )
+                );
 
                 return $this->redirect()->toRoute('community/program/nda/view', ['id' => $nda->getId()]);
             }
             if (isset($data['cancel'])) {
                 $this->flashMessenger()->setNamespace('info')->addMessage(
-                    sprintf($this->translator->translate("txt-action-has-been-cancelled"))
+                    sprintf($this->translator->translate('txt-action-has-been-cancelled'))
                 );
 
                 return $this->redirect()->toRoute('community/program/nda/view', ['id' => $nda->getId()]);
@@ -282,7 +280,7 @@ final class NdaController extends AbstractActionController
         /** @var Response $response */
         $response = $this->getResponse();
 
-        if (null === $nda || \count($nda->getObject()) === 0) {
+        if (null === $nda || count($nda->getObject()) === 0) {
             return $response->setStatusCode(Response::STATUS_CODE_404);
         }
         /*

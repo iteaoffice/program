@@ -33,15 +33,15 @@ class FormService
     /**
      * @var ServiceLocatorInterface
      */
-    private $serviceLocator;
+    private $container;
     /**
      * @var EntityManager
      */
     private $entityManager;
 
-    public function __construct(ServiceLocatorInterface $serviceLocator, EntityManager $entityManager)
+    public function __construct(ServiceLocatorInterface $container, EntityManager $entityManager)
     {
-        $this->serviceLocator = $serviceLocator;
+        $this->container = $container;
         $this->entityManager = $entityManager;
     }
 
@@ -72,15 +72,15 @@ class FormService
          * The filter and the form can dynamically be created by pulling the form from the serviceManager
          * if the form or filter is not give in the serviceManager we will create it by default
          */
-        if ($this->serviceLocator->has($formName)) {
-            $form = $this->serviceLocator->build($formName, $options);
+        if ($this->container->has($formName)) {
+            $form = $this->container->build($formName, $options);
         } else {
-            $form = new CreateObject($this->entityManager, $entity, $this->serviceLocator);
+            $form = new CreateObject($this->entityManager, $entity, $this->container);
         }
 
-        if ($this->serviceLocator->has($filterName)) {
+        if ($this->container->has($filterName)) {
             /** @var InputFilter $filter */
-            $filter = $this->serviceLocator->get($filterName);
+            $filter = $this->container->get($filterName);
             $form->setInputFilter($filter);
         }
 

@@ -23,22 +23,8 @@ use Zend\Permissions\Acl\Role\RoleInterface;
  *
  * @package Program\Acl\Assertion
  */
-class Doa extends AbstractAssertion
+final class Doa extends AbstractAssertion
 {
-    /**
-     * Returns true if and only if the assertion conditions are met.
-     *
-     * This method is passed the ACL, Role, Resource, and privilege to which the authorization query applies. If the
-     * $role, $doa, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
-     * privileges, respectively.
-     *
-     * @param Acl                          $acl
-     * @param RoleInterface                $role
-     * @param ResourceInterface|Entity\Doa $doa
-     * @param string                       $privilege
-     *
-     * @return bool
-     */
     public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $doa = null, $privilege = null): bool
     {
         $this->setPrivilege($privilege);
