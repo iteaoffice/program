@@ -36,8 +36,7 @@
 
 
 {% do form.prepare() %}
-
-        {{ form().openTag(form)|raw }}
+{{ form().openTag(form)|raw }}
 
         {{ ztbformelement(form.get('call')) }}
         {{ ztbformelement(form.get('year')) }}

@@ -14,7 +14,7 @@ format(nda, nda.contact.displayName)) %}
     <label class="col-sm-3 col-form-label">{{ translate("txt-contact") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static form-control-plaintext">{{ nda.contact.displayName }}</p></div>
+        <p class="form-control-plaintext">{{ nda.contact.displayName }}</p></div>
 </div>
 
 {% if nda.call %}
@@ -22,7 +22,7 @@ format(nda, nda.contact.displayName)) %}
         <label class="col-sm-3 col-form-label">{{ translate("txt-program-call") }}</label>
 
         <div class="col-sm-9">
-            <p class="form-control-static form-control-plaintext">{{ nda.call.first }}</p>
+            <p class="form-control-plaintext">{{ nda.call.first }}</p>
         </div>
     </div>
 {% endif %}
@@ -31,7 +31,7 @@ format(nda, nda.contact.displayName)) %}
     <label class="col-sm-3 col-form-label">{{ translate("txt-download-current-nda") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static form-control-plaintext">{{ ndaLink(nda,'download','text') }}</p>
+        <p class="form-control-plaintext">{{ ndaLink(nda,'download','text') }}</p>
     </div>
 </div>
 
@@ -39,7 +39,7 @@ format(nda, nda.contact.displayName)) %}
     <label class="col-sm-3 col-form-label">{{ translate("txt-render-new-nda") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static form-control-plaintext">{{ ndaLink(nda,'render','text',nda.call.first) }}</p>
+        <p class="form-control-plaintext">{{ ndaLink(nda,'render','text',nda.call.first) }}</p>
     </div>
 </div>
 

@@ -23,7 +23,7 @@ use Zend\Stdlib\AbstractOptions;
  *
  * @package Program\Options
  */
-final  class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
+class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
 {
     protected $__strictMode__ = false;
 
@@ -104,6 +104,4 @@ final  class ModuleOptions extends AbstractOptions implements ProgramOptionsInte
         $this->footerImage = $footerImage;
         return $this;
     }
-
-
 }

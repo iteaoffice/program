@@ -46,8 +46,6 @@ use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 
 /**
- * Class CallManagerController
- *
  * @package Program\Controller
  * @method FlashMessenger flashMessenger()
  * @method GetFilter getProgramFilter()
@@ -65,6 +63,10 @@ final class CallManagerController extends AbstractActionController
      * @var FormService
      */
     private $formService;
+    /**
+     * @var AffiliationService
+     */
+    private $affiliationService;
     /**
      * @var ProjectService
      */
@@ -93,6 +95,7 @@ final class CallManagerController extends AbstractActionController
     public function __construct(
         CallService $callService,
         FormService $formService,
+        AffiliationService $affiliationService,
         ProjectService $projectService,
         VersionService $versionService,
         GeneralService $generalService,
@@ -102,6 +105,7 @@ final class CallManagerController extends AbstractActionController
     ) {
         $this->callService = $callService;
         $this->formService = $formService;
+        $this->affiliationService = $affiliationService;
         $this->projectService = $projectService;
         $this->versionService = $versionService;
         $this->generalService = $generalService;
@@ -149,9 +153,10 @@ final class CallManagerController extends AbstractActionController
 
         return new ViewModel(
             [
-                'call'           => $call,
-                'countries'      => $countries,
-                'generalService' => $this->generalService
+                'call'               => $call,
+                'countries'          => $countries,
+                'generalService'     => $this->generalService,
+                'affiliationService' => $this->affiliationService,
             ]
         );
     }

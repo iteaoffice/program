@@ -15,8 +15,6 @@
 
 declare(strict_types=1);
 
-declare(strict_types=1);
-
 namespace Program\View\Factory;
 
 use Interop\Container\ContainerInterface;
@@ -31,15 +29,6 @@ use Zend\View\HelperPluginManager;
  */
 final class ViewHelperFactory implements FactoryInterface
 {
-    /**
-     * Create an instance of the requested class name.
-     *
-     * @param ContainerInterface|HelperPluginManager $container
-     * @param string $requestedName
-     * @param null|array $options
-     *
-     * @return AbstractViewHelper
-     */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): AbstractViewHelper
     {
         /** @var AbstractViewHelper $viewHelper */

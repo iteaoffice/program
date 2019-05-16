@@ -118,6 +118,7 @@ return [
         Controller\CallManagerController::class            => [
             CallService::class,
             FormService::class,
+            AffiliationService::class,
             ProjectService::class,
             VersionService::class,
             GeneralService::class,

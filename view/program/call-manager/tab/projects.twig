@@ -6,7 +6,9 @@
         <tr>
             <th>{{ translate("txt-project") }}</th>
             <th>{{ translate("txt-project-leader") }}</th>
-            <th>{{ translate("txt-project-partners") }}</th>
+            <th>{{ translate("txt-total-project-partners") }}</th>
+            <th>{{ translate("txt-active-project-partners") }}</th>
+            <th>{{ translate("txt-inactive-project-partners") }}</th>
         </tr>
         </thead>
         <tbody>
@@ -14,7 +16,9 @@
             <tr>
                 <td>{{ projectLink(project,'view-admin','name') }}</td>
                 <td>{{ contactLink(project.contact, 'view-admin','name') }}</td>
-                <td>{{ project.affiliation.count() }}</td>
+                <td>{{ affiliationService.findAffiliationByProjectAndWhich(project, constant("Affiliation\\Service\\AffiliationService::WHICH_ALL")).count() }}</td>
+                <td>{{ affiliationService.findAffiliationByProjectAndWhich(project, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")).count() }}</td>
+                <td>{{ affiliationService.findAffiliationByProjectAndWhich(project, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_INACTIVE")).count() }}</td>
             </tr>
         {% endfor %}
         </tbody>

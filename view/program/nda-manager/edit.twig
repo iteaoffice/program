@@ -8,8 +8,7 @@
 <h1>{{ translate("txt-edit-nda") }}</h1>
 
 {% do form.prepare() %}
-
-    {{ form().openTag(form)|raw }}
+{{ form().openTag(form)|raw }}
 
     {% set ndaForm = form.get('program_entity_nda') %}
 
@@ -23,7 +22,7 @@
         <label class="col-sm-3 col-form-label">{{ translate("txt-download-current-nda") }}</label>
 
         <div class="col-sm-9">
-            <p class="form-control-static form-control-plaintext">{{ ndaLink(nda,'download','text') }}</p>
+            <p class="form-control-plaintext">{{ ndaLink(nda,'download','text') }}</p>
         </div>
     </div>
 {% endif %}
