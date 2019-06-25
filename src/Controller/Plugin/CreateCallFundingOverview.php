@@ -18,11 +18,11 @@ declare(strict_types=1);
 namespace Program\Controller\Plugin;
 
 use Affiliation\Service\AffiliationService;
+use Evaluation\Service\EvaluationService;
 use General\Service\CountryService;
 use Project\Entity\Funding\Funding;
 use Project\Entity\Funding\Source;
 use Project\Entity\Funding\Status;
-use Project\Service\EvaluationService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
@@ -84,10 +84,10 @@ final class CreateCallFundingOverview extends AbstractPlugin
                  * Create an array of countries to serialize it normally
                  */
                 $this->countries[$country->getIso3()] = [
-                    'id'      => $country->getId(),
+                    'id' => $country->getId(),
                     'country' => $country->getCountry(),
-                    'object'  => $country,
-                    'iso3'    => ucwords((string)$country->getIso3()),
+                    'object' => $country,
+                    'iso3' => ucwords((string)$country->getIso3()),
 
                 ];
 

@@ -23,19 +23,11 @@ use Program\Entity\Program;
 
 /**
  * Class DoaLink
+ *
  * @package Program\View\Helper
  */
 class DoaLink extends AbstractLink
 {
-    /**
-     * @param Doa|null $doa
-     * @param string $action
-     * @param string $show
-     * @param Organisation|null $organisation
-     * @param Program|null $program
-     *
-     * @return string
-     */
     public function __invoke(
         Doa $doa = null,
         $action = 'view',
@@ -53,21 +45,19 @@ class DoaLink extends AbstractLink
         }
 
         // Set the non-standard options needed to give an other link value
-        $this->setShowOptions([
-            'name' => $this->getDoa(),
-        ]);
+        $this->setShowOptions(
+            [
+                'name' => $this->getDoa(),
+            ]
+        );
 
-        if (!\is_null($this->getDoa())) {
+        if ($this->getDoa() !== null) {
             $this->addRouterParam('id', $this->getDoa()->getId());
         }
 
         return $this->createLink();
     }
 
-
-    /**
-     * Extract the relevant parameters based on the action.
-     */
     public function parseAction(): void
     {
         switch ($this->getAction()) {
@@ -77,7 +67,7 @@ class DoaLink extends AbstractLink
                 $this->addRouterParam('programId', $this->getProgram()->getId());
                 $this->setText(
                     sprintf(
-                        $this->translate("txt-upload-doa-for-organisation-%s-in-program-%s-link-title"),
+                        $this->translate('txt-upload-doa-for-organisation-%s-in-program-%s-link-title'),
                         $this->getOrganisation(),
                         $this->getProgram()
                     )
@@ -88,8 +78,8 @@ class DoaLink extends AbstractLink
                 /*
                  * The $doa can be null, we then use the $organisation and $program to produce the link
                  */
-                $renderText = _("txt-render-doa-for-organisation-%s-in-program-%s-link-title");
-                if (\is_null($this->getDoa()->getId())) {
+                $renderText = _('txt-render-doa-for-organisation-%s-in-program-%s-link-title');
+                if ($this->getDoa()->getId() === null) {
                     $this->setText(sprintf($renderText, $this->getOrganisation(), $this->getProgram()));
                     $this->addRouterParam('organisationId', $this->getOrganisation()->getId());
                     $this->addRouterParam('programId', $this->getProgram()->getId());
@@ -109,7 +99,7 @@ class DoaLink extends AbstractLink
                 $this->setRouter('community/program/doa/replace');
                 $this->setText(
                     sprintf(
-                        _("txt-replace-doa-for-organisation-%s-in-program-%s-link-title"),
+                        _('txt-replace-doa-for-organisation-%s-in-program-%s-link-title'),
                         $this->getDoa()->getOrganisation(),
                         $this->getDoa()->getProgram()
                     )
@@ -119,7 +109,7 @@ class DoaLink extends AbstractLink
                 $this->setRouter('community/program/doa/view');
                 $this->setText(
                     sprintf(
-                        _("txt-view-doa-for-organisation-%s-in-program-%s-link-title"),
+                        _('txt-view-doa-for-organisation-%s-in-program-%s-link-title'),
                         $this->getDoa()->getOrganisation(),
                         $this->getDoa()->getProgram()
                     )
@@ -129,20 +119,12 @@ class DoaLink extends AbstractLink
                 $this->setRouter('community/program/doa/download');
                 $this->setText(
                     sprintf(
-                        _("txt-download-doa-for-organisation-%s-in-program-%s-link-title"),
+                        _('txt-download-doa-for-organisation-%s-in-program-%s-link-title'),
                         $this->getDoa()->getOrganisation(),
                         $this->getDoa()->getProgram()
                     )
                 );
                 break;
-            default:
-                throw new \InvalidArgumentException(
-                    sprintf(
-                        "%s is an incorrect action for %s",
-                        $this->getAction(),
-                        __CLASS__
-                    )
-                );
         }
     }
 }

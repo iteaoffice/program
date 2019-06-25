@@ -293,7 +293,7 @@ final class NdaManagerController extends AbstractActionController
         $form->setData($data);
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                return $this->redirect()->toRoute('zfcadmin/contact-admin/view', ['id' => $contact->getId()]);
+                return $this->redirect()->toRoute('zfcadmin/contact/view', ['id' => $contact->getId()]);
             }
 
 
@@ -323,7 +323,7 @@ final class NdaManagerController extends AbstractActionController
             }
 
 
-            return $this->redirect()->toRoute('zfcadmin/contact-admin/view', ['id' => $contact->getId()]);
+            return $this->redirect()->toRoute('zfcadmin/contact/view', ['id' => $contact->getId()]);
         }
 
         return new ViewModel(

@@ -28,15 +28,6 @@ use Program\Entity\Nda;
  */
 class NdaLink extends AbstractLink
 {
-    /**
-     * @param Nda|null     $nda
-     * @param string       $action
-     * @param string       $show
-     * @param Call|null    $call
-     * @param Contact|null $contact
-     *
-     * @return string
-     */
     public function __invoke(
         Nda $nda = null,
         $action = 'submit',

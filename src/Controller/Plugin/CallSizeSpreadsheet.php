@@ -27,6 +27,7 @@ use Program\Entity\Call\Call;
 use Program\Entity\Program;
 use Project\Entity\Project;
 use Project\Entity\Version\Type;
+use Project\Form\Statistics;
 use Project\Service\ContractService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
@@ -34,6 +35,15 @@ use Zend\Http\Headers;
 use Zend\Http\Response;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use function end;
+use function ini_set;
+use function key;
+use function ob_end_flush;
+use function ob_get_clean;
+use function ob_get_length;
+use function ob_start;
+use function range;
+use function set_time_limit;
 
 /**
  * Class SessionSpreadsheet
@@ -43,13 +53,28 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 final class CallSizeSpreadsheet extends AbstractPlugin
 {
     /**
-     * @var Program
+     * @var Program[]
      */
-    private $program;
+    private $programs = [];
     /**
-     * @var Call
+     * @var Call[]
      */
-    private $call;
+    private $calls = [];
+    /**
+     * @var array
+     */
+    private $countryIds = [];
+    /**
+     * @var array
+     */
+    private $organisationTypeIds = [];
+
+    /**
+     * @var Project[]
+     */
+    private $projects = [];
+
+
     /**
      * @var Spreadsheet
      */
@@ -80,6 +105,9 @@ final class CallSizeSpreadsheet extends AbstractPlugin
     private $translator;
     private $start = 2;
 
+    private $showInactivePartners = false;
+    private $showRejectedProposals = false;
+
     public function __construct(
         ProjectService $projectService,
         VersionService $versionService,
@@ -96,40 +124,49 @@ final class CallSizeSpreadsheet extends AbstractPlugin
         $this->translator = $translator;
     }
 
-    public function __invoke(Program $program = null, Call $call = null): self
-    {
-        \set_time_limit(0);
-        \ini_set('memory_limit', '2000M');
+    public function __invoke(
+        array $programs = [],
+        array $calls = [],
+        array $countryIds = [],
+        array $organisationTypeIds = [],
+        array $include = []
+    ): self {
+        set_time_limit(0);
+        ini_set('memory_limit', '2000M');
 
         $this->spreadsheet = new Spreadsheet();
 
-        if (null !== $program) {
-            $this->parseProgram($program);
+        if (in_array(Statistics::INCLUDE_DEACTIVATED_PARTNERS, $include, false)) {
+            $this->showInactivePartners = true;
         }
 
-        if (null !== $call) {
-            $this->parseCall($call);
+        if (in_array(Statistics::INCLUDE_REJECTED_PROPOSALS, $include, false)) {
+            $this->showRejectedProposals = true;
         }
 
-        return $this;
-    }
+        if (null !== $programs) {
+            $this->parsePrograms($programs);
+        }
 
-    public function parseProgram(Program $program): CallSizeSpreadsheet
-    {
-        $this->program = $program;
+        if (null !== $calls) {
+            $this->parseCalls($calls);
+        }
+
+        $this->countryIds = $countryIds;
+        $this->organisationTypeIds = $organisationTypeIds;
 
         $sheet = $this->spreadsheet->getActiveSheet();
-        $sheet->setTitle($this->translator->translate((string)$program));
+        $sheet->setTitle($this->translator->translate('txt-statistics'));
         $sheet->getPageSetup()->setPaperSize(PageSetup::PAPERSIZE_A4);
         $sheet->getPageSetup()->setFitToWidth(true);
         $sheet->getPageSetup()->setFitToHeight(false);
 
         // Header
         $columns = $this->getHeaders();
-        \end($columns);
+        end($columns);
 
-        $lastColumn = \key($columns);
-        foreach (\range('A', $lastColumn) as $column) {
+        $lastColumn = key($columns);
+        foreach (range('A', $lastColumn) as $column) {
             $sheet->getColumnDimension($column)->setAutoSize(true);
         }
 
@@ -137,12 +174,34 @@ final class CallSizeSpreadsheet extends AbstractPlugin
         $sheet->freezePane('A2');
         $sheet->fromArray($columns);
 
-        $projects = $this->projectService->findProjectByProgram($program, ProjectService::WHICH_ALL)
-            ->getQuery()
-            ->getResult();
+        $this->addProjectsToSheet($sheet, $this->projects);
 
-        foreach ($projects as $project) {
-            $this->addProjectsToSheet($sheet, [$project]);
+        return $this;
+    }
+
+    public function parsePrograms(array $programs): CallSizeSpreadsheet
+    {
+        $this->programs = $programs;
+
+        foreach ($programs as $program) {
+            foreach ($this->projectService->findProjectByProgram($program, ProjectService::WHICH_ALL)
+                    ->getQuery()
+                    ->getResult() as $project) {
+                $this->projects[] = $project;
+            }
+        }
+
+        return $this;
+    }
+
+    public function parseCalls(array $calls): CallSizeSpreadsheet
+    {
+        $this->calls = $calls;
+
+        foreach ($calls as $call) {
+            foreach ($this->projectService->findProjectsByCall($call, ProjectService::WHICH_ALL)->getQuery()->getResult() as $project) {
+                $this->projects[] = $project;
+            }
         }
 
         return $this;
@@ -169,16 +228,22 @@ final class CallSizeSpreadsheet extends AbstractPlugin
             $column++ => $this->translator->translate('txt-cost-latest-approved-version'),
             $column++ => $this->translator->translate('txt-effort-draft'),
             $column++ => $this->translator->translate('txt-cost-draft'),
+            $column++ => $this->translator->translate('txt-has-contract'),
             $column++ => $this->translator->translate('txt-contract-cost-local-currency'),
             $column++ => $this->translator->translate('txt-contract-exchange-rate'),
-            $column   => $this->translator->translate('txt-contract-cost-euro'),
+            $column++ => $this->translator->translate('txt-contract-cost-euro'),
+            $column   => $this->translator->translate('txt-final-cost-euro'),
         ];
     }
 
     private function addProjectsToSheet(Worksheet $sheet, array $projects): void
     {
         /** @var Project $project */
-        foreach (array_slice($projects, 0, 200000) as $project) {
+        foreach ($projects as $project) {
+            if (!$this->showRejectedProposals && !$this->projectService->isSuccessful($project)) {
+                continue;
+            }
+
             //Find the PO
             $po = $this->versionService->findVersionTypeById(Type::TYPE_PO);
             $fpp = $this->versionService->findVersionTypeById(Type::TYPE_FPP);
@@ -192,8 +257,36 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
             /** @var Affiliation $affiliation */
             foreach ($affiliations as $affiliation) {
+                if (!$this->showInactivePartners && !$affiliation->isActive()) {
+                    continue;
+                }
+
+
+                if (!empty($this->countryIds)
+                    && !in_array(
+                        $affiliation->getOrganisation()->getCountry()->getId(),
+                        $this->countryIds,
+                        false
+                    )
+                ) {
+                    continue;
+                }
+
+                if (!empty($this->organisationTypeIds)
+                    && !in_array(
+                        $affiliation->getOrganisation()->getType()->getId(),
+                        $this->organisationTypeIds,
+                        false
+                    )
+                ) {
+                    continue;
+                }
+
                 $latestContractVersion = $this->contractService->findLatestContractVersionByAffiliation($affiliation);
+
+
                 $exchangeRate = 1;
+                $contractCost = [];
 
                 if (null !== $latestContractVersion) {
                     $exchangeRate = $this->contractService->findLatestExchangeRate($latestContractVersion);
@@ -265,9 +358,12 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                         $column++ => $latestCostVersionPerYear[$year] ?? null,
                         $column++ => $draftEffort[$year] ?? null,
                         $column++ => $draftCost[$year] ?? null,
+                        $column++ => null !== $latestContractVersion ? 'Y' : 'N',
                         $column++ => $contractCost[$year] ?? null,
                         $column++ => null !== $latestContractVersion ? $exchangeRate : '',
-                        $column   => ($contractCost[$year] ?? null) / $exchangeRate
+                        $column++ => ($contractCost[$year] ?? null) / $exchangeRate,
+                        $column   => null !== $latestContractVersion ? (($contractCost[$year] ?? null) / $exchangeRate)
+                            : $latestCostVersionPerYear[$year] ?? null
                     ];
 
                     $sheet->fromArray($projectColumn, null, 'A' . $this->start++);
@@ -276,38 +372,6 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                 $this->entityManager->clear();
             }
         }
-    }
-
-    public function parseCall(Call $call): CallSizeSpreadsheet
-    {
-        $this->call = $call;
-
-        $sheet = $this->spreadsheet->getActiveSheet();
-        $sheet->setTitle($this->translator->translate((string)$call));
-        $sheet->getPageSetup()->setPaperSize(PageSetup::PAPERSIZE_A4);
-        $sheet->getPageSetup()->setFitToWidth(true);
-        $sheet->getPageSetup()->setFitToHeight(false);
-
-        // Header
-
-        $columns = $this->getHeaders();
-        \end($columns);
-
-        $lastColumn = \key($columns);
-        foreach (\range('A', $lastColumn) as $column) {
-            $sheet->getColumnDimension($column)->setAutoSize(true);
-        }
-
-        // Freeze the header
-        $sheet->freezePane('A2');
-        $sheet->fromArray($columns);
-
-        $this->addProjectsToSheet(
-            $sheet,
-            $this->projectService->findProjectsByCall($call, ProjectService::WHICH_ALL)->getQuery()->getResult()
-        );
-
-        return $this;
     }
 
     public function parseResponse(): Response
@@ -321,20 +385,20 @@ final class CallSizeSpreadsheet extends AbstractPlugin
         /** @var Xlsx $writer */
         $writer = IOFactory::createWriter($this->spreadsheet, 'Xlsx');
 
-        \ob_start();
+        ob_start();
         $gzip = false;
         // Gzip the output when possible. @see http://php.net/manual/en/function.ob-gzhandler.php
-        if (\ob_start('ob_gzhandler')) {
+        if (ob_start('ob_gzhandler')) {
             $gzip = true;
         }
         $writer->save('php://output');
         if ($gzip) {
-            \ob_end_flush(); // Flush the gzipped buffer into the main buffer
+            ob_end_flush(); // Flush the gzipped buffer into the main buffer
         }
-        $contentLength = \ob_get_length();
+        $contentLength = ob_get_length();
 
         // Prepare the response
-        $response->setContent(\ob_get_clean());
+        $response->setContent(ob_get_clean());
         $response->setStatusCode(Response::STATUS_CODE_200);
         $headers = new Headers();
         $headers->addHeaders(
@@ -357,13 +421,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
     public function parseFileName(): string
     {
-        if (null !== $this->call) {
-            return $this->call->__toString();
-        }
-
-        if (null !== $this->program) {
-            return $this->program->__toString();
-        }
+        return 'Statistics';
     }
 
     public function getSpreadsheet(): Spreadsheet
