@@ -106,7 +106,9 @@ final class CallSizeSpreadsheet extends AbstractPlugin
     private $start = 2;
 
     private $showInactivePartners = false;
-    private $showRejectedProposals = false;
+    private $showOnlyApproved = true;
+    private $showDecisionPending = false;
+    private $showCancelledProjects = false;
 
     public function __construct(
         ProjectService $projectService,
@@ -141,8 +143,17 @@ final class CallSizeSpreadsheet extends AbstractPlugin
         }
 
         if (in_array(Statistics::INCLUDE_REJECTED_PROPOSALS, $include, false)) {
-            $this->showRejectedProposals = true;
+            $this->showOnlyApproved = false;
         }
+
+        if (in_array(Statistics::INCLUDE_CANCELLED_PROJECTS, $include, false)) {
+            $this->showCancelledProjects = true;
+        }
+
+        if (in_array(Statistics::INCLUDE_DECISION_PENDING, $include, false)) {
+            $this->showDecisionPending = true;
+        }
+
 
         if (null !== $programs) {
             $this->parsePrograms($programs);
@@ -226,6 +237,9 @@ final class CallSizeSpreadsheet extends AbstractPlugin
             $column++ => $this->translator->translate('txt-cost-fpp'),
             $column++ => $this->translator->translate('txt-effort-latest-approved-version'),
             $column++ => $this->translator->translate('txt-cost-latest-approved-version'),
+            $column++ => $this->translator->translate('txt-latest-approved-version-type'),
+            $column++ => $this->translator->translate('txt-latest-approved-version-status'),
+            $column++ => $this->translator->translate('txt-latest-approved-version-date'),
             $column++ => $this->translator->translate('txt-effort-draft'),
             $column++ => $this->translator->translate('txt-cost-draft'),
             $column++ => $this->translator->translate('txt-has-contract'),
@@ -240,16 +254,16 @@ final class CallSizeSpreadsheet extends AbstractPlugin
     {
         /** @var Project $project */
         foreach ($projects as $project) {
-            if (!$this->showRejectedProposals && !$this->projectService->isSuccessful($project)) {
+            if (!$this->showCancelledProjects && !$this->projectService->isSuccessful($project)) {
                 continue;
             }
 
             //Find the PO
             $po = $this->versionService->findVersionTypeById(Type::TYPE_PO);
             $fpp = $this->versionService->findVersionTypeById(Type::TYPE_FPP);
-            $projectOutline = $this->projectService->getLatestProjectVersion($project, $po);
+            $projectOutline = $this->projectService->getLatestProjectVersion($project, $po, );
             $fullProjectProposal = $this->projectService->getLatestProjectVersion($project, $fpp);
-            $latestVersion = $this->projectService->getLatestProjectVersion($project, null, null, false, true);
+            $latestVersion = $this->projectService->getLatestProjectVersion($project, null, $this->showOnlyApproved, $this->showDecisionPending);
             $affiliations = $this->affiliationService->findAffiliationByProjectAndWhich(
                 $project,
                 AffiliationService::WHICH_ALL
@@ -260,7 +274,6 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                 if (!$this->showInactivePartners && !$affiliation->isActive()) {
                     continue;
                 }
-
 
                 if (!empty($this->countryIds)
                     && !in_array(
@@ -342,8 +355,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                 foreach ($this->projectService->parseYearRange($project, true) as $year) {
                     $projectColumn = [
                         $column++ => $project->parseFullName(),
-                        $column++ => $project->getCall()->getProgram()->__toString(),
-                        $column++ => $project->getCall()->__toString(),
+                        $column++ => (string)$project->getCall()->getProgram(),
+                        $column++ => (string)$project->getCall(),
                         $column++ => $this->projectService->parseStatus($project),
                         $column++ => $affiliation->parseBranchedName(),
                         $column++ => $affiliation->getOrganisation()->getCountry()->getIso3(),
@@ -356,6 +369,11 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                         $column++ => $fppCostVersionPerYear[$year] ?? null,
                         $column++ => $latestEffortVersionPerYear[$year] ?? null,
                         $column++ => $latestCostVersionPerYear[$year] ?? null,
+
+                        $column++ => null !== $latestVersion ? $latestVersion->getVersionType()->getDescription() : '',
+                        $column++ => null !== $latestVersion ? $this->versionService->parseStatus($latestVersion) : '',
+                        $column++ => null !== $latestVersion && null !== $latestVersion->getDateReviewed() ? $latestVersion->getDateReviewed()->format('d-m-Y') : '',
+
                         $column++ => $draftEffort[$year] ?? null,
                         $column++ => $draftCost[$year] ?? null,
                         $column++ => null !== $latestContractVersion ? 'Y' : 'N',

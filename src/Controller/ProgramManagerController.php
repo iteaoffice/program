@@ -197,6 +197,7 @@ final class ProgramManagerController extends AbstractActionController
         return new ViewModel(['form' => $form, 'program' => $program]);
     }
 
+    /** @deprecated  */
     public function sizeAction(): ViewModel
     {
         $filter = $this->getRequest()->getPost()->toArray();
