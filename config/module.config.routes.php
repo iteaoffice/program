@@ -316,15 +316,6 @@ return [
                                     ],
                                 ],
                             ],
-                            'size'        => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'    => '/size[/program-:id].html',
-                                    'defaults' => [
-                                        'action' => 'size',
-                                    ],
-                                ],
-                            ],
                             'export-size' => [
                                 'type'    => 'Segment',
                                 'options' => [

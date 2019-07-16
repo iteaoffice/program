@@ -11,9 +11,8 @@
 
 {% if nda|length > 0 %}
 
-
     {% do form.prepare() %}
-{{ form().openTag(form)|raw }}
+    {{ form().openTag(form)|raw }}
 
     <label>
         {{ formelement(form.get('sendMail')) }}

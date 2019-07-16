@@ -15,15 +15,22 @@ declare(strict_types=1);
 
 namespace Program\Entity;
 
+use Contact\Entity\Contact;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use General\Entity\ContentType;
+use Program\Entity\Call\Call;
 use Zend\Form\Annotation;
+use function sprintf;
+use function str_replace;
 
 /**
  * @ORM\Table(name="nda")
  * @ORM\Entity(repositoryClass="Program\Repository\Nda")
  * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @Annotation\Instance("Program\Entity\Nda")
  * @Annotation\Name("nda")
  */
 class Nda extends AbstractEntity
@@ -39,55 +46,55 @@ class Nda extends AbstractEntity
     /**
      * @ORM\Column(name="date_approved", type="datetime", nullable=true)
      *
-     * @var \DateTime
+     * @var DateTime
      */
     private $dateApproved;
     /**
      * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", cascade={"persist"}, inversedBy="ndaApprover")
      * @ORM\JoinColumn(name="approve_contact_id", referencedColumnName="contact_id")
      *
-     * @var \Contact\Entity\Contact
+     * @var Contact
      */
     private $approver;
     /**
      * @ORM\Column(name="date_signed", type="date", nullable=true)
      * @Gedmo\Timestampable(on="create")
      *
-     * @var \DateTime
+     * @var DateTime
      */
     private $dateSigned;
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\ContentType", cascade={"persist"}, inversedBy="programNna")
      * @ORM\JoinColumn(name="contenttype_id", referencedColumnName="contenttype_id", nullable=true)
      *
-     * @var \General\Entity\ContentType
+     * @var ContentType
      */
     private $contentType;
     /**
      * @ORM\Column(name="size", type="integer", nullable=true)
      *
-     * @var integer|null
+     * @var integer
      */
     private $size;
     /**
      * @ORM\Column(name="date_created", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="create")
      *
-     * @var \DateTime
+     * @var DateTime
      */
     private $dateCreated;
     /**
      * @ORM\Column(name="date_updated", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="update")
      *
-     * @var \DateTime
+     * @var DateTime
      */
     private $dateUpdated;
     /**
      * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", cascade={"persist"}, inversedBy="nda")
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id", nullable=false)
      *
-     * @var \Contact\Entity\Contact
+     * @var Contact
      */
     private $contact;
     /**
@@ -97,20 +104,20 @@ class Nda extends AbstractEntity
      *      inverseJoinColumns={@ORM\JoinColumn(name="programcall_id", referencedColumnName="programcall_id")}
      * )
      *
-     * @var \Program\Entity\Call\Call[]|ArrayCollection
+     * @var Call[]|ArrayCollection
      */
     private $call;
     /**
      * @ORM\OneToMany(targetEntity="\Program\Entity\NdaObject", cascade={"persist","remove"}, mappedBy="nda")
-     * @Annotation\Exclude()
      *
-     * @var \Program\Entity\NdaObject[]|ArrayCollection
+     * @var NdaObject[]|ArrayCollection
      */
     private $object;
 
     public function __construct()
     {
         $this->call = new ArrayCollection();
+        $this->object = new ArrayCollection();
     }
 
     public function __get($property)
@@ -131,7 +138,7 @@ class Nda extends AbstractEntity
     public function __toString(): string
     {
         if (null === $this->id) {
-            return \sprintf('NDA_EMPTY');
+            return sprintf('NDA_EMPTY');
         }
 
         return $this->parseFileName();
@@ -139,60 +146,47 @@ class Nda extends AbstractEntity
 
     public function parseFileName(): string
     {
-        if ($this->getCall()->isEmpty()) {
-            return \sprintf('NDA_SEQ_%s', $this->getContact()->getId());
+        if ($this->call->isEmpty()) {
+            return sprintf('NDA_SEQ_%s', $this->contact->getId());
         }
 
-        return \str_replace(' ', '_', \sprintf('NDA_%s_SEQ_%s', $this->parseCall(), $this->getContact()->getId()));
+        return str_replace(' ', '_', sprintf('NDA_%s_SEQ_%s', $this->parseCall(), $this->contact->getId()));
     }
 
-    /**
-     * @return ArrayCollection|Call\Call[]
-     */
-    public function getCall()
-    {
-        return $this->call;
-    }
-
-    /**
-     * @param ArrayCollection|Call\Call[] $call
-     *
-     * @return Nda
-     */
-    public function setCall($call): Nda
-    {
-        $this->call = $call;
-
-        return $this;
-    }
-
-    /**
-     * @return \Contact\Entity\Contact
-     */
-    public function getContact()
-    {
-        return $this->contact;
-    }
-
-    public function setContact($contact): Nda
-    {
-        $this->contact = $contact;
-
-        return $this;
-    }
-
-    public function parseCall(): ?Call\Call
+    public function parseCall(): ?Call
     {
         if (!$this->hasCall()) {
             return null;
         }
 
-        return $this->getCall()->first();
+        return $this->call->first();
     }
 
     public function hasCall(): bool
     {
-        return !$this->getCall()->isEmpty();
+        return !$this->call->isEmpty();
+    }
+
+    public function getCall()
+    {
+        return $this->call;
+    }
+
+    public function setCall($call): Nda
+    {
+        $this->call = $call;
+        return $this;
+    }
+
+    public function getContact(): ?Contact
+    {
+        return $this->contact;
+    }
+
+    public function setContact(?Contact $contact): Nda
+    {
+        $this->contact = $contact;
+        return $this;
     }
 
     public function getId()
@@ -205,134 +199,91 @@ class Nda extends AbstractEntity
         $this->id = $id;
     }
 
-    /**
-     * @return \General\Entity\ContentType
-     */
-    public function getContentType()
-    {
-        return $this->contentType;
-    }
-
-    /**
-     * @param \General\Entity\ContentType $contentType
-     */
-    public function setContentType($contentType)
-    {
-        $this->contentType = $contentType;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getDateApproved()
+    public function getDateApproved(): ?DateTime
     {
         return $this->dateApproved;
     }
 
-    /**
-     * @param \DateTime $dateApproved
-     */
-    public function setDateApproved($dateApproved)
+    public function setDateApproved(?DateTime $dateApproved): Nda
     {
         $this->dateApproved = $dateApproved;
+        return $this;
     }
 
-    /**
-     * @return \Contact\Entity\Contact
-     */
-    public function getApprover(): ?\Contact\Entity\Contact
+    public function getApprover(): ?Contact
     {
         return $this->approver;
     }
 
-    /**
-     * @param \Contact\Entity\Contact $approver
-     *
-     * @return Nda
-     */
-    public function setApprover(\Contact\Entity\Contact $approver): Nda
+    public function setApprover(?Contact $approver): Nda
     {
         $this->approver = $approver;
-
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDateCreated()
-    {
-        return $this->dateCreated;
-    }
-
-    /**
-     * @param \DateTime $dateCreated
-     */
-    public function setDateCreated($dateCreated)
-    {
-        $this->dateCreated = $dateCreated;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getDateSigned()
+    public function getDateSigned(): ?DateTime
     {
         return $this->dateSigned;
     }
 
-    /**
-     * @param \DateTime $dateSigned
-     */
-    public function setDateSigned($dateSigned)
+    public function setDateSigned(?DateTime $dateSigned): Nda
     {
         $this->dateSigned = $dateSigned;
+        return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDateUpdated(): ?\DateTime
+    public function getContentType(): ?ContentType
+    {
+        return $this->contentType;
+    }
+
+    public function setContentType(ContentType $contentType): Nda
+    {
+        $this->contentType = $contentType;
+        return $this;
+    }
+
+    public function getSize(): ?int
+    {
+        return $this->size;
+    }
+
+    public function setSize(?int $size): Nda
+    {
+        $this->size = $size;
+        return $this;
+    }
+
+    public function getDateCreated(): ?DateTime
+    {
+        return $this->dateCreated;
+    }
+
+    public function setDateCreated(?DateTime $dateCreated): Nda
+    {
+        $this->dateCreated = $dateCreated;
+        return $this;
+    }
+
+    public function getDateUpdated(): ?DateTime
     {
         return $this->dateUpdated;
     }
 
-    public function setDateUpdated($dateUpdated): Nda
+    public function setDateUpdated(?DateTime $dateUpdated): Nda
     {
         $this->dateUpdated = $dateUpdated;
-
         return $this;
     }
 
-    /**
-     * @return \Program\Entity\NdaObject[]|ArrayCollection
-     */
     public function getObject()
     {
         return $this->object;
     }
 
-    /**
-     * @param \Program\Entity\NdaObject[] $object
-     */
-    public function setObject($object)
+    public function setObject($object): Nda
     {
         $this->object = $object;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSize()
-    {
-        return $this->size;
-    }
-
-    /**
-     * @param int $size
-     */
-    public function setSize($size)
-    {
-        $this->size = $size;
+        return $this;
     }
 }

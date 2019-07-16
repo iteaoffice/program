@@ -38,8 +38,8 @@ final class AdminUploadNda extends Form\Form implements InputFilterProviderInter
                 'type'    => Form\Element\File::class,
                 'name'    => 'file',
                 'options' => [
-                    "label"      => _("txt-file"),
-                    "help-block" => _("txt-a-signed-nda-in-pdf-format-or-image-is-required"),
+                    'label'      => _('txt-file'),
+                    'help-block' => _('txt-a-signed-nda-in-pdf-format-or-image-is-required'),
                 ],
             ]
         );
@@ -48,8 +48,8 @@ final class AdminUploadNda extends Form\Form implements InputFilterProviderInter
                 'type'       => Form\Element\Date::class,
                 'name'       => 'dateSigned',
                 'attributes' => [
-                    "label"      => _("txt-date-signed"),
-                    "help-block" => _("txt-nda-date-signed-help-block"),
+                    'label'      => _('txt-date-signed'),
+                    'help-block' => _('txt-nda-date-signed-help-block'),
                 ],
             ]
         );
@@ -58,14 +58,14 @@ final class AdminUploadNda extends Form\Form implements InputFilterProviderInter
                 'type'       => EntitySelect::class,
                 'name'       => 'call',
                 'attributes' => [
-                    'label' => _("txt-program-call"),
+                    'label' => _('txt-program-call'),
                 ],
                 'options'    => [
                     'object_manager'     => $entityManager,
                     'target_class'       => Call::class,
                     'display_empty_item' => true,
-                    'empty_item_label'   => "-- No call specific NDA",
-                    "help-block"         => _("txt-nda-program-call-help-block"),
+                    'empty_item_label'   => '-- No call specific NDA',
+                    'help-block'         => _('txt-nda-program-call-help-block'),
                     'find_method'        => [
                         'name'   => 'findBy',
                         'params' => [
@@ -89,8 +89,8 @@ final class AdminUploadNda extends Form\Form implements InputFilterProviderInter
                 'type'    => Form\Element\Checkbox::class,
                 'name'    => 'approve',
                 'options' => [
-                    "label"      => "txt-approve",
-                    "help-block" => _("txt-admin-upload-nda-approve-text"),
+                    'label'      => 'txt-approve',
+                    'help-block' => _('txt-admin-upload-nda-approve-text'),
                 ],
             ]
         );
@@ -99,8 +99,8 @@ final class AdminUploadNda extends Form\Form implements InputFilterProviderInter
                 'type'       => Form\Element\Submit::class,
                 'name'       => 'submit',
                 'attributes' => [
-                    'class' => "btn btn-primary",
-                    'value' => _("txt-upload-nda-title"),
+                    'class' => 'btn btn-primary',
+                    'value' => _('txt-upload-nda-title'),
                 ],
             ]
         );
@@ -109,23 +109,23 @@ final class AdminUploadNda extends Form\Form implements InputFilterProviderInter
                 'type'       => Form\Element\Submit::class,
                 'name'       => 'cancel',
                 'attributes' => [
-                    'class' => "btn btn-warning",
-                    'value' => _("txt-cancel"),
+                    'class' => 'btn btn-warning',
+                    'value' => _('txt-cancel'),
                 ],
             ]
         );
     }
 
-    /**
-     * Should return an array specification compatible with
-     * {@link Zend\InputFilter\Factory::createInputFilter()}.
-     *
-     * @return array
-     */
     public function getInputFilterSpecification(): array
     {
         return [
-            'file' => [
+            'call'       => [
+                'required' => false,
+            ],
+            'dateSigned' => [
+                'required' => false,
+            ],
+            'file'       => [
                 'required'   => true,
                 'validators' => [
                     new Size(

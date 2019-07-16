@@ -112,7 +112,7 @@ final class CreateCallFundingOverview extends AbstractPlugin
 
     private function getValue($project, $country, $year): array
     {
-        $version = $this->projectService->getLatestProjectVersion($project);
+        $version = $this->projectService->getLatestApprovedProjectVersion($project);
 
         if (null === $version) {
             return [];
@@ -120,11 +120,11 @@ final class CreateCallFundingOverview extends AbstractPlugin
 
         //Funding status separation
         /** @var Status $allGood */
-        $allGood = $this->evaluationService->find(Status::class, Status::STATUS_ALL_GOOD);
+        $allGood = $this->projectService->find(Status::class, Status::STATUS_ALL_GOOD);
         /** @var Status $selfFunded */
-        $selfFunded = $this->evaluationService->find(Status::class, Status::STATUS_SELF_FUNDED);
+        $selfFunded = $this->projectService->find(Status::class, Status::STATUS_SELF_FUNDED);
         /** @var Status $default */
-        $default = $this->evaluationService->find(Status::class, Status::STATUS_DEFAULT);
+        $default = $this->projectService->find(Status::class, Status::STATUS_DEFAULT);
 
         $costAllGood = 0;
         $costSelfFunded = 0;
@@ -141,7 +141,7 @@ final class CreateCallFundingOverview extends AbstractPlugin
             /** @var Funding $funding */
             foreach ($affiliation->getFunding() as $funding) {
                 if ($funding->getSource()->getId() === Source::SOURCE_OFFICE
-                    && $funding->getDateStart()->format('Y') == $year
+                    && $funding->getDateStart()->format('Y') === $year
                 ) {
                     $costs = null;
                     if (isset($costsPerYear[$year])) {

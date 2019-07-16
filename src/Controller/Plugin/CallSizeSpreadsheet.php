@@ -261,9 +261,19 @@ final class CallSizeSpreadsheet extends AbstractPlugin
             //Find the PO
             $po = $this->versionService->findVersionTypeById(Type::TYPE_PO);
             $fpp = $this->versionService->findVersionTypeById(Type::TYPE_FPP);
-            $projectOutline = $this->projectService->getLatestProjectVersion($project, $po, );
-            $fullProjectProposal = $this->projectService->getLatestProjectVersion($project, $fpp);
-            $latestVersion = $this->projectService->getLatestProjectVersion($project, null, $this->showOnlyApproved, $this->showDecisionPending);
+            $projectOutline = $this->projectService->getLatestApprovedProjectVersion($project, $po);
+            $fullProjectProposal = $this->projectService->getLatestApprovedProjectVersion($project, $fpp);
+
+            $latestVersion = null;
+            if ($this->showOnlyApproved) {
+                $latestVersion = $this->projectService->getLatestApprovedProjectVersion($project);
+            }
+
+            if ($this->showDecisionPending) {
+                $latestVersion = $this->projectService->getLatestSubmittedProjectVersion($project);
+            }
+
+
             $affiliations = $this->affiliationService->findAffiliationByProjectAndWhich(
                 $project,
                 AffiliationService::WHICH_ALL

@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Program\Controller;
 
 use Admin\Service\AdminService;
-use function array_merge_recursive;
 use Contact\Entity\Contact;
 use Contact\Service\ContactService;
 use DateTime;
@@ -35,8 +34,6 @@ use Program\Form\AdminUploadNda;
 use Program\Form\NdaApproval;
 use Program\Service\CallService;
 use Program\Service\FormService;
-use function sprintf;
-use function strlen;
 use Zend\Http\Response;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -46,10 +43,11 @@ use Zend\Validator\File\FilesSize;
 use Zend\Validator\File\MimeType;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
+use function array_merge_recursive;
+use function sprintf;
+use function strlen;
 
 /**
- * Class NdaManagerController
- *
  * @package Program\Controller
  * @method GetFilter getProgramFilter()
  * @method FlashMessenger flashMessenger()
@@ -182,7 +180,7 @@ final class NdaManagerController extends AbstractActionController
             $this->getRequest()->getFiles()->toArray()
         );
 
-        $form = $this->formService->prepare(Nda::class, $data);
+        $form = $this->formService->prepare($nda, $data);
 
         $form->get($nda->get('underscore_entity_name'))->get('contact')->setValueOptions(
             [
@@ -296,7 +294,6 @@ final class NdaManagerController extends AbstractActionController
                 return $this->redirect()->toRoute('zfcadmin/contact/view', ['id' => $contact->getId()]);
             }
 
-
             if ($form->isValid()) {
                 $fileData = $form->getData('file');
 
@@ -320,10 +317,9 @@ final class NdaManagerController extends AbstractActionController
                 $this->flashMessenger()->addSuccessMessage(
                     sprintf($this->translator->translate('txt-nda-has-been-uploaded-successfully'))
                 );
+
+                return $this->redirect()->toRoute('zfcadmin/contact/view', ['id' => $contact->getId()]);
             }
-
-
-            return $this->redirect()->toRoute('zfcadmin/contact/view', ['id' => $contact->getId()]);
         }
 
         return new ViewModel(

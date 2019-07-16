@@ -80,10 +80,6 @@ return [
                             ],
                         ],
                     ],
-                    'program-size' => [
-                        'label' => _('txt-nav-program-size'),
-                        'route' => 'zfcadmin/program/size',
-                    ],
                     'call-list'    => [
                         'label' => _('txt-nav-program-calls'),
                         'route' => 'zfcadmin/call/list',

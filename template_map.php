@@ -8,7 +8,6 @@ return array(
     'program/program-manager/new'               => __DIR__ . '//view/program/program-manager/new.twig',
     'program/program-manager/list'              => __DIR__ . '//view/program/program-manager/list.twig',
     'program/program-manager/edit'              => __DIR__ . '//view/program/program-manager/edit.twig',
-    'program/program-manager/size'              => __DIR__ . '//view/program/program-manager/size.twig',
     'program/pdf/doa-program'                   => __DIR__ . '//view/program/pdf/doa-program.twig',
     'program/session-manager/view'              => __DIR__ . '//view/program/session-manager/view.twig',
     'program/session-manager/new'               => __DIR__ . '//view/program/session-manager/new.twig',
