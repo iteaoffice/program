@@ -82,7 +82,7 @@ final class CreateFundingDownload extends AbstractPlugin
 
         /** @var Project $project */
         foreach ($this->projectService->findProjectsByCall($call)->getQuery()->getResult() as $project) {
-            $version = $this->projectService->getLatestSubmittedProjectVersion($project);
+            $version = $this->projectService->getLatestNotRejectedProjectVersion($project);
 
             if (null === $version) {
                 continue;
