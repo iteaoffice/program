@@ -111,8 +111,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
     private $includeRejectedFPP = false;
     private $includeRejectedCR = false;
     private $includeDecisionPending = false;
-
     private $includeDeactivatedPartners = false;
+    private $splitPerYear = false;
 
     public function __construct(
         ProjectService $projectService,
@@ -160,6 +160,10 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
         if (in_array(Statistics::INCLUDE_DEACTIVATED_PARTNERS, $include, false)) {
             $this->includeDeactivatedPartners = true;
+        }
+
+        if (in_array(Statistics::SPLIT_COSTS_PER_YEAR, $include, false)) {
+            $this->splitPerYear = true;
         }
 
 
@@ -353,121 +357,232 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                 }
 
                 $latestContractVersion = $this->contractService->findLatestContractVersionByAffiliation($affiliation);
-
-
                 $exchangeRate = 1;
-                $poEffortVersionPerYear = [];
-                $poCostVersionPerYear = [];
-                $fppEffortVersionPerYear = [];
-                $fppCostVersionPerYear = [];
-                $latestEffortVersionPerYear = [];
-                $latestCostVersionPerYear = [];
-                $contractCost = [];
 
-                if (null !== $latestContractVersion) {
-                    $exchangeRate = $this->contractService->findLatestExchangeRate($latestContractVersion);
-                    $contractCost = $this->contractService->findTotalCostVersionByAffiliationAndVersionPerYear(
-                        $affiliation,
-                        $latestContractVersion
-                    );
-                }
+
+
+
+
+
 
                 $column = 'A';
 
-                if (null !== $projectOutline) {
-                    $poEffortVersionPerYear
-                        = $this->versionService->findTotalEffortVersionByAffiliationAndVersionPerYear(
+
+                if ($this->splitPerYear) {
+                    $poEffortVersionPerYear = [];
+                    $poCostVersionPerYear = [];
+                    $fppEffortVersionPerYear = [];
+                    $fppCostVersionPerYear = [];
+                    $latestEffortVersionPerYear = [];
+                    $latestCostVersionPerYear = [];
+                    $contractCost = [];
+
+                    if (null !== $projectOutline) {
+                        $poEffortVersionPerYear
+                            = $this->versionService->findTotalEffortVersionByAffiliationAndVersionPerYear(
+                                $affiliation,
+                                $projectOutline
+                            );
+                        $poCostVersionPerYear = $this->versionService->findTotalCostVersionByAffiliationAndVersionPerYear(
                             $affiliation,
                             $projectOutline
                         );
-                    $poCostVersionPerYear = $this->versionService->findTotalCostVersionByAffiliationAndVersionPerYear(
-                        $affiliation,
-                        $projectOutline
-                    );
-                }
+                    }
 
-                if (null !== $fullProjectProposal) {
-                    $fppEffortVersionPerYear
-                        = $this->versionService->findTotalEffortVersionByAffiliationAndVersionPerYear(
+                    if (null !== $fullProjectProposal) {
+                        $fppEffortVersionPerYear
+                            = $this->versionService->findTotalEffortVersionByAffiliationAndVersionPerYear(
+                                $affiliation,
+                                $fullProjectProposal
+                            );
+                        $fppCostVersionPerYear = $this->versionService->findTotalCostVersionByAffiliationAndVersionPerYear(
                             $affiliation,
                             $fullProjectProposal
                         );
-                    $fppCostVersionPerYear = $this->versionService->findTotalCostVersionByAffiliationAndVersionPerYear(
-                        $affiliation,
-                        $fullProjectProposal
-                    );
-                }
+                    }
 
-                if (null !== $latestVersion) {
-                    $latestEffortVersionPerYear
-                        = $this->versionService->findTotalEffortVersionByAffiliationAndVersionPerYear(
+                    if (null !== $latestVersion) {
+                        $latestEffortVersionPerYear
+                            = $this->versionService->findTotalEffortVersionByAffiliationAndVersionPerYear(
+                                $affiliation,
+                                $latestVersion
+                            );
+                        $latestCostVersionPerYear
+                            = $this->versionService->findTotalCostVersionByAffiliationAndVersionPerYear(
+                                $affiliation,
+                                $latestVersion
+                            );
+                    }
+
+                    if (null !== $latestContractVersion) {
+                        $exchangeRate = $this->contractService->findLatestExchangeRate($latestContractVersion);
+                        $contractCost = $this->contractService->findTotalCostVersionByAffiliationAndVersionPerYear(
                             $affiliation,
-                            $latestVersion
+                            $latestContractVersion
                         );
-                    $latestCostVersionPerYear
-                        = $this->versionService->findTotalCostVersionByAffiliationAndVersionPerYear(
-                            $affiliation,
-                            $latestVersion
-                        );
-                }
+                    }
 
-                $draftEffort = $this->projectService->findTotalEffortByAffiliationPerYear($affiliation);
-                $draftCost = $this->projectService->findTotalCostByAffiliationPerYear($affiliation);
+                    $draftEffort = $this->projectService->findTotalEffortByAffiliationPerYear($affiliation);
+                    $draftCost = $this->projectService->findTotalCostByAffiliationPerYear($affiliation);
 
+                    foreach ($this->projectService->parseYearRange($project, true) as $year) {
 
-                foreach ($this->projectService->parseYearRange($project, true) as $year) {
+                        /** @var Funding $funding */
+                        $funding = $affiliation->getFunding()->filter(
+                            static function (Funding $funding) use ($year) {
+                                return $funding->getSource()->getId() === Source::SOURCE_OFFICE
+                                    && $funding->getYear() === (int)$year;
+                            }
+                        )->first();
 
-                    /** @var Funding $funding */
-                    $funding = $affiliation->getFunding()->filter(
-                        static function (Funding $funding) use ($year) {
-                            return $funding->getSource()->getId() === Source::SOURCE_OFFICE
-                                && $funding->getYear() === (int)$year;
+                        $fundingStatus = '';
+                        if ($funding) {
+                            $fundingStatus = $funding->getStatus()->getCode();
                         }
-                    )->first();
 
-                    $fundingStatus = '';
-                    if ($funding) {
-                        $fundingStatus = $funding->getStatus()->getCode();
+                        if ($affiliation->isSelfFunded()) {
+                            $fundingStatus = 'SF';
+                        }
+
+
+                        $projectColumn = [
+                            $column++ => $project->getNumber(),
+                            $column++ => $project->getProject(),
+                            $column++ => (string)$project->getCall()->getProgram(),
+                            $column++ => (string)$project->getCall(),
+                            $column++ => $this->projectService->parseStatus($project),
+                            $column++ => $affiliation->parseBranchedName(),
+                            $column++ => $affiliation->getOrganisation()->getCountry()->getIso3(),
+                            $column++ => $affiliation->getOrganisation()->getType()->getDescription(),
+                            $column++ => $affiliation->isActive() ? 'Y' : 'N',
+                            $column++ => $year,
+                            $column++ => $fundingStatus,
+                            $column++ => $poEffortVersionPerYear[$year] ?? null,
+                            $column++ => $poCostVersionPerYear[$year] ?? null,
+                            $column++ => $fppEffortVersionPerYear[$year] ?? null,
+                            $column++ => $fppCostVersionPerYear[$year] ?? null,
+                            $column++ => $latestEffortVersionPerYear[$year] ?? null,
+                            $column++ => $latestCostVersionPerYear[$year] ?? null,
+
+                            $column++ => null !== $latestVersion ? $latestVersion->getVersionType()->getDescription()
+                                : '',
+                            $column++ => null !== $latestVersion ? $this->versionService->parseStatus($latestVersion)
+                                : '',
+                            $column++ => null !== $latestVersion && null !== $latestVersion->getDateReviewed()
+                                ? $latestVersion->getDateReviewed()->format('d-m-Y') : '',
+
+                            $column++ => $draftEffort[$year] ?? null,
+                            $column++ => $draftCost[$year] ?? null,
+                            $column++ => null !== $latestContractVersion ? 'Y' : 'N',
+                            $column++ => $contractCost[$year] ?? null,
+                            $column++ => null !== $latestContractVersion ? $exchangeRate : '',
+                            $column++ => ($contractCost[$year] ?? null) / $exchangeRate,
+                            $column   => null !== $latestContractVersion ? (($contractCost[$year] ?? null)
+                                / $exchangeRate)
+                                : $latestCostVersionPerYear[$year] ?? null
+                        ];
+
+                        $sheet->fromArray($projectColumn, null, 'A' . $this->start++);
+                    }
+                }
+
+                if (!$this->splitPerYear) {
+                    $poEffortVersion = null;
+                    $poCostVersion = null;
+                    $fppEffortVersion = null;
+                    $fppCostVersion = null;
+                    $latestEffortVersion = null;
+                    $latestCostVersion = null;
+                    $contractCost = null;
+
+                    if (null !== $projectOutline) {
+                        $poEffortVersion
+                            = $this->versionService->findTotalEffortVersionByAffiliationAndVersion(
+                                $affiliation,
+                                $projectOutline
+                            );
+                        $poCostVersion = $this->versionService->findTotalCostVersionByAffiliationAndVersion(
+                            $affiliation,
+                            $projectOutline
+                        );
                     }
 
-                    if ($affiliation->isSelfFunded()) {
-                        $fundingStatus = 'SF';
+                    if (null !== $fullProjectProposal) {
+                        $fppEffortVersion
+                            = $this->versionService->findTotalEffortVersionByAffiliationAndVersion(
+                                $affiliation,
+                                $fullProjectProposal
+                            );
+                        $fppCostVersion = $this->versionService->findTotalCostVersionByAffiliationAndVersion(
+                            $affiliation,
+                            $fullProjectProposal
+                        );
                     }
+
+                    if (null !== $latestVersion) {
+                        $latestEffortVersion
+                            = $this->versionService->findTotalEffortVersionByAffiliationAndVersion(
+                                $affiliation,
+                                $latestVersion
+                            );
+                        $latestCostVersion
+                            = $this->versionService->findTotalCostVersionByAffiliationAndVersion(
+                                $affiliation,
+                                $latestVersion
+                            );
+                    }
+
+                    if (null !== $latestContractVersion) {
+                        $exchangeRate = $this->contractService->findLatestExchangeRate($latestContractVersion);
+                        $contractCost = array_sum($this->contractService->findTotalCostVersionByAffiliationAndVersionPerYear(
+                            $affiliation,
+                            $latestContractVersion
+                        ));
+                    }
+
+                    $draftEffort = $this->projectService->findTotalEffortByAffiliation($affiliation);
+                    $draftCost = $this->projectService->findTotalCostByAffiliation($affiliation);
+
+
+
 
 
                     $projectColumn = [
-                        $column++ => $project->getNumber(),
-                        $column++ => $project->getProject(),
-                        $column++ => (string)$project->getCall()->getProgram(),
-                        $column++ => (string)$project->getCall(),
-                        $column++ => $this->projectService->parseStatus($project),
-                        $column++ => $affiliation->parseBranchedName(),
-                        $column++ => $affiliation->getOrganisation()->getCountry()->getIso3(),
-                        $column++ => $affiliation->getOrganisation()->getType()->getDescription(),
-                        $column++ => $affiliation->isActive() ? 'Y' : 'N',
-                        $column++ => $year,
-                        $column++ => $fundingStatus,
-                        $column++ => $poEffortVersionPerYear[$year] ?? null,
-                        $column++ => $poCostVersionPerYear[$year] ?? null,
-                        $column++ => $fppEffortVersionPerYear[$year] ?? null,
-                        $column++ => $fppCostVersionPerYear[$year] ?? null,
-                        $column++ => $latestEffortVersionPerYear[$year] ?? null,
-                        $column++ => $latestCostVersionPerYear[$year] ?? null,
+                            $column++ => $project->getNumber(),
+                            $column++ => $project->getProject(),
+                            $column++ => (string)$project->getCall()->getProgram(),
+                            $column++ => (string)$project->getCall(),
+                            $column++ => $this->projectService->parseStatus($project),
+                            $column++ => $affiliation->parseBranchedName(),
+                            $column++ => $affiliation->getOrganisation()->getCountry()->getIso3(),
+                            $column++ => $affiliation->getOrganisation()->getType()->getDescription(),
+                            $column++ => $affiliation->isActive() ? 'Y' : 'N',
+                            $column++ => null,
+                            $column++ => null,
+                            $column++ => $poEffortVersion,
+                            $column++ => $poCostVersion,
+                            $column++ => $fppEffortVersion,
+                            $column++ => $fppCostVersion,
+                            $column++ => $latestEffortVersion,
+                            $column++ => $latestCostVersion,
 
-                        $column++ => null !== $latestVersion ? $latestVersion->getVersionType()->getDescription() : '',
-                        $column++ => null !== $latestVersion ? $this->versionService->parseStatus($latestVersion) : '',
-                        $column++ => null !== $latestVersion && null !== $latestVersion->getDateReviewed()
-                            ? $latestVersion->getDateReviewed()->format('d-m-Y') : '',
+                            $column++ => null !== $latestVersion ? $latestVersion->getVersionType()->getDescription()
+                                : '',
+                            $column++ => null !== $latestVersion ? $this->versionService->parseStatus($latestVersion)
+                                : '',
+                            $column++ => null !== $latestVersion && null !== $latestVersion->getDateReviewed()
+                                ? $latestVersion->getDateReviewed()->format('d-m-Y') : '',
 
-                        $column++ => $draftEffort[$year] ?? null,
-                        $column++ => $draftCost[$year] ?? null,
-                        $column++ => null !== $latestContractVersion ? 'Y' : 'N',
-                        $column++ => $contractCost[$year] ?? null,
-                        $column++ => null !== $latestContractVersion ? $exchangeRate : '',
-                        $column++ => ($contractCost[$year] ?? null) / $exchangeRate,
-                        $column   => null !== $latestContractVersion ? (($contractCost[$year] ?? null) / $exchangeRate)
-                            : $latestCostVersionPerYear[$year] ?? null
-                    ];
+                            $column++ => $draftEffort,
+                            $column++ => $draftCost,
+                            $column++ => null !== $latestContractVersion ? 'Y' : 'N',
+                            $column++ => $contractCost,
+                            $column++ => null !== $latestContractVersion ? $exchangeRate : '',
+                            $column++ => $contractCost / $exchangeRate,
+                            $column   => null !== $latestContractVersion ? ($contractCost
+                                / $exchangeRate)
+                                : $latestCostVersion
+                        ];
 
                     $sheet->fromArray($projectColumn, null, 'A' . $this->start++);
                 }
