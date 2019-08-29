@@ -54,6 +54,8 @@
         </tbody>
     </table>
     {{ callSessionLink(session, 'download-document', 'button') }}
+    {{ callSessionLink(session, 'download-spreadsheet', 'button') }}
+    {{ callSessionLink(session, 'download', 'button') }}
 {% else %}
     {{ ztbalert().info(translate("txt-no-ideas-found"))|raw }}
 {% endif %}

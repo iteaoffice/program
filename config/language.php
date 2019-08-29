@@ -9,7 +9,7 @@ _("txt-session");
 _("txt-program-call");
 _("txt-idea-tool");
 _("txt-idea-tool-help-block");
-_("txt-date");
+_("txt-session-date");
 _("txt-date-national-application-label");
 _("txt-date-national-application-help-block");
 _("txt-date-expected-funding-decision-label");

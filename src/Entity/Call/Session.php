@@ -15,10 +15,12 @@ declare(strict_types=1);
 
 namespace Program\Entity\Call;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Program\Entity\AbstractEntity;
+use Project\Entity\Idea\Tool;
 use Zend\Form\Annotation;
 
 /**
@@ -62,7 +64,7 @@ class Session extends AbstractEntity
      *     }
      * })
      *
-     * @var \Program\Entity\Call\Call
+     * @var Call
      */
     private $call;
     /**
@@ -82,15 +84,16 @@ class Session extends AbstractEntity
      *     }
      * })
      *
-     * @var \Project\Entity\Idea\Tool|null
+     * @var Tool|null
      */
     private $tool;
     /**
      * @ORM\Column(name="date", type="datetime", nullable=false)
-     * @Annotation\Type("\Zend\Form\Element\Date")
-     * @Annotation\Options({"label":"txt-date"})
+     * @Annotation\Type("\Zend\Form\Element\DateTime")
+     * @Annotation\Attributes({"step":"any"})
+     * @Annotation\Options({"label":"txt-session-date", "format":"Y-m-d H:i:s"})
      *
-     * @var \DateTime
+     * @var DateTime
      */
     private $date;
     /**
@@ -167,7 +170,7 @@ class Session extends AbstractEntity
         return $this;
     }
 
-    public function getTool(): ?\Project\Entity\Idea\Tool
+    public function getTool(): ?Tool
     {
         return $this->tool;
     }
@@ -179,12 +182,12 @@ class Session extends AbstractEntity
         return $this;
     }
 
-    public function getDate(): ?\DateTime
+    public function getDate(): ?DateTime
     {
         return $this->date;
     }
 
-    public function setDate(\DateTime $date): Session
+    public function setDate(DateTime $date): Session
     {
         $this->date = $date;
 

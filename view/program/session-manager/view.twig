@@ -11,7 +11,7 @@
     <dt>{{ translate("txt-call") }}</dt>
     <dd>{{ callLink(session.call, 'view-admin') }}</dd>
     <dt>{{ translate("txt-date") }}</dt>
-    <dd>{{ session.date|string_date }}</dd>
+    <dd>{{ session.date|date('d M Y H:i') }}</dd>
     <dt>{{ translate("txt-ideas") }}</dt>
     <dd>{{ session.ideaSession|length }}</dd>
 </dl>

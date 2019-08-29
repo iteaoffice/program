@@ -200,9 +200,13 @@ abstract class AbstractLink extends AbstractViewHelper
                         $this->addLinkContent('<i class="fa fa-external-link"></i>');
                         break;
                     case 'download':
-                    case 'download-spreadsheet':
-                    case 'download-document':
                         $this->addLinkContent('<i class="fa fa-download" aria-hidden="true"></i>');
+                        break;
+                    case 'download-spreadsheet':
+                        $this->addLinkContent('<i class="fa fa-file-excel-o" aria-hidden="true"></i>');
+                        break;
+                    case 'download-document':
+                        $this->addLinkContent('<i class="fa fa-file-word-o" aria-hidden="true"></i>');
                         break;
                     case 'upload':
                     case 'upload-admin':

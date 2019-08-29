@@ -31,8 +31,6 @@ use Zend\Form\Annotation;
  * @ORM\Entity(repositoryClass="Program\Repository\Program")
  * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("contact_contact")
- *
- * @category    Program
  */
 class Program extends AbstractEntity
 {
