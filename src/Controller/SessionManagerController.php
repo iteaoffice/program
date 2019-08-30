@@ -149,11 +149,12 @@ final class SessionManagerController extends AbstractActionController
     {
         /** @var Request $request */
         $request = $this->getRequest();
-        $data = $request->getPost()->toArray();
-
+        $data    = $request->getPost()->toArray();
         $session = new Session();
-        $form = $this->formService->prepare($session, $data);
+        $form    = $this->formService->prepare($session, $data);
         $form->remove('delete');
+        // Because this form can be open for a long time, csrf check will time-out
+        $form->remove('csrf');
 
         if ($request->isPost()) {
             if (isset($data['cancel'])) {
@@ -187,6 +188,8 @@ final class SessionManagerController extends AbstractActionController
         $request = $this->getRequest();
         $data    = $request->getPost()->toArray();
         $form    = $this->formService->prepare($session, $data);
+        // Because this form can be open for a long time, csrf check will time-out
+        $form->remove('csrf');
 
         if ($request->isPost()) {
             if (isset($data['cancel'])) {
