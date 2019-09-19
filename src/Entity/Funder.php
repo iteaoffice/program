@@ -49,7 +49,7 @@ class Funder extends AbstractEntity
             self::SHOW_ON_WEBSITE => 'txt-show-on-website',
         ];
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="funder_id", type="integer", options={"unsigned":true})
      * @ORM\Id
