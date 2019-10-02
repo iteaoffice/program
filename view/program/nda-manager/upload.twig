@@ -1,10 +1,6 @@
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-upload-nda-title")) %}
 
-{% do headLink().appendStylesheet(
-'//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css'
-) %}
-
 <h1>{{ translate("txt-upload-nda-title") }}</h1>
 
 {% do form.prepare() %}
@@ -40,13 +36,4 @@
     {% endfor %}
 </ul>
 
-
 {{ form().closeTag()|raw }}
-
-
-<script type="text/javascript">
-    $('input[type=date]').datepicker({
-        sliderAccessArgs: {touchonly: false},
-        dateFormat: 'yy-mm-dd'
-    });
-</script>

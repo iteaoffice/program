@@ -1,17 +1,13 @@
 <?php
-/**
- * ITEA Office copyright message placeholder
- *
- * @category    Program
- * @package     Config
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
- */
 
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Gedmo\Sluggable\SluggableListener;
+use Gedmo\Timestampable\TimestampableListener;
 use Program\Acl;
 use Program\Controller;
 use Program\Factory;
 use Program\Factory\InvokableFactory;
+use Program\Form;
 use Program\InputFilter;
 use Program\Navigation;
 use Program\Options;
@@ -19,6 +15,15 @@ use Program\Service;
 use Program\View;
 use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 use Zend\Stdlib;
+
+/**
+ * ITEA Office copyright message placeholder
+ *
+ * @category    Program
+ * @package     Config
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
+ */
 
 $config = [
     'controllers'        => [
@@ -73,6 +78,8 @@ $config = [
             'ndaLink'            => View\Helper\NdaLink::class,
             'funderLink'         => View\Helper\FunderLink::class,
             'callCountryLink'    => View\Helper\CallCountryLink::class,
+
+            'callformelement' => Form\View\Helper\CallFormElement::class,
         ],
         'factories' => [
             View\Handler\SessionHandler::class => ConfigAbstractFactory::class,
@@ -86,6 +93,8 @@ $config = [
             View\Helper\NdaLink::class            => View\Factory\ViewHelperFactory::class,
             View\Helper\FunderLink::class         => View\Factory\ViewHelperFactory::class,
             View\Helper\CallCountryLink::class    => View\Factory\ViewHelperFactory::class,
+
+            Form\View\Helper\CallFormElement::class => ConfigAbstractFactory::class
         ],
     ],
     'service_manager'    => [
@@ -121,7 +130,7 @@ $config = [
     'doctrine'           => [
         'driver'       => [
             'program_annotation_driver' => [
-                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'class' => AnnotationDriver::class,
                 'paths' => [__DIR__ . '/../src/Entity/'],
             ],
             'orm_default'               => [
@@ -133,8 +142,8 @@ $config = [
         'eventmanager' => [
             'orm_default' => [
                 'subscribers' => [
-                    'Gedmo\Timestampable\TimestampableListener',
-                    'Gedmo\Sluggable\SluggableListener',
+                    TimestampableListener::class,
+                    SluggableListener::class,
                 ],
             ],
         ],

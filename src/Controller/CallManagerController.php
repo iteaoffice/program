@@ -1,13 +1,8 @@
 <?php
 /**
- * ITEA Office all rights reserved
- *
- * PHP Version 7
- *
- * @category    Project
- *
+*
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/project for the canonical source repository
@@ -172,7 +167,7 @@ final class CallManagerController extends AbstractActionController
 
         if ($request->isPost()) {
             if (isset($data['cancel'])) {
-                $this->redirect()->toRoute('zfcadmin/call/list');
+                return $this->redirect()->toRoute('zfcadmin/call/list');
             }
 
             if ($form->isValid()) {
@@ -182,7 +177,7 @@ final class CallManagerController extends AbstractActionController
 
                 $this->flashMessenger()->addSuccessMessage(
                     sprintf(
-                        $this->translator->translate("txt-call-%s-has-been-created-successfully"),
+                        $this->translator->translate('txt-call-%s-has-been-created-successfully'),
                         $call
                     )
                 );
@@ -216,7 +211,7 @@ final class CallManagerController extends AbstractActionController
 
                 $this->flashMessenger()->addSuccessMessage(
                     sprintf(
-                        $this->translator->translate("txt-call-%s-has-been-updated-successfully"),
+                        $this->translator->translate('txt-call-%s-has-been-updated-successfully'),
                         $call
                     )
                 );
@@ -281,7 +276,7 @@ final class CallManagerController extends AbstractActionController
         return $this->callSizeSpreadsheet(null, $call)->parseResponse();
     }
 
-    public function fundingAction(): ViewModel
+    public function fundingAction()
     {
         /** @var Request $request */
         $request = $this->getRequest();
@@ -293,8 +288,8 @@ final class CallManagerController extends AbstractActionController
         }
 
         $minMaxYear = $this->callService->findMinAndMaxYearInCall($call);
-
         $year = $this->params('year', $minMaxYear->maxYear);
+
         /*
          * The form can be used to overrule some parameters. We therefore need to check if the form is set
          * posted correctly and need to update the params when the form has been post
@@ -304,21 +299,21 @@ final class CallManagerController extends AbstractActionController
 
         if ($request->isPost() && $form->isValid()) {
             $formData = $form->getData();
-            $this->redirect()->toRoute(
+            return $this->redirect()->toRoute(
                 'zfcadmin/call/funding',
                 [
                     'id'   => (int)$formData['call'],
                     'year' => (int)$formData['year'],
                 ]
             );
-        } else {
-            $form->setData(
-                [
-                    'call' => $callId,
-                    'year' => $year,
-                ]
-            );
         }
+
+        $form->setData(
+            [
+                'call' => $callId,
+                'year' => $year,
+            ]
+        );
 
         $projects = $this->projectService->findProjectsByCall($call)->getQuery()->getResult();
 

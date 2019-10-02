@@ -1,13 +1,8 @@
 <?php
 /**
- * ITEA Office all rights reserved
- *
- * PHP Version 7
- *
- * @category    Project
- *
+*
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/project for the canonical source repository
@@ -141,7 +136,7 @@ final class ProgramManagerController extends AbstractActionController
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                $this->redirect()->toRoute('zfcadmin/program/list');
+                return $this->redirect()->toRoute('zfcadmin/program/list');
             }
 
             if ($form->isValid()) {
@@ -185,7 +180,7 @@ final class ProgramManagerController extends AbstractActionController
 
                 /** @var Program $program */
                 $this->programService->save($program);
-                $this->redirect()->toRoute(
+                return $this->redirect()->toRoute(
                     'zfcadmin/program/view',
                     [
                         'id' => $program->getId(),

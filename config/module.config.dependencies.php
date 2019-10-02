@@ -32,6 +32,7 @@ use General\Service\EmailService;
 use General\Service\GeneralService;
 use Organisation\Search\Service\OrganisationSearchService;
 use Organisation\Service\OrganisationService;
+use Program\Form\View\Helper\CallFormElement;
 use Program\Options\ModuleOptions;
 use Program\Service\CallService;
 use Program\Service\FormService;
@@ -208,6 +209,10 @@ return [
         ],
         View\Helper\CallInformationBox::class              => [
             CallService::class
-        ]
+        ],
+        CallFormElement::class => [
+            'ViewHelperManager',
+            TranslatorInterface::class
+        ],
     ]
 ];
