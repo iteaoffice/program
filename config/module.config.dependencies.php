@@ -91,6 +91,8 @@ return [
             VersionService::class,
             AffiliationService::class,
             ContractService::class,
+            ContactService::class,
+            CountryService::class,
             EntityManager::class,
             TranslatorInterface::class
         ],
@@ -210,7 +212,7 @@ return [
         View\Helper\CallInformationBox::class              => [
             CallService::class
         ],
-        CallFormElement::class => [
+        CallFormElement::class                             => [
             'ViewHelperManager',
             TranslatorInterface::class
         ],

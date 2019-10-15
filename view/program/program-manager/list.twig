@@ -6,70 +6,55 @@
 {% set filter = form.get('filter') %}
 
 
+<h1>{{ translate("txt-program-list") }} {{ programLink(null, 'new','button') }}</h1>
 
 <div class="row">
-
-    <div class="col-md-10">
-        <h1>{{ translate("txt-program-list") }} {{ programLink(null, 'new','button') }}</h1>
-
-        <div class="row">
-            <div class="col-md-6">
-                <p class="lead">{{ translate("txt-program-list-explanation") }}</p>
-            </div>
-            <div class="col-md-6">
-                <div class="input-group">
-                    {{ formelement(filter.get('search')) }}
-                    <div class="input-group-append input-group-btn">
-                        {{ formelement(form.get('submit')) }}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {% if paginator.pageRange > 0 %}
-            <table class="table table-hover table-striped table-sm">
-                <thead>
-                <tr>
-                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/program/list', 'criteria': 'id', 'text': translate('txt-id')} %}</th>
-                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/program/list', 'criteria': 'name', 'text': translate('txt-name')} %}</th>
-                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/program/list', 'criteria': 'number', 'text': translate('txt-number')} %}</th>
-                    <th>{{ translate("txt-amount-of-calls") }}</th>
-                    <th>{{ translate("txt-eurkeka-export") }}</th>
-                    <th>{{ translate("txt-invoice-method") }}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for program in paginator.getCurrentItems() %}
-                    <tr>
-                        <td>{{ program.id }} {{ programLink(program,'edit', 'icon') }}</td>
-                        <td>{{ programLink(program,'view-admin','name') }}</td>
-                        <td>{{ program.number }}</td>
-                        <td>{{ program.call.count }}</td>
-                        <td>
-                            <a href="{{ url('zfcadmin/project/export/program',{'id': program.id}) }}"><i
-                                        class="fa fa-exchange"></i></a>
-                            {{ programLink(program,'export-size','icon') }}
-                        </td>
-                        <td>{% for method in program.invoiceMethod %}{{ method }}{% endfor %}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            {% include 'application/partial/pagination-control' %}
-        {% else %}
-            {{ ztbalert().info(translate("txt-no-program-could-be-found"))|raw }}
-        {% endif %}
+    <div class="col-md-6">
+        <p class="lead">{{ translate("txt-program-list-explanation") }}</p>
     </div>
-    <div class="col-md-2">
-        <div class="well well-sm">
-            <fieldset>
-
-                                   {{ ztbformelement(form.get('submit')) }}
-                    {{ ztbformelement(form.get('clear')) }}
-            </fieldset>
+    <div class="col-md-6">
+        <div class="input-group">
+            {{ formelement(filter.get('search')) }}
+            <div class="input-group-append input-group-btn">
+                {{ formelement(form.get('submit')) }}
+            </div>
         </div>
     </div>
 </div>
+
+{% if paginator.pageRange > 0 %}
+    <table class="table table-hover table-striped table-sm">
+        <thead>
+        <tr>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/program/list', 'criteria': 'id', 'text': translate('txt-id')} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/program/list', 'criteria': 'name', 'text': translate('txt-name')} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/program/list', 'criteria': 'number', 'text': translate('txt-number')} %}</th>
+            <th>{{ translate("txt-amount-of-calls") }}</th>
+            <th>{{ translate("txt-eurkeka-export") }}</th>
+            <th>{{ translate("txt-invoice-method") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for program in paginator.getCurrentItems() %}
+            <tr>
+                <td>{{ program.id }} {{ programLink(program,'edit', 'icon') }}</td>
+                <td>{{ programLink(program,'view-admin','name') }}</td>
+                <td>{{ program.number }}</td>
+                <td>{{ program.call.count }}</td>
+                <td>
+                    <a href="{{ url('zfcadmin/project/export/program',{'id': program.id}) }}"><i
+                                class="fa fa-exchange"></i></a>
+                    {{ programLink(program,'export-size','icon') }}
+                </td>
+                <td>{% for method in program.invoiceMethod %}{{ method }}{% endfor %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% include 'application/partial/pagination-control' %}
+{% else %}
+    {{ ztbalert().info(translate("txt-no-program-could-be-found"))|raw }}
+{% endif %}
 
 {{ form().closeTag()|raw }}
 

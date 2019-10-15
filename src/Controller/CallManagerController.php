@@ -1,6 +1,6 @@
 <?php
 /**
-*
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
@@ -23,7 +23,6 @@ use Program\Controller\Plugin\CreateCallFundingOverview;
 use Program\Controller\Plugin\CreateFundingDownload;
 use Program\Controller\Plugin\GetFilter;
 use Program\Entity\Call\Call;
-use Program\Entity\Program;
 use Program\Form\CallFilter;
 use Program\Form\FundingFilter;
 use Program\Service\CallService;
@@ -45,7 +44,7 @@ use Zend\View\Model\ViewModel;
  * @method FlashMessenger flashMessenger()
  * @method GetFilter getProgramFilter()
  * @method CreateCallFundingOverview createCallFundingOverview($projects, $year)
- * @method CallSizeSpreadsheet callSizeSpreadsheet(Program $program = null, Call $call = null)
+ * @method CallSizeSpreadsheet callSizeSpreadsheet(array $programs = [], array $call = [])
  * @method CreateFundingDownload createFundingDownload(Call $call)
  */
 final class CallManagerController extends AbstractActionController
@@ -273,7 +272,7 @@ final class CallManagerController extends AbstractActionController
             return $response;
         }
 
-        return $this->callSizeSpreadsheet(null, $call)->parseResponse();
+        return $this->callSizeSpreadsheet([], [$call])->parseResponse();
     }
 
     public function fundingAction()
