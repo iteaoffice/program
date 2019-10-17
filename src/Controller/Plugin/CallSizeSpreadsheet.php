@@ -319,6 +319,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
         if ($this->includeTotals) {
             $header[$column++] = $this->translator->translate('txt-total-project-effort');
             $header[$column++] = $this->translator->translate('txt-total-project-cost');
+            $header[$column++] = $this->translator->translate('txt-project-countries');
         }
 
         if ($this->includeProjectLeaderData) {
@@ -569,6 +570,16 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
                             $projectColumn[$column++] = $totalEffort;
                             $projectColumn[$column++] = $totalCost;
+
+                            //Countries
+                            $projectColumn[$column++] = implode(
+                                ', ',
+                                $this->countryService->findCountryByProject($project)->map(
+                                    static function (Country $country) {
+                                        return $country->getIso3();
+                                    }
+                                )->toArray()
+                            );
                         }
 
 
@@ -729,6 +740,16 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
                         $projectColumn[$column++] = $totalEffort;
                         $projectColumn[$column++] = $totalCost;
+
+                        //Countries
+                        $projectColumn[$column++] = implode(
+                            ', ',
+                            $this->countryService->findCountryByProject($project)->map(
+                                static function (Country $country) {
+                                        return $country->getIso3();
+                                }
+                            )->toArray()
+                        );
                     }
 
 
