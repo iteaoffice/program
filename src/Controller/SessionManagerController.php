@@ -16,6 +16,7 @@ use Application\Twig\ParseSizeExtension;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
+use Exception;
 use Program\Entity\Call\Session;
 use Program\Form\SessionFilter;
 use Program\Service\FormService;
@@ -31,12 +32,14 @@ use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
+use function array_values;
+use function ceil;
+use function implode;
+use function krsort;
+use function ksort;
+use function urlencode;
 
 /**
- * Class SessionManagerController
- *
- * @package Program\Controller
- *
  * @method Plugin\GetFilter getProgramFilter()
  * @method FlashMessenger flashMessenger()
  */
@@ -86,7 +89,7 @@ final class SessionManagerController extends AbstractActionController
         $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($contactQuery, false)));
         $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 20);
         $paginator->setCurrentPageNumber($page);
-        $paginator->setPageRange(\ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
+        $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
         $form = new SessionFilter($this->entityManager);
         $form->setData(['filter' => $filterPlugin->getFilter()]);
@@ -94,7 +97,7 @@ final class SessionManagerController extends AbstractActionController
         return new ViewModel([
             'paginator'     => $paginator,
             'form'          => $form,
-            'encodedFilter' => \urlencode($filterPlugin->getHash()),
+            'encodedFilter' => urlencode($filterPlugin->getHash()),
             'order'         => $filterPlugin->getOrder(),
             'direction'     => $filterPlugin->getDirection(),
         ]);
@@ -125,13 +128,13 @@ final class SessionManagerController extends AbstractActionController
                     'type'   => 'image'
                 ];
             }
-            \krsort($files);
+            krsort($files);
             $orderedIdeaSessions[$ideaSession->getIdea()->getNumber()] = [
                 'session' => $ideaSession,
                 'files'   => $files
             ];
         }
-        \ksort($orderedIdeaSessions);
+        ksort($orderedIdeaSessions);
 
         return new ViewModel([
             'session'             => $session,
@@ -232,7 +235,7 @@ final class SessionManagerController extends AbstractActionController
         foreach ($data['file'] as $fileData) {
             try {
                 $this->ideaService->addFileToIdea($ideaSession->getIdea(), $fileData, null, $ideaSession);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $errors[] = $e->getMessage();
             }
         }
@@ -240,7 +243,7 @@ final class SessionManagerController extends AbstractActionController
         $response = $this->getResponse();
         if (!empty($errors)) {
             $response->setStatusCode(501);
-            $response->setContent(\implode(', ', $errors));
+            $response->setContent(implode(', ', $errors));
         }
         return $response;
     }
@@ -271,10 +274,10 @@ final class SessionManagerController extends AbstractActionController
                     ->fromRoute('community/idea/image/delete', ['id' => $image->getId()])
             ];
         }
-        \krsort($data);
+        krsort($data);
 
         return new JsonModel([
-            'files' => \array_values($data)
+            'files' => array_values($data)
         ]);
     }
 }

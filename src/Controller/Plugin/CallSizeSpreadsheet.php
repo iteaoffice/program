@@ -615,8 +615,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
                             $projectColumn[$column++] = $address;
                             $projectColumn[$column++] = $zip;
-                            $projectColumn[$column++] = $country;
                             $projectColumn[$column++] = $city;
+                            $projectColumn[$column++] = $country;
                             $projectColumn[$column] = $this->contactService->getDirectPhone($affiliation->getContact());
                         }
 
@@ -746,7 +746,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                             ', ',
                             $this->countryService->findCountryByProject($project)->map(
                                 static function (Country $country) {
-                                        return $country->getIso3();
+                                    return $country->getIso3();
                                 }
                             )->toArray()
                         );
@@ -785,8 +785,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
                         $projectColumn[$column++] = $address;
                         $projectColumn[$column++] = $zip;
-                        $projectColumn[$column++] = $country;
                         $projectColumn[$column++] = $city;
+                        $projectColumn[$column++] = $country;
                         $projectColumn[$column] = $this->contactService->getDirectPhone($affiliation->getContact());
                     }
 
@@ -985,8 +985,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
                 $projectColumn[$column++] = $address;
                 $projectColumn[$column++] = $zip;
-                $projectColumn[$column++] = $country;
                 $projectColumn[$column++] = $city;
+                $projectColumn[$column++] = $country;
                 $projectColumn[$column] = $this->contactService->getDirectPhone($project->getContact());
             }
 

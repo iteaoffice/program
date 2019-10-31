@@ -24,11 +24,17 @@ use Project\Acl\Assertion\Idea\Idea;
 use Zend\Http\Headers;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
+use ZipArchive;
+use function file_get_contents;
+use function filesize;
+use function str_replace;
+use function stream_get_contents;
+use function strlen;
+use function sys_get_temp_dir;
+use function tempnam;
+use function unlink;
 
 /**
- * Class SessionController
- *
- * @package Program\Controller
  * @method SessionPdf sessionPdf(Session $session)
  * @method SessionSpreadsheet sessionSpreadsheet(Session $session)
  * @method SessionDocument sessionDocument(Session $session)
@@ -69,7 +75,7 @@ final class SessionController extends AbstractActionController
         $response->getHeaders()
             ->addHeaderLine('Content-Disposition', 'attachment; filename="Session_' . $session->getId() . '.pdf"')
             ->addHeaderLine('Content-Type: application/pdf')
-            ->addHeaderLine('Content-Length', \strlen($sessionPdf->getPDFData()));
+            ->addHeaderLine('Content-Length', strlen($sessionPdf->getPDFData()));
         $response->setContent($sessionPdf->getPDFData());
 
         return $response;
@@ -102,8 +108,8 @@ final class SessionController extends AbstractActionController
             return $response->setStatusCode(Response::STATUS_CODE_404);
         }
 
-        $tempFile = \tempnam(\sys_get_temp_dir(), 'zip');
-        $zip = new \ZipArchive();
+        $tempFile = tempnam(sys_get_temp_dir(), 'zip');
+        $zip = new ZipArchive();
 
         $zip->open($tempFile);
         foreach ($session->getIdeaSession() as $ideaSession) {
@@ -114,25 +120,25 @@ final class SessionController extends AbstractActionController
                 continue;
             }
 
-            $dir = \str_replace(':', '', $ideaSession->getIdea()->parseName());
+            $dir = str_replace(':', '', $ideaSession->getIdea()->parseName());
             //$zip->addEmptyDir($dir);
             foreach ($ideaSession->getDocuments() as $document) {
                 $zip->addFromString(
                     $dir . '/' . $document->getFilename(),
-                    \stream_get_contents($document->getObject()->first()->getObject())
+                    stream_get_contents($document->getObject()->first()->getObject())
                 );
             }
             foreach ($ideaSession->getImages() as $image) {
                 $zip->addFromString(
                     $dir . '/' . $image->getImage(),
-                    \stream_get_contents($image->getObject()->first()->getObject())
+                    stream_get_contents($image->getObject()->first()->getObject())
                 );
             }
         }
         $zip->close();
-        $content = \file_get_contents($tempFile);
-        $contentLength = \filesize($tempFile);
-        \unlink($tempFile);
+        $content = file_get_contents($tempFile);
+        $contentLength = filesize($tempFile);
+        unlink($tempFile);
 
         // Prepare the response
         $response->setContent($content);
