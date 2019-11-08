@@ -427,7 +427,12 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                     continue;
                 }
 
-                $latestContractVersion = $this->contractService->findLatestContractVersionByAffiliation($affiliation);
+                $latestContractVersion = null;
+                if (AffiliationService::useActiveContract($affiliation)) {
+                    $latestContractVersion = $this->contractService->findLatestContractVersionByAffiliation(
+                        $affiliation
+                    );
+                }
                 $exchangeRate = 1;
                 $column = 'A';
 

@@ -13,7 +13,7 @@ final class ProgramData
     private $projects;
     private $partners;
     private $countries;
-    private $years = 12;
+    private $years;
 
     public function __construct(int $calls, int $projects, int $partners, int $countries, int $years)
     {
