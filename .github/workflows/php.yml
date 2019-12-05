@@ -10,9 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - uses: iteaoffice/project@develop
-
-      - uses: webfactory/ssh-agent@v0.1.1
+      - name: Start the SSH agent and add the deploy key
+        uses: webfactory/ssh-agent@v0.1.1
         with:
           ssh-private-key: ${{ secrets.deployKey }}
 
