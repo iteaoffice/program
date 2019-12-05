@@ -9,6 +9,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
+        with:
+          repo-token: ${{ secrets.deployKey }}
 
       - name: Validate composer.json and composer.lock
         run: composer validate
