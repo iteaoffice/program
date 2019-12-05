@@ -64,10 +64,10 @@
     "lint": [
       "@php-lint"
     ],
-    "php-lint": "parallel-lint module",
-    "cs": "phpcs -n -p --standard=PSR2 --extensions=php,twig",
-    "cbf": "phpcbf module --standard=PSR2",
-    "cs-fix": "php-cs-fixer fix -v module",
-    "test": "phpunit"
+    "php-lint": "./vendor/bin/parallel-lint module",
+    "cs": "./vendor/bin/phpcs -n -p --standard=PSR2 --extensions=php,twig module",
+    "cbf": "./vendor/bin/phpcbf module --standard=PSR2",
+    "cs-fix": "./vendor/bin/php-cs-fixer fix -v module",
+    "test": "./vendor/bin/phpunit"
   }
 }
