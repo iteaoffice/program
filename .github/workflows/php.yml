@@ -1,4 +1,4 @@
-name: PHP Composer
+name: Test suite
 
 on: [push]
 
@@ -22,4 +22,4 @@ jobs:
         run: composer fix
 
       - name: Run test suite
-        run: composer text
+        run: composer test
