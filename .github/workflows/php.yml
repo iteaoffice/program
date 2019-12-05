@@ -19,7 +19,7 @@ jobs:
         uses: shivammathur/setup-php@v1
         with:
           php-version: '7.4'
-          extension-csv: mbstring, intl #optional, setup extensions
+          extension-csv: mbstring, intl, zip
           coverage: xdebug #optional, setup coverage driver
 
       - name: Check PHP Version
