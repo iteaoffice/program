@@ -6,7 +6,12 @@ build:
             version: 7.4
             pecl_extensions:
                 - zip
-    tests:
+    nodes:
+        analysis:
+            tests:
+                override:
+                    - php-scrutinizer-run
+    tests-and-coverage:
         override:
             -
                 command: ./vendor/bin/phpunit --coverage-clover=coverage
@@ -16,7 +21,6 @@ build:
 checks:
     php:
         code_rating: true
-        duplication: true
 filter:
     excluded_paths:
         - 'test/*'
