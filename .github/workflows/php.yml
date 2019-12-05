@@ -13,7 +13,7 @@ jobs:
       - name: Start the SSH agent and add the deploy key
         uses: webfactory/ssh-agent@v0.1.1
         with:
-          ssh-private-key: ${{ secrets.deployKey }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v1
