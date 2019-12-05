@@ -1,34 +1,33 @@
 imports:
-    - php
-build:
-    build:
-        environment:
-            php:
-                version: 7.4
-                pecl_extensions:
-                    - zip
-        nodes:
-            itea-tests-with-coverage:
-                tests:
-                    override:
-                        - command: ./vendor/bin/phpunit --coverage-clover=coverage
-                          coverage:
-                              file: coverage
-                              format: php-clover
-            itea-analysis:
-                tests:
-                    override:
-                        - php-scrutinizer-run
+  - php
+  build:
+    environment:
+      php:
+        version: 7.4
+        pecl_extensions:
+          - zip
+    nodes:
+      itea-tests-with-coverage:
+        tests:
+          override:
+            - command: ./vendor/bin/phpunit --coverage-clover=coverage
+              coverage:
+                file: coverage
+                format: php-clover
+      itea-analysis:
+        tests:
+          override:
+            - php-scrutinizer-run
 checks:
-    php: true
+  php: true
 filter:
-    excluded_paths:
-        - 'test/*'
+  excluded_paths:
+    - 'test/*'
 tools:
-    php_changetracking: true
-    php_sim: true
-    php_pdepend: true
-    php_mess_detector: true
-    php_analyzer: true
-    php_cs_fixer: true
-    sensiolabs_security_checker: true
+  php_changetracking: true
+  php_sim: true
+  php_pdepend: true
+  php_mess_detector: true
+  php_analyzer: true
+  php_cs_fixer: true
+  sensiolabs_security_checker: true
