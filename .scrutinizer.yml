@@ -1,26 +1,26 @@
 imports:
     - php
 build:
-    environment:
-        php:
-            version: 7.4
-            pecl_extensions:
-                - zip
-    nodes:
-        analysis:
-            tests:
-                override:
-                    - php-scrutinizer-run
-    tests-and-coverage:
-        override:
-            -
-                command: ./vendor/bin/phpunit --coverage-clover=coverage
-                coverage:
-                    file: coverage
-                    format: php-clover
+    build:
+        environment:
+            php:
+                version: 7.4
+                pecl_extensions:
+                    - zip
+        nodes:
+            itea-tests-with-coverage:
+                tests:
+                    override:
+                        - command: ./vendor/bin/phpunit --coverage-clover=coverage
+                          coverage:
+                              file: coverage
+                              format: php-clover
+            itea-analysis:
+                tests:
+                    override:
+                        - php-scrutinizer-run
 checks:
-    php:
-        code_rating: true
+    php: true
 filter:
     excluded_paths:
         - 'test/*'

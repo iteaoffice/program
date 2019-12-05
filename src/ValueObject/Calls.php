@@ -12,9 +12,9 @@ use Program\Entity\Call\Call;
 
 final class Calls
 {
-    private ?Call $call1;
-    private ?Call $call2;
-    private ?Call $upcoming;
+    private ?Call $call1 = null;
+    private ?Call $call2 = null;
+    private ?Call $upcoming = null;
 
     public function __construct(array $calls, ?Call $upcoming = null)
     {
