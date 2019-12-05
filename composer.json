@@ -65,7 +65,7 @@
       "@php-lint"
     ],
     "php-lint": "parallel-lint module",
-    "cs": "phpcs -n -p --standard=PSR2 --extensions=php,twig module",
+    "cs": "phpcs -n -p --standard=PSR2 --extensions=php,twig",
     "cbf": "phpcbf module --standard=PSR2",
     "cs-fix": "php-cs-fixer fix -v module",
     "test": "phpunit"
