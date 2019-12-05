@@ -10,9 +10,11 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - uses: iteaoffice/evaluation@develop
+      - uses: iteaoffice/project@develop
+
+      - uses: webfactory/ssh-agent@v0.1.1
         with:
-          repo-token: ${{ secrets.deployKey }}
+          ssh-private-key: ${{ secrets.deployKey }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v1
