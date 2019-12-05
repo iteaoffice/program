@@ -40,7 +40,6 @@ use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 
 /**
- * @package Program\Controller
  * @method FlashMessenger flashMessenger()
  * @method GetFilter getProgramFilter()
  * @method CreateCallFundingOverview createCallFundingOverview($projects, $year)
@@ -49,42 +48,15 @@ use Zend\View\Model\ViewModel;
  */
 final class CallManagerController extends AbstractActionController
 {
-    /**
-     * @var CallService
-     */
-    private $callService;
-    /**
-     * @var FormService
-     */
-    private $formService;
-    /**
-     * @var AffiliationService
-     */
-    private $affiliationService;
-    /**
-     * @var ProjectService
-     */
-    private $projectService;
-    /**
-     * @var VersionService
-     */
-    private $versionService;
-    /**
-     * @var GeneralService
-     */
-    private $generalService;
-    /**
-     * @var CountryService
-     */
-    private $countryService;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private CallService $callService;
+    private FormService $formService;
+    private AffiliationService $affiliationService;
+    private ProjectService $projectService;
+    private VersionService $versionService;
+    private GeneralService $generalService;
+    private CountryService $countryService;
+    private EntityManager $entityManager;
+    private TranslatorInterface $translator;
 
     public function __construct(
         CallService $callService,

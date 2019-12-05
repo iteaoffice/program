@@ -15,20 +15,15 @@ namespace Program\Form;
 
 use Zend\Form\Fieldset;
 use Zend\Form\Form;
+use Zend\Form\Element\Submit;
+use Zend\Form\Element\Text;
 
 /**
- * Jield copyright message placeholder.
- *
- * @category  Program
- *
- * @author    Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright Copyright (c) 2019 ITEA Office (https://itea3.org)
+* Class ProgramFilter
+ * @package Program\Form
  */
-class ProgramFilter extends Form
+final class ProgramFilter extends Form
 {
-    /**
-     * ProgramFilter constructor.
-     */
     public function __construct()
     {
         parent::__construct();
@@ -39,7 +34,7 @@ class ProgramFilter extends Form
 
         $filterFieldset->add(
             [
-                'type'       => 'Zend\Form\Element\Text',
+                'type'       => Text::class,
                 'name'       => 'search',
                 'attributes' => [
                     'class'       => 'form-control',
@@ -52,7 +47,7 @@ class ProgramFilter extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'submit',
                 'attributes' => [
                     'id'    => 'submit',
@@ -64,7 +59,7 @@ class ProgramFilter extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'clear',
                 'attributes' => [
                     'id'    => 'cancel',

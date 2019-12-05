@@ -26,26 +26,14 @@ use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 
 /**
- * Class FunderManagerController
- *
- * @package Program\Controller
  * @method GetFilter getProgramFilter()
  * @method FlashMessenger flashMessenger()
  */
 final class FunderManagerController extends AbstractActionController
 {
-    /**
-     * @var ProgramService
-     */
-    private $programService;
-    /**
-     * @var FormService
-     */
-    private $formService;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private ProgramService $programService;
+    private FormService $formService;
+    private TranslatorInterface $translator;
 
     public function __construct(
         ProgramService $programService,

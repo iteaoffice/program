@@ -9,11 +9,11 @@ namespace Program\ValueObject;
 
 final class ProgramData
 {
-    private $calls;
-    private $projects;
-    private $partners;
-    private $countries;
-    private $years;
+    private int $calls;
+    private int $projects;
+    private int $partners;
+    private int $countries;
+    private int $years;
 
     public function __construct(int $calls, int $projects, int $partners, int $countries, int $years)
     {

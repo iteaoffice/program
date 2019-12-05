@@ -2,10 +2,8 @@
 /**
  * ITEA Office all rights reserved
  *
- * @category   News
- *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  Copyright (c) 2004-2018 ITEA Office (http://itea3.org)
+ * @copyright  Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 declare(strict_types=1);
 
@@ -29,14 +27,8 @@ use ZfcTwig\View\TwigRenderer;
  */
 final class SessionHandler extends AbstractHandler
 {
-    /**
-     * @var ProgramService
-     */
-    private $programService;
-    /**
-     * @var IdeaService
-     */
-    private $ideaService;
+    private ProgramService $programService;
+    private IdeaService $ideaService;
 
     public function __construct(
         Application $application,
@@ -70,7 +62,7 @@ final class SessionHandler extends AbstractHandler
             return 'The selected session cannot be found';
         }
 
-        $this->getHeadTitle()->append($this->translate("txt-session"));
+        $this->getHeadTitle()->append($this->translate('txt-session'));
         $this->getHeadTitle()->append($session->getSession());
 
         return $this->renderer->render(

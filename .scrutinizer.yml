@@ -3,7 +3,7 @@ imports:
 build:
     environment:
         php:
-            version: 7.3
+            version: 7.4
             pecl_extensions:
                 - zip
     tests:

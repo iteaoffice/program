@@ -27,15 +27,11 @@ use Zend\Form\Form;
 use Zend\Form\Element;
 
 /**
- * Class SessionFilter
+* Class SessionFilter
  * @package Program\Form
  */
-class SessionFilter extends Form
+final class SessionFilter extends Form
 {
-    /**
-     * SessionFilter constructor.
-     * @param EntityManager $entityManager
-     */
     public function __construct(EntityManager $entityManager)
     {
         parent::__construct();

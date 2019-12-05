@@ -35,43 +35,19 @@ use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 
 /**
- * Class ProgramManagerController
- *
- * @package Program\Controller
  * @method FlashMessenger flashMessenger()
  * @method GetFilter getProgramFilter()
  * @method CallSizeSpreadsheet callSizeSpreadsheet(Program $program = null, Call $call = null)
  */
 final class ProgramManagerController extends AbstractActionController
 {
-    /**
-     * @var ProgramService
-     */
-    private $programService;
-    /**
-     * @var CallService
-     */
-    private $callService;
-    /**
-     * @var ProjectService
-     */
-    private $projectService;
-    /**
-     * @var VersionService
-     */
-    private $versionService;
-    /**
-     * @var FormService
-     */
-    private $formService;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private ProgramService $programService;
+    private CallService $callService;
+    private ProjectService $projectService;
+    private VersionService $versionService;
+    private FormService $formService;
+    private EntityManager $entityManager;
+    private TranslatorInterface $translator;
 
     public function __construct(
         ProgramService $programService,
@@ -191,8 +167,6 @@ final class ProgramManagerController extends AbstractActionController
 
         return new ViewModel(['form' => $form, 'program' => $program]);
     }
-
-
 
     public function exportSizeAction(): Response
     {

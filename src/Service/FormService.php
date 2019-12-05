@@ -7,7 +7,7 @@
  * @category    Program
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2018 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/main for the canonical source repository
@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Program\Service;
 
 use Doctrine\ORM\EntityManager;
+use Interop\Container\ContainerInterface;
 use Program\Entity\AbstractEntity;
 use Program\Form\CreateObject;
 use Zend\Form\Form;
@@ -30,16 +31,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class FormService
 {
-    /**
-     * @var ServiceLocatorInterface
-     */
-    private $container;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    private ContainerInterface $container;
+    private EntityManager $entityManager;
 
-    public function __construct(ServiceLocatorInterface $container, EntityManager $entityManager)
+    public function __construct(ContainerInterface $container, EntityManager $entityManager)
     {
         $this->container = $container;
         $this->entityManager = $entityManager;
@@ -47,12 +42,6 @@ class FormService
 
     public function prepare($classNameOrEntity, array $data = [], array $options = []): Form
     {
-        /**
-         * The form can be created from an empty element, we then expect the $formClassName to be filled
-         * This should be a string, indicating the class
-         *
-         * But if the class a class is injected, we will change it into the className but hint the user to use a string
-         */
         if (!$classNameOrEntity instanceof AbstractEntity) {
             $classNameOrEntity = new $classNameOrEntity();
         }

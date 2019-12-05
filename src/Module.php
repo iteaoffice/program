@@ -39,7 +39,7 @@ class Module implements Feature\ConfigProviderInterface
         $em = $app->getEventManager();
         $em->attach(
             MvcEvent::EVENT_RENDER,
-            function (MvcEvent $event) {
+            static function (MvcEvent $event) {
                 $event->getApplication()->getServiceManager()->get(CallNavigationService::class)();
             }
         );

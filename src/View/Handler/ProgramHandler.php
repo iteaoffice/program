@@ -29,10 +29,7 @@ use ZfcTwig\View\TwigRenderer;
  */
 final class ProgramHandler extends AbstractHandler
 {
-    /**
-     * @var ProgramService
-     */
-    private $programService;
+    private ProgramService $programService;
 
     public function __construct(
         Application $application,

@@ -25,40 +25,18 @@ use Zend\Mvc\Plugin\Identity\Identity;
 use Zend\View\Model\ViewModel;
 
 /**
- * Class SessionManagerController
- *
- * @package Program\Controller
- *
  * @method Identity|Contact identity()
  * @method Plugin\GetFilter getProgramFilter()
  * @method FlashMessenger flashMessenger()
  */
 final class CallController extends AbstractActionController
 {
-    /**
-     * @var CallService
-     */
-    private $callService;
-    /**
-     * @var ProjectService
-     */
-    private $projectService;
-    /**
-     * @var IdeaService
-     */
-    private $ideaService;
-    /**
-     * @var HelpService
-     */
-    private $helpService;
-    /**
-     * @var MeetingService
-     */
-    private $meetingService;
-    /**
-     * @var RegistrationService
-     */
-    private $registrationService;
+    private CallService $callService;
+    private ProjectService $projectService;
+    private IdeaService $ideaService;
+    private HelpService $helpService;
+    private MeetingService $meetingService;
+    private RegistrationService $registrationService;
 
     public function __construct(
         CallService $callService,

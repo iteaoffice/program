@@ -48,7 +48,6 @@ use function sprintf;
 use function strlen;
 
 /**
- * @package Program\Controller
  * @method GetFilter getProgramFilter()
  * @method FlashMessenger flashMessenger()
  * @method Identity|Contact identity()
@@ -56,38 +55,14 @@ use function strlen;
  */
 final class NdaManagerController extends AbstractActionController
 {
-    /**
-     * @var CallService
-     */
-    private $callService;
-    /**
-     * @var FormService
-     */
-    private $formService;
-    /**
-     * @var ContactService
-     */
-    private $contactService;
-    /**
-     * @var GeneralService
-     */
-    private $generalService;
-    /**
-     * @var AdminService
-     */
-    private $adminService;
-    /**
-     * @var EmailService
-     */
-    private $emailService;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    private CallService $callService;
+    private FormService $formService;
+    private ContactService $contactService;
+    private GeneralService $generalService;
+    private AdminService $adminService;
+    private EmailService $emailService;
+    private TranslatorInterface $translator;
+    private EntityManager $entityManager;
 
     public function __construct(
         CallService $callService,

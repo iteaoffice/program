@@ -13,7 +13,7 @@
         {% for country in countries %}
             <tr>
                 <td>{{ countryLink(country,'view-admin','name') }}</td>
-                {% for callCountry in call.callCountry if callCountry.country.id == country.id %}
+                {% for callCountry in call.callCountry|filter(callCountry => callCountry.country.id == country.id) -%}
                     <td>{{ callCountry.dateNationalApplication|default('-') }} {{ callCountryLink(callCountry,'edit-admin','icon') }}</td>
                     <td>{{ callCountry.dateExpectedFundingDecision|default('-') }}</td>
                 {% else %}

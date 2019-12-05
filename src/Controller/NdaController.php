@@ -37,7 +37,6 @@ use ZfcTwig\View\TwigRenderer;
 use function count;
 
 /**
- * @package Program\Controller
  * @method GetFilter getProgramFilter()
  * @method FlashMessenger flashMessenger()
  * @method Identity|Contact identity()
@@ -45,30 +44,12 @@ use function count;
  */
 final class NdaController extends AbstractActionController
 {
-    /**
-     * @var ProgramService
-     */
-    private $programService;
-    /**
-     * @var CallService
-     */
-    private $callService;
-    /**
-     * @var GeneralService
-     */
-    private $generalService;
-    /**
-     * @var ContactService
-     */
-    private $contactService;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-    /**
-     * @var TwigRenderer
-     */
-    private $renderer;
+    private ProgramService $programService;
+    private CallService $callService;
+    private GeneralService $generalService;
+    private ContactService $contactService;
+    private TranslatorInterface $translator;
+    private TwigRenderer $renderer;
 
     public function __construct(
         ProgramService $programService,

@@ -23,18 +23,16 @@ use DoctrineORMModule\Form\Element\EntitySelect;
 use Program\Entity\Program;
 use Zend\Form\Fieldset;
 use Zend\Form\Form;
+use Zend\Form\Element\Submit;
+use Zend\Form\Element\Csrf;
 
 /**
  * Class ForecastSelect
  *
  * @package Program\Form
  */
-class SizeSelect extends Form
+final class SizeSelect extends Form
 {
-    /**
-     * SizeSelect constructor.
-     * @param EntityManager $entityManager
-     */
     public function __construct(EntityManager $entityManager)
     {
         parent::__construct();
@@ -60,14 +58,14 @@ class SizeSelect extends Form
 
         $this->add(
             [
-                'type' => 'Zend\Form\Element\Csrf',
+                'type' => Csrf::class,
                 'name' => 'csrf',
             ]
         );
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'submit',
                 'attributes' => [
                     'id'    => 'submit',
@@ -79,7 +77,7 @@ class SizeSelect extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'clear',
                 'attributes' => [
                     'id'    => 'cancel',

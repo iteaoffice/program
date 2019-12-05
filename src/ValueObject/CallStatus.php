@@ -12,9 +12,9 @@ use Project\Entity\Version\Type;
 
 final class CallStatus
 {
-    private $referenceDate;
-    private $result;
-    private $versionType;
+    private ?DateTime $referenceDate;
+    private string $result;
+    private ?Type $versionType;
 
     public function __construct(?DateTime $referenceDate, string $result, ?Type $versionType)
     {

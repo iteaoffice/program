@@ -45,26 +45,11 @@ use function urlencode;
  */
 final class SessionManagerController extends AbstractActionController
 {
-    /**
-     * @var ProgramService
-     */
-    private $programService;
-    /**
-     * @var IdeaService
-     */
-    private $ideaService;
-    /**
-     * @var FormService
-     */
-    private $formService;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    private ProgramService $programService;
+    private IdeaService $ideaService;
+    private FormService $formService;
+    private TranslatorInterface $translator;
+    private EntityManager $entityManager;
 
     public function __construct(
         ProgramService      $programService,

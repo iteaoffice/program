@@ -28,7 +28,7 @@ use Zend\Form\Element\Text;
  *
  * @package Program\Form
  */
-class CallFilter extends Form
+final class CallFilter extends Form
 {
     public function __construct()
     {

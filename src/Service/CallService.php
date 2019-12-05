@@ -45,14 +45,8 @@ class CallService extends AbstractService
     public const FPP_OPEN = 'FPP_OPEN';
     public const UNDEFINED = 'UNDEFINED';
 
-    /**
-     * @var GeneralService
-     */
-    private $generalService;
-    /**
-     * @var AdminService
-     */
-    private $adminService;
+    private GeneralService $generalService;
+    private AdminService $adminService;
 
     public function __construct(
         EntityManager $entityManager,

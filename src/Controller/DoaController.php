@@ -33,31 +33,16 @@ use Zend\Validator\File\MimeType;
 use Zend\View\Model\ViewModel;
 
 /**
- * Class DoaController
- *
- * @package Program\Controller
  * @method Identity|Contact identity()
  * @method FlashMessenger flashMessenger()
  * @method RenderDoa|TcpdfFpdi renderDoa(Entity\Doa $doa)
  */
 final class DoaController extends AbstractActionController
 {
-    /**
-     * @var ProgramService
-     */
-    private $programService;
-    /**
-     * @var OrganisationService
-     */
-    private $organisationService;
-    /**
-     * @var GeneralService
-     */
-    private $generalService;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private ProgramService $programService;
+    private OrganisationService $organisationService;
+    private GeneralService $generalService;
+    private TranslatorInterface $translator;
 
     public function __construct(
         ProgramService $programService,

@@ -32,18 +32,9 @@ use stdClass;
  */
 class ProgramService extends AbstractService
 {
-    /**
-     * @var OrganisationSearchService
-     */
-    private $organisationSearchService;
-    /**
-     * @var ProjectSearchService
-     */
-    private $projectSearchService;
-    /**
-     * @var CountrySearchService
-     */
-    private $countrySearchService;
+    private OrganisationSearchService $organisationSearchService;
+    private ProjectSearchService $projectSearchService;
+    private CountrySearchService $countrySearchService;
 
     public function __construct(
         EntityManager $entityManager,

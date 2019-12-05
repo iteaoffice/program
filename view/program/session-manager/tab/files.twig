@@ -3,10 +3,9 @@
 <div id="idea-panels">
     {% if orderedIdeaSessions|length > 0 %}
         {% set itemsPerRow = 3 %}
-        <div class="row card-deck-row">
+        <div class="row row-cols-4">
             {% for ideaSession in orderedIdeaSessions %}
-
-                <div class="col-3 mb-4">
+                <div class="col mb-4">
                     <div class="card">
                         <div class="card-header">{{ ideaLink(ideaSession.session.idea, 'view-admin') }}</div>
                         <div class="card-body">

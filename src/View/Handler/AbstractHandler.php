@@ -6,7 +6,7 @@
  *
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2018 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  */
@@ -35,18 +35,12 @@ use ZfcTwig\View\TwigRenderer;
  */
 abstract class AbstractHandler extends AbstractHelper
 {
-    /**
-     * @var HelperPluginManager
-     */
-    protected $helperPluginManager;
+    protected HelperPluginManager $helperPluginManager;
     /**
      * @var RouteMatch
      */
     protected $routeMatch;
-    /**
-     * @var TwigRenderer
-     */
-    protected $renderer;
+    protected TwigRenderer $renderer;
     /**
      * @var Response
      */
@@ -55,14 +49,8 @@ abstract class AbstractHandler extends AbstractHelper
      * @var Request
      */
     protected $request;
-    /**
-     * @var AuthenticationService
-     */
-    protected $authenticationService;
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
+    protected AuthenticationService $authenticationService;
+    protected TranslatorInterface $translator;
 
     public function __construct(
         Application             $application,

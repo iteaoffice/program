@@ -42,14 +42,8 @@ use function unlink;
  */
 final class SessionController extends AbstractActionController
 {
-    /**
-     * @var ProgramService
-     */
-    private $programService;
-    /**
-     * @var AssertionService
-     */
-    private $assertionService;
+    private ProgramService $programService;
+    private AssertionService $assertionService;
 
     public function __construct(ProgramService $programService, AssertionService $assertionService)
     {
