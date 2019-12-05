@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - uses: iteaoffice/project
+      - uses: iteaoffice/project@develop
         with:
           repo-token: ${{ secrets.deployKey }}
 
