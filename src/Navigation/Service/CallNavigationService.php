@@ -75,7 +75,7 @@ final class CallNavigationService
             $callPage = new Uri();
             $callPage->setOrder($key);
             $callPage->setId($key);
-            $callPage->setUri('community/call/index/call-'. $activeCall->getId() . '.html');
+            $callPage->setUri('community/call/index/call-' . $activeCall->getId() . '.html');
             $callPage->setLabel((string)$activeCall);
 
             /** @var Mvc $page */

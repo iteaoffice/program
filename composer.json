@@ -57,19 +57,18 @@
   },
   "scripts": {
     "check": [
-      "@cs",
-      "@test"
+      "@php-lint",
+      "@phpstan",
+      "@cs"
     ],
     "fix": [
       "@cbf",
       "@cs-fix"
     ],
-    "lint": [
-      "@php-lint"
-    ],
-    "php-lint": "./vendor/bin/parallel-lint module",
-    "cs": "./vendor/bin/phpcs -n -p --standard=PSR2 --extensions=php,twig src",
-    "cbf": "./vendor/bin/phpcbf src --standard=PSR2",
+    "php-lint": "./vendor/bin/parallel-lint src",
+    "phpstan": "./vendor/bin/phpstan analyse src/ --level=1",
+    "cs": "./vendor/bin/phpcs -n -p --standard=PSR12 --extensions=php,twig src",
+    "cbf": "./vendor/bin/phpcbf src --standard=PSR12 --extensions=php,twig",
     "cs-fix": "./vendor/bin/php-cs-fixer fix -v src",
     "test": "./vendor/bin/phpunit"
   }

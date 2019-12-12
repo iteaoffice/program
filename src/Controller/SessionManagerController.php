@@ -101,14 +101,14 @@ final class SessionManagerController extends AbstractActionController
         foreach ($session->getIdeaSession() as $ideaSession) {
             $files = [];
             foreach ($ideaSession->getDocuments() as $document) {
-                $files[$document->getDateUpdated()->format('U').'|'.$document->getId()] = [
+                $files[$document->getDateUpdated()->format('U') . '|' . $document->getId()] = [
                     'object' => $document,
                     'type'   => 'document'
                 ];
             }
             foreach ($ideaSession->getImages() as $image) {
                 $date = $image->getDateUpdated() ?? $image->getDateCreated();
-                $files[$date->format('U').'|'.$image->getId()] = [
+                $files[$date->format('U') . '|' . $image->getId()] = [
                     'object' => $image,
                     'type'   => 'image'
                 ];
@@ -241,7 +241,7 @@ final class SessionManagerController extends AbstractActionController
         $sizeParser  = new ParseSizeExtension();
 
         foreach ($ideaSession->getDocuments() as $document) {
-            $data[$document->getDateUpdated()->format('U').'|'.$document->getId()] = [
+            $data[$document->getDateUpdated()->format('U') . '|' . $document->getId()] = [
                 'name'         => $document->parseFileName(),
                 'size'         => $sizeParser->processFilter($document->getSize()),
                 'download-url' => $this->url()
@@ -252,7 +252,7 @@ final class SessionManagerController extends AbstractActionController
         }
         foreach ($ideaSession->getImages() as $image) {
             $date = $image->getDateUpdated() ?? $image->getDateCreated();
-            $data[$date->format('U').'|'.$image->getId()] = [
+            $data[$date->format('U') . '|' . $image->getId()] = [
                 'name'         => $image->getImage(),
                 'size'         => $sizeParser->processFilter($image->getSize()),
                 'delete-url'   => $this->url()

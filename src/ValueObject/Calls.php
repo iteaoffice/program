@@ -12,9 +12,9 @@ use Program\Entity\Call\Call;
 
 final class Calls
 {
-    private ?Call $call1 = null;
-    private ?Call $call2 = null;
-    private ?Call $upcoming = null;
+    private ? Call $call1 = null;
+    private ? Call $call2 = null;
+    private ? Call $upcoming = null;
 
     public function __construct(array $calls, ?Call $upcoming = null)
     {
@@ -36,17 +36,17 @@ final class Calls
         $this->upcoming = $upcoming;
     }
 
-    public function getFirst(): ?Call
+    public function getFirst() : ?Call
     {
         return $this->call1;
     }
 
-    public function getSecond(): ?Call
+    public function getSecond() : ?Call
     {
         return $this->call2;
     }
 
-    public function getUpcoming(): ?Call
+    public function getUpcoming() : ?Call
     {
         return $this->upcoming;
     }

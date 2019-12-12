@@ -138,7 +138,7 @@ final class SessionSpreadsheet extends AbstractPlugin
             $sheet->setCellValue('A' . $row, $ideaSession->getSchedule());
 
             $ideaLink = $this->urlHelper->__invoke('community/idea/view', ['docRef' => $ideaSession->getIdea()->getDocRef()]);
-            $sheet->getCell('B'. $row)->getHyperlink()->setUrl(
+            $sheet->getCell('B' . $row)->getHyperlink()->setUrl(
                 $this->serverUrlHelper->__invoke() . $ideaLink
             );
 

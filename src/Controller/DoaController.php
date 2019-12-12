@@ -22,6 +22,7 @@ use Program\Controller\Plugin\RenderDoa;
 use Program\Entity;
 use Program\Form\UploadDoa;
 use Program\Service\ProgramService;
+use setasign\Fpdi\Tcpdf\Fpdi;
 use setasign\Fpdi\TcpdfFpdi;
 use Zend\Http\Response;
 use Zend\I18n\Translator\TranslatorInterface;
@@ -31,11 +32,15 @@ use Zend\Mvc\Plugin\Identity\Identity;
 use Zend\Validator\File\FilesSize;
 use Zend\Validator\File\MimeType;
 use Zend\View\Model\ViewModel;
+use function array_merge_recursive;
+use function count;
+use function file_get_contents;
+use function strlen;
 
 /**
  * @method Identity|Contact identity()
  * @method FlashMessenger flashMessenger()
- * @method RenderDoa|TcpdfFpdi renderDoa(Entity\Doa $doa)
+ * @method RenderDoa|Fpdi renderDoa(Entity\Doa $doa)
  */
 final class DoaController extends AbstractActionController
 {
@@ -61,7 +66,7 @@ final class DoaController extends AbstractActionController
         /** @var Entity\Doa $doa */
         $doa = $this->programService->find(Entity\Doa::class, (int)$this->params('id'));
 
-        if (null === $doa || \count($doa->getObject()) === 0) {
+        if (null === $doa || count($doa->getObject()) === 0) {
             return $this->notFoundAction();
         }
 
@@ -135,10 +140,10 @@ final class DoaController extends AbstractActionController
         /** @var Entity\Doa $doa */
         $doa = $this->programService->find(Entity\Doa::class, (int)$this->params('id'));
 
-        if (null === $doa || \count($doa->getObject()) === 0) {
+        if (null === $doa || count($doa->getObject()) === 0) {
             return $this->notFoundAction();
         }
-        $data = \array_merge_recursive(
+        $data = array_merge_recursive(
             $this->getRequest()->getPost()->toArray(),
             $this->getRequest()->getFiles()->toArray()
         );
@@ -159,7 +164,7 @@ final class DoaController extends AbstractActionController
                 }
                 //Create a article object element
                 $programDoaObject = new Entity\DoaObject();
-                $programDoaObject->setObject(\file_get_contents($fileData['file']['tmp_name']));
+                $programDoaObject->setObject(file_get_contents($fileData['file']['tmp_name']));
                 $fileSizeValidator = new FilesSize(PHP_INT_MAX);
                 $fileSizeValidator->isValid($fileData['file']);
                 $doa->setSize($fileSizeValidator->size);
@@ -215,7 +220,7 @@ final class DoaController extends AbstractActionController
                 'attachment; filename="' . $programDoa->parseFileName() . '.pdf"'
             )
             ->addHeaderLine('Content-Type: application/pdf')
-            ->addHeaderLine('Content-Length', \strlen($renderProjectDoa->getPDFData()));
+            ->addHeaderLine('Content-Length', strlen($renderProjectDoa->getPDFData()));
         $response->setContent($renderProjectDoa->getPDFData());
 
         return $response;
@@ -229,7 +234,7 @@ final class DoaController extends AbstractActionController
         /** @var Response $response */
         $response = $this->getResponse();
 
-        if (null === $doa || \count($doa->getObject()) === 0) {
+        if (null === $doa || count($doa->getObject()) === 0) {
             return $response->setStatusCode(Response::STATUS_CODE_404);
         }
         /*
