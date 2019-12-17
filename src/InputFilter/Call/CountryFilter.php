@@ -21,9 +21,6 @@ use Zend\InputFilter\InputFilter;
  */
 class CountryFilter extends InputFilter
 {
-    /**
-     * Class constructor.
-     */
     public function __construct()
     {
         $inputFilter = new InputFilter();

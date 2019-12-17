@@ -95,9 +95,7 @@ class Doa extends AbstractEntity
     private $object;
     /**
      * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", inversedBy="programDoa")
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id")
-     * })
      *
      * @var \Contact\Entity\Contact
      */
@@ -116,298 +114,150 @@ class Doa extends AbstractEntity
      * @var \Program\Entity\Program
      */
     private $program;
-
-    /**
-     * Class constructor.
-     */
     public function __construct()
     {
         $this->object = new ArrayCollection();
     }
 
-    /**
-     * Magic Getter.
-     *
-     * @param $property
-     *
-     * @return mixed
-     */
-    public function __get($property)
-    {
-        return $this->$property;
-    }
-
-    /**
-     * Magic Setter.
-     *
-     * @param $property
-     * @param $value
-     */
-    public function __set($property, $value)
-    {
-        $this->$property = $value;
-    }
-
-    /**
-     * @param $property
-     * @return bool
-     */
-    public function __isset($property)
-    {
-        return isset($this->$property);
-    }
-
-    /**
-     * @return mixed
-     */
     public function __toString(): string
     {
-        return sprintf("Doa: %s", $this->id);
+        return sprintf('Doa: %s', $this->id);
     }
 
-    /**
-     * Parse a filename.
-     *
-     * @return string
-     */
     public function parseFileName(): string
     {
-        return str_replace(' ', '_', sprintf("DOA_%s_%s", $this->getOrganisation(), $this->getProgram()));
+        return str_replace(' ', '_', sprintf('DOA_%s_%s', $this->getOrganisation(), $this->getProgram()));
     }
 
-    /**
-     * @return \Organisation\Entity\Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
-    }
-
-    /**
-     * @param \Organisation\Entity\Organisation $organisation
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-    }
-
-    /**
-     * @return Program
-     */
-    public function getProgram()
-    {
-        return $this->program;
-    }
-
-    /**
-     * @param Program $program
-     *
-     * @return Doa
-     */
-    public function setProgram($program)
-    {
-        $this->program = $program;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return Doa
-     */
-    public function setId($id)
+    public function setId(?int $id): Doa
     {
         $this->id = $id;
-
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDateApproved()
+    public function getDateApproved(): ?\DateTime
     {
         return $this->dateApproved;
     }
 
-    /**
-     * @param \DateTime $dateApproved
-     *
-     * @return Doa
-     */
-    public function setDateApproved($dateApproved)
+    public function setDateApproved(?\DateTime $dateApproved): Doa
     {
         $this->dateApproved = $dateApproved;
-
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDateSigned()
+    public function getDateSigned(): ?\DateTime
     {
         return $this->dateSigned;
     }
 
-    /**
-     * @param \DateTime $dateSigned
-     *
-     * @return Doa
-     */
-    public function setDateSigned($dateSigned)
+    public function setDateSigned(?\DateTime $dateSigned): Doa
     {
         $this->dateSigned = $dateSigned;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getBranch()
+    public function getBranch(): ?string
     {
         return $this->branch;
     }
 
-    /**
-     * @param string $branch
-     *
-     * @return Doa
-     */
-    public function setBranch($branch)
+    public function setBranch(?string $branch): Doa
     {
         $this->branch = $branch;
-
         return $this;
     }
 
-    /**
-     * @return \General\Entity\ContentType
-     */
-    public function getContentType()
+    public function getContentType(): ?\General\Entity\ContentType
     {
         return $this->contentType;
     }
 
-    /**
-     * @param \General\Entity\ContentType $contentType
-     *
-     * @return Doa
-     */
-    public function setContentType($contentType)
+    public function setContentType(?\General\Entity\ContentType $contentType): Doa
     {
         $this->contentType = $contentType;
-
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getSize()
+    public function getSize(): ?int
     {
         return $this->size;
     }
 
-    /**
-     * @param int $size
-     *
-     * @return Doa
-     */
-    public function setSize($size)
+    public function setSize(?int $size): Doa
     {
         $this->size = $size;
-
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDateUpdated()
+    public function getDateUpdated(): ?\DateTime
     {
         return $this->dateUpdated;
     }
 
-    /**
-     * @param \DateTime $dateUpdated
-     *
-     * @return Doa
-     */
-    public function setDateUpdated($dateUpdated)
+    public function setDateUpdated(?\DateTime $dateUpdated): Doa
     {
         $this->dateUpdated = $dateUpdated;
-
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDateCreated()
+    public function getDateCreated(): ?\DateTime
     {
         return $this->dateCreated;
     }
 
-    /**
-     * @param \DateTime $dateCreated
-     *
-     * @return Doa
-     */
-    public function setDateCreated($dateCreated)
+    public function setDateCreated(?\DateTime $dateCreated): Doa
     {
         $this->dateCreated = $dateCreated;
-
         return $this;
     }
 
-    /**
-     * @return ArrayCollection|DoaObject[]
-     */
     public function getObject()
     {
         return $this->object;
     }
 
-    /**
-     * @param ArrayCollection|DoaObject[] $object
-     *
-     * @return Doa
-     */
-    public function setObject($object)
+    public function setObject($object): Doa
     {
         $this->object = $object;
-
         return $this;
     }
 
-    /**
-     * @return \Contact\Entity\Contact
-     */
-    public function getContact()
+    public function getContact(): ?\Contact\Entity\Contact
     {
         return $this->contact;
     }
 
-    /**
-     * @param \Contact\Entity\Contact $contact
-     *
-     * @return Doa
-     */
-    public function setContact($contact)
+    public function setContact(?\Contact\Entity\Contact $contact): Doa
     {
         $this->contact = $contact;
+        return $this;
+    }
 
+    public function getOrganisation(): ?\Organisation\Entity\Organisation
+    {
+        return $this->organisation;
+    }
+
+    public function setOrganisation(?\Organisation\Entity\Organisation $organisation): Doa
+    {
+        $this->organisation = $organisation;
+        return $this;
+    }
+
+    public function getProgram(): ?Program
+    {
+        return $this->program;
+    }
+
+    public function setProgram(?Program $program): Doa
+    {
+        $this->program = $program;
         return $this;
     }
 }

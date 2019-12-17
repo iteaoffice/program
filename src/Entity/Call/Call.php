@@ -314,10 +314,6 @@ class Call extends AbstractEntity
      * @var \General\Entity\Challenge[]|Collections\ArrayCollection
      */
     private $challenge;
-
-    /**
-     * Class constructor.
-     */
     public function __construct()
     {
         $this->publication = new Collections\ArrayCollection();
@@ -363,21 +359,6 @@ class Call extends AbstractEntity
     public static function getProjectReportTemplates(): array
     {
         return self::$projectReportTemplates;
-    }
-
-    public function __get($property)
-    {
-        return $this->$property;
-    }
-
-    public function __set($property, $value)
-    {
-        $this->$property = $value;
-    }
-
-    public function __isset($property)
-    {
-        return isset($this->$property);
     }
 
     public function __toString(): string

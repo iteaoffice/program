@@ -23,9 +23,6 @@ use Zend\Validator\File\Size;
  */
 class DoaFilter extends InputFilter
 {
-    /**
-     * Class constructor.
-     */
     public function __construct()
     {
         $inputFilter = new InputFilter();
