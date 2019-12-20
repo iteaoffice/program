@@ -15,91 +15,76 @@ declare(strict_types=1);
 
 namespace Program\View\Helper;
 
+use General\ValueObject\Link\Link;
+use General\View\Helper\AbstractLink;
 use Program\Entity\Program;
 
 /**
  * Class ProgramLink
- *
  * @package Program\View\Helper
  */
-class ProgramLink extends AbstractLink
+final class ProgramLink extends AbstractLink
 {
-    /**
-     * @param \Program\Entity\Program $program
-     * @param                         $action
-     * @param                         $show
-     *
-     * @return string
-     *
-     * @throws \RuntimeException
-     * @throws \Exception
-     */
     public function __invoke(
         Program $program = null,
-        $action = 'view',
-        $show = 'name'
+        string $action = 'view',
+        string $show = 'name'
     ): string {
-        $this->setProgram($program);
-        $this->setAction($action);
-        $this->setShow($show);
+        $program ??= new Program();
 
-        // Set the non-standard options needed to give an other link value
-        $this->setShowOptions(
-            [
-                'name' => $this->getProgram(),
-
-            ]
-        );
-
-        if (!\is_null($program)) {
-            $this->addRouterParam('id', $this->getProgram()->getId());
+        $routeParams = [];
+        $showOptions = [];
+        if (!$program->isEmpty()) {
+            $routeParams['id'] = $program->getId();
+            $showOptions['name'] = $program->getProgram();
         }
 
-        return $this->createLink();
-    }
-
-    /**
-     * Parse te action and fill the correct parameters.
-     */
-    public function parseAction(): void
-    {
-        switch ($this->getAction()) {
+        switch ($action) {
             case 'new':
-                $this->setRouter('zfcadmin/program/new');
-                $this->setText($this->translate("txt-new-program"));
+                $linkParams = [
+                    'icon' => 'fa-plus',
+                    'route' => 'zfcadmin/program/new',
+                    'text' => $showOptions[$show]
+                        ?? $this->translator->translate('txt-new-program')
+                ];
                 break;
             case 'size':
-                $this->setRouter('zfcadmin/program/size');
-                $this->setText(sprintf($this->translate("txt-program-size-%s"), $this->getProgram()));
+                $linkParams = [
+                    'icon' => 'fa-bar-chart',
+                    'route' => 'zfcadmin/program/size',
+                    'text' => $showOptions[$show]
+                        ?? $this->translator->translate('txt-program-size')
+                ];
                 break;
             case 'export-size':
-                $this->setRouter('zfcadmin/program/export-size');
-                $this->setText(sprintf($this->translate("txt-export-program-size-%s"), $this->getProgram()));
+                $linkParams = [
+                    'icon' => 'fa-file-excel-o',
+                    'route' => 'zfcadmin/program/export-size',
+                    'text' => $showOptions[$show]
+                        ?? $this->translator->translate('txt-export-program-size')
+                ];
                 break;
             case 'view-admin':
-                $this->setRouter('zfcadmin/program/view');
-                $this->setText(sprintf($this->translate("txt-view-program-%s"), $this->getProgram()));
-                break;
-            case 'edit-admin':
-                $this->setRouter('zfcadmin/program/edit');
-                $this->setText(sprintf($this->translate("txt-edit-program-%s"), $this->getProgram()));
-                break;
-            case 'list-admin':
-                $this->setRouter('zfcadmin/program/list');
-                $this->setText(sprintf($this->translate("txt-list-programs")));
+                $linkParams = [
+                    'icon' => 'fa-link',
+                    'route' => 'zfcadmin/program/view',
+                    'text' => $showOptions[$show] ?? $program->getProgram()
+                ];
                 break;
             case 'edit':
-                $this->setRouter('zfcadmin/program/edit');
-                $this->setText(sprintf($this->translate("txt-edit-program-%s"), $this->getProgram()));
+                $linkParams = [
+                    'icon' => 'fa-pencil-square-o',
+                    'route' => 'zfcadmin/program/edit',
+                    'text' => $showOptions[$show]
+                        ?? $this->translator->translate('txt-edit-program')
+                ];
                 break;
-            default:
-                throw new \InvalidArgumentException(
-                    sprintf(
-                        "%s is an incorrect action for %s",
-                        $this->getAction(),
-                        __CLASS__
-                    )
-                );
         }
+
+        $linkParams['action'] = $action;
+        $linkParams['show'] = $show;
+        $linkParams['routeParams'] = $routeParams;
+
+        return $this->parse(Link::fromArray($linkParams));
     }
 }

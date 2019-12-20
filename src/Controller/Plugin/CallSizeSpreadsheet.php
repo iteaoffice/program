@@ -60,79 +60,50 @@ final class CallSizeSpreadsheet extends AbstractPlugin
     /**
      * @var Program[]
      */
-    private $programs = [];
+    private array $programs = [];
     /**
      * @var Call[]
      */
-    private $calls = [];
+    private array $calls = [];
     /**
      * @var array
      */
-    private $countryIds = [];
+    private array $countryIds = [];
     /**
      * @var array
      */
-    private $organisationTypeIds = [];
-
+    private array $organisationTypeIds = [];
     /**
      * @var Project[]
      */
-    private $projects = [];
+    private array $projects = [];
+
+    private Spreadsheet $spreadsheet;
+    private ProjectService $projectService;
+    private VersionService $versionService;
+    private AffiliationService $affiliationService;
+    private ContractService $contractService;
+    private ContactService $contactService;
+    private CountryService $countryService;
+    private EntityManager $entityManager;
+    private TranslatorInterface $translator;
+    private int $start = 2;
+
+    private bool $includeRejectedPO = false;
+    private bool $includeRejectedFPP = false;
+    private bool $includeRejectedCR = false;
+    private bool $includeDecisionPending = false;
+    private bool $includeDeactivatedPartners = false;
+    private bool $includePOFPPCostAndEffort = false;
+    private bool $includeCancelledProjects = false;
+    private bool $splitPerYear = false;
+    private bool $includeProjectLeaderData = false;
+    private bool $includeTotals = false;
+    private int $output = Statistics::OUTPUT_PARTNERS;
 
 
-    /**
-     * @var Spreadsheet
-     */
-    private $spreadsheet;
-    /**
-     * @var ProjectService
-     */
-    private $projectService;
-    /**
-     * @var VersionService
-     */
-    private $versionService;
-    /**
-     * @var AffiliationService
-     */
-    private $affiliationService;
-    /**
-     * @var ContractService
-     */
-    private $contractService;
-    /**
-     * @var ContactService
-     */
-    private $contactService;
-    /**
-     * @var CountryService
-     */
-    private $countryService;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-    private $start = 2;
-
-    private $includeRejectedPO = false;
-    private $includeRejectedFPP = false;
-    private $includeRejectedCR = false;
-    private $includeDecisionPending = false;
-    private $includeDeactivatedPartners = false;
-    private $includePOFPPCostAndEffort = false;
-    private $includeCancelledProjects = false;
-    private $splitPerYear = false;
-    private $includeProjectLeaderData = false;
-    private $includeTotals = false;
-    private $output = Statistics::OUTPUT_PARTNERS;
-
-
-    private $header = [];
-    private $rows = [];
+    private array $header = [];
+    private array $rows = [];
 
     public function __construct(
         ProjectService $projectService,

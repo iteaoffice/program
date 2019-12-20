@@ -21,6 +21,7 @@ use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Mvc\Application;
 use Zend\View\HelperPluginManager;
 use ZfcTwig\View\TwigRenderer;
+use General\View\Handler\AbstractHandler;
 
 /**
  * Class ProgramHandler

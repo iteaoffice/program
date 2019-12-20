@@ -93,7 +93,7 @@
 
                         {% if projectItem.type is constant('\\Project\\ValueObject\\ProjectItem::TYPE_INVITE') %}
                             <a class="card card-action"
-                               href="{{ inviteLink(projectItem.invite,'accept','social') }}">
+                               href="{{ projectInviteLink(projectItem.invite,'accept','raw') }}">
                                 <div class="project-card {% if projectItem.isPending() %}project-card-blur{% endif %}"></div>
 
                                 <div class="card-label">{{ projectItem.label }}</div>

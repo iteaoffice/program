@@ -37,8 +37,8 @@
         <tbody>
         {% for program in paginator.getCurrentItems() %}
             <tr>
-                <td>{{ program.id }} {{ programLink(program,'edit', 'icon') }}</td>
-                <td>{{ programLink(program,'view-admin','name') }}</td>
+                <td><small class="text-muted">{{ program.id }}</small></td>
+                <td>{{ programLink(program,'view','name') }} {{ programLink(program,'edit', 'icon') }}</td>
                 <td>{{ program.number }}</td>
                 <td>{{ program.call.count }}</td>
                 <td>

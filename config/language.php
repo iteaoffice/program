@@ -1,5 +1,5 @@
 <?php
-_("txt-program-name-label');
+_('txt-program-name-label');
 _('txt-program-name-help-block');
 _('txt-program-number-label');
 _('txt-program-label-help-block');
@@ -64,4 +64,4 @@ _('txt-funder-sorting-position-help-block');
 _('txt-funder-website-label');
 _('txt-funder-website-placeholder');
 _('txt-funder-website-help-block');
-_('txt-hide-on-website");
+_('txt-hide-on-website');

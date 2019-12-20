@@ -16,16 +16,15 @@ declare(strict_types=1);
 
 namespace Program\View\Helper;
 
+use DateTime;
 use Program\Service\CallService;
 use Program\ValueObject\Calls;
 use Zend\View\Helper\AbstractHelper;
+use function sprintf;
 
 final class CallInformationBox extends AbstractHelper
 {
-    /**
-     * @var CallService
-     */
-    private $callService;
+    private CallService $callService;
 
     public function __construct(CallService $callService)
     {
@@ -63,9 +62,9 @@ final class CallInformationBox extends AbstractHelper
                 return '';
             }
             $result = $callStatus->getResult();
-            /** @var \DateTime $referenceDate */
+            /** @var DateTime $referenceDate */
             $referenceDate = $callStatus->getReferenceDate();
-            $today = new \DateTime();
+            $today = new DateTime();
             $dateDifference = $referenceDate->diff($today);
             if ($dateDifference->days > 7) {
                 $format = '%a days';
@@ -93,7 +92,7 @@ final class CallInformationBox extends AbstractHelper
 
             $type = 'info';
 
-            $return .= \sprintf($alert, $type, $content);
+            $return .= sprintf($alert, $type, $content);
         }
 
         return $return;

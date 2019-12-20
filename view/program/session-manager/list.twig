@@ -9,7 +9,7 @@
 
 <div class="row">
     <div class="col-md-10">
-        <h1>{{ translate("txt-session-list") }} {{ callSessionLink(null, 'new-admin','button') }}</h1>
+        <h1>{{ translate("txt-session-list") }} {{ callSessionLink(null, 'new','button') }}</h1>
 
         <div class="row">
             <div class="col-md-6">
@@ -38,7 +38,7 @@
                 <tbody>
                 {% for session in paginator.getCurrentItems() %}
                     <tr>
-                        <td>{{ session.id }} {{ callSessionLink(session,'edit-admin', 'icon') }}</td>
+                        <td>{{ session.id }} {{ callSessionLink(session,'edit', 'icon') }}</td>
                         <td>{{ callSessionLink(session,'view-admin') }}</td>
                         <td>{{ callLink(session.call,'view-admin','name') }}</td>
                         <td>{{ session.date|string_date }}</td>

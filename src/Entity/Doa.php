@@ -19,7 +19,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Zend\Form\Annotation;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * @ORM\Table(name="program_doa")
@@ -114,6 +113,7 @@ class Doa extends AbstractEntity
      * @var \Program\Entity\Program
      */
     private $program;
+
     public function __construct()
     {
         $this->object = new ArrayCollection();

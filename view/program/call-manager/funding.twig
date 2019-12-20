@@ -7,7 +7,7 @@
 <table class="table table-hover table-striped table-sm">
     <thead>
     <tr>
-        <th colspan="2">{{ programLink(program,'view-admin','name') }}</th>
+        <th colspan="2">{{ programLink(program,'view','name') }}</th>
         {% for country in fundingResult['countries'] %}
             <th colspan="3"><abbr title="{{ country.country }}" class="country">{{ country.iso3 }}</th>
         {% endfor %}

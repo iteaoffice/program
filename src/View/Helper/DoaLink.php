@@ -16,6 +16,8 @@ declare(strict_types=1);
 
 namespace Program\View\Helper;
 
+use General\ValueObject\Link\Link;
+use General\View\Helper\AbstractLink;
 use Organisation\Entity\Organisation;
 use Program\Acl\Assertion\Doa as DoaAssertion;
 use Program\Entity\Doa;
@@ -26,105 +28,93 @@ use Program\Entity\Program;
  *
  * @package Program\View\Helper
  */
-class DoaLink extends AbstractLink
+final class DoaLink extends AbstractLink
 {
     public function __invoke(
         Doa $doa = null,
-        $action = 'view',
-        $show = 'text',
+        string $action = 'view',
+        string $show = 'text',
         Organisation $organisation = null,
         Program $program = null
     ): string {
-        $this->setDoa($doa);
-        $this->setOrganisation($organisation);
-        $this->setProgram($program);
-        $this->setAction($action);
-        $this->setShow($show);
-        if (!$this->hasAccess($this->getDoa(), DoaAssertion::class, $this->getAction())) {
+        $doa ??= new Doa();
+
+
+        if (!$this->hasAccess($doa, DoaAssertion::class, $action)) {
             return '';
         }
 
-        // Set the non-standard options needed to give an other link value
-        $this->setShowOptions(
-            [
-                'name' => $this->getDoa(),
-            ]
-        );
-
-        if ($this->getDoa() !== null) {
-            $this->addRouterParam('id', $this->getDoa()->getId());
+        $routeParams = [];
+        $showOptions = [];
+        if (!$doa->isEmpty()) {
+            $routeParams['id'] = $doa->getId();
+            $showOptions['name'] = $doa->parseFileName();
+            $routeParams['organisationId'] = $doa->getOrganisation()->getId();
+            $routeParams['programId'] = $doa->getProgram()->getId();
         }
 
-        return $this->createLink();
-    }
+        if (null !== $organisation) {
+            $routeParams['organisationId'] = $organisation->getId();
+        }
+        if (null !== $program) {
+            $routeParams['programId'] = $program->getId();
+        }
 
-    public function parseAction(): void
-    {
-        switch ($this->getAction()) {
+        switch ($action) {
             case 'upload':
-                $this->setRouter('program/doa/upload');
-                $this->addRouterParam('organisationId', $this->getOrganisation()->getId());
-                $this->addRouterParam('programId', $this->getProgram()->getId());
-                $this->setText(
-                    sprintf(
-                        $this->translate('txt-upload-doa-for-organisation-%s-in-program-%s-link-title'),
-                        $this->getOrganisation(),
-                        $this->getProgram()
-                    )
-                );
-                break;
-            case 'render':
-                $this->setRouter('program/doa/render');
-                /*
-                 * The $doa can be null, we then use the $organisation and $program to produce the link
-                 */
-                $renderText = _('txt-render-doa-for-organisation-%s-in-program-%s-link-title');
-                if ($this->getDoa()->getId() === null) {
-                    $this->setText(sprintf($renderText, $this->getOrganisation(), $this->getProgram()));
-                    $this->addRouterParam('organisationId', $this->getOrganisation()->getId());
-                    $this->addRouterParam('programId', $this->getProgram()->getId());
-                } else {
-                    $this->setText(
-                        sprintf(
-                            $renderText,
-                            $this->getDoa()->getOrganisation(),
-                            $this->getDoa()->getProgram()
+                $linkParams = [
+                    'icon' => 'fa-upload',
+                    'route' => 'program/doa/upload',
+                    'text' => $showOptions[$show]
+                        ?? sprintf(
+                            $this->translator->translate('txt-upload-doa-for-organisation-%s-in-program-%s-link-title'),
+                            $organisation->getOrganisation(),
+                            $program->getProgram()
                         )
-                    );
-                    $this->addRouterParam('organisationId', $this->getDoa()->getOrganisation()->getId());
-                    $this->addRouterParam('programId', $this->getDoa()->getProgram()->getId());
-                }
+                ];
                 break;
             case 'replace':
-                $this->setRouter('community/program/doa/replace');
-                $this->setText(
-                    sprintf(
-                        _('txt-replace-doa-for-organisation-%s-in-program-%s-link-title'),
-                        $this->getDoa()->getOrganisation(),
-                        $this->getDoa()->getProgram()
-                    )
-                );
+                $linkParams = [
+                    'icon' => 'fa-refresh',
+                    'route' => 'community/program/doa/replace',
+                    'text' => $showOptions[$show]
+                        ?? sprintf(
+                            $this->translator->translate('txt-replace-doa-for-organisation-%s-in-program-%s-link-title'),
+                            $doa->getOrganisation()->getOrganisation(),
+                            $doa->getProgram()->getProgram()
+                        )
+                ];
                 break;
             case 'view':
-                $this->setRouter('community/program/doa/view');
-                $this->setText(
-                    sprintf(
-                        _('txt-view-doa-for-organisation-%s-in-program-%s-link-title'),
-                        $this->getDoa()->getOrganisation(),
-                        $this->getDoa()->getProgram()
-                    )
-                );
+                $linkParams = [
+                    'icon' => 'fa-file-o',
+                    'route' => 'community/program/doa/view',
+                    'text' => $showOptions[$show]
+                        ?? sprintf(
+                            $this->translator->translate('txt-view-doa-for-organisation-%s-in-program-%s-link-title'),
+                            $doa->getOrganisation()->getOrganisation(),
+                            $doa->getProgram()->getProgram()
+                        )
+                ];
                 break;
             case 'download':
-                $this->setRouter('community/program/doa/download');
-                $this->setText(
-                    sprintf(
-                        _('txt-download-doa-for-organisation-%s-in-program-%s-link-title'),
-                        $this->getDoa()->getOrganisation(),
-                        $this->getDoa()->getProgram()
-                    )
-                );
+                $linkParams = [
+                    'icon' => 'fa-download',
+                    'route' => 'community/program/doa/download',
+                    'text' => $showOptions[$show]
+                        ?? sprintf(
+                            $this->translator->translate('txt-download-doa-for-organisation-%s-in-program-%s-link-title'),
+                            $doa->getOrganisation()->getOrganisation(),
+                            $doa->getProgram()->getProgram()
+                        )
+                ];
                 break;
         }
+
+        $linkParams['action'] = $action;
+        $linkParams['show'] = $show;
+        $linkParams['routeParams'] = $routeParams;
+
+        return $this->parse(Link::fromArray($linkParams));
     }
 }

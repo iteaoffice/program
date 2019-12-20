@@ -19,6 +19,8 @@ declare(strict_types=1);
 namespace Program\View\Helper;
 
 use General\Entity\Country;
+use General\ValueObject\Link\Link;
+use General\View\Helper\AbstractLink;
 use Program\Entity\Call\Call;
 use Program\Entity\Call\Country as CallCountry;
 
@@ -26,98 +28,79 @@ use Program\Entity\Call\Country as CallCountry;
  * Class CallCountryLink
  * @package Program\View\Helper
  */
-class CallCountryLink extends AbstractLink
+final class CallCountryLink extends AbstractLink
 {
-    /**
-     * @param CallCountry|null $callCountry
-     * @param string $action
-     * @param string $show
-     * @param Call|null $call
-     * @param Country|null $country
-     *
-     * @return string
-     */
     public function __invoke(
         CallCountry $callCountry = null,
-        $action = 'view',
-        $show = 'name',
+        string $action = 'view',
+        string $show = 'name',
         Call $call = null,
         Country $country = null
     ): string {
-        $this->setCallCountry($callCountry);
-        $this->setCountry($country);
-        $this->setCall($call);
-        $this->setAction($action);
-        $this->setShow($show);
+        $callCountry ??= new CallCountry();
 
-        if (!$this->hasAccess(
-            $this->getCallCountry(),
-            \Program\Acl\Assertion\Call\Country::class,
-            $this->getAction()
-        )) {
+        if (!$this->hasAccess($callCountry, \Program\Acl\Assertion\Call\Country::class, $action)) {
             return '';
         }
-        /*
-         * Set the non-standard options needed to give an other link value
-         */
-        $this->setShowOptions(
-            [
-                'name' => $this->getCountry()->getId(),
-            ]
-        );
 
-        $this->addRouterParam('id', $this->getCallCountry()->getId());
-        $this->addRouterParam('country', $this->getCountry()->getId());
-        $this->addRouterParam('call', $this->getCall()->getId());
-
-        return $this->createLink();
-    }
-
-
-    /**
-     * Extract the relevant parameters based on the action.
-     */
-    public function parseAction(): void
-    {
-        switch ($this->getAction()) {
-            case 'new-admin':
-                $this->setRouter('zfcadmin/call/country/new');
-                $this->setText(
-                    sprintf(
-                        $this->translate("txt-add-country-information-for-for-%s-in-%s"),
-                        $this->getCallCountry()->getCountry(),
-                        $this->getCallCountry()->getCall()
-                    )
-                );
-                break;
-            case 'view-admin':
-                $this->setRouter('zfcadmin/call/country/view');
-                $this->setText(
-                    sprintf(
-                        $this->translate("txt-view-country-information-for-for-%s-in-%s"),
-                        $this->getCallCountry()->getCountry(),
-                        $this->getCallCountry()->getCall()
-                    )
-                );
-                break;
-            case 'edit-admin':
-                $this->setRouter('zfcadmin/call/country/edit');
-                $this->setText(
-                    sprintf(
-                        $this->translate("txt-edit-country-information-for-for-%s-in-%s"),
-                        $this->getCallCountry()->getCountry(),
-                        $this->getCallCountry()->getCall()
-                    )
-                );
-                break;
-            default:
-                throw new \InvalidArgumentException(
-                    sprintf(
-                        "%s is an incorrect action for %s",
-                        $this->getAction(),
-                        __CLASS__
-                    )
-                );
+        $routeParams = [];
+        $showOptions = [];
+        if (!$callCountry->isEmpty()) {
+            $routeParams['id'] = $callCountry->getId();
+            $showOptions['name'] = $callCountry->getCountry()->getCountry();
         }
+
+        if (null !== $call) {
+            $routeParams['call'] = $call->getId();
+        }
+        if (null !== $country) {
+            $routeParams['country'] = $country->getId();
+        }
+
+
+        switch ($action) {
+            case 'new':
+                $linkParams = [
+                    'icon' => 'fa-plus',
+                    'route' => 'zfcadmin/call/country/new',
+                    'text' => $showOptions[$show]
+                        ?? sprintf(
+                            $this->translator->translate('txt-add-country-information-for-for-%s-in-%s'),
+                            $country->getCountry(),
+                            (string)$call
+                        )
+                ];
+                break;
+            case 'edit':
+                $linkParams = [
+                    'icon' => 'fa-pencil-square-o',
+                    'route' => 'zfcadmin/call/country/edit',
+                    'text' => $showOptions[$show]
+                        ?? sprintf(
+                            $this->translator->translate('txt-edit-country-information-for-for-%s-in-%s'),
+                            $callCountry->getCountry()->getCountry(),
+                            (string)$callCountry->getCall()
+                        )
+                ];
+                break;
+            case 'view':
+                $linkParams = [
+                    'icon' => 'fa-link',
+                    'route' => 'zfcadmin/call/country/view',
+                    'text' => $showOptions[$show]
+                        ?? sprintf(
+                            $this->translator->translate('txt-view-country-information-for-for-%s-in-%s'),
+                            $callCountry->getCountry()->getCountry(),
+                            (string)$callCountry->getCall()
+                        )
+                ];
+                break;
+        }
+
+        $linkParams['action'] = $action;
+        $linkParams['show'] = $show;
+        $linkParams['routeParams'] = $routeParams;
+
+        return $this->parse(Link::fromArray($linkParams));
     }
 }

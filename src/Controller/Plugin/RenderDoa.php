@@ -28,26 +28,10 @@ use ZfcTwig\View\TwigRenderer;
  */
 final class RenderDoa extends AbstractPlugin
 {
-    /**
-     * @var TwigRenderer
-     */
-    protected $renderer;
-    /**
-     * @var ModuleOptions
-     */
-    protected $moduleOptions;
-    /**
-     * @var ContactService
-     */
-    protected $contactService;
+    protected TwigRenderer $renderer;
+    protected ModuleOptions $moduleOptions;
+    protected ContactService $contactService;
 
-    /**
-     * RenderDoa constructor.
-     *
-     * @param TwigRenderer   $renderer
-     * @param ModuleOptions  $moduleOptions
-     * @param ContactService $contactService
-     */
     public function __construct(TwigRenderer $renderer, ModuleOptions $moduleOptions, ContactService $contactService)
     {
         $this->renderer = $renderer;
@@ -55,12 +39,6 @@ final class RenderDoa extends AbstractPlugin
         $this->contactService = $contactService;
     }
 
-
-    /**
-     * @param Doa $doa
-     *
-     * @return ProgramPdf
-     */
     public function __invoke(Doa $doa): ProgramPdf
     {
         $pdf = new ProgramPdf();

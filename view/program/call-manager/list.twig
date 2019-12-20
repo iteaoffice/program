@@ -40,7 +40,7 @@
             <tr>
                 <td>{{ call.id }} {{ callLink(call,'edit', 'icon') }}</td>
                 <td>{{ callLink(call,'view-admin','name') }}</td>
-                <td>{{ programLink(call.program,'view-admin','name') }}</td>
+                <td>{{ programLink(call.program,'view','name') }}</td>
                 <td>{% if call.poOpenDate %}{{ call.poOpenDate|string_date }}{% endif %}</td>
                 <td>{% if call.poCloseDate %}{{ call.poCloseDate|string_date }}{% endif %}</td>
                 <td>{% if call.fppOpenDate %}{{ call.fppOpenDate|string_date }}{% endif %}</td>

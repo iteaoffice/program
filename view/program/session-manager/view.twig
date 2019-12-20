@@ -3,7 +3,7 @@
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-session-%s")|format(session.session)) %}
 
-<h1>{{ session.session }} {{ callSessionLink(session,'edit-admin','button') }}</h1>
+<h1>{{ session.session }} {{ callSessionLink(session,'edit','button') }}</h1>
 
 <dl class="dl-horizontal">
     <dt>{{ translate("txt-session") }}</dt>

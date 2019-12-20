@@ -33,15 +33,6 @@ format(doa.organisation, doa.program)) %}
     </div>
 </div>
 
-{#<div class="form-group row">#}
-    {#<label class="col-sm-3 col-form-label">{{ translate("txt-render-new-program-doa") }}</label>#}
-
-    {#<div class="col-sm-9">#}
-        {#<p class="form-control-plaintext">{{ programDoaLink(doa,'render','text') }}</p>#}
-    {#</div>#}
-{#</div>#}
-
-
 {{ ztbformelement(form.get('file')) }}
 {{ formelement(form.get('csrf')) }}
 

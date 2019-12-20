@@ -56,20 +56,11 @@ final class ProgramPdf extends TcpdfFpdi
         // emtpy method body
     }
 
-    /**
-     * @param $template
-     */
     public function setTemplate($template)
     {
         $this->template = $template;
     }
 
-    /**
-     * @param            $header
-     * @param            $data
-     * @param array|null $width
-     * @param bool       $lastRow
-     */
     public function coloredTable($header, $data, array $width = null, $lastRow = false): void
     {
         // Colors, line width and bold font

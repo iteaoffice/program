@@ -14,10 +14,10 @@
             <tr>
                 <td>{{ countryLink(country,'view-admin','name') }}</td>
                 {% for callCountry in call.callCountry|filter(callCountry => callCountry.country.id == country.id) -%}
-                    <td>{{ callCountry.dateNationalApplication|default('-') }} {{ callCountryLink(callCountry,'edit-admin','icon') }}</td>
+                    <td>{{ callCountry.dateNationalApplication|default('-') }} {{ callCountryLink(callCountry,'edit','icon') }}</td>
                     <td>{{ callCountry.dateExpectedFundingDecision|default('-') }}</td>
                 {% else %}
-                    <td>{{ translate("txt-not-provided-yet") }} {{ callCountryLink(null,'new-admin','icon', call, country) }}</td>
+                    <td>{{ translate("txt-not-provided-yet") }} {{ callCountryLink(null,'new','icon', call, country) }}</td>
                     <td>{{ translate("txt-not-provided-yet") }}</td>
                 {% endfor %}
             </tr>

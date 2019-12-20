@@ -29,30 +29,12 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin;
  */
 final class CreateCallFundingOverview extends AbstractPlugin
 {
-    /**
-     * @var CountryService
-     */
-    private $countryService;
-    /**
-     * @var VersionService
-     */
-    private $versionService;
-    /**
-     * @var ProjectService
-     */
-    private $projectService;
-    /**
-     * @var EvaluationService
-     */
-    private $evaluationService;
-    /**
-     * @var AffiliationService
-     */
-    private $affiliationService;
-    /**
-     * @var array
-     */
-    private $countries = [];
+    private CountryService $countryService;
+    private VersionService $versionService;
+    private ProjectService $projectService;
+    private EvaluationService $evaluationService;
+    private AffiliationService $affiliationService;
+    private array $countries = [];
 
     public function __construct(
         CountryService $countryService,

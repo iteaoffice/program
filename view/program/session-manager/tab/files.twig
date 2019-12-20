@@ -29,13 +29,17 @@
                                                     </td>
                                                     <td>
                                                         {{ ideaDocumentLink(file.object, 'download', 'icon') }}
-                                                        {{ ideaDocumentLink(file.object, 'delete', 'icon') }}
+                                                        <a href="{{ ideaDocumentLink(file.object, 'delete', 'raw') }}"
+                                                           onclick="return confirm('{{ translate("txt-this-will-permanently-remove-the-document-are-you-sure") }}')"
+                                                        ><i class="fa fa-trash-o"></i></a>
                                                     </td>
                                                 {% elseif file.type == 'image' %}
                                                     <td>{{ file.object.getImage() }}</td>
                                                     <td>{{ file.object.size|parse_size }}</td>
                                                     <td>
-                                                        {{ ideaImageLink(file.object, 'delete', 'icon') }}
+                                                        <a href="{{ ideaImageLink(file.object, 'delete', 'raw') }}"
+                                                           onclick="return confirm('{{ translate("txt-this-will-permanently-remove-the-image-are-you-sure") }}')"
+                                                        ><i class="fa fa-trash-o"></i></a>
                                                     </td>
                                                 {% endif %}
                                             </tr>

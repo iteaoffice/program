@@ -1,5 +1,4 @@
 <?php
-
 /**
  * ITEA Office all rights reserved
  *
@@ -16,80 +15,93 @@ declare(strict_types=1);
 
 namespace Program\View\Helper;
 
+use General\ValueObject\Link\Link;
+use General\View\Helper\AbstractLink;
 use Program\Entity\Call\Call;
 
 /**
- * Class CallLink
- *
+ * Class ProgramLink
  * @package Program\View\Helper
  */
-class CallLink extends AbstractLink
+final class CallLink extends AbstractLink
 {
-    public function __invoke(Call $call = null, $action = 'view', $show = 'name', array $classes = []): string
-    {
-        $this->setCall($call);
-        $this->setAction($action);
-        $this->setShow($show);
+    public function __invoke(
+        Call $call = null,
+        string $action = 'view',
+        string $show = 'name'
+    ): string {
+        $call ??= new Call();
 
-        $this->addClasses($classes);
-
-        if (null !== $call) {
-            $this->addRouterParam('id', $this->getCall()->getId());
-
-            $this->setShowOptions(
-                [
-                    'name'                 => $this->getCall(),
-                    'name-without-program' => $this->getCall()->getCall(),
-                ]
-            );
+        $routeParams = [];
+        $showOptions = [];
+        if (!$call->isEmpty()) {
+            $routeParams['id'] = $call->getId();
+            $showOptions['name'] = (string)$call;
+            $showOptions['name-without-program'] = $call->getCall();
         }
 
-        return $this->createLink();
-    }
-
-    public function parseAction(): void
-    {
-        switch ($this->getAction()) {
+        switch ($action) {
             case 'new':
-                $this->setRouter('zfcadmin/call/new');
-                $this->setText($this->translate("txt-new-program-call"));
+                $linkParams = [
+                    'icon' => 'fa-plus',
+                    'route' => 'zfcadmin/call/new',
+                    'text' => $showOptions[$show]
+                        ?? $this->translator->translate('txt-new-program-call')
+                ];
                 break;
             case 'edit':
-                $this->setRouter('zfcadmin/call/edit');
-                $this->setText(sprintf($this->translate("txt-edit-call-%s"), $this->getCall()));
+                $linkParams = [
+                    'icon' => 'fa-pencil-square-o',
+                    'route' => 'zfcadmin/call/edit',
+                    'text' => $showOptions[$show]
+                        ?? $this->translator->translate('txt-edit-program-call')
+                ];
                 break;
             case 'size':
-                $this->setRouter('zfcadmin/call/size');
-                $this->setText(sprintf($this->translate("txt-call-size-%s"), $this->getCall()));
+                $linkParams = [
+                    'icon' => 'fa-bar-chart',
+                    'route' => 'zfcadmin/call/size',
+                    'text' => $showOptions[$show]
+                        ?? $this->translator->translate('txt-call-size')
+                ];
                 break;
             case 'export-size':
-                $this->setRouter('zfcadmin/call/export-size');
-                $this->setText(sprintf($this->translate("txt-call-export-size-%s"), $this->getCall()));
+                $linkParams = [
+                    'icon' => 'fa-file-excel-o',
+                    'route' => 'zfcadmin/call/export-size',
+                    'text' => $showOptions[$show]
+                        ?? $this->translator->translate('txt-export-call-size')
+                ];
                 break;
             case 'funding':
-                $this->setRouter('zfcadmin/call/funding');
-                $this->setText(sprintf($this->translate("txt-call-funding-%s"), $this->getCall()));
+                $linkParams = [
+                    'icon' => 'fa-eur',
+                    'route' => 'zfcadmin/call/funding',
+                    'text' => $showOptions[$show]
+                        ?? $this->translator->translate('txt-call-funding')
+                ];
                 break;
             case 'download-funding':
-                $this->setRouter('zfcadmin/call/download-funding');
-                $this->setText(sprintf($this->translate("txt-download-funding-%s"), $this->getCall()));
+                $linkParams = [
+                    'icon' => 'fa-file-excel-o',
+                    'route' => 'zfcadmin/call/download-funding',
+                    'text' => $showOptions[$show]
+                        ?? $this->translator->translate('txt-download-call-funding')
+                ];
                 break;
             case 'view-admin':
-                $this->setRouter('zfcadmin/call/view');
-                $this->setText(sprintf($this->translate("txt-view-call-%s"), $this->getCall()));
+                $linkParams = [
+                    'icon' => 'fa-link',
+                    'route' => 'zfcadmin/call/view',
+                    'text' => $showOptions[$show] ?? (string)$call
+                ];
                 break;
-            case 'list-admin':
-                $this->setRouter('zfcadmin/call/list');
-                $this->setText(sprintf($this->translate("txt-call-list")));
-                break;
-            default:
-                throw new \InvalidArgumentException(
-                    sprintf(
-                        "%s is an incorrect action for %s",
-                        $this->getAction(),
-                        __CLASS__
-                    )
-                );
         }
+
+        $linkParams['action'] = $action;
+        $linkParams['show'] = $show;
+        $linkParams['routeParams'] = $routeParams;
+
+        return $this->parse(Link::fromArray($linkParams));
     }
 }

@@ -27,14 +27,8 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin;
  */
 final class RenderSession extends AbstractPlugin
 {
-    /**
-     * @var ModuleOptions
-     */
-    private $moduleOptions;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private ModuleOptions $moduleOptions;
+    private TranslatorInterface $translator;
 
     public function __construct(ModuleOptions $moduleOptions, TranslatorInterface $translator)
     {
@@ -83,12 +77,11 @@ final class RenderSession extends AbstractPlugin
 
         //Funding information
         $header = [
-            $this->translator->translate("txt-time"),
-            $this->translator->translate("txt-no"),
-            $this->translator->translate("txt-idea"),
-            $this->translator->translate("txt-title"),
-            $this->translator->translate("txt-presenter"),
-
+            $this->translator->translate('txt-time'),
+            $this->translator->translate('txt-no'),
+            $this->translator->translate('txt-idea'),
+            $this->translator->translate('txt-title'),
+            $this->translator->translate('txt-presenter'),
         ];
 
         $pitches = [];

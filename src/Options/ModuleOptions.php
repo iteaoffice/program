@@ -25,19 +25,12 @@ use Zend\Stdlib\AbstractOptions;
  */
 class ModuleOptions extends AbstractOptions implements ProgramOptionsInterface
 {
-    protected $__strictMode__ = false;
-
-    protected $ndaTemplate = '';
-
-    protected $hasNda = true;
-
-    protected $doaTemplate = '';
-
-    protected $blankTemplate = '';
-
-    protected $headerLogo = '';
-
-    protected $footerImage = '';
+    protected string $ndaTemplate = '';
+    protected bool $hasNda = true;
+    protected string $doaTemplate = '';
+    protected string $blankTemplate = '';
+    protected string $headerLogo = '';
+    protected string $footerImage = '';
 
     public function getNdaTemplate(): string
     {

@@ -38,10 +38,10 @@
                 <tbody>
                 {% for funder in paginator.getCurrentItems() %}
                     <tr>
-                        <td>{{ funderLink(funder,'view-admin', 'name') }} {{ funderLink(funder,'edit', 'icon') }}</td>
+                        <td>{{ funderLink(funder,'view', 'name') }} {{ funderLink(funder,'edit', 'icon') }}</td>
                         <td>{{ countryLink(funder.country,'view-admin','name') }}</td>
                         <td>{{ funder.position }}</td>
-                        <td>{% if funder.getShowOnWebsite %}{{ translate(funder.getShowOnWebsite(true)) }}{% endif %}</td>
+                        <td>{% if funder.getShowOnWebsite() %}{{ translate(funder.getShowOnWebsite(true)) }}{% endif %}</td>
                     </tr>
                 {% endfor %}
                 </tbody>

@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Program\View\Handler;
 
 use Content\Entity\Content;
+use General\View\Handler\AbstractHandler;
 use Program\Entity\Call\Session;
 use Program\Service\ProgramService;
 use Project\Service\IdeaService;
@@ -68,7 +69,7 @@ final class SessionHandler extends AbstractHandler
         return $this->renderer->render(
             'cms/call/session',
             [
-                'session'     => $session,
+                'session' => $session,
                 'ideaService' => $this->ideaService
             ]
         );

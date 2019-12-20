@@ -36,14 +36,8 @@ final class GetFilter extends AbstractPlugin
      * @var RouteMatch
      */
     private $routeMatch;
-    /**
-     * @var array
-     */
-    private $filter = [];
-    /**
-     * @var string|null
-     */
-    private $query;
+    private array $filter = [];
+    private ? string $query;
 
     public function __construct(Application $application)
     {
@@ -51,7 +45,7 @@ final class GetFilter extends AbstractPlugin
         $this->request = $application->getMvcEvent()->getRequest();
     }
 
-    public function __invoke(): self
+    public function __invoke() : self
     {
         $encodedFilter = urldecode((string)$this->routeMatch->getParam('encodedFilter'));
 
