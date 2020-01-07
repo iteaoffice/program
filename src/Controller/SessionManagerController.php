@@ -23,15 +23,15 @@ use Program\Service\FormService;
 use Program\Service\ProgramService;
 use Project\Entity\Idea\Session as IdeaSession;
 use Project\Service\IdeaService;
-use Zend\Http\Headers;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Zend\Paginator\Paginator;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Headers;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\Paginator\Paginator;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 use function array_values;
 use function ceil;
 use function implode;
@@ -211,7 +211,7 @@ final class SessionManagerController extends AbstractActionController
     public function uploadAction(): Response
     {
         /** @var Request $request */
-        $request =  $this->getRequest();
+        $request = $this->getRequest();
         /** @var IdeaSession $ideaSession */
         $ideaSession = $this->ideaService->find(IdeaSession::class, (int) $this->params('id'));
         $data        = $request->getFiles()->toArray();
@@ -226,7 +226,7 @@ final class SessionManagerController extends AbstractActionController
         }
         /** @var Response $response */
         $response = $this->getResponse();
-        if (!empty($errors)) {
+        if (! empty($errors)) {
             $response->setStatusCode(501);
             $response->setContent(implode(', ', $errors));
         }

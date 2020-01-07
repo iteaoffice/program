@@ -25,14 +25,14 @@ use Program\Entity;
 use Program\Form\UploadNda;
 use Program\Service\CallService;
 use Program\Service\ProgramService;
-use Zend\Http\Response;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Zend\Mvc\Plugin\Identity\Identity;
-use Zend\Validator\File\FilesSize;
-use Zend\Validator\File\MimeType;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\Mvc\Plugin\Identity\Identity;
+use Laminas\Validator\File\FilesSize;
+use Laminas\Validator\File\MimeType;
+use Laminas\View\Model\ViewModel;
 use ZfcTwig\View\TwigRenderer;
 use function count;
 
@@ -100,7 +100,7 @@ final class NdaController extends AbstractActionController
         $form = new UploadNda();
         $form->setData($data);
 
-        if ($this->getRequest()->isPost() && !isset($data['approve']) && $form->isValid()) {
+        if ($this->getRequest()->isPost() && ! isset($data['approve']) && $form->isValid()) {
             if (isset($data['submit'])) {
                 $fileData = $form->getData('file');
                 $nda = $this->callService->uploadNda($fileData['file'], $contact, $call);
@@ -170,7 +170,7 @@ final class NdaController extends AbstractActionController
         $form = new UploadNda();
         $form->setData($data);
         if ($this->getRequest()->isPost()) {
-            if (!isset($data['cancel']) && $form->isValid()) {
+            if (! isset($data['cancel']) && $form->isValid()) {
                 $fileData = $this->params()->fromFiles();
                 /*
                  * Remove the current entity

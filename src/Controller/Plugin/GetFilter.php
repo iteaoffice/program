@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Program\Controller\Plugin;
 
-use Zend\Http\Request;
-use Zend\Json\Json;
-use Zend\Mvc\Application;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\Router\Http\RouteMatch;
+use Laminas\Http\Request;
+use Laminas\Json\Json;
+use Laminas\Mvc\Application;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Router\Http\RouteMatch;
 use function base64_decode;
 use function base64_encode;
 
@@ -54,7 +54,7 @@ final class GetFilter extends AbstractPlugin
 
         //Take the filter from the URL
         $filter = [];
-        if (!empty($base64decodedFilter = base64_decode($encodedFilter))) {
+        if (! empty($base64decodedFilter = base64_decode($encodedFilter))) {
             $filter = (array)Json::decode($base64decodedFilter);
         }
 
@@ -64,7 +64,7 @@ final class GetFilter extends AbstractPlugin
         }
 
         //Add a default order and direction if not known in the filter
-        if (!isset($filter['order'])) {
+        if (! isset($filter['order'])) {
             $filter['order'] = 'id';
             $filter['direction'] = 'desc';
         }

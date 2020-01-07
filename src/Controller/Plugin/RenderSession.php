@@ -17,8 +17,8 @@ namespace Program\Controller\Plugin;
 
 use Program\Entity\Call\Session;
 use Program\Options\ModuleOptions;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 
 /***
  * Class RenderSession

@@ -13,10 +13,10 @@ declare(strict_types=1);
 namespace Program;
 
 use Program\Navigation\Service\CallNavigationService;
-use Zend\EventManager\EventInterface;
-use Zend\ModuleManager\Feature;
-use Zend\Mvc\Application;
-use Zend\Mvc\MvcEvent;
+use Laminas\EventManager\EventInterface;
+use Laminas\ModuleManager\Feature;
+use Laminas\Mvc\Application;
+use Laminas\Mvc\MvcEvent;
 
 /**
  * Class Module

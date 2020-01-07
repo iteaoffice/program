@@ -39,7 +39,7 @@ final class ProgramPdf extends TcpdfFpdi
     public function header()
     {
         if (null === $this->_tplIdx) {
-            if (!file_exists($this->template)) {
+            if (! file_exists($this->template)) {
                 throw new \InvalidArgumentException(sprintf('Template %s cannot be found', $this->template));
             }
             $this->setSourceFile($this->template);
@@ -110,7 +110,7 @@ final class ProgramPdf extends TcpdfFpdi
             }
             $rowCounter++;
             $this->Ln();
-            $fill = !$fill;
+            $fill = ! $fill;
         }
         $this->Cell(array_sum($w), 0, '', 'T');
         $this->Ln();

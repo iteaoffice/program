@@ -19,7 +19,7 @@ namespace Program\View\Helper;
 use DateTime;
 use Program\Service\CallService;
 use Program\ValueObject\Calls;
-use Zend\View\Helper\AbstractHelper;
+use Laminas\View\Helper\AbstractHelper;
 use function sprintf;
 
 final class CallInformationBox extends AbstractHelper
@@ -39,7 +39,7 @@ final class CallInformationBox extends AbstractHelper
             $showCalls[] = $calls->getUpcoming();
         }
 
-        if (!$calls->isEmpty()) {
+        if (! $calls->isEmpty()) {
             $showCalls = $calls->toArray();
         }
 

@@ -14,9 +14,9 @@ namespace Program\Acl\Assertion;
 
 use Admin\Entity\Access;
 use Program\Entity;
-use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
-use Zend\Permissions\Acl\Role\RoleInterface;
+use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Role\RoleInterface;
 
 /**
  * Class Doa
@@ -30,7 +30,7 @@ final class Doa extends AbstractAssertion
         $this->setPrivilege($privilege);
         $id = $this->getId();
 
-        if (!$doa instanceof Entity\Doa && null !== $id) {
+        if (! $doa instanceof Entity\Doa && null !== $id) {
             $doa = $this->programService->find(Entity\Doa::class, (int)$id);
         }
 

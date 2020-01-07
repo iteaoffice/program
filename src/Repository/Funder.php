@@ -69,7 +69,7 @@ class Funder extends EntityRepository
      */
     public function applyFilter(QueryBuilder $queryBuilder, array $filter): QueryBuilder
     {
-        if (!empty($filter['search'])) {
+        if (! empty($filter['search'])) {
             $queryBuilder->andWhere(
                 $queryBuilder->expr()->orX(
                     $queryBuilder->expr()->like('contact_entity_contact.firstName', ':like'),
@@ -83,7 +83,7 @@ class Funder extends EntityRepository
         }
 
 
-        if (!empty($filter['showOnWebsite'])) {
+        if (! empty($filter['showOnWebsite'])) {
             $queryBuilder->andWhere(
                 $queryBuilder->expr()->in(
                     'funder_entity_funder.showOnWebsite',

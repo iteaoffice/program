@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Program\InputFilter;
 
-use Zend\InputFilter\FileInput;
-use Zend\InputFilter\InputFilter;
-use Zend\Validator\File\Size;
+use Laminas\InputFilter\FileInput;
+use Laminas\InputFilter\InputFilter;
+use Laminas\Validator\File\Size;
 
 /**
  * Class DoaFilter

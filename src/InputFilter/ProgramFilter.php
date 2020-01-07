@@ -15,7 +15,7 @@ namespace Program\InputFilter;
 use Doctrine\ORM\EntityManager;
 use DoctrineModule\Validator\UniqueObject;
 use Program\Entity\Program;
-use Zend\InputFilter\InputFilter;
+use Laminas\InputFilter\InputFilter;
 
 /**
  * Class ProgramFilter

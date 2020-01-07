@@ -16,12 +16,12 @@ namespace Program\Entity;
 use Contact\Entity\Contact;
 use Doctrine\ORM\Mapping as ORM;
 use General\Entity\Country;
-use Zend\Form\Annotation;
+use Laminas\Form\Annotation;
 
 /**
  * @ORM\Table(name="funder")
  * @ORM\Entity(repositoryClass="Program\Repository\Funder")
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
  * @Annotation\Name("funder")
  */
 class Funder extends AbstractEntity
@@ -73,7 +73,7 @@ class Funder extends AbstractEntity
     private $country;
     /**
      * @ORM\Column(name="info_office", type="text", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\Textarea")
+     * @Annotation\Type("\Laminas\Form\Element\Textarea")
      * @Annotation\Attributes({"rows":20,"label":"txt-funder-info-office-label","placeholder":"txt-funder-info-office-placeholder"})
      * @Annotation\Options({"help-block":"txt-funder-info-office-help-block"})
      *
@@ -82,7 +82,7 @@ class Funder extends AbstractEntity
     private $infoOffice;
     /**
      * @ORM\Column(name="info_public", type="text", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\Textarea")
+     * @Annotation\Type("\Laminas\Form\Element\Textarea")
      * @Annotation\Attributes({"rows":20,"label":"txt-funder-info-public-label","placeholder":"txt-funder-info-public-placeholder"})
      * @Annotation\Options({"help-block":"txt-funder-info-public-help-block"})
      *
@@ -91,7 +91,7 @@ class Funder extends AbstractEntity
     private $infoPublic;
     /**
      * @ORM\Column(name="show_on_website",type="smallint",nullable=false)
-     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Type("Laminas\Form\Element\Radio")
      * @Annotation\Attributes({"array":"showOnWebsiteTemplates"})
      * @Annotation\Attributes({"label":"txt-show-on-website"})
      * @Annotation\Options({"help-block":"txt-funder-show-on-website-help-block"})
@@ -101,7 +101,7 @@ class Funder extends AbstractEntity
     private $showOnWebsite;
     /**
      * @ORM\Column(name="position", type="smallint", nullable=false)
-     * @Annotation\Type("\Zend\Form\Element\Number")
+     * @Annotation\Type("\Laminas\Form\Element\Number")
      * @Annotation\Attributes({"label":"txt-funder-sorting-position-label"})
      * @Annotation\Options({"help-block":"txt-funder-sorting-position-help-block"})
      *
@@ -110,7 +110,7 @@ class Funder extends AbstractEntity
     private $position;
     /**
      * @ORM\Column(name="website",type="text",nullable=true)
-     * @Annotation\Type("Zend\Form\Element\Url")
+     * @Annotation\Type("Laminas\Form\Element\Url")
      * @Annotation\Attributes({"label":"txt-funder-website-label","placeholder":"txt-funder-website-placeholder"})
      * @Annotation\Options({"help-block":"txt-funder-website-help-block"})
      *

@@ -14,11 +14,11 @@ use General\View\Handler\AbstractHandler;
 use Program\Entity\Call\Session;
 use Program\Service\ProgramService;
 use Project\Service\IdeaService;
-use Zend\Authentication\AuthenticationService;
-use Zend\Http\Response;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Application;
-use Zend\View\HelperPluginManager;
+use Laminas\Authentication\AuthenticationService;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Application;
+use Laminas\View\HelperPluginManager;
 use ZfcTwig\View\TwigRenderer;
 
 /**

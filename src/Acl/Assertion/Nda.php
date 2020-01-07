@@ -14,9 +14,9 @@ namespace Program\Acl\Assertion;
 
 use Admin\Entity\Access;
 use Program\Entity;
-use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
-use Zend\Permissions\Acl\Role\RoleInterface;
+use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Role\RoleInterface;
 
 /**
  * Class Nda
@@ -33,7 +33,7 @@ final class Nda extends AbstractAssertion
         /*
          * @var $nda Entity\Nda
          */
-        if (!$nda instanceof Entity\Nda && null !== $id) {
+        if (! $nda instanceof Entity\Nda && null !== $id) {
             /** @var Entity\Nda $nda */
             $nda = $this->programService->find(Entity\Nda::class, (int)$id);
         }
@@ -49,7 +49,7 @@ final class Nda extends AbstractAssertion
 
                 return null === $nda->getDateApproved() && $nda->getContact()->getId() === $this->contact->getId();
             case 'render':
-                if (!$this->hasContact() || null === $this->contact->getContactOrganisation()) {
+                if (! $this->hasContact() || null === $this->contact->getContactOrganisation()) {
                     return false;
                 }
                 /*
@@ -72,7 +72,7 @@ final class Nda extends AbstractAssertion
                 return true;
             case 'download':
             case 'view':
-                if (!$this->hasContact()) {
+                if (! $this->hasContact()) {
                     return false;
                 }
 

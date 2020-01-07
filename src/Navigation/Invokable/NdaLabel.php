@@ -14,7 +14,7 @@ namespace Program\Navigation\Invokable;
 
 use Admin\Navigation\Invokable\AbstractNavigationInvokable;
 use Program\Entity\Nda;
-use Zend\Navigation\Page\Mvc;
+use Laminas\Navigation\Page\Mvc;
 
 /**
  * Class NdaLabel
@@ -31,7 +31,7 @@ final class NdaLabel extends AbstractNavigationInvokable
             /** @var Nda $nda */
             $nda = $this->getEntities()->get(Nda::class);
 
-            if (!$nda->getCall()->isEmpty()) {
+            if (! $nda->getCall()->isEmpty()) {
                 $page->setParams(
                     \array_merge(
                         $page->getParams(),

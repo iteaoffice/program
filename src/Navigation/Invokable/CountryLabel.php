@@ -15,7 +15,7 @@ namespace Program\Navigation\Invokable;
 use Admin\Navigation\Invokable\AbstractNavigationInvokable;
 use Program\Entity\Call\Call;
 use Program\Entity\Call\Country;
-use Zend\Navigation\Page\Mvc;
+use Laminas\Navigation\Page\Mvc;
 
 /**
  * Class CountryLabel

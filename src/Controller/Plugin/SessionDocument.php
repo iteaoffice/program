@@ -30,13 +30,13 @@ use Program\Options\ModuleOptions;
 use Project\Acl\Assertion\Idea\Idea;
 use Project\Entity\Idea\Description;
 use Project\Entity\Idea\DescriptionType;
-use Zend\Http\Headers;
-use Zend\Http\Response;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\View\Helper\ServerUrl;
-use Zend\View\Helper\Url;
-use Zend\View\HelperPluginManager;
+use Laminas\Http\Headers;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\View\Helper\ServerUrl;
+use Laminas\View\Helper\Url;
+use Laminas\View\HelperPluginManager;
 use function html_entity_decode;
 use function ob_end_flush;
 use function ob_get_clean;
@@ -104,7 +104,7 @@ final class SessionDocument extends AbstractPlugin
         );
 
         $header = $section->addHeader();
-        if (!empty($this->headerLogo)) {
+        if (! empty($this->headerLogo)) {
             $header->addImage(
                 $this->headerLogo,
                 [
@@ -119,7 +119,7 @@ final class SessionDocument extends AbstractPlugin
         }
 
         $footer = $section->addFooter();
-        if (!empty($this->footerImage)) {
+        if (! empty($this->footerImage)) {
             $footer->addImage(
                 $this->footerImage,
                 [
@@ -150,7 +150,7 @@ final class SessionDocument extends AbstractPlugin
         foreach ($session->getIdeaSession() as $ideaSession) {
             //Check access to the idea
             $this->assertionService->addResource($ideaSession->getIdea(), Idea::class);
-            if (!$this->authorize->isAllowed($ideaSession->getIdea(), 'view')) {
+            if (! $this->authorize->isAllowed($ideaSession->getIdea(), 'view')) {
                 continue;
             }
 
@@ -207,7 +207,7 @@ final class SessionDocument extends AbstractPlugin
     public function parseResponse() : Response
     {
         $response = new Response();
-        if (!($this->document instanceof PhpWord)) {
+        if (! ($this->document instanceof PhpWord)) {
             return $response->setStatusCode(Response::STATUS_CODE_404);
         }
 

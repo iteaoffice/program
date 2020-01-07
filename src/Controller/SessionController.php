@@ -21,9 +21,9 @@ use Program\Controller\Plugin\SessionSpreadsheet;
 use Program\Entity\Call\Session;
 use Program\Service\ProgramService;
 use Project\Acl\Assertion\Idea\Idea;
-use Zend\Http\Headers;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Http\Headers;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
 use ZipArchive;
 use function file_get_contents;
 use function filesize;
@@ -110,7 +110,7 @@ final class SessionController extends AbstractActionController
             //Do a check to see if the user has access to the idea
             $this->assertionService->addResource($ideaSession->getIdea(), Idea::class);
 
-            if (!$this->isAllowed($ideaSession->getIdea(), 'view')) {
+            if (! $this->isAllowed($ideaSession->getIdea(), 'view')) {
                 continue;
             }
 

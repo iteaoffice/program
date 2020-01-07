@@ -34,7 +34,7 @@ final class ProgramLink extends AbstractLink
 
         $routeParams = [];
         $showOptions = [];
-        if (!$program->isEmpty()) {
+        if (! $program->isEmpty()) {
             $routeParams['id'] = $program->getId();
             $showOptions['name'] = $program->getProgram();
         }
@@ -64,7 +64,7 @@ final class ProgramLink extends AbstractLink
                         ?? $this->translator->translate('txt-export-program-size')
                 ];
                 break;
-            case 'view-admin':
+            case 'view':
                 $linkParams = [
                     'icon' => 'fa-link',
                     'route' => 'zfcadmin/program/view',

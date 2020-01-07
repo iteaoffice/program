@@ -19,11 +19,11 @@ use Program\Entity\Funder;
 use Program\Form\FunderFilter;
 use Program\Service\FormService;
 use Program\Service\ProgramService;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Zend\Paginator\Paginator;
-use Zend\View\Model\ViewModel;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\Paginator\Paginator;
+use Laminas\View\Model\ViewModel;
 
 /**
  * @method GetFilter getProgramFilter()
@@ -139,7 +139,7 @@ final class FunderManagerController extends AbstractActionController
                 return $this->redirect()->toRoute('zfcadmin/funder/list');
             }
 
-            if (!isset($data['cancel'])) {
+            if (! isset($data['cancel'])) {
                 $this->programService->save($funder);
 
                 $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-funder-has-been-updated-successfully")));

@@ -14,13 +14,13 @@ namespace Program\Entity\Call;
 
 use Doctrine\ORM\Mapping as ORM;
 use Program\Entity\AbstractEntity;
-use Zend\Form\Annotation;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Form\Annotation;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * @ORM\Table(name="programcall_country")
  * @ORM\Entity
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
  * @Annotation\Name("programcall_session")
  *
  * @category    Program
@@ -54,7 +54,7 @@ class Country extends AbstractEntity
     private $country;
     /**
      * @ORM\Column(name="date_national_application", type="string", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @Annotation\Type("\Laminas\Form\Element\Text")
      * @Annotation\Options({"label":"txt-date-national-application-label","help-block":"txt-date-national-application-help-block"})
      *
      * @var string
@@ -62,7 +62,7 @@ class Country extends AbstractEntity
     private $dateNationalApplication;
     /**
      * @ORM\Column(name="date_expected_funding_decision", type="string", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @Annotation\Type("\Laminas\Form\Element\Text")
      * @Annotation\Options({"label":"txt-date-expected-funding-decision-label","help-block":"txt-date-expected-funding-decision-help-block"})
      *
      * @var string

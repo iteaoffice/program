@@ -16,8 +16,8 @@ use Admin\Options\ModuleOptions;
 use Interop\Container\ContainerInterface;
 use Program\Navigation\Service\CallNavigationService;
 use Program\Service\CallService;
-use Zend\Mvc\Application;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\Mvc\Application;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * Class CallNavigationServiceFactory

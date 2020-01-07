@@ -35,10 +35,10 @@ use Project\Form\Statistics;
 use Project\Service\ContractService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
-use Zend\Http\Headers;
-use Zend\Http\Response;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Http\Headers;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 use function count;
 use function end;
 use function ini_set;
@@ -311,8 +311,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
     {
         /** @var Project $project */
         foreach ($projects as $project) {
-            if (!($this->includeRejectedPO || $this->includeRejectedFPP || $this->includeCancelledProjects)) {
-                if (!$this->projectService->isSuccessful($project)) {
+            if (! ($this->includeRejectedPO || $this->includeRejectedFPP || $this->includeCancelledProjects)) {
+                if (! $this->projectService->isSuccessful($project)) {
                     continue;
                 }
             }
@@ -330,7 +330,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                 $fullProjectProposal = $this->projectService->getAnyLatestProjectVersion($project, $fpp);
                 $latestVersion = $this->projectService->getAnyLatestProjectVersion($project);
 
-                if (!$this->includeRejectedCR && null !== $latestVersion && $latestVersion->isRejected()) {
+                if (! $this->includeRejectedCR && null !== $latestVersion && $latestVersion->isRejected()) {
                     $latestVersion = $this->projectService->getLatestApprovedProjectVersion($project);
                 }
             } else {
@@ -338,24 +338,24 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                 $fullProjectProposal = $this->projectService->getLatestReviewedProjectVersion($project, $fpp);
                 $latestVersion = $this->projectService->getLatestReviewedProjectVersion($project);
 
-                if (!$this->includeRejectedCR && null !== $latestVersion && $latestVersion->isRejected()) {
+                if (! $this->includeRejectedCR && null !== $latestVersion && $latestVersion->isRejected()) {
                     $latestVersion = $this->projectService->getLatestApprovedProjectVersion($project);
                 }
             }
 
             //Stop the process when we don't include rejected PO and when the PO has not been approved
-            if (!$this->includeRejectedPO && null !== $projectOutline && $projectOutline->isReviewed() && $projectOutline->isRejected()) {
+            if (! $this->includeRejectedPO && null !== $projectOutline && $projectOutline->isReviewed() && $projectOutline->isRejected()) {
                 continue;
             }
 
             //Stop the process when we don't include rejected PO and when the PO has not been approved
-            if (!$this->includeRejectedFPP && null !== $fullProjectProposal && $fullProjectProposal->isReviewed()
+            if (! $this->includeRejectedFPP && null !== $fullProjectProposal && $fullProjectProposal->isReviewed()
                 && $fullProjectProposal->isRejected()
             ) {
                 continue;
             }
 
-            if (!$this->includeCancelledProjects && $this->projectService->isCancelled($project)) {
+            if (! $this->includeCancelledProjects && $this->projectService->isCancelled($project)) {
                 continue;
             }
 
@@ -374,12 +374,12 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
             /** @var Affiliation $affiliation */
             foreach ($affiliations as $affiliation) {
-                if (!$this->includeDeactivatedPartners && !$affiliation->isActive()) {
+                if (! $this->includeDeactivatedPartners && ! $affiliation->isActive()) {
                     continue;
                 }
 
-                if (!empty($this->countryIds)
-                    && !in_array(
+                if (! empty($this->countryIds)
+                    && ! in_array(
                         $affiliation->getOrganisation()->getCountry()->getId(),
                         $this->countryIds,
                         false
@@ -388,8 +388,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                     continue;
                 }
 
-                if (!empty($this->organisationTypeIds)
-                    && !in_array(
+                if (! empty($this->organisationTypeIds)
+                    && ! in_array(
                         $affiliation->getOrganisation()->getType()->getId(),
                         $this->organisationTypeIds,
                         false
@@ -600,7 +600,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                     }
                 }
 
-                if (!$this->splitPerYear) {
+                if (! $this->splitPerYear) {
                     $projectColumn = [];
 
                     $poEffortVersion = null;
@@ -817,8 +817,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
     {
         /** @var Project $project */
         foreach ($projects as $project) {
-            if (!($this->includeRejectedPO || $this->includeRejectedFPP || $this->includeCancelledProjects)) {
-                if (!$this->projectService->isSuccessful($project)) {
+            if (! ($this->includeRejectedPO || $this->includeRejectedFPP || $this->includeCancelledProjects)) {
+                if (! $this->projectService->isSuccessful($project)) {
                     continue;
                 }
             }
@@ -836,7 +836,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                 $fullProjectProposal = $this->projectService->getAnyLatestProjectVersion($project, $fpp);
                 $latestVersion = $this->projectService->getAnyLatestProjectVersion($project);
 
-                if (!$this->includeRejectedCR && null !== $latestVersion && $latestVersion->isRejected()) {
+                if (! $this->includeRejectedCR && null !== $latestVersion && $latestVersion->isRejected()) {
                     $latestVersion = $this->projectService->getLatestApprovedProjectVersion($project);
                 }
             } else {
@@ -844,24 +844,24 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                 $fullProjectProposal = $this->projectService->getLatestReviewedProjectVersion($project, $fpp);
                 $latestVersion = $this->projectService->getLatestReviewedProjectVersion($project);
 
-                if (!$this->includeRejectedCR && null !== $latestVersion && $latestVersion->isRejected()) {
+                if (! $this->includeRejectedCR && null !== $latestVersion && $latestVersion->isRejected()) {
                     $latestVersion = $this->projectService->getLatestApprovedProjectVersion($project);
                 }
             }
 
             //Stop the process when we don't include rejected PO and when the PO has not been approved
-            if (!$this->includeRejectedPO && null !== $projectOutline && $projectOutline->isReviewed() && $projectOutline->isRejected()) {
+            if (! $this->includeRejectedPO && null !== $projectOutline && $projectOutline->isReviewed() && $projectOutline->isRejected()) {
                 continue;
             }
 
             //Stop the process when we don't include rejected PO and when the PO has not been approved
-            if (!$this->includeRejectedFPP && null !== $fullProjectProposal && $fullProjectProposal->isReviewed()
+            if (! $this->includeRejectedFPP && null !== $fullProjectProposal && $fullProjectProposal->isReviewed()
                 && $fullProjectProposal->isRejected()
             ) {
                 continue;
             }
 
-            if (!$this->includeCancelledProjects && $this->projectService->isCancelled($project)) {
+            if (! $this->includeCancelledProjects && $this->projectService->isCancelled($project)) {
                 continue;
             }
 
@@ -997,7 +997,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
         $response = new Response();
 
-        if (!($this->spreadsheet instanceof Spreadsheet)) {
+        if (! ($this->spreadsheet instanceof Spreadsheet)) {
             return $response->setStatusCode(Response::STATUS_CODE_404);
         }
 

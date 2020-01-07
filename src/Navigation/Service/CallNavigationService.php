@@ -13,10 +13,10 @@ declare(strict_types=1);
 namespace Program\Navigation\Service;
 
 use Program\Service\CallService;
-use Zend\Navigation\Navigation;
-use Zend\Navigation\Page\Mvc;
-use Zend\Navigation\Page\Uri;
-use Zend\Router\RouteMatch;
+use Laminas\Navigation\Navigation;
+use Laminas\Navigation\Page\Mvc;
+use Laminas\Navigation\Page\Uri;
+use Laminas\Router\RouteMatch;
 
 /**
  * Class CallNavigationService
@@ -67,7 +67,7 @@ final class CallNavigationService
             $showCalls[] = $calls->getUpcoming();
         }
 
-        if (!$calls->isEmpty()) {
+        if (! $calls->isEmpty()) {
             $showCalls = $calls->toArray();
         }
 
@@ -80,7 +80,7 @@ final class CallNavigationService
 
             /** @var Mvc $page */
             foreach ($pages as $page) {
-                if (!$activeCall->hasIdeaTool()
+                if (! $activeCall->hasIdeaTool()
                     && \in_array(
                         $page->getRoute(),
                         ['community/idea/list', 'community/idea/invite/retrieve'],

@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Program\InputFilter;
 
-use Zend\InputFilter\InputFilter;
-use Zend\Validator\Uri;
+use Laminas\InputFilter\InputFilter;
+use Laminas\Validator\Uri;
 
 /**
  * Class FunderFilter

@@ -16,10 +16,10 @@ declare(strict_types=1);
 namespace Program\View\Handler;
 
 use Program\Service\ProgramService;
-use Zend\Authentication\AuthenticationService;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Application;
-use Zend\View\HelperPluginManager;
+use Laminas\Authentication\AuthenticationService;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Application;
+use Laminas\View\HelperPluginManager;
 use ZfcTwig\View\TwigRenderer;
 use General\View\Handler\AbstractHandler;
 

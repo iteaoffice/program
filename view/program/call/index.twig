@@ -3,14 +3,6 @@
 
 <div class="row">
     <div class="col-md-8"><h1>{{ translate("txt-%s-overview")|format(call) }}</h1></div>
-    <div class="col-md-4">
-        {#{% if previousCall %}#}
-        {#<a href="{{ url('community/call/index',{'callId':previousCall.id}) }}">{{ previousCall }}</a>#}
-        {#{% endif %}#}
-        {#{% if nextCall %}#}
-        {#<a href="{{ url('community/call/index',{'callId':nextCall.id}) }}">{{ nextCall }}</a>#}
-        {#{% endif %}#}
-    </div>
 </div>
 
 <h2>{{ translate("txt-%s-calendar")|format(call) }}</h2>
@@ -79,7 +71,7 @@
 
                         {% if projectItem.type is constant('\\Project\\ValueObject\\ProjectItem::TYPE_PROJECT') %}
                             <a class="card"
-                               href="{{ projectLink(projectItem.project,'view-community','social') }}">
+                               href="{{ projectLink(projectItem.project,'view-community',constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) }}">
                                 <div class="project-card {% if projectItem.isPending() %}project-card-blur{% endif %}"
                                      style="background: url('{{ projectLogo(projectItem.project,150, true) }}') no-repeat center 15px"></div>
 
@@ -93,7 +85,7 @@
 
                         {% if projectItem.type is constant('\\Project\\ValueObject\\ProjectItem::TYPE_INVITE') %}
                             <a class="card card-action"
-                               href="{{ projectInviteLink(projectItem.invite,'accept','raw') }}">
+                               href="{{ projectInviteLink(projectItem.invite,'accept',constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) }}">
                                 <div class="project-card {% if projectItem.isPending() %}project-card-blur{% endif %}"></div>
 
                                 <div class="card-label">{{ projectItem.label }}</div>
@@ -106,7 +98,7 @@
                     </div>
                 {% endfor %}
 
-                {% set newProjectLink = projectLink(null, 'new-community','social') %}
+                {% set newProjectLink = projectLink(null, 'new-community',constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) %}
 
                 {% if newProjectLink %}
                     <div class="col-xs-6 col-md-3">
@@ -124,7 +116,7 @@
 
             <a class="btn btn-primary"
                href="{{ url('community/project/list',{'call':call.id}) }}"><i
-                        class="fa fa-bars"></i> {{ translate("txt-list-projects-in-call-%s")|format(call) }}</a>
+                        class="fa fa-list"></i> {{ translate("txt-list-projects-in-call-%s")|format(call) }}</a>
 
         {% endif %}
 
@@ -136,7 +128,7 @@
                 {% for ideaItem in ideas %}
                     <div class="col-md-3 pb-3">
                         {% if ideaItem.type is constant('\\Project\\ValueObject\\IdeaItem::TYPE_IDEA') %}
-                            <a class="card" href="{{ ideaLink(ideaItem.idea,'view','social') }}">
+                            <a class="card" href="{{ ideaLink(ideaItem.idea,'view',constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) }}">
                                 <div class="idea-card"></div>
 
                                 <div class="card-label">{{ ideaItem.label }}</div>
@@ -148,7 +140,7 @@
 
                         {% if ideaItem.type is constant('\\Project\\ValueObject\\IdeaItem::TYPE_INVITE') %}
                             <a class="card card-action"
-                               href="{{ ideaInviteLink(ideaItem.invite,'accept','social') }}">
+                               href="{{ ideaInviteLink(ideaItem.invite,'accept',constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) }}">
                                 <div class="idea-card idea-card-blur"></div>
 
                                 <div class="card-label">{{ ideaItem.label }}</div>
@@ -160,7 +152,7 @@
 
                         {% if ideaItem.type is constant('\\Project\\ValueObject\\IdeaItem::TYPE_JOIN_REQUEST') %}
                             <a class="card card-inactive"
-                               href="{{ ideaLink(ideaItem.idea,'view','social') }}">
+                               href="{{ ideaLink(ideaItem.idea,'view',constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) }}">
                                 <div class="idea-card idea-card-blur"></div>
 
                                 <div class="card-label inactive">{{ ideaItem.label }}</div>
@@ -172,7 +164,7 @@
                     </div>
                 {% endfor %}
 
-                {% set newIdeaLink = ideaLink(null, 'new','social', tool) %}
+                {% set newIdeaLink = ideaLink(null, 'new',constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW"), tool) %}
 
                 {% if newIdeaLink %}
                     <div class="col-md-3">
@@ -204,7 +196,7 @@
                         {% set registration = registrationService.findRegistrationByMeetingAndContact(tool.meeting, identity() ) %}
 
                         <a class="card {% if not meetingService.isPassed(tool.meeting) and ((registration and registrationService.isCancelled(registration)) or not registration) %}card-action{% endif %}"
-                           href="{{ meetingLink(tool.meeting,'view', 'social') }}">
+                           href="{{ meetingLink(tool.meeting,'view', constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) }}">
 
                             {% if registration is not null %}
                                 {# The user is registered #}
@@ -220,7 +212,7 @@
                 {% endif %}
 
                 <div class="col-md-3">
-                    <a class="card" href="{{ ideaToolLink(tool,'list-idea', 'social') }}">
+                    <a class="card" href="{{ ideaToolLink(tool,'list-idea', constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) }}">
                         <img src="https://image.itea3.org/7fB2tsMdjHdoDdBbYKSLlTtdcFA=/fit-in/150x150/https://itea3.org/img/i/1744-1430817993.jpg">
 
                         <div class="card-name"><p>{{ translate("txt-project-ideas") }}<br>{{ tool }}</p></div>

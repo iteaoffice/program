@@ -14,8 +14,8 @@ use Program\Navigation;
 use Program\Options;
 use Program\Service;
 use Program\View;
-use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
-use Zend\Stdlib;
+use Laminas\ServiceManager\AbstractFactory\ConfigAbstractFactory;
+use Laminas\Stdlib;
 
 /**
  * @category    Program

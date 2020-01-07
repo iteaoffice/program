@@ -28,7 +28,7 @@ use Program\ValueObject\CallStatus;
 use Program\ValueObject\LastCall;
 use Project\Entity\Version\Type;
 use stdClass;
-use Zend\Validator\File\MimeType;
+use Laminas\Validator\File\MimeType;
 
 /**
  * Class CallService

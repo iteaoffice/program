@@ -12,12 +12,12 @@ declare(strict_types=1);
 
 namespace Program\Form;
 
-use Zend\Form\Form;
-use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Validator\File\Extension;
-use Zend\Validator\File\Size;
-use Zend\Form\Element\Submit;
-use Zend\Form\Element\File;
+use Laminas\Form\Form;
+use Laminas\InputFilter\InputFilterProviderInterface;
+use Laminas\Validator\File\Extension;
+use Laminas\Validator\File\Size;
+use Laminas\Form\Element\Submit;
+use Laminas\Form\Element\File;
 
 /**
  * Class UploadDoa

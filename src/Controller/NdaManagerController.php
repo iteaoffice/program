@@ -34,15 +34,15 @@ use Program\Form\AdminUploadNda;
 use Program\Form\NdaApproval;
 use Program\Service\CallService;
 use Program\Service\FormService;
-use Zend\Http\Response;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Zend\Mvc\Plugin\Identity\Identity;
-use Zend\Validator\File\FilesSize;
-use Zend\Validator\File\MimeType;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\Mvc\Plugin\Identity\Identity;
+use Laminas\Validator\File\FilesSize;
+use Laminas\Validator\File\MimeType;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 use function array_merge_recursive;
 use function sprintf;
 use function strlen;
@@ -195,7 +195,7 @@ final class NdaManagerController extends AbstractActionController
                     /*
                      * Replace the content of the object
                      */
-                    if (!$nda->getObject()->isEmpty()) {
+                    if (! $nda->getObject()->isEmpty()) {
                         $nda->getObject()->first()->setObject(
                             file_get_contents($fileData['program_entity_nda']['file']['tmp_name'])
                         );
@@ -221,7 +221,7 @@ final class NdaManagerController extends AbstractActionController
                 /*
                  * The programme call needs to have a dedicated treatment
                  */
-                if (!empty($data['program_entity_nda']['programCall'])) {
+                if (! empty($data['program_entity_nda']['programCall'])) {
                     $nda->setCall([$this->callService->findCallById((int)$data['program_entity_nda']['programCall'])]);
                 } else {
                     $nda->setCall([]);
@@ -320,7 +320,7 @@ final class NdaManagerController extends AbstractActionController
             );
         }
 
-        if (!DateTime::createFromFormat('Y-m-d', $dateSigned)) {
+        if (! DateTime::createFromFormat('Y-m-d', $dateSigned)) {
             return new JsonModel(
                 [
                     'result' => 'error',
@@ -347,7 +347,7 @@ final class NdaManagerController extends AbstractActionController
             $this->emailService->addTo($nda->getContact());
             $this->emailService->setTemplateVariable('filename', $nda->parseFileName());
             $this->emailService->setTemplateVariable('date_signed', $nda->getDateSigned()->format('d-m-Y'));
-            if (!$nda->getCall()->isEmpty()) {
+            if (! $nda->getCall()->isEmpty()) {
                 $this->emailService->setTemplateVariable('call', (string)$nda->getCall()->first());
             }
 

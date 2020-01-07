@@ -21,7 +21,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Program\Entity\AbstractEntity;
 use Project\Entity\Idea\Tool;
-use Zend\Form\Annotation;
+use Laminas\Form\Annotation;
 
 /**
  * @ORM\Table(name="programcall_session")
@@ -42,7 +42,7 @@ class Session extends AbstractEntity
     private $id;
     /**
      * @ORM\Column(name="session", type="string", length=50, nullable=false)
-     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @Annotation\Type("\Laminas\Form\Element\Text")
      * @Annotation\Options({"label":"txt-session"})
      *
      * @var string
@@ -89,7 +89,7 @@ class Session extends AbstractEntity
     private $tool;
     /**
      * @ORM\Column(name="date", type="datetime", nullable=false)
-     * @Annotation\Type("\Zend\Form\Element\DateTime")
+     * @Annotation\Type("\Laminas\Form\Element\DateTime")
      * @Annotation\Attributes({"step":"any"})
      * @Annotation\Options({"label":"txt-session-date", "format":"Y-m-d H:i:s"})
      *

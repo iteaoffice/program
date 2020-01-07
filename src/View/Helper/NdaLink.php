@@ -39,13 +39,13 @@ final class NdaLink extends AbstractLink
     ): string {
         $nda ??= new Nda();
 
-        if (!$this->hasAccess($nda, NdaAssertion::class, $action)) {
+        if (! $this->hasAccess($nda, NdaAssertion::class, $action)) {
             return '';
         }
 
         $routeParams = [];
         $showOptions = [];
-        if (!$nda->isEmpty()) {
+        if (! $nda->isEmpty()) {
             $routeParams['id'] = $nda->getId();
             $showOptions['name'] = $nda->parseFileName();
 
@@ -117,7 +117,7 @@ final class NdaLink extends AbstractLink
                     'text' => $showOptions[$show] ?? $this->translator->translate('txt-view-nda')
                 ];
                 break;
-            case 'edit':
+            case 'edit-admin':
                 $linkParams = [
                     'icon' => 'fa-pencil-square-o',
                     'route' => 'zfcadmin/nda/edit',

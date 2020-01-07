@@ -18,10 +18,10 @@ declare(strict_types=1);
 
 namespace Program\Form;
 
-use Zend\Form\Fieldset;
-use Zend\Form\Form;
-use Zend\Form\Element\Submit;
-use Zend\Form\Element\Text;
+use Laminas\Form\Fieldset;
+use Laminas\Form\Form;
+use Laminas\Form\Element\Submit;
+use Laminas\Form\Element\Text;
 
 /**
  * Class CallFilter

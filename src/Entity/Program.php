@@ -24,12 +24,12 @@ use Organisation\Entity\Parent\Invoice;
 use Organisation\Entity\Parent\InvoiceExtra;
 use Program\Entity\Call\Call;
 use function substr;
-use Zend\Form\Annotation;
+use Laminas\Form\Annotation;
 
 /**
  * @ORM\Table(name="program")
  * @ORM\Entity(repositoryClass="Program\Repository\Program")
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
  * @Annotation\Name("contact_contact")
  */
 class Program extends AbstractEntity
@@ -38,14 +38,14 @@ class Program extends AbstractEntity
      * @ORM\Column(name="program_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @Annotation\Type("\Zend\Form\Element\Hidden")
+     * @Annotation\Type("\Laminas\Form\Element\Hidden")
      *
      * @var int
      */
     private $id;
     /**
      * @ORM\Column(name="program", type="string", nullable=false)
-     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @Annotation\Type("\Laminas\Form\Element\Text")
      * @Annotation\Options({"label":"txt-program-name-label","help-block":"txt-program-name-help-block"})
      *
      * @var string
@@ -53,7 +53,7 @@ class Program extends AbstractEntity
     private $program;
     /**
      * @ORM\Column(name="number", type="string", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @Annotation\Type("\Laminas\Form\Element\Text")
      * @Annotation\Options({"label":"txt-program-number-label","help-block":"txt-program-label-help-block"})
      *
      * @var string
@@ -140,7 +140,7 @@ class Program extends AbstractEntity
     {
         $programName = $this->getProgram();
 
-        if (!is_numeric(substr($programName, -1))) {
+        if (! is_numeric(substr($programName, -1))) {
             $programName .= ' 1';
         }
 

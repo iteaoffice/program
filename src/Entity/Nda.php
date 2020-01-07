@@ -22,14 +22,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use General\Entity\ContentType;
 use Program\Entity\Call\Call;
-use Zend\Form\Annotation;
+use Laminas\Form\Annotation;
 use function sprintf;
 use function str_replace;
 
 /**
  * @ORM\Table(name="nda")
  * @ORM\Entity(repositoryClass="Program\Repository\Nda")
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
  * @Annotation\Instance("Program\Entity\Nda")
  * @Annotation\Name("nda")
  */
@@ -140,7 +140,7 @@ class Nda extends AbstractEntity
 
     public function parseCall(): ?Call
     {
-        if (!$this->hasCall()) {
+        if (! $this->hasCall()) {
             return null;
         }
 
@@ -149,7 +149,7 @@ class Nda extends AbstractEntity
 
     public function hasCall(): bool
     {
-        return !$this->call->isEmpty();
+        return ! $this->call->isEmpty();
     }
 
     public function getCall()

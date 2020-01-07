@@ -15,8 +15,8 @@ namespace Program\Form;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Program\Entity\AbstractEntity;
-use Zend\Form\Element;
-use Zend\Form\Form;
+use Laminas\Form\Element;
+use Laminas\Form\Form;
 use function class_exists;
 
 /**

@@ -18,7 +18,7 @@ namespace Program\Controller\Plugin;
 use Contact\Service\ContactService;
 use Program\Entity\Doa;
 use Program\Options\ModuleOptions;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 use ZfcTwig\View\TwigRenderer;
 
 /**

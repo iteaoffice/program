@@ -39,13 +39,13 @@ final class CallCountryLink extends AbstractLink
     ): string {
         $callCountry ??= new CallCountry();
 
-        if (!$this->hasAccess($callCountry, \Program\Acl\Assertion\Call\Country::class, $action)) {
+        if (! $this->hasAccess($callCountry, \Program\Acl\Assertion\Call\Country::class, $action)) {
             return '';
         }
 
         $routeParams = [];
         $showOptions = [];
-        if (!$callCountry->isEmpty()) {
+        if (! $callCountry->isEmpty()) {
             $routeParams['id'] = $callCountry->getId();
             $showOptions['name'] = $callCountry->getCountry()->getCountry();
         }

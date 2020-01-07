@@ -19,14 +19,14 @@ final class Calls
     public function __construct(array $calls, ?Call $upcoming = null)
     {
         if (isset($calls[0])) {
-            if (!$calls[0] instanceof Call) {
+            if (! $calls[0] instanceof Call) {
                 throw new InvalidArgumentException('The object should be an instance of the Program Call');
             }
 
             $this->call1 = $calls[0];
         }
         if (isset($calls[1])) {
-            if (!$calls[0] instanceof Call) {
+            if (! $calls[0] instanceof Call) {
                 throw new InvalidArgumentException('The object should be an instance of the Program Call');
             }
 
@@ -70,7 +70,7 @@ final class Calls
             return [];
         }
 
-        if (!$this->isMultiple()) {
+        if (! $this->isMultiple()) {
             return [$this->call1];
         }
 
@@ -88,7 +88,7 @@ final class Calls
             return [];
         }
 
-        if (!$this->isMultiple()) {
+        if (! $this->isMultiple()) {
             return [$this->call1->getId()];
         }
 

@@ -20,7 +20,7 @@ use Project\Entity\Funding\Source;
 use Project\Entity\Funding\Status;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 
 /**
  * Special plugin to produce an array with the evaluation.

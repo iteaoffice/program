@@ -19,12 +19,12 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Organisation\Entity\Organisation;
 use Program\Entity\AbstractEntity;
-use Zend\Form\Annotation;
+use Laminas\Form\Annotation;
 
 /**
  * @ORM\Table(name="programcall_doa")
  * @ORM\Entity
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
  * @Annotation\Name("programcall_doa")
  *
  * @category    Program

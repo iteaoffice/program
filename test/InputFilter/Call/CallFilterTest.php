@@ -14,7 +14,7 @@ namespace ProgramTest\InputFilter;
 
 use PHPUnit\Framework\TestCase;
 use Program\InputFilter\Call\CallFilter;
-use Zend\InputFilter\InputFilter;
+use Laminas\InputFilter\InputFilter;
 
 /**
  * Class GeneralTest

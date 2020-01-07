@@ -34,7 +34,7 @@ final class CallLink extends AbstractLink
 
         $routeParams = [];
         $showOptions = [];
-        if (!$call->isEmpty()) {
+        if (! $call->isEmpty()) {
             $routeParams['id'] = $call->getId();
             $showOptions['name'] = (string)$call;
             $showOptions['name-without-program'] = $call->getCall();

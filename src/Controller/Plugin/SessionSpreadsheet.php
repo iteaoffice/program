@@ -26,13 +26,13 @@ use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Program\Entity\Call\Session;
 use Project\Acl\Assertion\Idea\Idea;
-use Zend\Http\Headers;
-use Zend\Http\Response;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\View\Helper\ServerUrl;
-use Zend\View\Helper\Url;
-use Zend\View\HelperPluginManager;
+use Laminas\Http\Headers;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\View\Helper\ServerUrl;
+use Laminas\View\Helper\Url;
+use Laminas\View\HelperPluginManager;
 use function end;
 use function implode;
 use function key;
@@ -120,7 +120,7 @@ final class SessionSpreadsheet extends AbstractPlugin
         foreach ($session->getIdeaSession() as $ideaSession) {
             //Check access to the idea
             $this->assertionService->addResource($ideaSession->getIdea(), Idea::class);
-            if (!$this->authorize->isAllowed($ideaSession->getIdea(), 'view')) {
+            if (! $this->authorize->isAllowed($ideaSession->getIdea(), 'view')) {
                 continue;
             }
 
@@ -147,7 +147,7 @@ final class SessionSpreadsheet extends AbstractPlugin
     public function parseResponse() : Response
     {
         $response = new Response();
-        if (!($this->spreadsheet instanceof Spreadsheet)) {
+        if (! ($this->spreadsheet instanceof Spreadsheet)) {
             return $response->setStatusCode(Response::STATUS_CODE_404);
         }
 
