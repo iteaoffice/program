@@ -17,5 +17,5 @@ namespace Program\Version;
  */
 final class Version
 {
-    public const VERSION = '4.1.0-DEV';
+    public const VERSION = '5.0.0';
 }
