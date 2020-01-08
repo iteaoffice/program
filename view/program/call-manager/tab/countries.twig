@@ -4,14 +4,21 @@
     <table class="table table-hover table-striped table-sm">
         <thead>
         <tr>
+            <th>{{ translate("txt-no") }}</th>
             <th>{{ translate("txt-country") }}</th>
             <th>{{ translate("txt-date-national-application") }}</th>
             <th>{{ translate("txt-date-expected-funding-decision") }}</th>
         </tr>
         </thead>
+        <tfoot>
+        <tr>
+            <td colspan="4"></td>
+        </tr>
+        </tfoot>
         <tbody>
         {% for country in countries %}
             <tr>
+                <td><small class="text-muted">{{ loop.index }}</small></td>
                 <td>{{ countryLink(country,'view-admin','name') }}</td>
                 {% for callCountry in call.callCountry|filter(callCountry => callCountry.country.id == country.id) -%}
                     <td>{{ callCountry.dateNationalApplication|default('-') }} {{ callCountryLink(callCountry,'edit','icon') }}</td>

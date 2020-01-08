@@ -45,11 +45,16 @@
             <th>{{ translate("txt-export-size") }}</th>
         </tr>
         </thead>
+        <tfoot>
+        <tr>
+            <td colspan="8"></td>
+        </tr>
+        </tfoot>
         <tbody>
         {% for call in program.call %}
             <tr>
-                <td>{{ call.id }} {{ callLink(call,'edit', 'icon') }}</td>
-                <td>{{ callLink(call,'view-admin','name') }}</td>
+                <td><small class="text-muted">{{ call.id }}</small></td>
+                <td>{{ callLink(call,'view-admin','name') }} {{ callLink(call,'edit', 'icon') }}</td>
                 <td>{% if call.poOpenDate %}{{ call.poOpenDate|string_date }}{% endif %}</td>
                 <td>{% if call.poCloseDate %}{{ call.poCloseDate|string_date }}{% endif %}</td>
                 <td>{% if call.fppOpenDate %}{{ call.fppOpenDate|string_date }}{% endif %}</td>

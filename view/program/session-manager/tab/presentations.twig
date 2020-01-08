@@ -3,6 +3,7 @@
     <table class="table table-hover table-striped table-sm">
         <thead>
         <tr>
+            <th>{{ translate("txt-no") }}</th>
             <th>{{ translate("txt-time") }}</th>
             <th>{{ translate("txt-idea") }}</th>
             <th>{{ translate("txt-images") }}</th>
@@ -12,10 +13,16 @@
             <th>{{ translate("txt-country") }}</th>
         </tr>
         </thead>
+        <tfoot>
+        <tr>
+            <td colspan="8"></td>
+        </tr>
+        </tfoot>
         <tbody>
         {% for ideaSession in session.ideaSession %}
             {% set idea = ideaSession.idea %}
             <tr>
+                <td><small class="text-muted">{{ loop.index }}</small></td>
                 <td>{{ ideaSession.schedule }}</td>
                 <td>{{ ideaLink(idea, 'view-admin') }}</td>
                 <td>{{ idea.image.count() }}</td>

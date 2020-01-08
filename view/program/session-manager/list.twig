@@ -6,7 +6,6 @@
 {% set filter = form.get('filter') %}
 
 
-
 <div class="row">
     <div class="col-md-10">
         <h1>{{ translate("txt-session-list") }} {{ callSessionLink(null, 'new','button') }}</h1>
@@ -35,11 +34,16 @@
                     <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/session/list', 'criteria': 'date', 'text': translate("txt-date")} %}</th>
                 </tr>
                 </thead>
+                <tfoot>
+                <tr>
+                    <td colspan="4"></td>
+                </tr>
+                </tfoot>
                 <tbody>
                 {% for session in paginator.getCurrentItems() %}
                     <tr>
-                        <td>{{ session.id }} {{ callSessionLink(session,'edit', 'icon') }}</td>
-                        <td>{{ callSessionLink(session,'view-admin') }}</td>
+                        <td><small class="text-muted">{{ session.id }}</small></td>
+                        <td>{{ callSessionLink(session,'view-admin') }} {{ callSessionLink(session,'edit', 'icon') }}</td>
                         <td>{{ callLink(session.call,'view-admin','name') }}</td>
                         <td>{{ session.date|string_date }}</td>
                     </tr>
@@ -56,8 +60,8 @@
             <fieldset>
                 {{ ztbformelement(filter.get('call'), true) }}
 
-                                   {{ ztbformelement(form.get('submit')) }}
-                    {{ ztbformelement(form.get('clear')) }}
+                {{ ztbformelement(form.get('submit')) }}
+                {{ ztbformelement(form.get('clear')) }}
             </fieldset>
         </div>
     </div>

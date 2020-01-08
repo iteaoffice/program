@@ -13,10 +13,10 @@ declare(strict_types=1);
 namespace Program\Acl\Assertion;
 
 use Admin\Entity\Access;
-use Program\Entity;
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Laminas\Permissions\Acl\Role\RoleInterface;
+use Program\Entity;
 
 /**
  * Class Nda
@@ -33,7 +33,7 @@ final class Nda extends AbstractAssertion
         /*
          * @var $nda Entity\Nda
          */
-        if (! $nda instanceof Entity\Nda && null !== $id) {
+        if (!$nda instanceof Entity\Nda && null !== $id) {
             /** @var Entity\Nda $nda */
             $nda = $this->programService->find(Entity\Nda::class, (int)$id);
         }
@@ -49,7 +49,7 @@ final class Nda extends AbstractAssertion
 
                 return null === $nda->getDateApproved() && $nda->getContact()->getId() === $this->contact->getId();
             case 'render':
-                if (! $this->hasContact() || null === $this->contact->getContactOrganisation()) {
+                if (!$this->hasContact() || null === $this->contact->getContactOrganisation()) {
                     return false;
                 }
                 /*
@@ -72,7 +72,7 @@ final class Nda extends AbstractAssertion
                 return true;
             case 'download':
             case 'view':
-                if (! $this->hasContact()) {
+                if (!$this->hasContact()) {
                     return false;
                 }
 
@@ -85,7 +85,7 @@ final class Nda extends AbstractAssertion
             case 'view-admin':
             case 'edit-admin':
             case 'approval-admin':
-            case 'upload-admin':
+            case 'upload':
                 return $this->rolesHaveAccess(Access::ACCESS_OFFICE);
         }
 
