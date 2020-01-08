@@ -1,13 +1,8 @@
 <?php
 /**
- * ITEA Office all rights reserved
- *
- * PHP Version 7
- *
- * @category    Project
- *
+*
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        https://itea3.org
@@ -21,52 +16,40 @@ use Application\Twig\ParseSizeExtension;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
+use Exception;
 use Program\Entity\Call\Session;
 use Program\Form\SessionFilter;
 use Program\Service\FormService;
 use Program\Service\ProgramService;
 use Project\Entity\Idea\Session as IdeaSession;
 use Project\Service\IdeaService;
-use Zend\Http\Headers;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Zend\Paginator\Paginator;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Headers;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\Paginator\Paginator;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
+use function array_values;
+use function ceil;
+use function implode;
+use function krsort;
+use function ksort;
+use function urlencode;
 
 /**
- * Class SessionManagerController
- *
- * @package Program\Controller
- *
  * @method Plugin\GetFilter getProgramFilter()
  * @method FlashMessenger flashMessenger()
  */
 final class SessionManagerController extends AbstractActionController
 {
-    /**
-     * @var ProgramService
-     */
-    private $programService;
-    /**
-     * @var IdeaService
-     */
-    private $ideaService;
-    /**
-     * @var FormService
-     */
-    private $formService;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    private ProgramService $programService;
+    private IdeaService $ideaService;
+    private FormService $formService;
+    private TranslatorInterface $translator;
+    private EntityManager $entityManager;
 
     public function __construct(
         ProgramService      $programService,
@@ -91,7 +74,7 @@ final class SessionManagerController extends AbstractActionController
         $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($contactQuery, false)));
         $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 20);
         $paginator->setCurrentPageNumber($page);
-        $paginator->setPageRange(\ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
+        $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
         $form = new SessionFilter($this->entityManager);
         $form->setData(['filter' => $filterPlugin->getFilter()]);
@@ -99,7 +82,7 @@ final class SessionManagerController extends AbstractActionController
         return new ViewModel([
             'paginator'     => $paginator,
             'form'          => $form,
-            'encodedFilter' => \urlencode($filterPlugin->getHash()),
+            'encodedFilter' => urlencode($filterPlugin->getHash()),
             'order'         => $filterPlugin->getOrder(),
             'direction'     => $filterPlugin->getDirection(),
         ]);
@@ -118,25 +101,25 @@ final class SessionManagerController extends AbstractActionController
         foreach ($session->getIdeaSession() as $ideaSession) {
             $files = [];
             foreach ($ideaSession->getDocuments() as $document) {
-                $files[$document->getDateUpdated()->format('U').'|'.$document->getId()] = [
+                $files[$document->getDateUpdated()->format('U') . '|' . $document->getId()] = [
                     'object' => $document,
                     'type'   => 'document'
                 ];
             }
             foreach ($ideaSession->getImages() as $image) {
                 $date = $image->getDateUpdated() ?? $image->getDateCreated();
-                $files[$date->format('U').'|'.$image->getId()] = [
+                $files[$date->format('U') . '|' . $image->getId()] = [
                     'object' => $image,
                     'type'   => 'image'
                 ];
             }
-            \krsort($files);
+            krsort($files);
             $orderedIdeaSessions[$ideaSession->getIdea()->getNumber()] = [
                 'session' => $ideaSession,
                 'files'   => $files
             ];
         }
-        \ksort($orderedIdeaSessions);
+        ksort($orderedIdeaSessions);
 
         return new ViewModel([
             'session'             => $session,
@@ -149,11 +132,12 @@ final class SessionManagerController extends AbstractActionController
     {
         /** @var Request $request */
         $request = $this->getRequest();
-        $data = $request->getPost()->toArray();
-
+        $data    = $request->getPost()->toArray();
         $session = new Session();
-        $form = $this->formService->prepare($session, $data);
+        $form    = $this->formService->prepare($session, $data);
         $form->remove('delete');
+        // Because this form can be open for a long time, csrf check will time-out
+        $form->remove('csrf');
 
         if ($request->isPost()) {
             if (isset($data['cancel'])) {
@@ -185,12 +169,10 @@ final class SessionManagerController extends AbstractActionController
 
         /** @var Request $request */
         $request = $this->getRequest();
-        $data = $request->getPost()->toArray();
-        // Set to empty array to allow removing all ideas
-        if ($request->isPost() && !isset($data['program_entity_call_session']['ideaSession'])) {
-            $data['program_entity_call_session']['ideaSession'] = [];
-        }
-        $form = $this->formService->prepare($session, $data);
+        $data    = $request->getPost()->toArray();
+        $form    = $this->formService->prepare($session, $data);
+        // Because this form can be open for a long time, csrf check will time-out
+        $form->remove('csrf');
 
         if ($request->isPost()) {
             if (isset($data['cancel'])) {
@@ -199,7 +181,7 @@ final class SessionManagerController extends AbstractActionController
 
             if (isset($data['delete'])) {
                 $this->programService->delete($session);
-                $this->flashMessenger()->setNamespace('success')->addMessage(
+                $this->flashMessenger()->addSuccessMessage(
                     sprintf(
                         $this->translator->translate("txt-session-has-successfully-been-deleted")
                     )
@@ -229,24 +211,24 @@ final class SessionManagerController extends AbstractActionController
     public function uploadAction(): Response
     {
         /** @var Request $request */
-        $request =  $this->getRequest();
+        $request = $this->getRequest();
         /** @var IdeaSession $ideaSession */
-        $ideaSession = $this->ideaService->findEntityById(IdeaSession::class, (int) $this->params('id'));
+        $ideaSession = $this->ideaService->find(IdeaSession::class, (int) $this->params('id'));
         $data        = $request->getFiles()->toArray();
         $errors      = [];
 
         foreach ($data['file'] as $fileData) {
             try {
                 $this->ideaService->addFileToIdea($ideaSession->getIdea(), $fileData, null, $ideaSession);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $errors[] = $e->getMessage();
             }
         }
         /** @var Response $response */
         $response = $this->getResponse();
-        if (!empty($errors)) {
+        if (! empty($errors)) {
             $response->setStatusCode(501);
-            $response->setContent(\implode(', ', $errors));
+            $response->setContent(implode(', ', $errors));
         }
         return $response;
     }
@@ -254,12 +236,12 @@ final class SessionManagerController extends AbstractActionController
     public function ideaFilesAction(): JsonModel
     {
         /** @var IdeaSession $ideaSession */
-        $ideaSession = $this->ideaService->findEntityById(IdeaSession::class, (int) $this->params('id'));
+        $ideaSession = $this->ideaService->find(IdeaSession::class, (int) $this->params('id'));
         $data        = [];
         $sizeParser  = new ParseSizeExtension();
 
         foreach ($ideaSession->getDocuments() as $document) {
-            $data[$document->getDateUpdated()->format('U').'|'.$document->getId()] = [
+            $data[$document->getDateUpdated()->format('U') . '|' . $document->getId()] = [
                 'name'         => $document->parseFileName(),
                 'size'         => $sizeParser->processFilter($document->getSize()),
                 'download-url' => $this->url()
@@ -270,17 +252,17 @@ final class SessionManagerController extends AbstractActionController
         }
         foreach ($ideaSession->getImages() as $image) {
             $date = $image->getDateUpdated() ?? $image->getDateCreated();
-            $data[$date->format('U').'|'.$image->getId()] = [
+            $data[$date->format('U') . '|' . $image->getId()] = [
                 'name'         => $image->getImage(),
                 'size'         => $sizeParser->processFilter($image->getSize()),
                 'delete-url'   => $this->url()
                     ->fromRoute('community/idea/image/delete', ['id' => $image->getId()])
             ];
         }
-        \krsort($data);
+        krsort($data);
 
         return new JsonModel([
-            'files' => \array_values($data)
+            'files' => array_values($data)
         ]);
     }
 }

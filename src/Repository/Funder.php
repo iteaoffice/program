@@ -1,13 +1,8 @@
 <?php
 /**
- * ITEA Office all rights reserved
- *
- * PHP Version 7
- *
- * @category    Project
- *
+*
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/project for the canonical source repository
@@ -74,7 +69,7 @@ class Funder extends EntityRepository
      */
     public function applyFilter(QueryBuilder $queryBuilder, array $filter): QueryBuilder
     {
-        if (!empty($filter['search'])) {
+        if (! empty($filter['search'])) {
             $queryBuilder->andWhere(
                 $queryBuilder->expr()->orX(
                     $queryBuilder->expr()->like('contact_entity_contact.firstName', ':like'),
@@ -88,7 +83,7 @@ class Funder extends EntityRepository
         }
 
 
-        if (!empty($filter['showOnWebsite'])) {
+        if (! empty($filter['showOnWebsite'])) {
             $queryBuilder->andWhere(
                 $queryBuilder->expr()->in(
                     'funder_entity_funder.showOnWebsite',

@@ -5,7 +5,7 @@
  * @category    ProjectTest
  * @package     Entity
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
@@ -14,7 +14,7 @@ namespace ProgramTest\InputFilter;
 
 use PHPUnit\Framework\TestCase;
 use Program\InputFilter\FunderFilter;
-use Zend\InputFilter\InputFilter;
+use Laminas\InputFilter\InputFilter;
 
 /**
  * Class GeneralTest

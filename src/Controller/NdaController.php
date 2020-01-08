@@ -5,7 +5,7 @@
  * @category   Program
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright  Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license    https://itea3.org/license.txt proprietary
  *
  * @link       https://itea3.org
@@ -25,20 +25,18 @@ use Program\Entity;
 use Program\Form\UploadNda;
 use Program\Service\CallService;
 use Program\Service\ProgramService;
-use Zend\Http\Response;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Zend\Mvc\Plugin\Identity\Identity;
-use Zend\Validator\File\FilesSize;
-use Zend\Validator\File\MimeType;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\Mvc\Plugin\Identity\Identity;
+use Laminas\Validator\File\FilesSize;
+use Laminas\Validator\File\MimeType;
+use Laminas\View\Model\ViewModel;
 use ZfcTwig\View\TwigRenderer;
+use function count;
 
 /**
- * Class NdaController
- *
- * @package Program\Controller
  * @method GetFilter getProgramFilter()
  * @method FlashMessenger flashMessenger()
  * @method Identity|Contact identity()
@@ -46,30 +44,12 @@ use ZfcTwig\View\TwigRenderer;
  */
 final class NdaController extends AbstractActionController
 {
-    /**
-     * @var ProgramService
-     */
-    private $programService;
-    /**
-     * @var CallService
-     */
-    private $callService;
-    /**
-     * @var GeneralService
-     */
-    private $generalService;
-    /**
-     * @var ContactService
-     */
-    private $contactService;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-    /**
-     * @var TwigRenderer
-     */
-    private $renderer;
+    private ProgramService $programService;
+    private CallService $callService;
+    private GeneralService $generalService;
+    private ContactService $contactService;
+    private TranslatorInterface $translator;
+    private TwigRenderer $renderer;
 
     public function __construct(
         ProgramService $programService,
@@ -85,18 +65,6 @@ final class NdaController extends AbstractActionController
         $this->contactService = $contactService;
         $this->translator = $translator;
         $this->renderer = $renderer;
-    }
-
-    public function viewAction(): ViewModel
-    {
-        /** @var Entity\Nda $nda */
-        $nda = $this->programService->find(Entity\Nda::class, (int)$this->params('id'));
-
-        if (null === $nda || \count($nda->getObject()) === 0) {
-            return $this->notFoundAction();
-        }
-
-        return new ViewModel(['nda' => $nda]);
     }
 
     public function submitAction()
@@ -132,16 +100,21 @@ final class NdaController extends AbstractActionController
         $form = new UploadNda();
         $form->setData($data);
 
-        if ($this->getRequest()->isPost() && !isset($data['approve']) && $form->isValid()) {
+        if ($this->getRequest()->isPost() && ! isset($data['approve']) && $form->isValid()) {
             if (isset($data['submit'])) {
                 $fileData = $form->getData('file');
-                $this->callService->uploadNda($fileData['file'], $contact, $call);
+                $nda = $this->callService->uploadNda($fileData['file'], $contact, $call);
 
-                $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-nda-has-been-uploaded-successfully")));
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate(
+                            'txt-nda-has-been-uploaded-successfully'
+                        )
+                    )
+                );
             }
 
-
-            return $this->redirect()->toRoute('community');
+            return $this->redirect()->toRoute('community/program/nda/submit');
         }
 
         if ($this->getRequest()->isPost() && isset($data['approve'])) {
@@ -151,15 +124,15 @@ final class NdaController extends AbstractActionController
             }
 
             if ($data['selfApprove'] === '1') {
-                $this->callService->submitNda($contact, $call);
+                $nda = $this->callService->submitNda($contact, $call);
 
                 $this->flashMessenger()->addSuccessMessage(
                     sprintf(
-                        $this->translator->translate("txt-nda-has-been-submitted-and-approved-successfully")
+                        $this->translator->translate('txt-nda-has-been-submitted-and-approved-successfully')
                     )
                 );
 
-                return $this->redirect()->toRoute('community');
+                return $this->redirect()->toRoute('community/program/nda/submit');
             }
         }
 
@@ -187,7 +160,7 @@ final class NdaController extends AbstractActionController
         /** @var Entity\Nda $nda */
         $nda = $this->programService->find(Entity\Nda::class, (int)$this->params('id'));
 
-        if (null === $nda || \count($nda->getObject()) === 0) {
+        if (null === $nda || count($nda->getObject()) === 0) {
             return $this->notFoundAction();
         }
         $data = array_merge_recursive(
@@ -197,7 +170,7 @@ final class NdaController extends AbstractActionController
         $form = new UploadNda();
         $form->setData($data);
         if ($this->getRequest()->isPost()) {
-            if (!isset($data['cancel']) && $form->isValid()) {
+            if (! isset($data['cancel']) && $form->isValid()) {
                 $fileData = $this->params()->fromFiles();
                 /*
                  * Remove the current entity
@@ -220,13 +193,19 @@ final class NdaController extends AbstractActionController
 
                 $ndaObject->setNda($nda);
                 $this->programService->save($ndaObject);
-                $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-nda-has-been-replaced-successfully")));
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate(
+                            'txt-nda-has-been-replaced-successfully'
+                        )
+                    )
+                );
 
                 return $this->redirect()->toRoute('community/program/nda/view', ['id' => $nda->getId()]);
             }
             if (isset($data['cancel'])) {
                 $this->flashMessenger()->setNamespace('info')->addMessage(
-                    sprintf($this->translator->translate("txt-action-has-been-cancelled"))
+                    sprintf($this->translator->translate('txt-action-has-been-cancelled'))
                 );
 
                 return $this->redirect()->toRoute('community/program/nda/view', ['id' => $nda->getId()]);
@@ -265,8 +244,7 @@ final class NdaController extends AbstractActionController
             $renderNda = $this->renderNda()->render($nda);
         }
 
-        $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-            ->addHeaderLine('Cache-Control: max-age=36000, must-revalidate')->addHeaderLine('Pragma: public')
+        $response->getHeaders()
             ->addHeaderLine('Content-Disposition', 'attachment; filename="' . $nda->parseFileName() . '.pdf"')
             ->addHeaderLine('Content-Type: application/pdf')
             ->addHeaderLine('Content-Length', strlen($renderNda->getPDFData()));
@@ -283,7 +261,7 @@ final class NdaController extends AbstractActionController
         /** @var Response $response */
         $response = $this->getResponse();
 
-        if (null === $nda || \count($nda->getObject()) === 0) {
+        if (null === $nda || count($nda->getObject()) === 0) {
             return $response->setStatusCode(Response::STATUS_CODE_404);
         }
         /*
@@ -292,8 +270,7 @@ final class NdaController extends AbstractActionController
         $object = $nda->getObject()->first()->getObject();
 
         $response->setContent(stream_get_contents($object));
-        $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-            ->addHeaderLine('Cache-Control: max-age=36000, must-revalidate')
+        $response->getHeaders()
             ->addHeaderLine(
                 'Content-Disposition',
                 'attachment; filename="' . $nda->parseFileName() . '.' . $nda->getContentType()->getExtension() . '"'

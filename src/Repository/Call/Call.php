@@ -5,7 +5,7 @@
  * @category    Program
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (program_entity_call_call) Copyright (c) 2004-2017 ITEA Office (https://itea3.org) (https://itea3.org)
+ * @copyright   Copyright (program_entity_call_call) Copyright (c) 2019 ITEA Office (https://itea3.org) (https://itea3.org)
  */
 
 declare(strict_types=1);
@@ -226,6 +226,42 @@ final class Call extends EntityRepository
         $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::ASC);
 
         return $queryBuilder->getQuery()->useQueryCache(true)->getResult();
+    }
+
+    public function findAmountOfActiveCalls(): int
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select($queryBuilder->expr()->count('program_entity_call_call'));
+        $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
+
+        //Filter here on the active calls
+        $queryBuilder->andWhere('program_entity_call_call.active = :active');
+        $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
+
+        return (int)$queryBuilder->getQuery()->useQueryCache(true)->useResultCache(true)->getSingleScalarResult();
+    }
+
+    public function findAmountOfYears(): int
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('program_entity_call_call.poOpenDate');
+        $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
+
+        //Filter here on the active calls
+        $queryBuilder->andWhere('program_entity_call_call.active = :active');
+        $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
+
+        $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::ASC);
+        $queryBuilder->setMaxResults(1);
+
+        /** @var \DateTime $firstPoOpen */
+        $firstPoOpen = $queryBuilder->getQuery()->useQueryCache(true)->useResultCache(true)->getResult();
+
+        if (\count($firstPoOpen) === 0) {
+            return 0;
+        }
+
+        return (int)$firstPoOpen[0]['poOpenDate']->diff(new \DateTime())->y;
     }
 
     public function findWithAchievement(): array

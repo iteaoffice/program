@@ -2,18 +2,10 @@
 {% do headTitle().append(call.__toString()) %}
 
 <div class="row">
-    <div class="col-md-8"><h1 class="display-4">{{ translate("txt-%s-overview")|format(call) }}</h1></div>
-    <div class="col-md-4">
-        {#{% if previousCall %}#}
-        {#<a href="{{ url('community/call/index',{'callId':previousCall.id}) }}">{{ previousCall }}</a>#}
-        {#{% endif %}#}
-        {#{% if nextCall %}#}
-        {#<a href="{{ url('community/call/index',{'callId':nextCall.id}) }}">{{ nextCall }}</a>#}
-        {#{% endif %}#}
-    </div>
+    <div class="col-md-8"><h1>{{ translate("txt-%s-overview")|format(call) }}</h1></div>
 </div>
 
-<h2 class="display-4">{{ translate("txt-%s-calendar")|format(call) }}</h2>
+<h2>{{ translate("txt-%s-calendar")|format(call) }}</h2>
 
 <ul class="timeline" id="timeline">
     <li class="li {% if call.poOpenDate < date() %}complete{% endif %}">
@@ -73,32 +65,32 @@
         {% if call.poOpenDate < date() %}
             <h2>{{ translate("txt-my-projects-in-call-%s")|format(call) }}</h2>
 
-            <div class="row">
+            <div class="row py-3">
                 {% for projectItem in projects %}
-                    <div class="col-xs-6 col-md-3">
+                    <div class="col-md-3 pb-3">
 
                         {% if projectItem.type is constant('\\Project\\ValueObject\\ProjectItem::TYPE_PROJECT') %}
-                            <a class="thumbnail"
-                               href="{{ projectLink(projectItem.project,'view-community','social') }}">
-                                <div class="project-thumbnail {% if projectItem.isPending() %}project-thumbnail-blur{% endif %}"
+                            <a class="card"
+                               href="{{ projectLink(projectItem.project,'view-community',constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) }}">
+                                <div class="project-card {% if projectItem.isPending() %}project-card-blur{% endif %}"
                                      style="background: url('{{ projectLogo(projectItem.project,150, true) }}') no-repeat center 15px"></div>
 
-                                <div class="thumbnail-label">{{ projectItem.label }}</div>
+                                <div class="card-label">{{ projectItem.label }}</div>
 
-                                <div class="thumbnail-name"><p
+                                <div class="card-name"><p
                                             class="text-center">{{ projectItem.project.parseFullName()|upper }}</p>
                                 </div>
                             </a>
                         {% endif %}
 
                         {% if projectItem.type is constant('\\Project\\ValueObject\\ProjectItem::TYPE_INVITE') %}
-                            <a class="thumbnail thumbnail-action"
-                               href="{{ inviteLink(projectItem.invite,'accept','social') }}">
-                                <div class="project-thumbnail {% if projectItem.isPending() %}project-thumbnail-blur{% endif %}"></div>
+                            <a class="card card-action"
+                               href="{{ projectInviteLink(projectItem.invite,'accept',constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) }}">
+                                <div class="project-card {% if projectItem.isPending() %}project-card-blur{% endif %}"></div>
 
-                                <div class="thumbnail-label">{{ projectItem.label }}</div>
+                                <div class="card-label">{{ projectItem.label }}</div>
 
-                                <div class="thumbnail-name"><p
+                                <div class="card-name"><p
                                             class="text-center">{{ projectItem.project.parseFullName()|upper }}</p>
                                 </div>
                             </a>
@@ -106,18 +98,15 @@
                     </div>
                 {% endfor %}
 
-
-
-
-                {% set newProjectLink = projectLink(null, 'new-community','social') %}
+                {% set newProjectLink = projectLink(null, 'new-community',constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) %}
 
                 {% if newProjectLink %}
                     <div class="col-xs-6 col-md-3">
-                        <a class="thumbnail" href="{{ newProjectLink }}">
+                        <a class="card" href="{{ newProjectLink }}">
 
-                            <div class="thumbnail-label new-item"><i class="fa fa-plus"></i></div>
+                            <div class="card-label new-item"><i class="fa fa-plus"></i></div>
 
-                            <div class="thumbnail-name"><p
+                            <div class="card-name"><p
                                         class="text-center">{{ translate("txt-create-new-project") }}</p>
                             </div>
                         </a>
@@ -127,65 +116,63 @@
 
             <a class="btn btn-primary"
                href="{{ url('community/project/list',{'call':call.id}) }}"><i
-                        class="fa fa-bars"></i> {{ translate("txt-list-projects-in-call-%s")|format(call) }}</a>
+                        class="fa fa-list"></i> {{ translate("txt-list-projects-in-call-%s")|format(call) }}</a>
 
         {% endif %}
 
         {# Project ideas #}
         {% if call.hasIdeaTool() %}
-            <br><br>
-            <h2>{{ translate("txt-my-project-ideas-in-%s-and-project-idea-invitations")|format(call) }}</h2>
+            <h2 class="pt-3">{{ translate("txt-my-project-ideas-in-%s-and-project-idea-invitations")|format(call) }}</h2>
 
-            <div class="row">
+            <div class="row py-3">
                 {% for ideaItem in ideas %}
-                    <div class="col-xs-6 col-md-3">
-
+                    <div class="col-md-3 pb-3">
                         {% if ideaItem.type is constant('\\Project\\ValueObject\\IdeaItem::TYPE_IDEA') %}
-                            <a class="thumbnail" href="{{ ideaLink(ideaItem.idea,'view','social') }}">
-                                <div class="idea-thumbnail"></div>
+                            <a class="card" href="{{ ideaLink(ideaItem.idea,'view',constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) }}">
+                                <div class="idea-card"></div>
 
-                                <div class="thumbnail-label">{{ ideaItem.label }}</div>
+                                <div class="card-label">{{ ideaItem.label }}</div>
 
-                                <div class="thumbnail-name"><p>{{ ideaItem.idea.parseName()|upper|truncate(25) }}</p>
+                                <div class="card-name"><p>{{ ideaItem.idea.parseName()|upper }}</p>
                                 </div>
                             </a>
                         {% endif %}
 
                         {% if ideaItem.type is constant('\\Project\\ValueObject\\IdeaItem::TYPE_INVITE') %}
-                            <a class="thumbnail thumbnail-action"
-                               href="{{ ideaInviteLink(ideaItem.invite,'accept','social') }}">
-                                <div class="idea-thumbnail idea-thumbnail-blur"></div>
+                            <a class="card card-action"
+                               href="{{ ideaInviteLink(ideaItem.invite,'accept',constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) }}">
+                                <div class="idea-card idea-card-blur"></div>
 
-                                <div class="thumbnail-label">{{ ideaItem.label }}</div>
+                                <div class="card-label">{{ ideaItem.label }}</div>
 
-                                <div class="thumbnail-name"><p>{{ ideaItem.idea.parseName()|upper|truncate(25) }}</p>
+                                <div class="card-name"><p>{{ ideaItem.idea.parseName()|upper }}</p>
                                 </div>
                             </a>
                         {% endif %}
 
                         {% if ideaItem.type is constant('\\Project\\ValueObject\\IdeaItem::TYPE_JOIN_REQUEST') %}
-                            <a class="thumbnail thumbnail-inactive"
-                               href="{{ ideaLink(ideaItem.idea,'view','social') }}">
-                                <div class="idea-thumbnail idea-thumbnail-blur"></div>
+                            <a class="card card-inactive"
+                               href="{{ ideaLink(ideaItem.idea,'view',constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) }}">
+                                <div class="idea-card idea-card-blur"></div>
 
-                                <div class="thumbnail-label inactive">{{ ideaItem.label }}</div>
+                                <div class="card-label inactive">{{ ideaItem.label }}</div>
 
-                                <div class="thumbnail-name"><p>{{ ideaItem.idea.parseName()|upper|truncate(25) }}</p>
+                                <div class="card-name"><p>{{ ideaItem.idea.parseName()|upper }}</p>
                                 </div>
                             </a>
                         {% endif %}
                     </div>
                 {% endfor %}
 
-                {% set newIdeaLink = ideaLink(null, 'new','social', tool) %}
+                {% set newIdeaLink = ideaLink(null, 'new',constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW"), tool) %}
 
                 {% if newIdeaLink %}
-                    <div class="col-xs-6 col-md-3">
-                        <a class="thumbnail" href="{{ newIdeaLink }}">
+                    <div class="col-md-3">
+                        <a class="card" href="{{ newIdeaLink }}">
 
-                            <div class="thumbnail-label new-item"><i class="fa fa-plus"></i></div>
+                            <div class="card-label new-item"><i class="fa fa-plus"></i></div>
 
-                            <div class="thumbnail-name"><p
+                            <div class="card-name"><p
                                         class="text-center">{{ translate("txt-create-new-idea") }}</p>
                             </div>
                         </a>
@@ -204,49 +191,49 @@
 
 
                 {% if tool.meeting %}
-                    <div class="col-xs-6 col-md-3">
+                    <div class="col-md-3">
                         {# Try to see if we can find a registration of the event #}
                         {% set registration = registrationService.findRegistrationByMeetingAndContact(tool.meeting, identity() ) %}
 
-                        <a class="thumbnail {% if not meetingService.isPassed(tool.meeting) and ((registration and registrationService.isCancelled(registration)) or not registration) %}thumbnail-action{% endif %}"
-                           href="{{ meetingLink(tool.meeting,'view', 'social') }}">
+                        <a class="card {% if not meetingService.isPassed(tool.meeting) and ((registration and registrationService.isCancelled(registration)) or not registration) %}card-action{% endif %}"
+                           href="{{ meetingLink(tool.meeting,'view', constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) }}">
 
                             {% if registration is not null %}
                                 {# The user is registered #}
-                                <div class="thumbnail-label">{{ translate("txt-registered") }}</div>
+                                <div class="card-label">{{ translate("txt-registered") }}</div>
                             {% elseif (meetingService.isRegistrationOpen(tool.meeting)) %}
                                 {# The user will register now #}
-                                <div class="thumbnail-label">{{ translate("txt-register-now") }}</div>
+                                <div class="card-label">{{ translate("txt-register-now") }}</div>
                             {% endif %}
 
-                            <div class="thumbnail-name"><p>{{ tool.meeting }}</p></div>
+                            <div class="card-name"><p>{{ tool.meeting }}</p></div>
                         </a>
                     </div>
                 {% endif %}
 
-                <div class="col-xs-6 col-md-3">
-                    <a class="thumbnail" href="{{ ideaToolLink(tool,'list-idea', 'social') }}">
+                <div class="col-md-3">
+                    <a class="card" href="{{ ideaToolLink(tool,'list-idea', constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) }}">
                         <img src="https://image.itea3.org/7fB2tsMdjHdoDdBbYKSLlTtdcFA=/fit-in/150x150/https://itea3.org/img/i/1744-1430817993.jpg">
 
-                        <div class="thumbnail-name"><p>{{ translate("txt-project-ideas") }}<br>{{ tool }}</p></div>
+                        <div class="card-name"><p>{{ translate("txt-project-ideas") }}<br>{{ tool }}</p></div>
                     </a>
 
                 </div>
 
-                <div class="col-xs-6 col-md-3">
-                    <a class="thumbnail" href="{{ url('community/contact/search') }}">
+                <div class="col-md-3">
+                    <a class="card" href="{{ url('community/contact/search') }}">
                         <img src="https://image.itea3.org/Zqv9wG7Yi4FVGJo_-NHxTgZtyAU=/fit-in/150x150/https://itea3.org/img/i/1746-1430818037.jpg">
 
-                        <div class="thumbnail-name"><p>{{ translate("txt-partner-search") }}</p></div>
+                        <div class="card-name"><p>{{ translate("txt-partner-search") }}</p></div>
                     </a>
 
                 </div>
 
-                <div class="col-xs-6 col-md-3">
-                    <a class="thumbnail" href="/call-documents.html">
+                <div class="col-md-3">
+                    <a class="card" href="/call-documents.html">
                         <img src="https://image.itea3.org/-Ul4jSuKtwTeDWrm9UyNBNGYyAM=/fit-in/150x150/https://itea3.org/img/i/1745-1430818012.jpg">
 
-                        <div class="thumbnail-name"><p>{{ translate("txt-call-documents") }}</p></div>
+                        <div class="card-name"><p>{{ translate("txt-call-documents") }}</p></div>
                     </a>
 
                 </div>
@@ -263,63 +250,63 @@
 </div>
 
 <style type="text/css">
-    .thumbnail {
-        height: 187px;
+    .card {
+        height: 200px;
         padding: 0;
         position: relative;
     }
 
-    .thumbnail img {
+    .card img {
+        margin: 10px auto 0px auto;
         width: 120px;
-        padding-top: 10px;
     }
 
-    .idea-thumbnail {
+    .idea-card {
         background: url('https://image.itea3.org/kLYYeap9A0Viobx5Q-GhlEVdpJw=/https://itea3.org/img/i/4186-1533726717.png') center center;
         background-size: cover;
         height: 100%;
     }
 
-    .project-thumbnail {
+    .project-card {
         height: 100%;
     }
 
-    .thumbnail-action {
+    .card-action {
         color: rgba(255, 108, 34, 0.9);;
     }
 
-    .thumbnail-action:hover, a.thumbnail-action:hover {
+    .card-action:hover, a.card-action:hover {
         border-color: rgb(167, 75, 26) !important;
         color: rgb(167, 75, 26) !important;
     }
 
-    .thumbnail-action .thumbnail-label {
+    .card-action .card-label {
         background: rgba(255, 108, 34, 0.75);
     }
 
-    .thumbnail-inactive {
+    .card-inactive {
         color: rgba(128, 130, 133, 0.75);
     }
 
-    .thumbnail-inactive .thumbnail-label {
+    .card-inactive .card-label {
         background: rgba(128, 130, 133, 0.75);
     }
 
-    .thumbnail-inactive:hover, a.thumbnail-inactive:hover {
+    .card-inactive:hover, a.card-inactive:hover {
         border-color: rgb(128, 130, 133);
     !important;
         color: rgb(128, 130, 133) !important;
     }
 
-    .idea-thumbnail-blur {
+    .idea-card-blur {
         opacity: 0.3;
     }
 
-    .idea-thumbnail:hover {
+    .idea-card:hover {
         background-size: 110%;
     }
 
-    .thumbnail-name {
+    .card-name {
         background: rgba(255, 255, 255, .9);
         border-radius: 4px;
         position: absolute;
@@ -331,7 +318,7 @@
         font-weight: bold;
     }
 
-    .thumbnail-label {
+    .card-label {
         background: rgba(17, 150, 71, 0.75);
         color: white;
         text-align: center;

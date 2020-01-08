@@ -8,7 +8,7 @@
  * @category   Program
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright  Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license    https://itea3.org/license.txt proprietary
  *
  * @link       https://itea3.org
@@ -18,7 +18,8 @@ declare(strict_types=1);
 
 namespace Program\View\Helper;
 
-use Content\Entity\Route;
+use General\ValueObject\Link\Link;
+use General\View\Helper\AbstractLink;
 use Program\Entity\Call\Session;
 
 /**
@@ -26,98 +27,81 @@ use Program\Entity\Call\Session;
  *
  * @package Program\View\Helper
  */
-class CallSessionLink extends AbstractLink
+final class CallSessionLink extends AbstractLink
 {
-    /**
-     * @var Session
-     */
-    private $session;
-
     public function __invoke(
         Session $session = null,
-        $action = 'view',
-        $show = 'text'
+        string $action = 'view',
+        string $show = 'text'
     ): string {
-        $this->session = $session;
-        $this->setAction($action);
-        $this->setShow($show);
+        $session ??= new Session();
 
-        // Set the non-standard options needed to give an other link value
-        $this->setShowOptions(
-            [
-                'name' => $this->getSession(),
-            ]
-        );
-
-        $this->addRouterParam('id', $this->getSession()->getId());
-
-        return $this->createLink();
-    }
-
-    /**
-     * @return Session
-     */
-    private function getSession(): Session
-    {
-        if ($this->session === null) {
-            $this->session = new Session();
+        $routeParams = [];
+        $showOptions = [];
+        if (! $session->isEmpty()) {
+            $routeParams['id'] = $session->getId();
+            $routeParams['session'] = $session->getId();
+            $showOptions['name'] = $session->getSession();
         }
 
-        return $this->session;
-    }
-
-    /**
-     * Extract the relevant parameters based on the action.
-     */
-    public function parseAction(): void
-    {
-        switch ($this->getAction()) {
-            case 'view':
-                $this->addRouterParam('session', $this->getSession()->getId());
-                $this->setRouter(Route::parseRouteName(Route::DEFAULT_ROUTE_HOME));
-                $this->setText(sprintf($this->translate('txt-view-session-%s'), $this->getSession()->getSession()));
-                break;
+        switch ($action) {
             case 'download-pdf':
-                $this->setRouter('community/program/session/download-pdf');
-                $this->setText(sprintf($this->translate('txt-download-session-%s'), $this->getSession()->getSession()));
+                $linkParams = [
+                    'icon' => 'fa-file-pdf-o',
+                    'route' => 'community/program/session/download-pdf',
+                    'text' => $showOptions[$show] ?? $this->translator->translate('txt-download-pdf-session-overview')
+                ];
                 break;
             case 'download-spreadsheet':
-                $this->setRouter('community/program/session/download-spreadsheet');
-                $this->setText(sprintf($this->translate('txt-download-session-%s'), $this->getSession()->getSession()));
+                $linkParams = [
+                    'icon' => 'fa-file-excel-o',
+                    'route' => 'community/program/session/download-spreadsheet',
+                    'text' => $showOptions[$show] ?? $this->translator->translate('txt-download-excel-session-overview')
+                ];
                 break;
             case 'download-document':
-                $this->setRouter('community/program/session/download-document');
-                $this->setText(sprintf($this->translate('txt-download-session-%s'), $this->getSession()->getSession()));
+                $linkParams = [
+                    'icon' => 'fa-file-word-o',
+                    'route' => 'community/program/session/download-document',
+                    'text' => $showOptions[$show] ?? $this->translator->translate('txt-download-word-session-overview')
+                ];
                 break;
             case 'download':
-                $this->setRouter('community/program/session/download');
-                $this->setText($this->translate('txt-download-files'));
+                $linkParams = [
+                    'icon' => 'fa-download',
+                    'route' => 'community/program/session/download',
+                    'text' => $showOptions[$show] ?? $this->translator->translate('txt-download-session-documents')
+                ];
                 break;
             case 'view-admin':
-                $this->setRouter('zfcadmin/session/view');
-                $this->setText($this->getSession()->getSession());
+                $linkParams = [
+                    'icon' => 'fa-link',
+                    'route' => 'zfcadmin/session/view',
+                    'text' => $showOptions[$show] ?? $session->getSession()
+                ];
                 break;
-            case 'edit-admin':
-                $this->setRouter('zfcadmin/session/edit');
-                $this->setText(
-                    sprintf(
-                        $this->translate('txt-edit-session-%s'),
-                        $this->getSession()->getSession()
-                    )
-                );
+            case 'edit':
+                $linkParams = [
+                    'icon' => 'fa-pencil-square-o',
+                    'route' => 'zfcadmin/session/edit',
+                    'text' => $showOptions[$show]
+                        ?? $this->translator->translate('txt-edit-session')
+                ];
                 break;
-            case 'new-admin':
-                $this->setRouter('zfcadmin/session/new');
-                $this->setText($this->translate('txt-new-session'));
+            case 'new':
+                $linkParams = [
+                    'icon' => 'fa-plus',
+                    'route' => 'zfcadmin/session/new',
+                    'text' => $showOptions[$show]
+                        ?? $this->translator->translate('txt-new-session')
+                ];
                 break;
-            default:
-                throw new \InvalidArgumentException(
-                    sprintf(
-                        '%s is an incorrect action for %s',
-                        $this->getAction(),
-                        __CLASS__
-                    )
-                );
         }
+
+        $linkParams['action'] = $action;
+        $linkParams['show'] = $show;
+        $linkParams['routeParams'] = $routeParams;
+
+        return $this->parse(Link::fromArray($linkParams));
     }
 }

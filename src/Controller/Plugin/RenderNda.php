@@ -5,7 +5,7 @@
  * @category   Program
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright  Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license    https://itea3.org/license.txt proprietary
  *
  * @link       https://itea3.org
@@ -18,7 +18,7 @@ namespace Program\Controller\Plugin;
 use Contact\Service\ContactService;
 use Program\Entity\Nda;
 use Program\Options\ModuleOptions;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 use ZfcTwig\View\TwigRenderer;
 
 /**
@@ -28,18 +28,9 @@ use ZfcTwig\View\TwigRenderer;
  */
 final class RenderNda extends AbstractPlugin
 {
-    /**
-     * @var TwigRenderer
-     */
-    private $renderer;
-    /**
-     * @var ModuleOptions
-     */
-    private $moduleOptions;
-    /**
-     * @var ContactService
-     */
-    private $contactService;
+    private TwigRenderer $renderer;
+    private ModuleOptions $moduleOptions;
+    private ContactService $contactService;
 
     public function __construct(TwigRenderer $renderer, ModuleOptions $moduleOptions, ContactService $contactService)
     {

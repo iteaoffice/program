@@ -7,29 +7,27 @@ declare(strict_types=1);
 
 namespace Program\ValueObject;
 
+use InvalidArgumentException;
 use Program\Entity\Call\Call;
 
 final class Calls
 {
-    /** @var Call */
-    private $call1;
-    /** @var Call */
-    private $call2;
-    /** @var Call */
-    private $upcoming;
+    private ? Call $call1 = null;
+    private ? Call $call2 = null;
+    private ? Call $upcoming = null;
 
     public function __construct(array $calls, ?Call $upcoming = null)
     {
         if (isset($calls[0])) {
-            if (!$calls[0] instanceof Call) {
-                throw new \InvalidArgumentException('The object should be an instance of the Program Call');
+            if (! $calls[0] instanceof Call) {
+                throw new InvalidArgumentException('The object should be an instance of the Program Call');
             }
 
             $this->call1 = $calls[0];
         }
         if (isset($calls[1])) {
-            if (!$calls[0] instanceof Call) {
-                throw new \InvalidArgumentException('The object should be an instance of the Program Call');
+            if (! $calls[0] instanceof Call) {
+                throw new InvalidArgumentException('The object should be an instance of the Program Call');
             }
 
             $this->call2 = $calls[1];
@@ -38,17 +36,17 @@ final class Calls
         $this->upcoming = $upcoming;
     }
 
-    public function getFirst(): ?Call
+    public function getFirst() : ?Call
     {
         return $this->call1;
     }
 
-    public function getSecond(): ?Call
+    public function getSecond() : ?Call
     {
         return $this->call2;
     }
 
-    public function getUpcoming(): ?Call
+    public function getUpcoming() : ?Call
     {
         return $this->upcoming;
     }
@@ -72,7 +70,7 @@ final class Calls
             return [];
         }
 
-        if (!$this->isMultiple()) {
+        if (! $this->isMultiple()) {
             return [$this->call1];
         }
 
@@ -90,7 +88,7 @@ final class Calls
             return [];
         }
 
-        if (!$this->isMultiple()) {
+        if (! $this->isMultiple()) {
             return [$this->call1->getId()];
         }
 

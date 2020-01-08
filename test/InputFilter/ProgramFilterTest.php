@@ -5,7 +5,7 @@
  * @category    ProjectTest
  * @package     Entity
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
@@ -16,7 +16,7 @@ use Program\Entity;
 use Program\InputFilter\ProgramFilter;
 use Program\Repository;
 use Testing\Util\AbstractServiceTest;
-use Zend\InputFilter\InputFilter;
+use Laminas\InputFilter\InputFilter;
 
 /**
  * Class GeneralTest

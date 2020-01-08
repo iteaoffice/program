@@ -1,13 +1,8 @@
 <?php
 /**
- * ITEA Office all rights reserved
- *
- * PHP Version 7
- *
- * @category    Project
- *
+*
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/project for the canonical source repository
@@ -18,13 +13,14 @@ declare(strict_types=1);
 namespace Program\Controller\Plugin;
 
 use Affiliation\Service\AffiliationService;
+use Evaluation\Service\EvaluationService;
 use General\Service\CountryService;
+use Project\Entity\Funding\Funding;
 use Project\Entity\Funding\Source;
 use Project\Entity\Funding\Status;
-use Project\Service\EvaluationService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 
 /**
  * Special plugin to produce an array with the evaluation.
@@ -33,30 +29,12 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin;
  */
 final class CreateCallFundingOverview extends AbstractPlugin
 {
-    /**
-     * @var CountryService
-     */
-    private $countryService;
-    /**
-     * @var VersionService
-     */
-    private $versionService;
-    /**
-     * @var ProjectService
-     */
-    private $projectService;
-    /**
-     * @var EvaluationService
-     */
-    private $evaluationService;
-    /**
-     * @var AffiliationService
-     */
-    private $affiliationService;
-    /**
-     * @var array
-     */
-    private $countries = [];
+    private CountryService $countryService;
+    private VersionService $versionService;
+    private ProjectService $projectService;
+    private EvaluationService $evaluationService;
+    private AffiliationService $affiliationService;
+    private array $countries = [];
 
     public function __construct(
         CountryService $countryService,
@@ -83,10 +61,10 @@ final class CreateCallFundingOverview extends AbstractPlugin
                  * Create an array of countries to serialize it normally
                  */
                 $this->countries[$country->getIso3()] = [
-                    'id'      => $country->getId(),
+                    'id' => $country->getId(),
                     'country' => $country->getCountry(),
-                    'object'  => $country,
-                    'iso3'    => ucwords((string)$country->getIso3()),
+                    'object' => $country,
+                    'iso3' => ucwords((string)$country->getIso3()),
 
                 ];
 
@@ -102,23 +80,16 @@ final class CreateCallFundingOverview extends AbstractPlugin
             }
         }
 
-        ksort($this->countries);
+        \ksort($this->countries);
 
         $evaluationResult['countries'] = $this->countries;
 
         return $evaluationResult;
     }
 
-    /**
-     * @param $project
-     * @param $country
-     * @param $year
-     *
-     * @return array
-     */
     private function getValue($project, $country, $year): array
     {
-        $version = $this->projectService->getLatestProjectVersion($project);
+        $version = $this->projectService->getLatestApprovedProjectVersion($project);
 
         if (null === $version) {
             return [];
@@ -126,29 +97,28 @@ final class CreateCallFundingOverview extends AbstractPlugin
 
         //Funding status separation
         /** @var Status $allGood */
-        $allGood = $this->evaluationService->find(Status::class, Status::STATUS_ALL_GOOD);
+        $allGood = $this->projectService->find(Status::class, Status::STATUS_ALL_GOOD);
         /** @var Status $selfFunded */
-        $selfFunded = $this->evaluationService->find(Status::class, Status::STATUS_SELF_FUNDED);
+        $selfFunded = $this->projectService->find(Status::class, Status::STATUS_SELF_FUNDED);
         /** @var Status $default */
-        $default = $this->evaluationService->find(Status::class, Status::STATUS_DEFAULT);
+        $default = $this->projectService->find(Status::class, Status::STATUS_DEFAULT);
 
         $costAllGood = 0;
         $costSelfFunded = 0;
         $otherCost = 0;
 
         //Go over the partners in the project and calculate the cost, group it by funding status
-        foreach ($this->affiliationService->findAffiliationByProjectAndCountryAndWhich($project, $country) as
-            $affiliation) {
+        foreach ($this->affiliationService->findAffiliationByProjectAndCountryAndWhich($project, $country) as $affiliation) {
             //Find the costs of this affiliation (in the given year)
             $costsPerYear = $this->versionService->findTotalCostVersionByAffiliationAndVersionPerYear(
                 $affiliation,
                 $version
             );
 
-
+            /** @var Funding $funding */
             foreach ($affiliation->getFunding() as $funding) {
                 if ($funding->getSource()->getId() === Source::SOURCE_OFFICE
-                    && $funding->getDateStart()->format('Y') == $year
+                    && $funding->getDateStart()->format('Y') === $year
                 ) {
                     $costs = null;
                     if (isset($costsPerYear[$year])) {

@@ -1,13 +1,8 @@
 <?php
 /**
- * ITEA Office all rights reserved
- *
- * PHP Version 7
- *
- * @category    Project
- *
+*
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        https://itea3.org
@@ -26,14 +21,20 @@ use Program\Controller\Plugin\SessionSpreadsheet;
 use Program\Entity\Call\Session;
 use Program\Service\ProgramService;
 use Project\Acl\Assertion\Idea\Idea;
-use Zend\Http\Headers;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Http\Headers;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use ZipArchive;
+use function file_get_contents;
+use function filesize;
+use function str_replace;
+use function stream_get_contents;
+use function strlen;
+use function sys_get_temp_dir;
+use function tempnam;
+use function unlink;
 
 /**
- * Class SessionController
- *
- * @package Program\Controller
  * @method SessionPdf sessionPdf(Session $session)
  * @method SessionSpreadsheet sessionSpreadsheet(Session $session)
  * @method SessionDocument sessionDocument(Session $session)
@@ -41,14 +42,8 @@ use Zend\Mvc\Controller\AbstractActionController;
  */
 final class SessionController extends AbstractActionController
 {
-    /**
-     * @var ProgramService
-     */
-    private $programService;
-    /**
-     * @var AssertionService
-     */
-    private $assertionService;
+    private ProgramService $programService;
+    private AssertionService $assertionService;
 
     public function __construct(ProgramService $programService, AssertionService $assertionService)
     {
@@ -71,11 +66,10 @@ final class SessionController extends AbstractActionController
         /** @var ProgramPdf $sessionPdf */
         $sessionPdf = $this->sessionPdf($session);
 
-        $response->getHeaders()->addHeaderLine('Expires: ' . \gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-            ->addHeaderLine('Cache-Control: max-age=36000, must-revalidate')->addHeaderLine('Pragma: public')
+        $response->getHeaders()
             ->addHeaderLine('Content-Disposition', 'attachment; filename="Session_' . $session->getId() . '.pdf"')
             ->addHeaderLine('Content-Type: application/pdf')
-            ->addHeaderLine('Content-Length', \strlen($sessionPdf->getPDFData()));
+            ->addHeaderLine('Content-Length', strlen($sessionPdf->getPDFData()));
         $response->setContent($sessionPdf->getPDFData());
 
         return $response;
@@ -108,37 +102,37 @@ final class SessionController extends AbstractActionController
             return $response->setStatusCode(Response::STATUS_CODE_404);
         }
 
-        $tempFile = \tempnam(\sys_get_temp_dir(), 'zip');
-        $zip = new \ZipArchive();
+        $tempFile = tempnam(sys_get_temp_dir(), 'zip');
+        $zip = new ZipArchive();
 
         $zip->open($tempFile);
         foreach ($session->getIdeaSession() as $ideaSession) {
             //Do a check to see if the user has access to the idea
             $this->assertionService->addResource($ideaSession->getIdea(), Idea::class);
 
-            if (!$this->isAllowed($ideaSession->getIdea(), 'view')) {
+            if (! $this->isAllowed($ideaSession->getIdea(), 'view')) {
                 continue;
             }
 
-            $dir = \str_replace(':', '', $ideaSession->getIdea()->parseName());
+            $dir = str_replace(':', '', $ideaSession->getIdea()->parseName());
             //$zip->addEmptyDir($dir);
             foreach ($ideaSession->getDocuments() as $document) {
                 $zip->addFromString(
                     $dir . '/' . $document->getFilename(),
-                    \stream_get_contents($document->getObject()->first()->getObject())
+                    stream_get_contents($document->getObject()->first()->getObject())
                 );
             }
             foreach ($ideaSession->getImages() as $image) {
                 $zip->addFromString(
                     $dir . '/' . $image->getImage(),
-                    \stream_get_contents($image->getObject()->first()->getObject())
+                    stream_get_contents($image->getObject()->first()->getObject())
                 );
             }
         }
         $zip->close();
-        $content = \file_get_contents($tempFile);
-        $contentLength = \filesize($tempFile);
-        \unlink($tempFile);
+        $content = file_get_contents($tempFile);
+        $contentLength = filesize($tempFile);
+        unlink($tempFile);
 
         // Prepare the response
         $response->setContent($content);

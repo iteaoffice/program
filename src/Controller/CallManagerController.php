@@ -1,13 +1,8 @@
 <?php
 /**
- * ITEA Office all rights reserved
- *
- * PHP Version 7
- *
- * @category    Project
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/project for the canonical source repository
@@ -23,6 +18,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use General\Service\CountryService;
 use General\Service\GeneralService;
+use Program\Controller\Plugin\CallSizeSpreadsheet;
 use Program\Controller\Plugin\CreateCallFundingOverview;
 use Program\Controller\Plugin\CreateFundingDownload;
 use Program\Controller\Plugin\GetFilter;
@@ -35,61 +31,37 @@ use Project\Entity\Project;
 use Project\Entity\Version\Version;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Zend\Paginator\Paginator;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\Paginator\Paginator;
+use Laminas\View\Model\ViewModel;
 
 /**
- * Class CallManagerController
- *
- * @package Program\Controller
  * @method FlashMessenger flashMessenger()
  * @method GetFilter getProgramFilter()
  * @method CreateCallFundingOverview createCallFundingOverview($projects, $year)
+ * @method CallSizeSpreadsheet callSizeSpreadsheet(array $programs = [], array $call = [])
  * @method CreateFundingDownload createFundingDownload(Call $call)
  */
 final class CallManagerController extends AbstractActionController
 {
-    /**
-     * @var CallService
-     */
-    private $callService;
-    /**
-     * @var FormService
-     */
-    private $formService;
-    /**
-     * @var ProjectService
-     */
-    private $projectService;
-    /**
-     * @var VersionService
-     */
-    private $versionService;
-    /**
-     * @var GeneralService
-     */
-    private $generalService;
-    /**
-     * @var CountryService
-     */
-    private $countryService;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private CallService $callService;
+    private FormService $formService;
+    private AffiliationService $affiliationService;
+    private ProjectService $projectService;
+    private VersionService $versionService;
+    private GeneralService $generalService;
+    private CountryService $countryService;
+    private EntityManager $entityManager;
+    private TranslatorInterface $translator;
 
     public function __construct(
         CallService $callService,
         FormService $formService,
+        AffiliationService $affiliationService,
         ProjectService $projectService,
         VersionService $versionService,
         GeneralService $generalService,
@@ -99,6 +71,7 @@ final class CallManagerController extends AbstractActionController
     ) {
         $this->callService = $callService;
         $this->formService = $formService;
+        $this->affiliationService = $affiliationService;
         $this->projectService = $projectService;
         $this->versionService = $versionService;
         $this->generalService = $generalService;
@@ -111,10 +84,11 @@ final class CallManagerController extends AbstractActionController
     {
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getProgramFilter();
+
         $callQuery = $this->callService->findFiltered(Call::class, $filterPlugin->getFilter());
 
         $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($callQuery, false)));
-        $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 20);
+        $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
@@ -145,16 +119,14 @@ final class CallManagerController extends AbstractActionController
 
         return new ViewModel(
             [
-                'call'           => $call,
-                'countries'      => $countries,
-                'generalService' => $this->generalService
+                'call'               => $call,
+                'countries'          => $countries,
+                'generalService'     => $this->generalService,
+                'affiliationService' => $this->affiliationService,
             ]
         );
     }
 
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     */
     public function newAction()
     {
         /** @var Request $request */
@@ -166,7 +138,7 @@ final class CallManagerController extends AbstractActionController
 
         if ($request->isPost()) {
             if (isset($data['cancel'])) {
-                $this->redirect()->toRoute('zfcadmin/call/list');
+                return $this->redirect()->toRoute('zfcadmin/call/list');
             }
 
             if ($form->isValid()) {
@@ -176,7 +148,7 @@ final class CallManagerController extends AbstractActionController
 
                 $this->flashMessenger()->addSuccessMessage(
                     sprintf(
-                        $this->translator->translate("txt-call-%s-has-been-created-successfully"),
+                        $this->translator->translate('txt-call-%s-has-been-created-successfully'),
                         $call
                     )
                 );
@@ -188,9 +160,6 @@ final class CallManagerController extends AbstractActionController
         return new ViewModel(['form' => $form]);
     }
 
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     */
     public function editAction()
     {
         /** @var Request $request */
@@ -213,7 +182,7 @@ final class CallManagerController extends AbstractActionController
 
                 $this->flashMessenger()->addSuccessMessage(
                     sprintf(
-                        $this->translator->translate("txt-call-%s-has-been-updated-successfully"),
+                        $this->translator->translate('txt-call-%s-has-been-updated-successfully'),
                         $call
                     )
                 );
@@ -225,9 +194,6 @@ final class CallManagerController extends AbstractActionController
         return new ViewModel(['form' => $form, 'call' => $call]);
     }
 
-    /**
-     * @return ViewModel
-     */
     public function sizeAction(): ViewModel
     {
         $call = $this->callService->findCallById((int)$this->params('id'));
@@ -237,7 +203,7 @@ final class CallManagerController extends AbstractActionController
         }
 
         // Only add the active projects
-        $activeProjects = $this->projectService->findProjectsByCall($call, ProjectService::WHICH_LABELLED);
+        $activeProjects = $this->projectService->findProjectsByCall($call, ProjectService::WHICH_ALL);
         $projects = $activeProjects->getQuery()->getResult();
 
         // Find the span of the call, because otherwise the matrix will be filled with numbers of year before the call
@@ -267,10 +233,21 @@ final class CallManagerController extends AbstractActionController
         );
     }
 
-    /**
-     * @return ViewModel
-     */
-    public function fundingAction(): ViewModel
+    public function exportSizeAction(): Response
+    {
+        $call = $this->callService->findCallById((int)$this->params('id'));
+
+        /** @var Response $response */
+        $response = $this->getResponse();
+
+        if (null === $call) {
+            return $response;
+        }
+
+        return $this->callSizeSpreadsheet([], [$call])->parseResponse();
+    }
+
+    public function fundingAction()
     {
         /** @var Request $request */
         $request = $this->getRequest();
@@ -282,8 +259,8 @@ final class CallManagerController extends AbstractActionController
         }
 
         $minMaxYear = $this->callService->findMinAndMaxYearInCall($call);
-
         $year = $this->params('year', $minMaxYear->maxYear);
+
         /*
          * The form can be used to overrule some parameters. We therefore need to check if the form is set
          * posted correctly and need to update the params when the form has been post
@@ -293,21 +270,21 @@ final class CallManagerController extends AbstractActionController
 
         if ($request->isPost() && $form->isValid()) {
             $formData = $form->getData();
-            $this->redirect()->toRoute(
+            return $this->redirect()->toRoute(
                 'zfcadmin/call/funding',
                 [
                     'id'   => (int)$formData['call'],
                     'year' => (int)$formData['year'],
                 ]
             );
-        } else {
-            $form->setData(
-                [
-                    'call' => $callId,
-                    'year' => $year,
-                ]
-            );
         }
+
+        $form->setData(
+            [
+                'call' => $callId,
+                'year' => $year,
+            ]
+        );
 
         $projects = $this->projectService->findProjectsByCall($call)->getQuery()->getResult();
 
@@ -322,9 +299,6 @@ final class CallManagerController extends AbstractActionController
         );
     }
 
-    /**
-     * @return Response
-     */
     public function downloadFundingAction(): Response
     {
         $call = $this->callService->findCallById((int)$this->params('id'));

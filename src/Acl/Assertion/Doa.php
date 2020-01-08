@@ -5,7 +5,7 @@
  * @category    Program
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
@@ -14,37 +14,23 @@ namespace Program\Acl\Assertion;
 
 use Admin\Entity\Access;
 use Program\Entity;
-use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
-use Zend\Permissions\Acl\Role\RoleInterface;
+use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Role\RoleInterface;
 
 /**
  * Class Doa
  *
  * @package Program\Acl\Assertion
  */
-class Doa extends AbstractAssertion
+final class Doa extends AbstractAssertion
 {
-    /**
-     * Returns true if and only if the assertion conditions are met.
-     *
-     * This method is passed the ACL, Role, Resource, and privilege to which the authorization query applies. If the
-     * $role, $doa, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
-     * privileges, respectively.
-     *
-     * @param Acl                          $acl
-     * @param RoleInterface                $role
-     * @param ResourceInterface|Entity\Doa $doa
-     * @param string                       $privilege
-     *
-     * @return bool
-     */
     public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $doa = null, $privilege = null): bool
     {
         $this->setPrivilege($privilege);
         $id = $this->getId();
 
-        if (!$doa instanceof Entity\Doa && null !== $id) {
+        if (! $doa instanceof Entity\Doa && null !== $id) {
             $doa = $this->programService->find(Entity\Doa::class, (int)$id);
         }
 

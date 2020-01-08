@@ -5,7 +5,7 @@
  * @category   Project
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright  Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license    https://itea3.org/license.txt proprietary
  *
  * @link       https://itea3.org
@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Program\Entity\AbstractEntity;
 use Program\Entity\Program;
-use Zend\Form\Annotation;
+use Laminas\Form\Annotation;
 
 /**
  * @ORM\Table(name="programcall")
@@ -55,57 +55,57 @@ class Call extends AbstractEntity
     public const PROJECT_REPORT_SINGLE = 1;
     public const PROJECT_REPORT_DOUBLE = 2;
 
-    protected static $activeTemplates
+    protected static array $activeTemplates
         = [
             self::INACTIVE => 'txt-inactive-for-projects',
             self::ACTIVE   => 'txt-active-for-projects',
         ];
 
-    protected static $doaRequirementTemplates
+    protected static array $doaRequirementTemplates
         = [
             self::DOA_REQUIREMENT_NOT_APPLICABLE => 'txt-no-doa-required',
             self::DOA_REQUIREMENT_PER_PROGRAM    => 'txt-doa-per-program-required',
             self::DOA_REQUIREMENT_PER_PROJECT    => 'txt-doa-per-project-required',
         ];
 
-    protected static $ndaRequirementTemplates
+    protected static array $ndaRequirementTemplates
         = [
             self::NDA_REQUIREMENT_NOT_APPLICABLE => 'txt-no-nda-required',
             self::NDA_REQUIREMENT_PER_CALL       => 'txt-nda-per-call-required',
             self::NDA_REQUIREMENT_PER_PROJECT    => 'txt-nda-per-project-required',
         ];
 
-    protected static $loiRequirementTemplates
+    protected static array $loiRequirementTemplates
         = [
             self::LOI_NOI_REQUIRED => 'txt-no-loi-required',
             self::LOI_REQUIRED     => 'txt-loi-required',
         ];
 
-    protected static $projectReportTemplates
+    protected static array $projectReportTemplates
         = [
             self::PROJECT_REPORT_SINGLE => 'txt-project-report-single',
             self::PROJECT_REPORT_DOUBLE => 'txt-project-report-double',
         ];
 
     /**
-     * @ORM\Column(name="programcall_id", type="integer", nullable=false)
+     * @ORM\Column(name="programcall_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @Annotation\Type("\Zend\Form\Element\Hidden")
+     * @Annotation\Type("\Laminas\Form\Element\Hidden")
      *
-     * @var integer
+     * @var int
      */
     private $id;
     /**
-     * @ORM\Column(name="programcall", type="string", length=5, nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @ORM\Column(name="programcall", type="string", nullable=true)
+     * @Annotation\Type("\Laminas\Form\Element\Text")
      * @Annotation\Options({"label":"txt-program-call"})
      *
      * @var string
      */
     private $call;
     /**
-     * @ORM\Column(name="docref", type="string", length=255, nullable=false, unique=true)
+     * @ORM\Column(name="docref", type="string", nullable=true, unique=true)
      * @Gedmo\Slug(fields={"call"})
      * @Annotation\Exclude()
      *
@@ -114,7 +114,7 @@ class Call extends AbstractEntity
     private $docRef;
     /**
      * @ORM\Column(name="po_open_date", type="datetime", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\DateTime")
+     * @Annotation\Type("\Laminas\Form\Element\DateTime")
      * @Annotation\Attributes({"step":"any"})
      * @Annotation\Options({"label":"txt-po-open-date", "format":"Y-m-d H:i:s"})
      *
@@ -123,7 +123,7 @@ class Call extends AbstractEntity
     private $poOpenDate;
     /**
      * @ORM\Column(name="po_close_date", type="datetime", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\DateTime")
+     * @Annotation\Type("\Laminas\Form\Element\DateTime")
      * @Annotation\Attributes({"step":"any"})
      * @Annotation\Options({"label":"txt-po-close-date", "format":"Y-m-d H:i:s"})
      *
@@ -132,7 +132,7 @@ class Call extends AbstractEntity
     private $poCloseDate;
     /**
      * @ORM\Column(name="loi_submission_date", type="datetime", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\DateTime")
+     * @Annotation\Type("\Laminas\Form\Element\DateTime")
      * @Annotation\Attributes({"step":"any"})
      * @Annotation\Options({"label":"txt-loi-submission-date-label", "format":"Y-m-d H:i:s","help-block":"txt-loi-submission-help-block"})
      *
@@ -141,7 +141,7 @@ class Call extends AbstractEntity
     private $loiSubmissionDate;
     /**
      * @ORM\Column(name="fpp_open_date", type="datetime", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\DateTime")
+     * @Annotation\Type("\Laminas\Form\Element\DateTime")
      * @Annotation\Attributes({"step":"any"})
      * @Annotation\Options({"label":"txt-fpp-open-date", "format":"Y-m-d H:i:s"})
      *
@@ -150,7 +150,7 @@ class Call extends AbstractEntity
     private $fppOpenDate;
     /**
      * @ORM\Column(name="fpp_close_date", type="datetime", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\DateTime")
+     * @Annotation\Type("\Laminas\Form\Element\DateTime")
      * @Annotation\Attributes({"step":"any"})
      * @Annotation\Options({"label":"txt-fpp-close-date", "format":"Y-m-d H:i:s"})
      *
@@ -159,7 +159,7 @@ class Call extends AbstractEntity
     private $fppCloseDate;
     /**
      * @ORM\Column(name="doa_submission_date", type="datetime", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\DateTime")
+     * @Annotation\Type("\Laminas\Form\Element\DateTime")
      * @Annotation\Attributes({"step":"any"})
      * @Annotation\Options({"label":"txt-doa-submission-date-label", "format":"Y-m-d H:i:s","help-block":"txt-doa-submission-help-block"})
      *
@@ -168,7 +168,7 @@ class Call extends AbstractEntity
     private $doaSubmissionDate;
     /**
      * @ORM\Column(name="label_announcement_date", type="datetime", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\DateTime")
+     * @Annotation\Type("\Laminas\Form\Element\DateTime")
      * @Annotation\Attributes({"step":"any"})
      * @Annotation\Options({"label":"txt-label-announcement-date-label", "format":"Y-m-d H:i:s","help-block":"txt-label-announcement-help-block"})
      *
@@ -177,7 +177,7 @@ class Call extends AbstractEntity
     private $labelAnnouncementDate;
     /**
      * @ORM\Column(name="doa_requirement", type="smallint", nullable=false)
-     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Type("Laminas\Form\Element\Radio")
      * @Annotation\Attributes({"array":"doaRequirementTemplates"})
      * @Annotation\Options({"label":"txt-doa-requirements","help-block":"txt-doa-requirements-inline-help"})
      *
@@ -186,7 +186,7 @@ class Call extends AbstractEntity
     private $doaRequirement;
     /**
      * @ORM\Column(name="loi_requirement", type="smallint", nullable=false)
-     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Type("Laminas\Form\Element\Radio")
      * @Annotation\Attributes({"array":"loiRequirementTemplates"})
      * @Annotation\Options({"label":"txt-loi-requirements","help-block":"txt-loi-requirements-inline-help"})
      *
@@ -195,7 +195,7 @@ class Call extends AbstractEntity
     private $loiRequirement;
     /**
      * @ORM\Column(name="project_report", type="smallint", nullable=false)
-     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Type("Laminas\Form\Element\Radio")
      * @Annotation\Attributes({"array":"projectReportTemplates"})
      * @Annotation\Options({"label":"txt-call-project-report-label","help-block":"txt-call-project-report-help-block"})
      *
@@ -204,7 +204,7 @@ class Call extends AbstractEntity
     private $projectReport;
     /**
      * @ORM\Column(name="nda_requirement", type="smallint", nullable=false)
-     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Type("Laminas\Form\Element\Radio")
      * @Annotation\Attributes({"array":"ndaRequirementTemplates"})
      * @Annotation\Options({"label":"txt-nda-requirements","help-block":"txt-nda-requirements-inline-help"})
      *
@@ -213,7 +213,7 @@ class Call extends AbstractEntity
     private $ndaRequirement;
     /**
      * @ORM\Column(name="active", type="smallint", nullable=false)
-     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Type("Laminas\Form\Element\Radio")
      * @Annotation\Attributes({"array":"activeTemplates"})
      * @Annotation\Options({"label":"txt-program-call-active-label","help-block":"txt-program-call-active-inline-help"})
      *
@@ -243,15 +243,6 @@ class Call extends AbstractEntity
      * @var \Project\Entity\Project[]|Collections\ArrayCollection
      */
     private $proxyProject;
-    /**
-     * @ORM\ManyToOne(targetEntity="Program\Entity\Roadmap", inversedBy="call")
-     * @ORM\JoinColumns({
-     * @ORM\JoinColumn(name="roadmap_id", referencedColumnName="roadmap_id")
-     * })
-     *
-     * @var \Program\Entity\Roadmap
-     */
-    private $roadmap;
     /**
      * @ORM\ManyToMany(targetEntity="Program\Entity\Nda", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
@@ -323,10 +314,6 @@ class Call extends AbstractEntity
      * @var \General\Entity\Challenge[]|Collections\ArrayCollection
      */
     private $challenge;
-
-    /**
-     * Class constructor.
-     */
     public function __construct()
     {
         $this->publication = new Collections\ArrayCollection();
@@ -374,21 +361,6 @@ class Call extends AbstractEntity
         return self::$projectReportTemplates;
     }
 
-    public function __get($property)
-    {
-        return $this->$property;
-    }
-
-    public function __set($property, $value)
-    {
-        $this->$property = $value;
-    }
-
-    public function __isset($property)
-    {
-        return isset($this->$property);
-    }
-
     public function __toString(): string
     {
         return sprintf('%s Call %s', $this->program->getProgram(), $this->call);
@@ -396,7 +368,7 @@ class Call extends AbstractEntity
 
     public function shortName(): string
     {
-        $words = \explode(' ', $this->getProgram()->getProgram());
+        $words = \explode(' ', $this->program->getProgram());
         $acronym = '';
 
         foreach ($words as $w) {
@@ -418,9 +390,14 @@ class Call extends AbstractEntity
         return $this;
     }
 
+    public function searchName(): string
+    {
+        return \sprintf('%s Call %s', $this->program->searchName(), $this->call);
+    }
+
     public function hasIdeaTool(): bool
     {
-        return !$this->ideaTool->isEmpty();
+        return ! $this->ideaTool->isEmpty();
     }
 
     public function isActive(): bool
@@ -566,18 +543,6 @@ class Call extends AbstractEntity
     public function setProject($project): Call
     {
         $this->project = $project;
-
-        return $this;
-    }
-
-    public function getRoadmap()
-    {
-        return $this->roadmap;
-    }
-
-    public function setRoadmap($roadmap): Call
-    {
-        $this->roadmap = $roadmap;
 
         return $this;
     }

@@ -5,7 +5,7 @@
  * @category    Program
  * @package     Config
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 use Program\Controller;
@@ -280,7 +280,7 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes'  => [
-                            'list' => [
+                            'list'        => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/list[/f-:encodedFilter][/page-:page].html',
@@ -289,7 +289,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'new'  => [
+                            'new'         => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/new.html',
@@ -298,7 +298,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'edit' => [
+                            'edit'        => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/edit/[:id].html',
@@ -307,7 +307,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'view' => [
+                            'view'        => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/view/[:id].html',
@@ -316,12 +316,12 @@ return [
                                     ],
                                 ],
                             ],
-                            'size' => [
+                            'export-size' => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/size[/program-:id].html',
+                                    'route'    => '/export-size[/program-:id].html',
                                     'defaults' => [
-                                        'action' => 'size',
+                                        'action' => 'export-size',
                                     ],
                                 ],
                             ],
@@ -381,6 +381,15 @@ return [
                                     'route'    => '/size/call-[:id].html',
                                     'defaults' => [
                                         'action' => 'size',
+                                    ],
+                                ],
+                            ],
+                            'export-size'      => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/export-size[/call-:id].html',
+                                    'defaults' => [
+                                        'action' => 'export-size',
                                     ],
                                 ],
                             ],

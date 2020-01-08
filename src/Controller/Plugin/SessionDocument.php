@@ -5,7 +5,7 @@
  * @category   Program
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright  Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license    https://itea3.org/license.txt proprietary
  *
  * @link       https://itea3.org
@@ -27,15 +27,24 @@ use PhpOffice\PhpWord\Style\Image;
 use PhpOffice\PhpWord\Writer\Word2007;
 use Program\Entity\Call\Session;
 use Program\Options\ModuleOptions;
+use Project\Acl\Assertion\Idea\Idea;
 use Project\Entity\Idea\Description;
 use Project\Entity\Idea\DescriptionType;
-use Zend\Http\Headers;
-use Zend\Http\Response;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\View\Helper\ServerUrl;
-use Zend\View\Helper\Url;
-use Zend\View\HelperPluginManager;
+use Laminas\Http\Headers;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\View\Helper\ServerUrl;
+use Laminas\View\Helper\Url;
+use Laminas\View\HelperPluginManager;
+use function html_entity_decode;
+use function ob_end_flush;
+use function ob_get_clean;
+use function ob_get_length;
+use function ob_start;
+use function preg_replace;
+use function round;
+use function strip_tags;
 
 /**
  * Class SessionDocument
@@ -44,46 +53,16 @@ use Zend\View\HelperPluginManager;
  */
 final class SessionDocument extends AbstractPlugin
 {
-    /**
-     * @var Session
-     */
-    private $session;
-    /**
-     * @var PhpWord
-     */
-    private $document;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var string
-     */
-    private $headerLogo;
-    /**
-     * @var string
-     */
-    private $footerImage;
-    /**
-     * @var AssertionService
-     */
-    private $assertionService;
-    /**
-     * @var Authorize
-     */
-    private $authorize;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-    /**
-     * @var Url
-     */
-    private $urlHelper;
-    /**
-     * @var ServerUrl
-     */
-    private $serverUrlHelper;
+    private Session $session;
+    private PhpWord $document;
+    private EntityManager $entityManager;
+    private string $headerLogo;
+    private string $footerImage;
+    private AssertionService $assertionService;
+    private Authorize $authorize;
+    private TranslatorInterface $translator;
+    private ? Url $urlHelper = null;
+    private ? ServerUrl $serverUrlHelper = null;
 
     public function __construct(
         EntityManager $entityManager,
@@ -106,7 +85,7 @@ final class SessionDocument extends AbstractPlugin
         Settings::setOutputEscapingEnabled(true);
     }
 
-    public function __invoke(Session $session): SessionDocument
+    public function __invoke(Session $session) : SessionDocument
     {
         $this->session = $session;
         $this->document = new PhpWord();
@@ -115,8 +94,8 @@ final class SessionDocument extends AbstractPlugin
 
         $section = $this->document->addSection(
             [
-                'marginLeft'   => 500,
-                'marginRight'  => 500,
+                'marginLeft' => 500,
+                'marginRight' => 500,
                 //'marginTop'    => 200,
                 'marginBottom' => 300,
                 'headerHeight' => 200,
@@ -125,32 +104,32 @@ final class SessionDocument extends AbstractPlugin
         );
 
         $header = $section->addHeader();
-        if (!empty($this->headerLogo)) {
+        if (! empty($this->headerLogo)) {
             $header->addImage(
                 $this->headerLogo,
                 [
-                    'width'            => 180,
-                    'positioning'      => Image::POS_ABSOLUTE,
-                    'posHorizontal'    => Image::POS_ABSOLUTE,
+                    'width' => 180,
+                    'positioning' => Image::POS_ABSOLUTE,
+                    'posHorizontal' => Image::POS_ABSOLUTE,
                     'posHorizontalRel' => Image::POS_RELTO_PAGE,
-                    'posVertical'      => Image::POS_ABSOLUTE,
-                    'marginLeft'       => 10
+                    'posVertical' => Image::POS_ABSOLUTE,
+                    'marginLeft' => 10
                 ]
             );
         }
 
         $footer = $section->addFooter();
-        if (!empty($this->footerImage)) {
+        if (! empty($this->footerImage)) {
             $footer->addImage(
                 $this->footerImage,
                 [
-                    'width'            => \round(Converter::cmToPixel(5.2)),
-                    'align'            => Image::POS_RIGHT,
-                    'positioning'      => Image::POS_ABSOLUTE,
-                    'posHorizontal'    => Image::POSITION_HORIZONTAL_RIGHT,
+                    'width' => round(Converter::cmToPixel(5.2)),
+                    'align' => Image::POS_RIGHT,
+                    'positioning' => Image::POS_ABSOLUTE,
+                    'posHorizontal' => Image::POSITION_HORIZONTAL_RIGHT,
                     'posHorizontalRel' => Image::POS_RELTO_PAGE,
-                    'posVertical'      => Image::POSITION_VERTICAL_BOTTOM,
-                    'posVerticalRel'   => Image::POS_RELTO_PAGE,
+                    'posVertical' => Image::POSITION_VERTICAL_BOTTOM,
+                    'posVerticalRel' => Image::POS_RELTO_PAGE,
                 ]
             );
         }
@@ -170,8 +149,8 @@ final class SessionDocument extends AbstractPlugin
 
         foreach ($session->getIdeaSession() as $ideaSession) {
             //Check access to the idea
-            $this->assertionService->addResource($ideaSession->getIdea(), \Project\Acl\Assertion\Idea\Idea::class);
-            if (!$this->authorize->isAllowed($ideaSession->getIdea(), 'view')) {
+            $this->assertionService->addResource($ideaSession->getIdea(), Idea::class);
+            if (! $this->authorize->isAllowed($ideaSession->getIdea(), 'view')) {
                 continue;
             }
 
@@ -211,10 +190,10 @@ final class SessionDocument extends AbstractPlugin
                 ]
             );
             if ($shortDescription instanceof Description) {
-                $shortDescriptionText = \preg_replace(
+                $shortDescriptionText = preg_replace(
                     '/[[:cntrl:]]+/',
                     '',
-                    \html_entity_decode(\strip_tags($shortDescription->getDescription()))
+                    html_entity_decode(strip_tags($shortDescription->getDescription()))
                 );
             }
             $table->addCell(6800)->addText($shortDescriptionText, ['size' => 9], 'noSpacing');
@@ -225,40 +204,40 @@ final class SessionDocument extends AbstractPlugin
         return $this;
     }
 
-    public function parseResponse(): Response
+    public function parseResponse() : Response
     {
         $response = new Response();
-        if (!($this->document instanceof PhpWord)) {
+        if (! ($this->document instanceof PhpWord)) {
             return $response->setStatusCode(Response::STATUS_CODE_404);
         }
 
         /** @var Word2007 $writer */
         $writer = IOFactory::createWriter($this->document, 'Word2007');
 
-        \ob_start();
+        ob_start();
         $gzip = false;
         // Gzip the output when possible. @see http://php.net/manual/en/function.ob-gzhandler.php
-        if (\ob_start('ob_gzhandler')) {
+        if (ob_start('ob_gzhandler')) {
             $gzip = true;
         }
         $writer->save('php://output');
         if ($gzip) {
-            \ob_end_flush(); // Flush the gzipped buffer into the main buffer
+            ob_end_flush(); // Flush the gzipped buffer into the main buffer
         }
-        $contentLength = \ob_get_length();
+        $contentLength = ob_get_length();
 
         // Prepare the response
-        $response->setContent(\ob_get_clean());
+        $response->setContent(ob_get_clean());
         $response->setStatusCode(Response::STATUS_CODE_200);
         $headers = new Headers();
         $headers->addHeaders(
             [
                 'Content-Disposition' => 'attachment; filename="' . $this->session->getSession() . '.docx"',
-                'Content-Type'        => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                'Content-Length'      => $contentLength,
-                'Expires'             => '0',
-                'Cache-Control'       => 'must-revalidate',
-                'Pragma'              => 'public',
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'Content-Length' => $contentLength,
+                'Expires' => '0',
+                'Cache-Control' => 'must-revalidate',
+                'Pragma' => 'public',
             ]
         );
         if ($gzip) {

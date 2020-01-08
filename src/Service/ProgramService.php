@@ -5,18 +5,25 @@
  * @category    Program
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
 
 namespace Program\Service;
 
+use Doctrine\ORM\EntityManager;
 use General\Entity\Country;
+use General\Search\Service\CountrySearchService;
 use Organisation\Entity\Organisation;
+use Organisation\Search\Service\OrganisationSearchService;
+use Program\Entity\Call\Call;
 use Program\Entity\Doa;
 use Program\Entity\Funder;
 use Program\Entity\Program;
+use Program\ValueObject\ProgramData;
+use Project\Search\Service\ProjectSearchService;
+use stdClass;
 
 /**
  * Class ProgramService
@@ -25,6 +32,24 @@ use Program\Entity\Program;
  */
 class ProgramService extends AbstractService
 {
+    private OrganisationSearchService $organisationSearchService;
+    private ProjectSearchService $projectSearchService;
+    private CountrySearchService $countrySearchService;
+
+    public function __construct(
+        EntityManager $entityManager,
+        OrganisationSearchService $organisationSearchService,
+        ProjectSearchService $projectSearchService,
+        CountrySearchService $countrySearchService
+    ) {
+        parent::__construct($entityManager);
+
+        $this->organisationSearchService = $organisationSearchService;
+        $this->projectSearchService = $projectSearchService;
+        $this->countrySearchService = $countrySearchService;
+    }
+
+
     public function findProgramById(int $id): ?Program
     {
         return $this->entityManager->getRepository(Program::class)->find($id);
@@ -40,17 +65,29 @@ class ProgramService extends AbstractService
         return $this->entityManager->getRepository(Program::class)->findOneBy([], ['id' => 'DESC']);
     }
 
-    public function findMinAndMaxYearInProgram(Program $program): \stdClass
+    public function findMinAndMaxYearInProgram(Program $program): stdClass
     {
         /** @var \Program\Repository\Program $repository */
         $repository = $this->entityManager->getRepository(Program::class);
 
         $yearSpanResult = $repository->findMinAndMaxYearInProgram($program);
-        $yearSpan = new \stdClass();
+        $yearSpan = new stdClass();
         $yearSpan->minYear = (int)$yearSpanResult['minYear'];
         $yearSpan->maxYear = (int)$yearSpanResult['maxYear'];
 
         return $yearSpan;
+    }
+
+    public function findProgramData(): ProgramData
+    {
+        $calls = $this->entityManager->getRepository(Call::class)->findAmountOfActiveCalls();
+        $years = $this->entityManager->getRepository(Call::class)->findAmountOfYears();
+        $organisations = $this->organisationSearchService->findAmountOfActiveOrganisations();
+
+        $countries = $this->countrySearchService->findAmountOfActiveCountries();
+        $projects = $this->projectSearchService->findAmountOfActiveProjects();
+
+        return new ProgramData($calls, $projects, $organisations, $countries, $years);
     }
 
     public function findFunderByCountry(Country $country): array

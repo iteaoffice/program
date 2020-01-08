@@ -5,12 +5,11 @@
 {{ form().openTag(form)|raw }}
 {% set filter = form.get('filter') %}
 
-<input type="hidden" name="filter[order]" value="{{ order }}">
-<input type="hidden" name="filter[direction]" value="{{ direction }}">
+
 
 <div class="row">
     <div class="col-md-10">
-        <h1 class="display-4">{{ translate("txt-funder-list") }} {{ funderLink(null, 'new','button') }}</h1>
+        <h1>{{ translate("txt-funder-list") }} {{ funderLink(null, 'new','button') }}</h1>
 
         <div class="row">
             <div class="col-md-6">
@@ -19,16 +18,19 @@
             <div class="col-md-6">
                 <div class="input-group">
                     {{ formelement(filter.get('search')) }}
-                    <span class="input-group-btn">{{ formelement(form.get('submit')) }}</span></div>
+                    <div class="input-group-append input-group-btn">
+                        {{ formelement(form.get('submit')) }}
+                    </div>
+                </div>
             </div>
         </div>
 
         {% if paginator.pageRange > 0 %}
-            <table class="table table-hover table-striped table-condensed table-sm">
+            <table class="table table-hover table-striped table-sm">
                 <thead>
                 <tr>
-                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/funder/list', 'criteria': 'contact', 'text': translate('txt-contact')} %}</th>
-                    <th>{% include 'program/partial/sortable-table-header' with {'route': 'zfcadmin/funder/list', 'criteria': 'country', 'text': translate('txt-country')} %}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/funder/list', 'criteria': 'contact', 'text': translate("txt-contact")} %}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/funder/list', 'criteria': 'country', 'text': translate("txt-country")} %}</th>
                     <th>{{ translate("txt-position") }}</th>
                     <th>{{ translate("txt-show-on-website") }}</th>
                 </tr>
@@ -36,15 +38,15 @@
                 <tbody>
                 {% for funder in paginator.getCurrentItems() %}
                     <tr>
-                        <td>{{ funderLink(funder,'view-admin', 'name') }} {{ funderLink(funder,'edit', 'icon') }}</td>
+                        <td>{{ funderLink(funder,'view', 'name') }} {{ funderLink(funder,'edit', 'icon') }}</td>
                         <td>{{ countryLink(funder.country,'view-admin','name') }}</td>
                         <td>{{ funder.position }}</td>
-                        <td>{% if funder.getShowOnWebsite %}{{ translate(funder.getShowOnWebsite(true)) }}{% endif %}</td>
+                        <td>{% if funder.getShowOnWebsite() %}{{ translate(funder.getShowOnWebsite(true)) }}{% endif %}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
-            {% include 'program/partial/pagination-control' %}
+            {% include 'application/partial/pagination-control' %}
         {% else %}
             {{ ztbalert().info(translate("txt-no-call-could-be-found"))|raw }}
         {% endif %}
@@ -52,12 +54,10 @@
     <div class="col-md-2">
         <div class="well well-sm">
             <fieldset>
-                {{ ztbformelement(filter.get('showOnWebsite')) }}
+                {{ ztbformelement(filter.get('showOnWebsite'), true) }}
 
-                <div class="form-group row">
-                    {{ ztbformelement(form.get('submit')) }}
+                                   {{ ztbformelement(form.get('submit')) }}
                     {{ ztbformelement(form.get('clear')) }}
-                </div>
             </fieldset>
         </div>
     </div>

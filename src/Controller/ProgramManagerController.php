@@ -1,13 +1,8 @@
 <?php
 /**
- * ITEA Office all rights reserved
- *
- * PHP Version 7
- *
- * @category    Project
- *
+*
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/project for the canonical source repository
@@ -20,7 +15,9 @@ namespace Program\Controller;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
+use Program\Controller\Plugin\CallSizeSpreadsheet;
 use Program\Controller\Plugin\GetFilter;
+use Program\Entity\Call\Call;
 use Program\Entity\Program;
 use Program\Form\ProgramFilter;
 use Program\Form\SizeSelect;
@@ -30,49 +27,27 @@ use Program\Service\ProgramService;
 use Project\Entity\Project;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Zend\Paginator\Paginator;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\Paginator\Paginator;
+use Laminas\View\Model\ViewModel;
 
 /**
- * Class ProgramManagerController
- *
- * @package Program\Controller
  * @method FlashMessenger flashMessenger()
  * @method GetFilter getProgramFilter()
+ * @method CallSizeSpreadsheet callSizeSpreadsheet(Program $program = null, Call $call = null)
  */
 final class ProgramManagerController extends AbstractActionController
 {
-    /**
-     * @var ProgramService
-     */
-    private $programService;
-    /**
-     * @var CallService
-     */
-    private $callService;
-    /**
-     * @var ProjectService
-     */
-    private $projectService;
-    /**
-     * @var VersionService
-     */
-    private $versionService;
-    /**
-     * @var FormService
-     */
-    private $formService;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private ProgramService $programService;
+    private CallService $callService;
+    private ProjectService $projectService;
+    private VersionService $versionService;
+    private FormService $formService;
+    private EntityManager $entityManager;
+    private TranslatorInterface $translator;
 
     public function __construct(
         ProgramService $programService,
@@ -137,7 +112,7 @@ final class ProgramManagerController extends AbstractActionController
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                $this->redirect()->toRoute('zfcadmin/program/list');
+                return $this->redirect()->toRoute('zfcadmin/program/list');
             }
 
             if ($form->isValid()) {
@@ -181,7 +156,7 @@ final class ProgramManagerController extends AbstractActionController
 
                 /** @var Program $program */
                 $this->programService->save($program);
-                $this->redirect()->toRoute(
+                return $this->redirect()->toRoute(
                     'zfcadmin/program/view',
                     [
                         'id' => $program->getId(),
@@ -193,89 +168,18 @@ final class ProgramManagerController extends AbstractActionController
         return new ViewModel(['form' => $form, 'program' => $program]);
     }
 
-    public function sizeAction(): ViewModel
+    public function exportSizeAction(): Response
     {
-        $filter = $this->getRequest()->getPost()->toArray();
+        /** @var Program $program */
+        $program = $this->programService->find(Program::class, (int)$this->params('id'));
 
-        $form = new SizeSelect($this->entityManager);
-        $form->setData($filter);
-
-        $program = $this->programService->findLastProgram();
-
-        if (null !== $this->params('id')) {
-            $program = $this->programService->findProgramById((int)$this->params('id'));
-        }
+        /** @var Response $response */
+        $response = $this->getResponse();
 
         if (null === $program) {
-            return $this->notFoundAction();
+            return $response;
         }
 
-        if (isset($filter['filter']['program']) && $this->getRequest()->isPost()) {
-            $program = $this->programService->findProgramById((int) $filter['filter']['program']);
-        }
-
-        $form->get('filter')->get('program')->setValue($program->getId());
-
-        $minMaxYear = $this->programService->findMinAndMaxYearInProgram($program);
-        $yearSpan = range($minMaxYear->minYear, $minMaxYear->maxYear);
-
-
-        //Go over the projects and add the evaluationTypes in a dedicated matrix
-        $projectOverview = [];
-
-        foreach ($program->getCall() as $call) {
-            //Only add the active projects
-            $activeProjects = $this->projectService->findProjectsByCall($call, ProjectService::WHICH_LABELLED);
-
-            //Find the span of the call, because otherwise the matrix will be filled with numbers of year before the call
-            $minMaxYearCall = $this->callService->findMinAndMaxYearInCall($call);
-            $yearSpanCall = range($minMaxYearCall->minYear, $minMaxYearCall->maxYear);
-
-
-            /** @var Project $project */
-            foreach ($activeProjects->getQuery()->getResult() as $project) {
-                foreach ($yearSpan as $year) {
-                    //Skip the years which are not in the call
-                    if (!\in_array($year, $yearSpanCall, true)) {
-                        continue;
-                    }
-
-                    //Create the last day of the year
-                    $dateSubmitted = new \DateTime();
-
-                    //Find the version corresponding to the year
-                    $activeVersion = $this->projectService->getLatestProjectVersion(
-                        $project,
-                        null,
-                        $dateSubmitted->modify('last day of december ' . $year)
-                    );
-
-                    if (null !== $activeVersion) {
-                        //We have the version now, add the total cost of that version to the cost of that year
-                        $projectOverview[$call->getId()][$year][$project->getDocRef()] = $this->versionService
-                            ->findTotalCostVersionByProjectVersion($activeVersion);
-                    }
-                }
-            };
-        }
-
-        //Produce an array with the totals
-        $totals = [];
-        foreach ($projectOverview as $callId => $yearOverview) {
-            foreach ($yearOverview as $year => $projects) {
-                $totals[$callId][$year] = \array_sum($projects);
-            }
-        }
-
-        return new ViewModel(
-            [
-                'form'            => $form,
-                'program'         => $program,
-                'yearSpan'        => $yearSpan,
-                'projectService'  => $this->projectService,
-                'projectOverview' => $projectOverview,
-                'totals'          => $totals,
-            ]
-        );
+        return $this->callSizeSpreadsheet($program)->parseResponse();
     }
 }

@@ -1,13 +1,8 @@
 <?php
 /**
- * ITEA Office all rights reserved
- *
- * PHP Version 7
- *
- * @category    Project
- *
+*
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        https://itea3.org
@@ -24,46 +19,24 @@ use Program\Service\CallService;
 use Project\Service\HelpService;
 use Project\Service\IdeaService;
 use Project\Service\ProjectService;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Zend\Mvc\Plugin\Identity\Identity;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\Mvc\Plugin\Identity\Identity;
+use Laminas\View\Model\ViewModel;
 
 /**
- * Class SessionManagerController
- *
- * @package Program\Controller
- *
  * @method Identity|Contact identity()
  * @method Plugin\GetFilter getProgramFilter()
  * @method FlashMessenger flashMessenger()
  */
 final class CallController extends AbstractActionController
 {
-    /**
-     * @var CallService
-     */
-    private $callService;
-    /**
-     * @var ProjectService
-     */
-    private $projectService;
-    /**
-     * @var IdeaService
-     */
-    private $ideaService;
-    /**
-     * @var HelpService
-     */
-    private $helpService;
-    /**
-     * @var MeetingService
-     */
-    private $meetingService;
-    /**
-     * @var RegistrationService
-     */
-    private $registrationService;
+    private CallService $callService;
+    private ProjectService $projectService;
+    private IdeaService $ideaService;
+    private HelpService $helpService;
+    private MeetingService $meetingService;
+    private RegistrationService $registrationService;
 
     public function __construct(
         CallService $callService,

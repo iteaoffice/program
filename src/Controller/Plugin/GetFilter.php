@@ -13,59 +13,39 @@ declare(strict_types=1);
 
 namespace Program\Controller\Plugin;
 
-use Zend\Http\Request;
-use Zend\Mvc\Application;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\Router\Http\RouteMatch;
+use Laminas\Http\Request;
+use Laminas\Json\Json;
+use Laminas\Mvc\Application;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Router\Http\RouteMatch;
+use function base64_decode;
+use function base64_encode;
 
 /**
- * @category    Application
+ * Class GetFilter
+ *
+ * @package Program\Controller\Plugin
  */
-class GetFilter extends AbstractPlugin
+final class GetFilter extends AbstractPlugin
 {
     /**
      * @var Request
      */
-    protected $request;
+    private $request;
     /**
      * @var RouteMatch
      */
-    protected $routeMatch;
-    /**
-     * @var array
-     */
-    protected $filter = [];
-    /**
-     * @var string|null
-     */
-    protected $order = 'name';
-    /**
-     * @var string|null
-     */
-    protected $direction = 'asc';
-    /**
-     * @var string|null
-     */
-    protected $query;
+    private $routeMatch;
+    private array $filter = [];
+    private ? string $query;
 
-    /**
-     * GetFilter constructor.
-     *
-     * @param Application $application
-     */
     public function __construct(Application $application)
     {
         $this->routeMatch = $application->getMvcEvent()->getRouteMatch();
         $this->request = $application->getMvcEvent()->getRequest();
     }
 
-
-    /**
-     * Instantiate the filter
-     *
-     * @return GetFilter
-     */
-    public function __invoke(): self
+    public function __invoke() : self
     {
         $encodedFilter = urldecode((string)$this->routeMatch->getParam('encodedFilter'));
 
@@ -73,21 +53,18 @@ class GetFilter extends AbstractPlugin
         $direction = $this->request->getQuery('direction');
 
         //Take the filter from the URL
-        $filter = (array)json_decode(base64_decode($encodedFilter));
-
+        $filter = [];
+        if (! empty($base64decodedFilter = base64_decode($encodedFilter))) {
+            $filter = (array)Json::decode($base64decodedFilter);
+        }
 
         //If the form is submitted, refresh the URL
         if ($this->request->isGet() && null !== $this->request->getQuery('submit')) {
             $filter = $this->request->getQuery()->toArray()['filter'];
         }
 
-        //Create a new filter if not set already
-        if (!$filter) {
-            $filter = [];
-        }
-
         //Add a default order and direction if not known in the filter
-        if (!isset($filter['order'])) {
+        if (! isset($filter['order'])) {
             $filter['order'] = 'id';
             $filter['direction'] = 'desc';
         }
@@ -107,44 +84,26 @@ class GetFilter extends AbstractPlugin
         return $this;
     }
 
-    /**
-     * Give the compressed version of the filter
-     *
-     * @return string
-     */
     public function getHash(): string
     {
-        return base64_encode(json_encode($this->filter));
+        return base64_encode(Json::encode($this->filter));
     }
 
-    /**
-     * @return array
-     */
     public function getFilter(): array
     {
         return $this->filter;
     }
 
-
-    /**
-     * @return null|string
-     */
     public function getOrder(): ?string
     {
-        return $this->order;
+        return $this->filter['order'];
     }
 
-    /**
-     * @return null|string
-     */
     public function getDirection(): ?string
     {
-        return $this->direction;
+        return $this->filter['direction'];
     }
 
-    /**
-     * @return null|string
-     */
     public function getQuery(): ?string
     {
         return $this->query;

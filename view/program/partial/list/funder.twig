@@ -1,4 +1,4 @@
-{% for funder in funder if funder.showOnWebsite is constant("\\Program\\Entity\\Funder::SHOW_ON_WEBSITE") %}
+{% for funder in funder|filter(funder => funder.showOnWebsite is constant("\\Program\\Entity\\Funder::SHOW_ON_WEBSITE")) -%}
 
     {% if loop.first %}
         <h2>{{ translate("txt-list-funder") }}</h2>
@@ -9,7 +9,7 @@
 
         <div class="row">
             <div class="col-md-3">
-                {{ contactPhoto(funder.contact, 300, false, true) }}
+                {{ contactPhoto(funder.contact, 300) }}
             </div>
             <div class="col-md-9">
                 <dl>

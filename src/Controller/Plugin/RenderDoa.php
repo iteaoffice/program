@@ -5,7 +5,7 @@
  * @category   Program
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright  Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license    https://itea3.org/license.txt proprietary
  *
  * @link       https://itea3.org
@@ -18,7 +18,7 @@ namespace Program\Controller\Plugin;
 use Contact\Service\ContactService;
 use Program\Entity\Doa;
 use Program\Options\ModuleOptions;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 use ZfcTwig\View\TwigRenderer;
 
 /**
@@ -28,26 +28,10 @@ use ZfcTwig\View\TwigRenderer;
  */
 final class RenderDoa extends AbstractPlugin
 {
-    /**
-     * @var TwigRenderer
-     */
-    protected $renderer;
-    /**
-     * @var ModuleOptions
-     */
-    protected $moduleOptions;
-    /**
-     * @var ContactService
-     */
-    protected $contactService;
+    protected TwigRenderer $renderer;
+    protected ModuleOptions $moduleOptions;
+    protected ContactService $contactService;
 
-    /**
-     * RenderDoa constructor.
-     *
-     * @param TwigRenderer   $renderer
-     * @param ModuleOptions  $moduleOptions
-     * @param ContactService $contactService
-     */
     public function __construct(TwigRenderer $renderer, ModuleOptions $moduleOptions, ContactService $contactService)
     {
         $this->renderer = $renderer;
@@ -55,12 +39,6 @@ final class RenderDoa extends AbstractPlugin
         $this->contactService = $contactService;
     }
 
-
-    /**
-     * @param Doa $doa
-     *
-     * @return ProgramPdf
-     */
     public function __invoke(Doa $doa): ProgramPdf
     {
         $pdf = new ProgramPdf();

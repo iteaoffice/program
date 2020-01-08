@@ -5,7 +5,7 @@
  * @category    Funder
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
@@ -19,33 +19,21 @@ use Program\Entity\Funder;
 use Program\Form\FunderFilter;
 use Program\Service\FormService;
 use Program\Service\ProgramService;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Zend\Paginator\Paginator;
-use Zend\View\Model\ViewModel;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\Paginator\Paginator;
+use Laminas\View\Model\ViewModel;
 
 /**
- * Class FunderManagerController
- *
- * @package Program\Controller
  * @method GetFilter getProgramFilter()
  * @method FlashMessenger flashMessenger()
  */
 final class FunderManagerController extends AbstractActionController
 {
-    /**
-     * @var ProgramService
-     */
-    private $programService;
-    /**
-     * @var FormService
-     */
-    private $formService;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private ProgramService $programService;
+    private FormService $formService;
+    private TranslatorInterface $translator;
 
     public function __construct(
         ProgramService $programService,
@@ -151,7 +139,7 @@ final class FunderManagerController extends AbstractActionController
                 return $this->redirect()->toRoute('zfcadmin/funder/list');
             }
 
-            if (!isset($data['cancel'])) {
+            if (! isset($data['cancel'])) {
                 $this->programService->save($funder);
 
                 $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-funder-has-been-updated-successfully")));

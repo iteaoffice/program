@@ -7,7 +7,7 @@
  * @category    Program
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/program for the canonical source repository
@@ -22,35 +22,21 @@ use General\Service\GeneralService;
 use Program\Entity\Call\Country as CallCountry;
 use Program\Service\CallService;
 use Program\Service\FormService;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Zend\View\Model\ViewModel;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\View\Model\ViewModel;
 
 /**
- * Class CallCountryManagerController
- *
  * @package Program\Controller
  * @method FlashMessenger flashMessenger()
  */
 final class CallCountryManagerController extends AbstractActionController
 {
-    /**
-     * @var CallService
-     */
-    private $callService;
-    /**
-     * @var GeneralService
-     */
-    private $generalService;
-    /**
-     * @var FormService
-     */
-    private $formService;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private CallService $callService;
+    private GeneralService $generalService;
+    private FormService $formService;
+    private TranslatorInterface $translator;
 
     public function __construct(
         CallService $callService,
@@ -112,7 +98,7 @@ final class CallCountryManagerController extends AbstractActionController
                 $this->flashMessenger()->addSuccessMessage(
                     sprintf(
                         $this->translator->translate(
-                            "txt-call-country-information-%s-has-successfully-been-removed"
+                            'txt-call-country-information-%s-has-successfully-been-removed'
                         ),
                         $country
                     )
@@ -137,7 +123,7 @@ final class CallCountryManagerController extends AbstractActionController
                 $this->flashMessenger()->addSuccessMessage(
                     sprintf(
                         $this->translator->translate(
-                            "txt-call-country-information-%s-has-successfully-been-updated"
+                            'txt-call-country-information-%s-has-successfully-been-updated'
                         ),
                         $callCountry->getCountry()
                     )
@@ -202,7 +188,7 @@ final class CallCountryManagerController extends AbstractActionController
                 $this->flashMessenger()->addSuccessMessage(
                     sprintf(
                         $this->translator->translate(
-                            "txt-call-country-information-%s-has-successfully-been-updated"
+                            'txt-call-country-information-%s-has-successfully-been-updated'
                         ),
                         $country
                     )

@@ -8,7 +8,7 @@
  * @category    Program
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/program for the canonical source repository
@@ -22,20 +22,16 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use DoctrineORMModule\Form\Element\EntityMultiCheckbox;
 use Program\Entity\Call\Call;
-use Zend\Form\Fieldset;
-use Zend\Form\Form;
-use Zend\Form\Element;
+use Laminas\Form\Fieldset;
+use Laminas\Form\Form;
+use Laminas\Form\Element;
 
 /**
- * Class SessionFilter
+* Class SessionFilter
  * @package Program\Form
  */
-class SessionFilter extends Form
+final class SessionFilter extends Form
 {
-    /**
-     * SessionFilter constructor.
-     * @param EntityManager $entityManager
-     */
     public function __construct(EntityManager $entityManager)
     {
         parent::__construct();

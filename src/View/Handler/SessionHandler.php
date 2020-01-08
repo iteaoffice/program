@@ -2,24 +2,23 @@
 /**
  * ITEA Office all rights reserved
  *
- * @category   News
- *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  Copyright (c) 2004-2018 ITEA Office (http://itea3.org)
+ * @copyright  Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 declare(strict_types=1);
 
 namespace Program\View\Handler;
 
 use Content\Entity\Content;
+use General\View\Handler\AbstractHandler;
 use Program\Entity\Call\Session;
 use Program\Service\ProgramService;
 use Project\Service\IdeaService;
-use Zend\Authentication\AuthenticationService;
-use Zend\Http\Response;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Application;
-use Zend\View\HelperPluginManager;
+use Laminas\Authentication\AuthenticationService;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Application;
+use Laminas\View\HelperPluginManager;
 use ZfcTwig\View\TwigRenderer;
 
 /**
@@ -29,14 +28,8 @@ use ZfcTwig\View\TwigRenderer;
  */
 final class SessionHandler extends AbstractHandler
 {
-    /**
-     * @var ProgramService
-     */
-    private $programService;
-    /**
-     * @var IdeaService
-     */
-    private $ideaService;
+    private ProgramService $programService;
+    private IdeaService $ideaService;
 
     public function __construct(
         Application $application,
@@ -62,33 +55,23 @@ final class SessionHandler extends AbstractHandler
     {
         $params = $this->extractContentParam($content);
 
-        switch ($content->getHandler()->getHandler()) {
-            case 'session_idea':
-                /** @var Session $session */
-                $session = $this->programService->find(Session::class, (int) $params['id']);
+        /** @var Session $session */
+        $session = $this->programService->find(Session::class, (int)$params['id']);
 
-                if ($session === null) {
-                    $this->response->setStatusCode(Response::STATUS_CODE_404);
-                    return 'The selected session cannot be found';
-                }
-
-                $this->getHeadTitle()->append($this->translate("txt-session"));
-                $this->getHeadTitle()->append($session->getSession());
-
-                return $this->renderer->render(
-                    'cms/call/session',
-                    [
-                        'session'     => $session,
-                        'ideaService' => $this->ideaService
-                    ]
-                );
-
-            default:
-                return sprintf(
-                    'No handler available for <code>%s</code> in class <code>%s</code>',
-                    $content->getHandler()->getHandler(),
-                    __CLASS__
-                );
+        if ($session === null) {
+            $this->response->setStatusCode(Response::STATUS_CODE_404);
+            return 'The selected session cannot be found';
         }
+
+        $this->getHeadTitle()->append($this->translate('txt-session'));
+        $this->getHeadTitle()->append($session->getSession());
+
+        return $this->renderer->render(
+            'cms/call/session',
+            [
+                'session' => $session,
+                'ideaService' => $this->ideaService
+            ]
+        );
     }
 }

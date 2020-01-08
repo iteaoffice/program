@@ -1,14 +1,9 @@
 <?php
 
 /**
- * ITEA Office all rights reserved
- *
- * PHP Version 7
- *
- * @category    Project
- *
+*
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/project for the canonical source repository
@@ -19,18 +14,18 @@ declare(strict_types=1);
 namespace Program\Form;
 
 use Program\Entity\Funder;
-use Zend\Form\Fieldset;
-use Zend\Form\Form;
+use Laminas\Form\Fieldset;
+use Laminas\Form\Form;
+use Laminas\Form\Element\Submit;
+use Laminas\Form\Element\Text;
+use Laminas\Form\Element\MultiCheckbox;
 
 /**
  * Class ProgramFilter
  * @package Program\Form
  */
-class FunderFilter extends Form
+final class FunderFilter extends Form
 {
-    /**
-     * ProgramFilter constructor.
-     */
     public function __construct()
     {
         parent::__construct();
@@ -41,21 +36,21 @@ class FunderFilter extends Form
 
         $filterFieldset->add(
             [
-                'type'       => 'Zend\Form\Element\MultiCheckbox',
+                'type'       => MultiCheckbox::class,
                 'name'       => 'showOnWebsite',
                 'options'    => [
                     'inline'        => true,
                     'value_options' => Funder::getShowOnWebsiteTemplates(),
                 ],
                 'attributes' => [
-                    'label' => _("txt-show-on-website"),
+                    'label' => _('txt-show-on-website'),
                 ],
             ]
         );
 
         $filterFieldset->add(
             [
-                'type'       => 'Zend\Form\Element\Text',
+                'type'       => Text::class,
                 'name'       => 'search',
                 'attributes' => [
                     'class'       => 'form-control',
@@ -68,7 +63,7 @@ class FunderFilter extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'submit',
                 'attributes' => [
                     'id'    => 'submit',
@@ -80,7 +75,7 @@ class FunderFilter extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'clear',
                 'attributes' => [
                     'id'    => 'cancel',

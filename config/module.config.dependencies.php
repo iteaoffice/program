@@ -7,7 +7,7 @@
  * @category    Program
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2018 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/project for the canonical source repository
@@ -23,24 +23,29 @@ use Application\Service\AssertionService;
 use BjyAuthorize\Service\Authorize;
 use Contact\Service\ContactService;
 use Doctrine\ORM\EntityManager;
+use Evaluation\Service\EvaluationService;
 use Event\Service\MeetingService;
 use Event\Service\RegistrationService;
+use General\Search\Service\CountrySearchService;
 use General\Service\CountryService;
 use General\Service\EmailService;
 use General\Service\GeneralService;
+use Organisation\Search\Service\OrganisationSearchService;
 use Organisation\Service\OrganisationService;
+use Program\Form\View\Helper\CallFormElement;
 use Program\Options\ModuleOptions;
 use Program\Service\CallService;
 use Program\Service\FormService;
 use Program\Service\ProgramService;
-use Project\Service\EvaluationService;
+use Project\Search\Service\ProjectSearchService;
+use Project\Service\ContractService;
 use Project\Service\HelpService;
 use Project\Service\IdeaService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
-use Zend\Authentication\AuthenticationService;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
+use Laminas\Authentication\AuthenticationService;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 use ZfcTwig\View\TwigRenderer;
 
 
@@ -81,6 +86,16 @@ return [
             TranslatorInterface::class,
             'ViewHelperManager'
         ],
+        Controller\Plugin\CallSizeSpreadsheet::class       => [
+            ProjectService::class,
+            VersionService::class,
+            AffiliationService::class,
+            ContractService::class,
+            ContactService::class,
+            CountryService::class,
+            EntityManager::class,
+            TranslatorInterface::class
+        ],
         Controller\Plugin\SessionDocument::class           => [
             EntityManager::class,
             ModuleOptions::class,
@@ -106,6 +121,7 @@ return [
         Controller\CallManagerController::class            => [
             CallService::class,
             FormService::class,
+            AffiliationService::class,
             ProjectService::class,
             VersionService::class,
             GeneralService::class,
@@ -166,7 +182,10 @@ return [
             EntityManager::class
         ],
         Service\ProgramService::class                      => [
-            EntityManager::class
+            EntityManager::class,
+            OrganisationSearchService::class,
+            ProjectSearchService::class,
+            CountrySearchService::class
         ],
         Service\CallService::class                         => [
             EntityManager::class,
@@ -182,8 +201,20 @@ return [
             ProgramService::class,
             IdeaService::class
         ],
+        View\Handler\ProgramHandler::class                 => [
+            'Application',
+            'ViewHelperManager',
+            TwigRenderer::class,
+            AuthenticationService::class,
+            TranslatorInterface::class,
+            ProgramService::class
+        ],
         View\Helper\CallInformationBox::class              => [
             CallService::class
-        ]
+        ],
+        CallFormElement::class                             => [
+            'ViewHelperManager',
+            TranslatorInterface::class
+        ],
     ]
 ];

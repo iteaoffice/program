@@ -5,24 +5,24 @@
  * @category    Program
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
 
 namespace Program\Form;
 
-use Zend\Form;
-use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Validator\File\Extension;
-use Zend\Validator\File\Size;
+use Laminas\Form;
+use Laminas\InputFilter\InputFilterProviderInterface;
+use Laminas\Validator\File\Extension;
+use Laminas\Validator\File\Size;
 
 /**
  * Class UploadNda
  *
  * @package Program\Form
  */
-class UploadNda extends Form\Form implements InputFilterProviderInterface
+final class UploadNda extends Form\Form implements InputFilterProviderInterface
 {
     public function __construct()
     {
@@ -41,8 +41,8 @@ class UploadNda extends Form\Form implements InputFilterProviderInterface
                 'type'    => Form\Element\File::class,
                 'name'    => 'file',
                 'options' => [
-                    "label"      => "txt-file",
-                    "help-block" => _("txt-a-signed-nda-in-pdf-format-or-image-is-required"),
+                    'label'      => 'txt-file',
+                    'help-block' => _('txt-a-signed-nda-in-pdf-format-or-image-is-required'),
                 ],
             ]
         );
@@ -52,7 +52,7 @@ class UploadNda extends Form\Form implements InputFilterProviderInterface
                 'name'       => 'selfApprove',
                 'options'    => [
                     'inline'     => true,
-                    "help-block" => _("txt-self-approve-nda-checkbox-help-text"),
+                    'help-block' => _('txt-self-approve-nda-checkbox-help-text'),
                 ],
                 'attributes' => [
 
@@ -64,8 +64,8 @@ class UploadNda extends Form\Form implements InputFilterProviderInterface
                 'type'       => Form\Element\Submit::class,
                 'name'       => 'submit',
                 'attributes' => [
-                    'class' => "btn btn-primary",
-                    'value' => _("txt-upload-nda-title"),
+                    'class' => 'btn btn-primary',
+                    'value' => _('txt-upload-nda-title'),
                 ],
             ]
         );
@@ -74,8 +74,8 @@ class UploadNda extends Form\Form implements InputFilterProviderInterface
                 'type'       => Form\Element\Submit::class,
                 'name'       => 'approve',
                 'attributes' => [
-                    'class' => "btn btn-primary",
-                    'value' => _("txt-approve-nda-title"),
+                    'class' => 'btn btn-primary',
+                    'value' => _('txt-approve-nda-title'),
                 ],
             ]
         );
@@ -84,19 +84,13 @@ class UploadNda extends Form\Form implements InputFilterProviderInterface
                 'type'       => Form\Element\Submit::class,
                 'name'       => 'cancel',
                 'attributes' => [
-                    'class' => "btn btn-warning",
-                    'value' => _("txt-cancel"),
+                    'class' => 'btn btn-warning',
+                    'value' => _('txt-cancel'),
                 ],
             ]
         );
     }
 
-    /**
-     * Should return an array specification compatible with
-     * {@link Zend\InputFilter\Factory::createInputFilter()}.
-     *
-     * @return array
-     */
     public function getInputFilterSpecification(): array
     {
         return [

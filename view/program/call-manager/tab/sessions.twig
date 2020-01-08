@@ -1,8 +1,9 @@
 <h2>{{ translate("txt-sessions") }}</h2>
 {% if call.session.count() > 0 %}
-    <table class="table table-hover table-striped table-condensed table-sm">
+    <table class="table table-hover table-striped table-sm">
         <thead>
         <tr>
+            <th>{{ translate("txt-id") }}</th>
             <th>{{ translate("txt-session") }}</th>
             <th>{{ translate("txt-date") }}</th>
             <th>{{ translate("txt-ideas") }}</th>
@@ -11,6 +12,7 @@
         <tbody>
         {% for session in call.session %}
             <tr>
+                <td><small class="text-muted">{{ session.id }}</small></td>
                 <td>{{ callSessionLink(session, 'view-admin') }}</td>
                 <td>{{ session.date|string_date }}</td>
                 <td>{{ session.ideaSession|length }}</td>

@@ -1,13 +1,8 @@
 <?php
 /**
- * ITEA Office all rights reserved
- *
- * PHP Version 7
- *
- * @category    Project
- *
+*
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/project for the canonical source repository
@@ -19,12 +14,17 @@ namespace Program\Controller\Plugin;
 
 use Affiliation\Service\AffiliationService;
 use Program\Entity\Call\Call;
+use Project\Entity\Funding\Funding;
 use Project\Entity\Funding\Source;
 use Project\Entity\Funding\Status;
 use Project\Entity\Project;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
+use function fopen;
+use function fputcsv;
+use function ob_get_clean;
+use function ob_start;
 
 /**
  * Special plugin to produce an array with the evaluation.
@@ -33,18 +33,9 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin;
  */
 final class CreateFundingDownload extends AbstractPlugin
 {
-    /**
-     * @var VersionService
-     */
-    private $versionService;
-    /**
-     * @var ProjectService
-     */
-    private $projectService;
-    /**
-     * @var AffiliationService
-     */
-    private $affiliationService;
+    private VersionService $versionService;
+    private ProjectService $projectService;
+    private AffiliationService $affiliationService;
 
     public function __construct(
         VersionService $versionService,
@@ -59,10 +50,10 @@ final class CreateFundingDownload extends AbstractPlugin
     public function __invoke(Call $call): string
     {
         // Open the output stream
-        $fh = \fopen('php://output', 'wb');
-        \ob_start();
+        $fh = fopen('php://output', 'wb');
+        ob_start();
 
-        \fputcsv(
+        fputcsv(
             $fh,
             [
                 'Program',
@@ -82,7 +73,7 @@ final class CreateFundingDownload extends AbstractPlugin
 
         /** @var Project $project */
         foreach ($this->projectService->findProjectsByCall($call)->getQuery()->getResult() as $project) {
-            $version = $this->projectService->getLatestProjectVersion($project);
+            $version = $this->projectService->getLatestNotRejectedProjectVersion($project);
 
             if (null === $version) {
                 continue;
@@ -96,6 +87,7 @@ final class CreateFundingDownload extends AbstractPlugin
                     $version
                 );
 
+                /** @var Funding $funding */
                 foreach ($affiliation->getFunding() as $funding) {
                     if ($funding->getSource()->getId() === Source::SOURCE_PROJECT_LEADER) {
                         continue;
@@ -120,8 +112,7 @@ final class CreateFundingDownload extends AbstractPlugin
                         }
                     }
 
-
-                    \fputcsv(
+                    fputcsv(
                         $fh,
                         [
                             $project->getCall()->getProgram(),
@@ -134,7 +125,7 @@ final class CreateFundingDownload extends AbstractPlugin
                             $year,
                             $funding->getStatus()->getStatusFunding(),
                             $funding->getStatus()->getCode(),
-                            (isset($costsPerYear[$year]) ? $costsPerYear[$year] : 0),
+                            ($costsPerYear[$year] ?? 0),
                             $globalStatus,
 
                         ]
@@ -143,6 +134,6 @@ final class CreateFundingDownload extends AbstractPlugin
             }
         }
 
-        return \ob_get_clean();
+        return ob_get_clean();
     }
 }

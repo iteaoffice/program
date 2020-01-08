@@ -5,7 +5,7 @@
  * @category   Program
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright  Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license    https://itea3.org/license.txt proprietary
  *
  * @link       https://itea3.org
@@ -25,13 +25,23 @@ use PhpOffice\PhpSpreadsheet\Style\Font;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Program\Entity\Call\Session;
-use Zend\Http\Headers;
-use Zend\Http\Response;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\View\Helper\ServerUrl;
-use Zend\View\Helper\Url;
-use Zend\View\HelperPluginManager;
+use Project\Acl\Assertion\Idea\Idea;
+use Laminas\Http\Headers;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\View\Helper\ServerUrl;
+use Laminas\View\Helper\Url;
+use Laminas\View\HelperPluginManager;
+use function end;
+use function implode;
+use function key;
+use function ob_end_flush;
+use function ob_get_clean;
+use function ob_get_length;
+use function ob_start;
+use function range;
+use function sprintf;
 
 /**
  * Class SessionSpreadsheet
@@ -40,34 +50,13 @@ use Zend\View\HelperPluginManager;
  */
 final class SessionSpreadsheet extends AbstractPlugin
 {
-    /**
-     * @var Session
-     */
-    private $session;
-    /**
-     * @var Spreadsheet
-     */
-    private $spreadsheet;
-    /**
-     * @var AssertionService
-     */
-    private $assertionService;
-    /**
-     * @var Authorize
-     */
-    private $authorize;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-    /**
-     * @var Url
-     */
-    private $urlHelper;
-    /**
-     * @var ServerUrl
-     */
-    private $serverUrlHelper;
+    private Session $session;
+    private Spreadsheet $spreadsheet;
+    private AssertionService $assertionService;
+    private Authorize $authorize;
+    private TranslatorInterface $translator;
+    private ? Url $urlHelper = null;
+    private ? ServerUrl $serverUrlHelper = null;
 
     public function __construct(
         AssertionService $assertionService,
@@ -83,7 +72,7 @@ final class SessionSpreadsheet extends AbstractPlugin
         $this->serverUrlHelper = $helperPluginManager->get(ServerUrl::class);
     }
 
-    public function __invoke(Session $session): SessionSpreadsheet
+    public function __invoke(Session $session) : SessionSpreadsheet
     {
         $this->session = $session;
         $this->spreadsheet = new Spreadsheet();
@@ -105,9 +94,9 @@ final class SessionSpreadsheet extends AbstractPlugin
             'D' => $this->translator->translate('txt-challenges'),
             'E' => $this->translator->translate('txt-notes'),
         ];
-        \end($columns);
-        $lastColumn = \key($columns);
-        foreach (\range('A', $lastColumn) as $column) {
+        end($columns);
+        $lastColumn = key($columns);
+        foreach (range('A', $lastColumn) as $column) {
             $sheet->getColumnDimension($column)->setAutoSize(true);
         }
         $sheet->getStyle('A2:' . $lastColumn . '2')->getFill()->setFillType(Fill::FILL_SOLID)
@@ -119,7 +108,7 @@ final class SessionSpreadsheet extends AbstractPlugin
         $sheet->getStyle('A1')->getFont()->setSize(18);
         $sheet->setCellValue(
             'A1',
-            \sprintf('%s / %s', $session->getSession(), $session->getDate()->format('Y-m-d H:i'))
+            sprintf('%s / %s', $session->getSession(), $session->getDate()->format('Y-m-d H:i'))
         );
 
         // Freeze the header
@@ -130,15 +119,15 @@ final class SessionSpreadsheet extends AbstractPlugin
         $row = 3;
         foreach ($session->getIdeaSession() as $ideaSession) {
             //Check access to the idea
-            $this->assertionService->addResource($ideaSession->getIdea(), \Project\Acl\Assertion\Idea\Idea::class);
-            if (!$this->authorize->isAllowed($ideaSession->getIdea(), 'view')) {
+            $this->assertionService->addResource($ideaSession->getIdea(), Idea::class);
+            if (! $this->authorize->isAllowed($ideaSession->getIdea(), 'view')) {
                 continue;
             }
 
             $sheet->setCellValue('A' . $row, $ideaSession->getSchedule());
 
             $ideaLink = $this->urlHelper->__invoke('community/idea/view', ['docRef' => $ideaSession->getIdea()->getDocRef()]);
-            $sheet->getCell('B'. $row)->getHyperlink()->setUrl(
+            $sheet->getCell('B' . $row)->getHyperlink()->setUrl(
                 $this->serverUrlHelper->__invoke() . $ideaLink
             );
 
@@ -148,37 +137,37 @@ final class SessionSpreadsheet extends AbstractPlugin
             foreach ($ideaSession->getIdea()->getIdeaChallenge() as $challenge) {
                 $challenges[] = $challenge->getChallenge();
             }
-            $sheet->setCellValue('D' . $row, \implode(', ', $challenges));
+            $sheet->setCellValue('D' . $row, implode(', ', $challenges));
             $row++;
         }
 
         return $this;
     }
 
-    public function parseResponse(): Response
+    public function parseResponse() : Response
     {
         $response = new Response();
-        if (!($this->spreadsheet instanceof Spreadsheet)) {
+        if (! ($this->spreadsheet instanceof Spreadsheet)) {
             return $response->setStatusCode(Response::STATUS_CODE_404);
         }
 
         /** @var Xlsx $writer */
         $writer = IOFactory::createWriter($this->spreadsheet, 'Xlsx');
 
-        \ob_start();
+        ob_start();
         $gzip = false;
         // Gzip the output when possible. @see http://php.net/manual/en/function.ob-gzhandler.php
-        if (\ob_start('ob_gzhandler')) {
+        if (ob_start('ob_gzhandler')) {
             $gzip = true;
         }
         $writer->save('php://output');
         if ($gzip) {
-            \ob_end_flush(); // Flush the gzipped buffer into the main buffer
+            ob_end_flush(); // Flush the gzipped buffer into the main buffer
         }
-        $contentLength = \ob_get_length();
+        $contentLength = ob_get_length();
 
         // Prepare the response
-        $response->setContent(\ob_get_clean());
+        $response->setContent(ob_get_clean());
         $response->setStatusCode(Response::STATUS_CODE_200);
         $headers = new Headers();
         $headers->addHeaders(

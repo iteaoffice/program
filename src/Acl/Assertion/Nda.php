@@ -5,7 +5,7 @@
  * @category    Program
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
@@ -13,30 +13,18 @@ declare(strict_types=1);
 namespace Program\Acl\Assertion;
 
 use Admin\Entity\Access;
+use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Role\RoleInterface;
 use Program\Entity;
-use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
-use Zend\Permissions\Acl\Role\RoleInterface;
 
 /**
- * Class Program.
+ * Class Nda
+ *
+ * @package Program\Acl\Assertion
  */
-class Nda extends AbstractAssertion
+final class Nda extends AbstractAssertion
 {
-    /**
-     * Returns true if and only if the assertion conditions are met.
-     *
-     * This method is passed the ACL, Role, Resource, and privilege to which the authorization query applies. If the
-     * $role, $nda, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
-     * privileges, respectively.
-     *
-     * @param Acl               $acl
-     * @param RoleInterface     $role
-     * @param ResourceInterface $nda
-     * @param string            $privilege
-     *
-     * @return bool
-     */
     public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $nda = null, $privilege = null): bool
     {
         $this->setPrivilege($privilege);
@@ -47,7 +35,7 @@ class Nda extends AbstractAssertion
          */
         if (!$nda instanceof Entity\Nda && null !== $id) {
             /** @var Entity\Nda $nda */
-            $nda = $this->programService->find(Entity\Nda::class, (int) $id);
+            $nda = $this->programService->find(Entity\Nda::class, (int)$id);
         }
 
         switch ($this->getPrivilege()) {
@@ -97,7 +85,7 @@ class Nda extends AbstractAssertion
             case 'view-admin':
             case 'edit-admin':
             case 'approval-admin':
-            case 'upload-admin':
+            case 'upload':
                 return $this->rolesHaveAccess(Access::ACCESS_OFFICE);
         }
 

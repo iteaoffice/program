@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Program\Entity;
 
-use Zend\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * Class AbstractEntity
@@ -21,19 +21,11 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  */
 abstract class AbstractEntity implements EntityInterface, ResourceInterface
 {
-    /**
-     * @return string
-     */
     public function getResourceId(): string
     {
         return sprintf('%s:%s', $this->get('full_entity_name'), $this->getId());
     }
 
-    /**
-     * @param $switch
-     *
-     * @return string
-     */
     public function get($switch): string
     {
         switch ($switch) {
@@ -70,17 +62,11 @@ abstract class AbstractEntity implements EntityInterface, ResourceInterface
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function __toString(): string
     {
         return sprintf('%s:%s', $this->get('full_entity_name'), $this->getId());
     }
 
-    /**
-     * @return bool
-     */
     public function isEmpty(): bool
     {
         return null === $this->getId();

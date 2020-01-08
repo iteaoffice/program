@@ -1,19 +1,11 @@
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-unapproved-nda")) %}
 
-
-{% do headLink().appendStylesheet(
-'//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css'
-) %}
-
-
-<h1 class="display-4">{{ translate("txt-unapproved-nda") }}</h1>
+<h1>{{ translate("txt-unapproved-nda") }}</h1>
 
 {% if nda|length > 0 %}
 
-
     {% do form.prepare() %}
-
     {{ form().openTag(form)|raw }}
 
     <label>
@@ -21,7 +13,7 @@
         {{ translate("txt-send-email-on-approval") }}
     </label>
 
-    <table class="table table-striped table-condensed table-sm table-hover">
+    <table class="table table-striped table-sm table-hover">
         <thead>
         <tr>
             <th>{{ translate("txt-contact") }}</th>
@@ -47,9 +39,7 @@
                 </td>
                 <td>{{ formElement(form.get('nda_' ~ nda.id).get('dateSigned')) }}</td>
                 <td>
-                    <button type="button" rel="{{ nda.id }}" data-complete-text="Approved"
-                            class="btn btn-info approveButton"
-                            autocomplete="off"><i class="fa fa-check"></i>
+                    <button type="button" data-nda-id="{{ nda.id }}" class="btn btn-info approveButton">
                         {{ translate("txt-approve") }}</button>
                 </td>
             </tr>
@@ -71,10 +61,11 @@
         e.preventDefault();
 
         var btn = $(this);
-        btn.button('loading');
+        btn.data('original-text', btn.html());
+        btn.html('<i class="fa fa-circle-o-notch fa-spin"></i> loading...');
 
         //NdaId
-        var ndaId = btn.attr('rel');
+        var ndaId = btn.data('nda-id');
 
         $.ajax({
             url: '{{ serverUrl() }}{{ url('zfcadmin/nda/approve') }}',
@@ -87,30 +78,22 @@
                 'sendEmail': $("#send-mail-checkbox").prop("checked")
             },
             success: function (response) {
-                if (response.result == 'success') {
-                    btn.addClass('complete');
-                    $("#nda-" + ndaId).addClass('success');
-                    btn.button('complete'); // button text will be "finished!"
+                if (response.result === 'success') {
+                    btn.attr('class', 'btn btn-success');
+                    btn.html('<i class="fa fa-check"></i> Approved');
+                    $("#nda-" + ndaId).addClass('table-success');
                 }
 
-                if (response.result == 'error') {
-                    btn.button('reset');
+                if (response.result === 'error') {
+                    btn.html(btn.data('original-text'));
                     alert(response.error);
                 }
-
             },
             error: function (xhr) {
-                console.log(xhr);
-                alert('Error! Did you enable adblock????? Status = ' + xhr.status);
+                alert('Error! Did you enable adblock? Status = ' + xhr.status);
             }
         });
 
 
-    });
-
-
-    $('input[type=date]').datepicker({
-        sliderAccessArgs: {touchonly: false},
-        dateFormat: 'yy-mm-dd'
     });
 </script>

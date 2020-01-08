@@ -6,7 +6,7 @@
  * @category   Program
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright  Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license    https://itea3.org/license.txt proprietary
  *
  * @link       https://itea3.org
@@ -16,16 +16,15 @@ declare(strict_types=1);
 
 namespace Program\View\Helper;
 
+use DateTime;
 use Program\Service\CallService;
 use Program\ValueObject\Calls;
-use Zend\View\Helper\AbstractHelper;
+use Laminas\View\Helper\AbstractHelper;
+use function sprintf;
 
 final class CallInformationBox extends AbstractHelper
 {
-    /**
-     * @var CallService
-     */
-    private $callService;
+    private CallService $callService;
 
     public function __construct(CallService $callService)
     {
@@ -40,7 +39,7 @@ final class CallInformationBox extends AbstractHelper
             $showCalls[] = $calls->getUpcoming();
         }
 
-        if (!$calls->isEmpty()) {
+        if (! $calls->isEmpty()) {
             $showCalls = $calls->toArray();
         }
 
@@ -63,9 +62,9 @@ final class CallInformationBox extends AbstractHelper
                 return '';
             }
             $result = $callStatus->getResult();
-            /** @var \DateTime $referenceDate */
+            /** @var DateTime $referenceDate */
             $referenceDate = $callStatus->getReferenceDate();
-            $today = new \DateTime();
+            $today = new DateTime();
             $dateDifference = $referenceDate->diff($today);
             if ($dateDifference->days > 7) {
                 $format = '%a days';
@@ -93,7 +92,7 @@ final class CallInformationBox extends AbstractHelper
 
             $type = 'info';
 
-            $return .= \sprintf($alert, $type, $content);
+            $return .= sprintf($alert, $type, $content);
         }
 
         return $return;

@@ -5,7 +5,7 @@
  * @category    Program
  * @package     Config
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 use BjyAuthorize\Guard\Route;
@@ -20,12 +20,13 @@ return [
                 ['route' => 'zfcadmin/program/view', 'roles' => ['office']],
                 ['route' => 'zfcadmin/program/new', 'roles' => ['office']],
                 ['route' => 'zfcadmin/program/list', 'roles' => ['office']],
-                ['route' => 'zfcadmin/program/size', 'roles' => ['office']],
+                ['route' => 'zfcadmin/program/export-size', 'roles' => ['office']],
                 ['route' => 'zfcadmin/call/edit', 'roles' => ['office']],
                 ['route' => 'zfcadmin/call/view', 'roles' => ['office']],
                 ['route' => 'zfcadmin/call/new', 'roles' => ['office']],
                 ['route' => 'zfcadmin/call/list', 'roles' => ['office']],
                 ['route' => 'zfcadmin/call/size', 'roles' => ['office']],
+                ['route' => 'zfcadmin/call/export-size', 'roles' => ['office']],
                 ['route' => 'zfcadmin/call/funding', 'roles' => ['office']],
                 ['route' => 'zfcadmin/call/download-funding', 'roles' => ['office']],
                 ['route' => 'zfcadmin/call/country/edit', 'roles' => ['office']],
@@ -52,7 +53,6 @@ return [
                 ['route' => 'community/program/session/download-document', 'roles' => ['user']],
                 ['route' => 'community/program/session/download', 'roles' => ['user']],
                 ['route' => 'community/program/nda/submit', 'roles' => [], 'assertion' => NdaAssertion::class],
-                ['route' => 'community/program/nda/view', 'roles' => [], 'assertion' => NdaAssertion::class],
                 ['route' => 'community/program/nda/render', 'roles' => [], 'assertion' => NdaAssertion::class],
                 ['route' => 'community/program/nda/replace', 'roles' => [], 'assertion' => NdaAssertion::class],
                 ['route' => 'community/program/nda/download', 'roles' => [], 'assertion' => NdaAssertion::class],

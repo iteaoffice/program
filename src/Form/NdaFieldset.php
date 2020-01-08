@@ -5,7 +5,7 @@
  * @category  Content
  *
  * @author    Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
@@ -17,51 +17,51 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use DoctrineORMModule\Form\Element\EntitySelect;
 use Program\Entity;
 use Program\Entity\Call\Call;
-use Zend\Form\Fieldset;
-use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Validator\File\Size;
+use Laminas\Form\Element\Date;
+use Laminas\Form\Element\File;
+use Laminas\Form\Element\Select;
+use Laminas\Form\Fieldset;
+use Laminas\InputFilter\InputFilterProviderInterface;
 
 /**
- * Class NdaFieldset.
+ * Class NdaFieldset
+ *
+ * @package Program\Form
  */
-class NdaFieldset extends Fieldset implements InputFilterProviderInterface
+final class NdaFieldset extends Fieldset implements InputFilterProviderInterface
 {
-    /**
-     * @param EntityManager $entityManager
-     */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, Entity\Nda $nda)
     {
         parent::__construct('program_entity_nda');
-        $nda = new Entity\Nda();
-        $doctrineHydrator = new DoctrineHydrator($entityManager, Entity\Nda::class);
+        $doctrineHydrator = new DoctrineHydrator($entityManager, $nda);
         $this->setHydrator($doctrineHydrator)->setObject($nda);
 
         $this->add(
             [
-                'type'    => '\Zend\Form\Element\Date',
+                'type'    => Date::class,
                 'name'    => 'dateApproved',
                 'options' => [
-                    "label" => "txt-date-approved",
+                    'label' => 'txt-date-approved',
                 ],
             ]
         );
 
         $this->add(
             [
-                'type'    => '\Zend\Form\Element\Date',
+                'type'    => Date::class,
                 'name'    => 'dateSigned',
                 'options' => [
-                    "label" => "txt-date-signed",
+                    'label' => 'txt-date-signed',
                 ],
             ]
         );
 
         $this->add(
             [
-                'type'    => '\Zend\Form\Element\Select',
+                'type'    => Select::class,
                 'name'    => 'contact',
                 'options' => [
-                    "label" => "txt-contact",
+                    'label' => 'txt-contact',
                 ],
             ]
         );
@@ -71,13 +71,13 @@ class NdaFieldset extends Fieldset implements InputFilterProviderInterface
                 'type'       => EntitySelect::class,
                 'name'       => 'programCall',
                 'attributes' => [
-                    'label' => _("txt-program-call"),
+                    'label' => _('txt-program-call'),
                 ],
                 'options'    => [
                     'object_manager'     => $entityManager,
                     'target_class'       => Call::class,
                     'display_empty_item' => true,
-                    'empty_item_label'   => "-- " . _("txt-not-connected-to-a-call"),
+                    'empty_item_label'   => '-- ' . _('txt-not-connected-to-a-call'),
                     'find_method'        => [
                         'name'   => 'findBy',
                         'params' => [
@@ -93,22 +93,16 @@ class NdaFieldset extends Fieldset implements InputFilterProviderInterface
 
         $this->add(
             [
-                'type'    => '\Zend\Form\Element\File',
+                'type'    => File::class,
                 'name'    => 'file',
                 'options' => [
-                    "label"      => "txt-source-file",
-                    "help-block" => _("txt-attachment-requirements"),
+                    'label'      => 'txt-source-file',
+                    'help-block' => _('txt-attachment-requirements'),
                 ],
             ]
         );
     }
 
-    /**
-     * Should return an array specification compatible with
-     * {@link Zend\InputFilter\Factory::createInputFilter()}.
-     *
-     * @return array
-     */
     public function getInputFilterSpecification(): array
     {
         return [
@@ -119,7 +113,7 @@ class NdaFieldset extends Fieldset implements InputFilterProviderInterface
                 'required' => false,
             ],
             'dateSigned'   => [
-                'required'   => true,
+                'required'   => false,
                 'validators' => [
                     [
                         'name'    => 'Date',
@@ -141,15 +135,7 @@ class NdaFieldset extends Fieldset implements InputFilterProviderInterface
                 ],
             ],
             'file'         => [
-                'required'   => false,
-                'validators' => [
-                    new Size(
-                        [
-                            'min' => '20kB',
-                            'max' => '8MB',
-                        ]
-                    ),
-                ],
+                'required' => false,
             ],
         ];
     }

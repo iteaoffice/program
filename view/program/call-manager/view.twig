@@ -1,7 +1,7 @@
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-call-%s")|format(call)) %}
 
-<h1 class="display-4">{{ translate("txt-call-%s")|format(call) }} {{ callLink(call,'edit','button') }} {{ callLink(call,'size','button') }}</h1>
+<h1>{{ translate("txt-call-%s")|format(call) }} {{ callLink(call,'edit','button') }} {{ callLink(call,'size','button') }} {{ callLink(call, 'export-size', 'button') }}</h1>
 
 <div role="tabpanel">
     <!-- Nav tabs -->

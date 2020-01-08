@@ -5,7 +5,7 @@
  * @category    CalendarTest
  * @package     Entity
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 namespace ProgramTest\Entity;
@@ -14,8 +14,8 @@ namespace ProgramTest\Entity;
 use General\Entity\AbstractEntity;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\Finder;
-use Zend\Form\Annotation\AnnotationBuilder;
-use Zend\Form\Element;
+use Laminas\Form\Annotation\AnnotationBuilder;
+use Laminas\Form\Element;
 
 class EntityTest extends TestCase
 {
@@ -39,14 +39,11 @@ class EntityTest extends TestCase
 
             if ($testClass->isInstantiable()) {
                 /** @var AbstractEntity $object */
-                $object = new $className;
+                $object = new $className();
 
                 $this->assertInstanceOf($className, $object);
                 $this->assertNull($object->getId());
-                $this->assertNull($object->id);
 
-                $object->id = 'test';
-                $this->assertSame('test', $object->id);
                 $this->assertTrue(isset($object));
 
                 $builder = new AnnotationBuilder();
@@ -79,8 +76,8 @@ class EntityTest extends TestCase
                         $labels[] = $element->getOptions()['placeholder'];
                     }
 
-                    $this->assertInternalType('array', ($element->getAttributes()));
-                    $this->assertInternalType('array', ($element->getOptions()));
+                    $this->assertIsArray($element->getAttributes());
+                    $this->assertIsArray($element->getOptions());
 
                 }
 
@@ -97,7 +94,7 @@ class EntityTest extends TestCase
 
         file_put_contents(
             __DIR__ . '/../../config/language.php',
-            "<?php\n_(\"" . implode("\");\n_(\"", array_unique($labels)) . '");'
+            "<?php\n_('" . implode("');\n_('", array_unique($labels)) . "');\n"
         );
     }
 }
