@@ -1,4 +1,5 @@
 <?php
+
 /**
 *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
@@ -25,6 +26,7 @@ use Laminas\Http\Headers;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use ZipArchive;
+
 use function file_get_contents;
 use function filesize;
 use function str_replace;

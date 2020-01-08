@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -37,6 +38,7 @@ use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 use Laminas\View\Helper\ServerUrl;
 use Laminas\View\Helper\Url;
 use Laminas\View\HelperPluginManager;
+
 use function html_entity_decode;
 use function ob_end_flush;
 use function ob_get_clean;
@@ -61,8 +63,8 @@ final class SessionDocument extends AbstractPlugin
     private AssertionService $assertionService;
     private Authorize $authorize;
     private TranslatorInterface $translator;
-    private ? Url $urlHelper = null;
-    private ? ServerUrl $serverUrlHelper = null;
+    private ?Url $urlHelper = null;
+    private ?ServerUrl $serverUrlHelper = null;
 
     public function __construct(
         EntityManager $entityManager,
@@ -85,7 +87,7 @@ final class SessionDocument extends AbstractPlugin
         Settings::setOutputEscapingEnabled(true);
     }
 
-    public function __invoke(Session $session) : SessionDocument
+    public function __invoke(Session $session): SessionDocument
     {
         $this->session = $session;
         $this->document = new PhpWord();
@@ -204,7 +206,7 @@ final class SessionDocument extends AbstractPlugin
         return $this;
     }
 
-    public function parseResponse() : Response
+    public function parseResponse(): Response
     {
         $response = new Response();
         if (! ($this->document instanceof PhpWord)) {

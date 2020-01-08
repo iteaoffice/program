@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -39,6 +40,7 @@ use Laminas\Http\Headers;
 use Laminas\Http\Response;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
+
 use function count;
 use function end;
 use function ini_set;
@@ -215,9 +217,11 @@ final class CallSizeSpreadsheet extends AbstractPlugin
         foreach ($programs as $program) {
 
             /** @var Project $project */
-            foreach ($this->projectService->findProjectByProgram($program, ProjectService::WHICH_ALL)
+            foreach (
+                $this->projectService->findProjectByProgram($program, ProjectService::WHICH_ALL)
                     ->getQuery()
-                    ->getResult() as $project) {
+                    ->getResult() as $project
+            ) {
                 $this->projects[$project->getId()] = $project;
             }
         }
@@ -349,7 +353,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
             }
 
             //Stop the process when we don't include rejected PO and when the PO has not been approved
-            if (! $this->includeRejectedFPP && null !== $fullProjectProposal && $fullProjectProposal->isReviewed()
+            if (
+                ! $this->includeRejectedFPP && null !== $fullProjectProposal && $fullProjectProposal->isReviewed()
                 && $fullProjectProposal->isRejected()
             ) {
                 continue;
@@ -360,7 +365,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
             }
 
             //Include cancelled projects destroys a bit the first filter, so remove some leftovers
-            if ($this->includeCancelledProjects
+            if (
+                $this->includeCancelledProjects
                 && $this->projectService->parseStatus($project) === ProjectService::STATUS_FPP_UNSUBMITTED
             ) {
                 continue;
@@ -378,7 +384,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                     continue;
                 }
 
-                if (! empty($this->countryIds)
+                if (
+                    ! empty($this->countryIds)
                     && ! in_array(
                         $affiliation->getOrganisation()->getCountry()->getId(),
                         $this->countryIds,
@@ -388,7 +395,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                     continue;
                 }
 
-                if (! empty($this->organisationTypeIds)
+                if (
+                    ! empty($this->organisationTypeIds)
                     && ! in_array(
                         $affiliation->getOrganisation()->getType()->getId(),
                         $this->organisationTypeIds,
@@ -565,7 +573,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
                             //Find the financial
                             $vat = '';
-                            if (null !== $affiliation->getFinancial()
+                            if (
+                                null !== $affiliation->getFinancial()
                                 && null !== $affiliation->getFinancial()->getOrganisation()->getFinancial()
                             ) {
                                 $vat = $affiliation->getFinancial()->getOrganisation()->getFinancial()->getVat();
@@ -735,7 +744,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
                         //Find the financial
                         $vat = '';
-                        if (null !== $affiliation->getFinancial()
+                        if (
+                            null !== $affiliation->getFinancial()
                             && null !== $affiliation->getFinancial()->getOrganisation()->getFinancial()
                         ) {
                             $vat = $affiliation->getFinancial()->getOrganisation()->getFinancial()->getVat();
@@ -855,7 +865,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
             }
 
             //Stop the process when we don't include rejected PO and when the PO has not been approved
-            if (! $this->includeRejectedFPP && null !== $fullProjectProposal && $fullProjectProposal->isReviewed()
+            if (
+                ! $this->includeRejectedFPP && null !== $fullProjectProposal && $fullProjectProposal->isReviewed()
                 && $fullProjectProposal->isRejected()
             ) {
                 continue;
@@ -866,7 +877,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
             }
 
             //Include cancelled projects destroys a bit the first filter, so remove some leftovers
-            if ($this->includeCancelledProjects
+            if (
+                $this->includeCancelledProjects
                 && $this->projectService->parseStatus($project) === ProjectService::STATUS_FPP_UNSUBMITTED
             ) {
                 continue;

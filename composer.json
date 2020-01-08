@@ -28,15 +28,15 @@
     "laminas/laminas-navigation": "^2.9.0",
     "jield-webdev/bjy-authorize": "^1.4.0",
     "doctrine/doctrine-orm-module": "@stable",
-    "phpoffice/phpword": "^0.16"
+    "phpoffice/phpword": "^0.17"
   },
   "require-dev": {
-    "iteaoffice/testing": "^2.1",
+    "iteaoffice/testing": "2.*",
     "jield-webdev/zf3-bootstrap4": "dev-master",
-    "iteaoffice/affiliation": "^5.1",
-    "iteaoffice/project": "^5.1",
-    "iteaoffice/contact": "^5.1",
-    "iteaoffice/search": "^2.1"
+    "iteaoffice/affiliation": "5.*",
+    "iteaoffice/project": "5.*",
+    "iteaoffice/contact": "5.*",
+    "iteaoffice/search": "2.*"
   },
   "autoload": {
     "psr-4": {
@@ -50,8 +50,8 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "5.0-DEV",
-      "dev-develop": "5.1-DEV"
+      "dev-master": "5.0-dev",
+      "dev-develop": "5.1-dev"
     }
   },
   "scripts": {

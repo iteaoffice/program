@@ -1,4 +1,5 @@
 <?php
+
 /**
 *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
@@ -21,6 +22,7 @@ use Project\Entity\Project;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
 use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
+
 use function fopen;
 use function fputcsv;
 use function ob_get_clean;

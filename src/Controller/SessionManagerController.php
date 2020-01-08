@@ -1,4 +1,5 @@
 <?php
+
 /**
 *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
@@ -32,6 +33,7 @@ use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\Paginator\Paginator;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+
 use function array_values;
 use function ceil;
 use function implode;
@@ -52,11 +54,11 @@ final class SessionManagerController extends AbstractActionController
     private EntityManager $entityManager;
 
     public function __construct(
-        ProgramService      $programService,
-        IdeaService         $ideaService,
-        FormService         $formService,
+        ProgramService $programService,
+        IdeaService $ideaService,
+        FormService $formService,
         TranslatorInterface $translator,
-        EntityManager       $entityManager
+        EntityManager $entityManager
     ) {
         $this->programService = $programService;
         $this->ideaService    = $ideaService;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -33,7 +34,8 @@ final class Call extends EntityRepository
         $queryBuilder->join('program_entity_call_call.program', 'program_entity_program');
 
         $direction = 'DESC';
-        if (isset($filter['direction'])
+        if (
+            isset($filter['direction'])
             && \in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)
         ) {
             $direction = strtoupper($filter['direction']);

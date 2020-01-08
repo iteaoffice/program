@@ -1,4 +1,5 @@
 <?php
+
 /**
 *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
@@ -35,7 +36,8 @@ class Program extends EntityRepository
         $queryBuilder->from(Entity\Program::class, 'program_entity_program');
 
         $direction = 'DESC';
-        if (isset($filter['direction'])
+        if (
+            isset($filter['direction'])
             && \in_array(strtoupper($filter['direction']), ['ASC', 'DESC'])
         ) {
             $direction = strtoupper($filter['direction']);
