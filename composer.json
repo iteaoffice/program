@@ -28,7 +28,7 @@
     "laminas/laminas-navigation": "^2.9.0",
     "jield-webdev/bjy-authorize": "^1.4.0",
     "doctrine/doctrine-orm-module": "@stable",
-    "phpoffice/phpword": "^0.16"
+    "phpoffice/phpword": "^0.17"
   },
   "require-dev": {
     "iteaoffice/testing": "2.*",
