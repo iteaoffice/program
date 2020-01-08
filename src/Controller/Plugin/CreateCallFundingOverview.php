@@ -1,4 +1,5 @@
 <?php
+
 /**
 *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
@@ -117,7 +118,8 @@ final class CreateCallFundingOverview extends AbstractPlugin
 
             /** @var Funding $funding */
             foreach ($affiliation->getFunding() as $funding) {
-                if ($funding->getSource()->getId() === Source::SOURCE_OFFICE
+                if (
+                    $funding->getSource()->getId() === Source::SOURCE_OFFICE
                     && $funding->getDateStart()->format('Y') === $year
                 ) {
                     $costs = null;

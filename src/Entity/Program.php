@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -19,11 +20,15 @@ use Contact\Entity\Dnd;
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Invoice\Entity\Method;
+
 use function is_numeric;
+
 use Organisation\Entity\Parent\Invoice;
 use Organisation\Entity\Parent\InvoiceExtra;
 use Program\Entity\Call\Call;
+
 use function substr;
+
 use Laminas\Form\Annotation;
 
 /**

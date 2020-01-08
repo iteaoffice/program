@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -23,6 +24,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use General\Entity\ContentType;
 use Program\Entity\Call\Call;
 use Laminas\Form\Annotation;
+
 use function sprintf;
 use function str_replace;
 

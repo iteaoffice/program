@@ -31,12 +31,12 @@
     "phpoffice/phpword": "^0.16"
   },
   "require-dev": {
-    "iteaoffice/testing": "^2.1",
+    "iteaoffice/testing": "2.*",
     "jield-webdev/zf3-bootstrap4": "dev-master",
-    "iteaoffice/affiliation": "^5.1",
-    "iteaoffice/project": "^5.1",
-    "iteaoffice/contact": "^5.1",
-    "iteaoffice/search": "^2.1"
+    "iteaoffice/affiliation": "5.*",
+    "iteaoffice/project": "5.*",
+    "iteaoffice/contact": "5.*",
+    "iteaoffice/search": "2.*"
   },
   "autoload": {
     "psr-4": {

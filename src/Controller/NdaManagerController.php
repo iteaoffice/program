@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -43,6 +44,7 @@ use Laminas\Validator\File\FilesSize;
 use Laminas\Validator\File\MimeType;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+
 use function array_merge_recursive;
 use function sprintf;
 use function strlen;

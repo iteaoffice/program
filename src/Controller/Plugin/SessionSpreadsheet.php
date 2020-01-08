@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -33,6 +34,7 @@ use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 use Laminas\View\Helper\ServerUrl;
 use Laminas\View\Helper\Url;
 use Laminas\View\HelperPluginManager;
+
 use function end;
 use function implode;
 use function key;
@@ -55,8 +57,8 @@ final class SessionSpreadsheet extends AbstractPlugin
     private AssertionService $assertionService;
     private Authorize $authorize;
     private TranslatorInterface $translator;
-    private ? Url $urlHelper = null;
-    private ? ServerUrl $serverUrlHelper = null;
+    private ?Url $urlHelper = null;
+    private ?ServerUrl $serverUrlHelper = null;
 
     public function __construct(
         AssertionService $assertionService,
@@ -72,7 +74,7 @@ final class SessionSpreadsheet extends AbstractPlugin
         $this->serverUrlHelper = $helperPluginManager->get(ServerUrl::class);
     }
 
-    public function __invoke(Session $session) : SessionSpreadsheet
+    public function __invoke(Session $session): SessionSpreadsheet
     {
         $this->session = $session;
         $this->spreadsheet = new Spreadsheet();
@@ -144,7 +146,7 @@ final class SessionSpreadsheet extends AbstractPlugin
         return $this;
     }
 
-    public function parseResponse() : Response
+    public function parseResponse(): Response
     {
         $response = new Response();
         if (! ($this->spreadsheet instanceof Spreadsheet)) {

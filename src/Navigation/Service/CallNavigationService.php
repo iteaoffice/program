@@ -1,4 +1,5 @@
 <?php
+
 /**
 *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
@@ -80,7 +81,8 @@ final class CallNavigationService
 
             /** @var Mvc $page */
             foreach ($pages as $page) {
-                if (! $activeCall->hasIdeaTool()
+                if (
+                    ! $activeCall->hasIdeaTool()
                     && \in_array(
                         $page->getRoute(),
                         ['community/idea/list', 'community/idea/invite/retrieve'],

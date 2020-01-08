@@ -18,6 +18,7 @@ use Laminas\Json\Json;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 use Laminas\Router\Http\RouteMatch;
+
 use function base64_decode;
 use function base64_encode;
 
@@ -37,7 +38,7 @@ final class GetFilter extends AbstractPlugin
      */
     private $routeMatch;
     private array $filter = [];
-    private ? string $query;
+    private ?string $query;
 
     public function __construct(Application $application)
     {
@@ -45,7 +46,7 @@ final class GetFilter extends AbstractPlugin
         $this->request = $application->getMvcEvent()->getRequest();
     }
 
-    public function __invoke() : self
+    public function __invoke(): self
     {
         $encodedFilter = urldecode((string)$this->routeMatch->getParam('encodedFilter'));
 

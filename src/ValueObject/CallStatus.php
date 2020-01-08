@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  */
@@ -12,9 +13,9 @@ use Project\Entity\Version\Type;
 
 final class CallStatus
 {
-    private ? DateTime $referenceDate;
+    private ?DateTime $referenceDate;
     private string $result;
-    private ? Type $versionType;
+    private ?Type $versionType;
 
     public function __construct(?DateTime $referenceDate, string $result, ?Type $versionType)
     {
@@ -23,12 +24,12 @@ final class CallStatus
         $this->versionType = $versionType;
     }
 
-    public function getReferenceDate() : ?DateTime
+    public function getReferenceDate(): ?DateTime
     {
         return $this->referenceDate;
     }
 
-    public function getResult() : string
+    public function getResult(): string
     {
         return $this->result;
     }
