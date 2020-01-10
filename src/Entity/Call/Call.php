@@ -16,12 +16,26 @@ declare(strict_types=1);
 
 namespace Program\Entity\Call;
 
+use Affiliation\Entity\Questionnaire\Questionnaire;
+use Calendar\Entity\Calendar;
+use DateTime;
 use Doctrine\Common\Collections;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Event\Entity\Meeting\Meeting;
 use Gedmo\Mapping\Annotation as Gedmo;
+use General\Entity\Challenge;
 use Program\Entity\AbstractEntity;
+use Program\Entity\Nda;
 use Program\Entity\Program;
 use Laminas\Form\Annotation;
+use Project\Entity\Idea\Idea;
+use Project\Entity\Idea\Tool;
+use Project\Entity\Project;
+use Publication\Entity\Publication;
+use function explode;
+use function sprintf;
+use function strtoupper;
 
 /**
  * @ORM\Table(name="programcall")
@@ -32,15 +46,13 @@ use Laminas\Form\Annotation;
  */
 class Call extends AbstractEntity
 {
-    /**
-     * Produce a list of different statuses in a call, which are required for representation and access control.
-     */
-    public const FPP_CLOSED = 'FPP_CLOSED';
+    // Produce a list of different statuses in a call, which are required for representation and access control.
+    public const FPP_CLOSED   = 'FPP_CLOSED';
     public const FPP_NOT_OPEN = 'FPP_NOT_OPEN';
-    public const FPP_OPEN = 'FPP_OPEN';
-    public const PO_CLOSED = 'PO_CLOSED';
-    public const PO_NOT_OPEN = 'PO_NOT_OPEN';
-    public const PO_OPEN = 'PO_OPEN';
+    public const FPP_OPEN     = 'FPP_OPEN';
+    public const PO_CLOSED    = 'PO_CLOSED';
+    public const PO_NOT_OPEN  = 'PO_NOT_OPEN';
+    public const PO_OPEN      = 'PO_OPEN';
 
     public const INACTIVE = 0;
     public const ACTIVE = 1;
@@ -56,34 +68,29 @@ class Call extends AbstractEntity
     public const PROJECT_REPORT_SINGLE = 1;
     public const PROJECT_REPORT_DOUBLE = 2;
 
-    protected static array $activeTemplates
-        = [
+    protected static array $activeTemplates = [
             self::INACTIVE => 'txt-inactive-for-projects',
             self::ACTIVE   => 'txt-active-for-projects',
         ];
 
-    protected static array $doaRequirementTemplates
-        = [
+    protected static array $doaRequirementTemplates = [
             self::DOA_REQUIREMENT_NOT_APPLICABLE => 'txt-no-doa-required',
             self::DOA_REQUIREMENT_PER_PROGRAM    => 'txt-doa-per-program-required',
             self::DOA_REQUIREMENT_PER_PROJECT    => 'txt-doa-per-project-required',
         ];
 
-    protected static array $ndaRequirementTemplates
-        = [
+    protected static array $ndaRequirementTemplates = [
             self::NDA_REQUIREMENT_NOT_APPLICABLE => 'txt-no-nda-required',
             self::NDA_REQUIREMENT_PER_CALL       => 'txt-nda-per-call-required',
             self::NDA_REQUIREMENT_PER_PROJECT    => 'txt-nda-per-project-required',
         ];
 
-    protected static array $loiRequirementTemplates
-        = [
+    protected static array $loiRequirementTemplates = [
             self::LOI_NOI_REQUIRED => 'txt-no-loi-required',
             self::LOI_REQUIRED     => 'txt-loi-required',
         ];
 
-    protected static array $projectReportTemplates
-        = [
+    protected static array $projectReportTemplates = [
             self::PROJECT_REPORT_SINGLE => 'txt-project-report-single',
             self::PROJECT_REPORT_DOUBLE => 'txt-project-report-double',
         ];
@@ -119,7 +126,7 @@ class Call extends AbstractEntity
      * @Annotation\Attributes({"step":"any"})
      * @Annotation\Options({"label":"txt-po-open-date", "format":"Y-m-d H:i:s"})
      *
-     * @var \DateTime
+     * @var DateTime
      */
     private $poOpenDate;
     /**
@@ -128,7 +135,7 @@ class Call extends AbstractEntity
      * @Annotation\Attributes({"step":"any"})
      * @Annotation\Options({"label":"txt-po-close-date", "format":"Y-m-d H:i:s"})
      *
-     * @var \DateTime
+     * @var DateTime
      */
     private $poCloseDate;
     /**
@@ -137,7 +144,7 @@ class Call extends AbstractEntity
      * @Annotation\Attributes({"step":"any"})
      * @Annotation\Options({"label":"txt-loi-submission-date-label", "format":"Y-m-d H:i:s","help-block":"txt-loi-submission-help-block"})
      *
-     * @var \DateTime
+     * @var DateTime
      */
     private $loiSubmissionDate;
     /**
@@ -146,7 +153,7 @@ class Call extends AbstractEntity
      * @Annotation\Attributes({"step":"any"})
      * @Annotation\Options({"label":"txt-fpp-open-date", "format":"Y-m-d H:i:s"})
      *
-     * @var \DateTime
+     * @var DateTime
      */
     private $fppOpenDate;
     /**
@@ -155,7 +162,7 @@ class Call extends AbstractEntity
      * @Annotation\Attributes({"step":"any"})
      * @Annotation\Options({"label":"txt-fpp-close-date", "format":"Y-m-d H:i:s"})
      *
-     * @var \DateTime
+     * @var DateTime
      */
     private $fppCloseDate;
     /**
@@ -164,7 +171,7 @@ class Call extends AbstractEntity
      * @Annotation\Attributes({"step":"any"})
      * @Annotation\Options({"label":"txt-doa-submission-date-label", "format":"Y-m-d H:i:s","help-block":"txt-doa-submission-help-block"})
      *
-     * @var \DateTime
+     * @var DateTime
      */
     private $doaSubmissionDate;
     /**
@@ -173,7 +180,7 @@ class Call extends AbstractEntity
      * @Annotation\Attributes({"step":"any"})
      * @Annotation\Options({"label":"txt-label-announcement-date-label", "format":"Y-m-d H:i:s","help-block":"txt-label-announcement-help-block"})
      *
-     * @var \DateTime
+     * @var DateTime
      */
     private $labelAnnouncementDate;
     /**
@@ -235,41 +242,41 @@ class Call extends AbstractEntity
      * @ORM\OneToMany(targetEntity="\Project\Entity\Project", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Project\Entity\Project[]|Collections\ArrayCollection
+     * @var Project[]|Collections\ArrayCollection
      */
     private $project;
     /**
      * @ORM\ManyToMany(targetEntity="\Project\Entity\Project", cascade={"persist"}, mappedBy="proxyCall")
      * @Annotation\Exclude()
-     * @var \Project\Entity\Project[]|Collections\ArrayCollection
+     * @var Project[]|Collections\ArrayCollection
      */
     private $proxyProject;
     /**
      * @ORM\ManyToMany(targetEntity="Program\Entity\Nda", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\Nda[]|Collections\ArrayCollection
+     * @var Nda[]|Collections\ArrayCollection
      */
     private $nda;
     /**
      * @ORM\ManyToMany(targetEntity="\Publication\Entity\Publication", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Publication\Entity\Publication[]|Collections\ArrayCollection
+     * @var Publication[]|Collections\ArrayCollection
      */
     private $publication;
     /**
      * @ORM\ManyToMany(targetEntity="Event\Entity\Meeting\Meeting", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Event\Entity\Meeting\Meeting[]|Collections\ArrayCollection
+     * @var Meeting[]|Collections\ArrayCollection
      */
     private $meeting;
     /**
      * @ORM\ManyToMany(targetEntity="Calendar\Entity\Calendar", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Calendar\Entity\Calendar[]|Collections\ArrayCollection
+     * @var Calendar[]|Collections\ArrayCollection
      */
     private $calendar;
     /**
@@ -284,14 +291,14 @@ class Call extends AbstractEntity
      * @ORM\OrderBy({"number" = "ASC"})
      * @Annotation\Exclude()
      *
-     * @var \Project\Entity\Idea\Idea[]|Collections\ArrayCollection
+     * @var Idea[]|Collections\ArrayCollection
      */
     private $idea;
     /**
      * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Tool", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Project\Entity\Idea\Tool[]|Collections\ArrayCollection
+     * @var Tool[]|Collections\ArrayCollection
      */
     private $ideaTool;
     /**
@@ -312,29 +319,38 @@ class Call extends AbstractEntity
      * @ORM\ManyToMany(targetEntity="General\Entity\Challenge", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \General\Entity\Challenge[]|Collections\ArrayCollection
+     * @var Challenge[]|Collections\ArrayCollection
      */
     private $challenge;
+    /**
+     * @ORM\OneToMany(targetEntity="Affiliation\Entity\Questionnaire\Questionnaire", cascade={"persist"}, mappedBy="programCall")
+     * @Annotation\Exclude()
+     *
+     * @var Questionnaire[]|Collection
+     */
+    private $questionnaires;
+
     public function __construct()
     {
-        $this->publication = new Collections\ArrayCollection();
-        $this->meeting = new Collections\ArrayCollection();
-        $this->project = new Collections\ArrayCollection();
-        $this->nda = new Collections\ArrayCollection();
-        $this->calendar = new Collections\ArrayCollection();
-        $this->doa = new Collections\ArrayCollection();
-        $this->idea = new Collections\ArrayCollection();
-        $this->ideaTool = new Collections\ArrayCollection();
-        $this->session = new Collections\ArrayCollection();
-        $this->callCountry = new Collections\ArrayCollection();
-        $this->challenge = new Collections\ArrayCollection();
-        $this->proxyProject = new Collections\ArrayCollection();
+        $this->publication    = new Collections\ArrayCollection();
+        $this->meeting        = new Collections\ArrayCollection();
+        $this->project        = new Collections\ArrayCollection();
+        $this->nda            = new Collections\ArrayCollection();
+        $this->calendar       = new Collections\ArrayCollection();
+        $this->doa            = new Collections\ArrayCollection();
+        $this->idea           = new Collections\ArrayCollection();
+        $this->ideaTool       = new Collections\ArrayCollection();
+        $this->session        = new Collections\ArrayCollection();
+        $this->callCountry    = new Collections\ArrayCollection();
+        $this->challenge      = new Collections\ArrayCollection();
+        $this->proxyProject   = new Collections\ArrayCollection();
+        $this->questionnaires = new Collections\ArrayCollection();
 
         $this->doaRequirement = self::DOA_REQUIREMENT_PER_PROJECT;
         $this->ndaRequirement = self::NDA_REQUIREMENT_PER_CALL;
         $this->loiRequirement = self::LOI_REQUIRED;
-        $this->projectReport = self::PROJECT_REPORT_SINGLE;
-        $this->active = self::ACTIVE;
+        $this->projectReport  = self::PROJECT_REPORT_SINGLE;
+        $this->active         = self::ACTIVE;
     }
 
     public static function getDoaRequirementTemplates(): array
@@ -369,14 +385,14 @@ class Call extends AbstractEntity
 
     public function shortName(): string
     {
-        $words = \explode(' ', $this->program->getProgram());
+        $words = explode(' ', $this->program->getProgram());
         $acronym = '';
 
         foreach ($words as $w) {
-            $acronym .= \strtoupper($w[0]);
+            $acronym .= strtoupper($w[0]);
         }
 
-        return \sprintf('%sC%s', $acronym, $this->call);
+        return sprintf('%sC%s', $acronym, $this->call);
     }
 
     public function getProgram(): ?Program
@@ -393,7 +409,7 @@ class Call extends AbstractEntity
 
     public function searchName(): string
     {
-        return \sprintf('%s Call %s', $this->program->searchName(), $this->call);
+        return sprintf('%s Call %s', $this->program->searchName(), $this->call);
     }
 
     public function hasIdeaTool(): bool
@@ -458,7 +474,7 @@ class Call extends AbstractEntity
         return $this;
     }
 
-    public function getPoOpenDate(): ?\DateTime
+    public function getPoOpenDate(): ?DateTime
     {
         return $this->poOpenDate;
     }
@@ -469,7 +485,7 @@ class Call extends AbstractEntity
         return $this;
     }
 
-    public function getPoCloseDate(): ?\DateTime
+    public function getPoCloseDate(): ?DateTime
     {
         return $this->poCloseDate;
     }
@@ -480,7 +496,7 @@ class Call extends AbstractEntity
         return $this;
     }
 
-    public function getLoiSubmissionDate(): ?\DateTime
+    public function getLoiSubmissionDate(): ?DateTime
     {
         return $this->loiSubmissionDate;
     }
@@ -745,6 +761,17 @@ class Call extends AbstractEntity
     {
         $this->challenge = $challenge;
 
+        return $this;
+    }
+
+    public function getQuestionnaires(): Collection
+    {
+        return $this->questionnaires;
+    }
+
+    public function setQuestionnaires(Collection $questionnaires): Call
+    {
+        $this->questionnaires = $questionnaires;
         return $this;
     }
 }
