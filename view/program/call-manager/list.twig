@@ -35,11 +35,16 @@
             <th>{{ translate("txt-#projects") }}</th>
         </tr>
         </thead>
+        <tfoot>
+        <tr>
+            <td colspan="8"></td>
+        </tr>
+        </tfoot>
         <tbody>
         {% for call in paginator.getCurrentItems() %}
             <tr>
-                <td>{{ call.id }} {{ callLink(call,'edit', 'icon') }}</td>
-                <td>{{ callLink(call,'view-admin','name') }}</td>
+                <td><small class="text-muted">{{ call.id }}</small></td>
+                <td>{{ callLink(call,'view-admin','name') }} {{ callLink(call,'edit', 'icon') }}</td>
                 <td>{{ programLink(call.program,'view','name') }}</td>
                 <td>{% if call.poOpenDate %}{{ call.poOpenDate|string_date }}{% endif %}</td>
                 <td>{% if call.poCloseDate %}{{ call.poCloseDate|string_date }}{% endif %}</td>

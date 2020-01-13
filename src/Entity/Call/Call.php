@@ -25,14 +25,15 @@ use Doctrine\ORM\Mapping as ORM;
 use Event\Entity\Meeting\Meeting;
 use Gedmo\Mapping\Annotation as Gedmo;
 use General\Entity\Challenge;
+use Laminas\Form\Annotation;
 use Program\Entity\AbstractEntity;
 use Program\Entity\Nda;
 use Program\Entity\Program;
-use Laminas\Form\Annotation;
 use Project\Entity\Idea\Idea;
 use Project\Entity\Idea\Tool;
 use Project\Entity\Project;
 use Publication\Entity\Publication;
+
 use function explode;
 use function sprintf;
 use function strtoupper;
@@ -54,46 +55,46 @@ class Call extends AbstractEntity
     public const PO_NOT_OPEN  = 'PO_NOT_OPEN';
     public const PO_OPEN      = 'PO_OPEN';
 
-    public const INACTIVE = 0;
-    public const ACTIVE = 1;
+    public const INACTIVE                       = 0;
+    public const ACTIVE                         = 1;
     public const DOA_REQUIREMENT_NOT_APPLICABLE = 1;
-    public const DOA_REQUIREMENT_PER_PROGRAM = 2;
-    public const DOA_REQUIREMENT_PER_PROJECT = 3;
+    public const DOA_REQUIREMENT_PER_PROGRAM    = 2;
+    public const DOA_REQUIREMENT_PER_PROJECT    = 3;
     public const NDA_REQUIREMENT_NOT_APPLICABLE = 1;
-    public const NDA_REQUIREMENT_PER_CALL = 2;
-    public const NDA_REQUIREMENT_PER_PROJECT = 3;
-    public const LOI_NOI_REQUIRED = 0;
-    public const LOI_REQUIRED = 1;
+    public const NDA_REQUIREMENT_PER_CALL       = 2;
+    public const NDA_REQUIREMENT_PER_PROJECT    = 3;
+    public const LOI_NOI_REQUIRED               = 0;
+    public const LOI_REQUIRED                   = 1;
 
     public const PROJECT_REPORT_SINGLE = 1;
     public const PROJECT_REPORT_DOUBLE = 2;
 
     protected static array $activeTemplates = [
-            self::INACTIVE => 'txt-inactive-for-projects',
-            self::ACTIVE   => 'txt-active-for-projects',
-        ];
+        self::INACTIVE => 'txt-inactive-for-projects',
+        self::ACTIVE   => 'txt-active-for-projects',
+    ];
 
     protected static array $doaRequirementTemplates = [
-            self::DOA_REQUIREMENT_NOT_APPLICABLE => 'txt-no-doa-required',
-            self::DOA_REQUIREMENT_PER_PROGRAM    => 'txt-doa-per-program-required',
-            self::DOA_REQUIREMENT_PER_PROJECT    => 'txt-doa-per-project-required',
-        ];
+        self::DOA_REQUIREMENT_NOT_APPLICABLE => 'txt-no-doa-required',
+        self::DOA_REQUIREMENT_PER_PROGRAM    => 'txt-doa-per-program-required',
+        self::DOA_REQUIREMENT_PER_PROJECT    => 'txt-doa-per-project-required',
+    ];
 
     protected static array $ndaRequirementTemplates = [
-            self::NDA_REQUIREMENT_NOT_APPLICABLE => 'txt-no-nda-required',
-            self::NDA_REQUIREMENT_PER_CALL       => 'txt-nda-per-call-required',
-            self::NDA_REQUIREMENT_PER_PROJECT    => 'txt-nda-per-project-required',
-        ];
+        self::NDA_REQUIREMENT_NOT_APPLICABLE => 'txt-no-nda-required',
+        self::NDA_REQUIREMENT_PER_CALL       => 'txt-nda-per-call-required',
+        self::NDA_REQUIREMENT_PER_PROJECT    => 'txt-nda-per-project-required',
+    ];
 
     protected static array $loiRequirementTemplates = [
-            self::LOI_NOI_REQUIRED => 'txt-no-loi-required',
-            self::LOI_REQUIRED     => 'txt-loi-required',
-        ];
+        self::LOI_NOI_REQUIRED => 'txt-no-loi-required',
+        self::LOI_REQUIRED     => 'txt-loi-required',
+    ];
 
     protected static array $projectReportTemplates = [
-            self::PROJECT_REPORT_SINGLE => 'txt-project-report-single',
-            self::PROJECT_REPORT_DOUBLE => 'txt-project-report-double',
-        ];
+        self::PROJECT_REPORT_SINGLE => 'txt-project-report-single',
+        self::PROJECT_REPORT_DOUBLE => 'txt-project-report-double',
+    ];
 
     /**
      * @ORM\Column(name="programcall_id", type="integer", options={"unsigned":true})
@@ -235,7 +236,7 @@ class Call extends AbstractEntity
      * @Annotation\Options({"target_class":"Program\Entity\Program"})
      * @Annotation\Attributes({"label":"txt-program"})
      *
-     * @var \Program\Entity\Program
+     * @var Program
      */
     private $program;
     /**
@@ -283,7 +284,7 @@ class Call extends AbstractEntity
      * @ORM\OneToMany(targetEntity="Program\Entity\Call\Doa", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\Call\Doa[]|Collections\ArrayCollection
+     * @var Doa[]|Collections\ArrayCollection
      */
     private $doa;
     /**
@@ -305,14 +306,14 @@ class Call extends AbstractEntity
      * @ORM\OneToMany(targetEntity="Program\Entity\Call\Session", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\Call\Session[]|Collections\ArrayCollection
+     * @var Session[]|Collections\ArrayCollection
      */
     private $session;
     /**
      * @ORM\OneToMany(targetEntity="Program\Entity\Call\Country", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\Call\Country[]|Collections\ArrayCollection
+     * @var Country[]|Collections\ArrayCollection
      */
     private $callCountry;
     /**
@@ -385,7 +386,7 @@ class Call extends AbstractEntity
 
     public function shortName(): string
     {
-        $words = explode(' ', $this->program->getProgram());
+        $words   = explode(' ', $this->program->getProgram());
         $acronym = '';
 
         foreach ($words as $w) {

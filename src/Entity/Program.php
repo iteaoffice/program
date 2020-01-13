@@ -20,16 +20,13 @@ use Contact\Entity\Dnd;
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Invoice\Entity\Method;
-
-use function is_numeric;
-
+use Laminas\Form\Annotation;
 use Organisation\Entity\Parent\Invoice;
 use Organisation\Entity\Parent\InvoiceExtra;
 use Program\Entity\Call\Call;
 
+use function is_numeric;
 use function substr;
-
-use Laminas\Form\Annotation;
 
 /**
  * @ORM\Table(name="program")
@@ -133,11 +130,11 @@ class Program extends AbstractEntity
 
     public function __construct()
     {
-        $this->call = new Collections\ArrayCollection();
-        $this->doa = new Collections\ArrayCollection();
-        $this->parentDoa = new Collections\ArrayCollection();
-        $this->invoiceMethod = new Collections\ArrayCollection();
-        $this->parentInvoice = new Collections\ArrayCollection();
+        $this->call               = new Collections\ArrayCollection();
+        $this->doa                = new Collections\ArrayCollection();
+        $this->parentDoa          = new Collections\ArrayCollection();
+        $this->invoiceMethod      = new Collections\ArrayCollection();
+        $this->parentInvoice      = new Collections\ArrayCollection();
         $this->parentInvoiceExtra = new Collections\ArrayCollection();
     }
 
@@ -150,6 +147,22 @@ class Program extends AbstractEntity
         }
 
         return $programName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProgram()
+    {
+        return $this->program;
+    }
+
+    /**
+     * @param string $program
+     */
+    public function setProgram($program)
+    {
+        $this->program = $program;
     }
 
     public function __toString(): string
@@ -198,22 +211,6 @@ class Program extends AbstractEntity
     public function setId($id)
     {
         $this->id = $id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getProgram()
-    {
-        return $this->program;
-    }
-
-    /**
-     * @param string $program
-     */
-    public function setProgram($program)
-    {
-        $this->program = $program;
     }
 
     /**
