@@ -19,11 +19,18 @@ namespace Program\Controller\Plugin;
 use Affiliation\Entity\Affiliation;
 use Affiliation\Service\AffiliationService;
 use Contact\Service\ContactService;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use General\Entity\Country;
 use General\Service\CountryService;
+use Laminas\Http\Headers;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Program\Entity\Call\Call;
@@ -36,10 +43,6 @@ use Project\Form\Statistics;
 use Project\Service\ContractService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
-use Laminas\Http\Headers;
-use Laminas\Http\Response;
-use Laminas\I18n\Translator\TranslatorInterface;
-use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 
 use function count;
 use function end;
@@ -67,18 +70,13 @@ final class CallSizeSpreadsheet extends AbstractPlugin
      * @var Call[]
      */
     private array $calls = [];
-    /**
-     * @var array
-     */
     private array $countryIds = [];
-    /**
-     * @var array
-     */
     private array $organisationTypeIds = [];
     /**
      * @var Project[]
      */
     private array $projects = [];
+    private array $dateColumns = [];
 
     private Spreadsheet $spreadsheet;
     private ProjectService $projectService;
@@ -103,7 +101,6 @@ final class CallSizeSpreadsheet extends AbstractPlugin
     private bool $includeTotals = false;
     private int $output = Statistics::OUTPUT_PARTNERS;
 
-
     private array $header = [];
     private array $rows = [];
 
@@ -117,14 +114,14 @@ final class CallSizeSpreadsheet extends AbstractPlugin
         EntityManager $entityManager,
         TranslatorInterface $translator
     ) {
-        $this->projectService = $projectService;
-        $this->versionService = $versionService;
+        $this->projectService     = $projectService;
+        $this->versionService     = $versionService;
         $this->affiliationService = $affiliationService;
-        $this->contractService = $contractService;
-        $this->contactService = $contactService;
-        $this->countryService = $countryService;
-        $this->entityManager = $entityManager;
-        $this->translator = $translator;
+        $this->contractService    = $contractService;
+        $this->contactService     = $contactService;
+        $this->countryService     = $countryService;
+        $this->entityManager      = $entityManager;
+        $this->translator         = $translator;
     }
 
     public function __invoke(
@@ -183,12 +180,12 @@ final class CallSizeSpreadsheet extends AbstractPlugin
         $this->output = $output;
 
         $this->programs = $programs;
-        $this->calls = $calls;
+        $this->calls    = $calls;
 
         $this->parsePrograms($programs);
         $this->parseCalls($calls);
 
-        $this->countryIds = $countryIds;
+        $this->countryIds          = $countryIds;
         $this->organisationTypeIds = $organisationTypeIds;
 
         if ($output === Statistics::OUTPUT_PARTNERS) {
@@ -219,8 +216,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
             /** @var Project $project */
             foreach (
                 $this->projectService->findProjectByProgram($program, ProjectService::WHICH_ALL)
-                    ->getQuery()
-                    ->getResult() as $project
+                ->getQuery()
+                ->getResult() as $project
             ) {
                 $this->projects[$project->getId()] = $project;
             }
@@ -261,6 +258,9 @@ final class CallSizeSpreadsheet extends AbstractPlugin
         $header[$column++] = $this->translator->translate('txt-partner-type');
         $header[$column++] = $this->translator->translate('txt-partner-active');
 
+        $header[$column++] = $this->translator->translate('txt-label-date');
+        $header[$column++] = $this->translator->translate('txt-official-start-date');
+        $header[$column++] = $this->translator->translate('txt-official-end-date');
 
         if ($this->splitPerYear) {
             $header[$column++] = $this->translator->translate('txt-year');
@@ -305,7 +305,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
             $header[$column++] = $this->translator->translate('txt-zip');
             $header[$column++] = $this->translator->translate('txt-city');
             $header[$column++] = $this->translator->translate('txt-country');
-            $header[$column] = $this->translator->translate('txt-phone');
+            $header[$column]   = $this->translator->translate('txt-phone');
         }
 
         return $header;
@@ -322,25 +322,25 @@ final class CallSizeSpreadsheet extends AbstractPlugin
             }
 
             //Find the PO
-            $po = $this->versionService->findVersionTypeById(Type::TYPE_PO);
+            $po  = $this->versionService->findVersionTypeById(Type::TYPE_PO);
             $fpp = $this->versionService->findVersionTypeById(Type::TYPE_FPP);
 
-            $projectOutline = null;
+            $projectOutline      = null;
             $fullProjectProposal = null;
-            $latestVersion = null;
+            $latestVersion       = null;
 
             if ($this->includeDecisionPending) {
-                $projectOutline = $this->projectService->getAnyLatestProjectVersion($project, $po);
+                $projectOutline      = $this->projectService->getAnyLatestProjectVersion($project, $po);
                 $fullProjectProposal = $this->projectService->getAnyLatestProjectVersion($project, $fpp);
-                $latestVersion = $this->projectService->getAnyLatestProjectVersion($project);
+                $latestVersion       = $this->projectService->getAnyLatestProjectVersion($project);
 
                 if (! $this->includeRejectedCR && null !== $latestVersion && $latestVersion->isRejected()) {
                     $latestVersion = $this->projectService->getLatestApprovedProjectVersion($project);
                 }
             } else {
-                $projectOutline = $this->projectService->getLatestReviewedProjectVersion($project, $po);
+                $projectOutline      = $this->projectService->getLatestReviewedProjectVersion($project, $po);
                 $fullProjectProposal = $this->projectService->getLatestReviewedProjectVersion($project, $fpp);
-                $latestVersion = $this->projectService->getLatestReviewedProjectVersion($project);
+                $latestVersion       = $this->projectService->getLatestReviewedProjectVersion($project);
 
                 if (! $this->includeRejectedCR && null !== $latestVersion && $latestVersion->isRejected()) {
                     $latestVersion = $this->projectService->getLatestApprovedProjectVersion($project);
@@ -413,17 +413,17 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                     );
                 }
                 $exchangeRate = 1;
-                $column = 'A';
+                $column       = 'A';
 
 
                 if ($this->splitPerYear) {
-                    $poEffortVersionPerYear = [];
-                    $poCostVersionPerYear = [];
-                    $fppEffortVersionPerYear = [];
-                    $fppCostVersionPerYear = [];
+                    $poEffortVersionPerYear     = [];
+                    $poCostVersionPerYear       = [];
+                    $fppEffortVersionPerYear    = [];
+                    $fppCostVersionPerYear      = [];
                     $latestEffortVersionPerYear = [];
-                    $latestCostVersionPerYear = [];
-                    $contractCost = [];
+                    $latestCostVersionPerYear   = [];
+                    $contractCost               = [];
 
                     if ($this->includePOFPPCostAndEffort) {
                         if (null !== $projectOutline) {
@@ -453,7 +453,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                         }
 
                         $draftEffort = $this->projectService->findTotalEffortByAffiliationPerYear($affiliation);
-                        $draftCost = $this->projectService->findTotalCostByAffiliationPerYear($affiliation);
+                        $draftCost   = $this->projectService->findTotalCostByAffiliationPerYear($affiliation);
                     }
 
                     if (null !== $latestVersion) {
@@ -507,6 +507,26 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                         $projectColumn[$column++] = $affiliation->getOrganisation()->getCountry()->getIso3();
                         $projectColumn[$column++] = $affiliation->getOrganisation()->getType()->getDescription();
                         $projectColumn[$column++] = $affiliation->isActive() ? 'Y' : 'N';
+
+                        if (null !== $fullProjectProposal && $fullProjectProposal->isReviewed() && $fullProjectProposal->isApproved()) {
+                            $this->dateColumns[]      = $column;
+                            $projectColumn[$column++] = $fullProjectProposal->getDateReviewed();
+                        } else {
+                            $projectColumn[$column++] = '';
+                        }
+                        if (null !== $project->getDateStartActual()) {
+                            $this->dateColumns[]      = $column;
+                            $projectColumn[$column++] = $project->getDateStartActual();
+                        } else {
+                            $projectColumn[$column++] = '';
+                        }
+                        if (null !== $project->getDateEndActual()) {
+                            $this->dateColumns[]      = $column;
+                            $projectColumn[$column++] = $project->getDateEndActual();
+                        } else {
+                            $projectColumn[$column++] = '';
+                        }
+
                         $projectColumn[$column++] = $year;
                         $projectColumn[$column++] = $fundingStatus;
 
@@ -526,9 +546,11 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                             $latestVersion
                         )
                             : '';
+
+                        $this->dateColumns[]      = $column;
                         $projectColumn[$column++] = null !== $latestVersion
                         && null !== $latestVersion->getDateReviewed()
-                            ? $latestVersion->getDateReviewed()->format('d-m-Y') : '';
+                            ? $latestVersion->getDateReviewed() : '';
 
                         if ($this->includePOFPPCostAndEffort) {
                             $projectColumn[$column++] = $draftEffort[$year] ?? null;
@@ -545,11 +567,11 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
                         if ($this->includeTotals) {
                             $totalEffort = 0;
-                            $totalCost = 0;
+                            $totalCost   = 0;
 
                             if (null !== $latestVersion) {
                                 $totalEffort = $this->versionService->findTotalEffortVersion($latestVersion);
-                                $totalCost = $this->versionService->findTotalCostVersionByProjectVersion($latestVersion);
+                                $totalCost   = $this->versionService->findTotalCostVersionByProjectVersion($latestVersion);
                             }
 
                             $projectColumn[$column++] = $totalEffort;
@@ -587,14 +609,14 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                                 $mailAddress = $this->contactService->getMailAddress($affiliation->getContact());
                             }
                             $address = null;
-                            $zip = null;
-                            $city = null;
+                            $zip     = null;
+                            $city    = null;
                             $country = null;
 
                             if (null !== $mailAddress) {
                                 $address = $mailAddress->getAddress();
-                                $zip = $mailAddress->getZipCode();
-                                $city = $mailAddress->getCity();
+                                $zip     = $mailAddress->getZipCode();
+                                $city    = $mailAddress->getCity();
                                 $country = $mailAddress->getCountry()->getCountry();
                             }
 
@@ -602,7 +624,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                             $projectColumn[$column++] = $zip;
                             $projectColumn[$column++] = $city;
                             $projectColumn[$column++] = $country;
-                            $projectColumn[$column] = $this->contactService->getDirectPhone($affiliation->getContact());
+                            $projectColumn[$column]   = $this->contactService->getDirectPhone($affiliation->getContact());
                         }
 
                         $this->rows[] = $projectColumn;
@@ -612,20 +634,20 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                 if (! $this->splitPerYear) {
                     $projectColumn = [];
 
-                    $poEffortVersion = null;
-                    $poCostVersion = null;
-                    $fppEffortVersion = null;
-                    $fppCostVersion = null;
+                    $poEffortVersion     = null;
+                    $poCostVersion       = null;
+                    $fppEffortVersion    = null;
+                    $fppCostVersion      = null;
                     $latestEffortVersion = null;
-                    $latestCostVersion = null;
-                    $contractCost = null;
+                    $latestCostVersion   = null;
+                    $contractCost        = null;
 
                     if (null !== $projectOutline) {
                         $poEffortVersion
-                            = $this->versionService->findTotalEffortVersionByAffiliationAndVersion(
-                                $affiliation,
-                                $projectOutline
-                            );
+                                       = $this->versionService->findTotalEffortVersionByAffiliationAndVersion(
+                                           $affiliation,
+                                           $projectOutline
+                                       );
                         $poCostVersion = $this->versionService->findTotalCostVersionByAffiliationAndVersion(
                             $affiliation,
                             $projectOutline
@@ -634,10 +656,10 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
                     if (null !== $fullProjectProposal) {
                         $fppEffortVersion
-                            = $this->versionService->findTotalEffortVersionByAffiliationAndVersion(
-                                $affiliation,
-                                $fullProjectProposal
-                            );
+                                        = $this->versionService->findTotalEffortVersionByAffiliationAndVersion(
+                                            $affiliation,
+                                            $fullProjectProposal
+                                        );
                         $fppCostVersion = $this->versionService->findTotalCostVersionByAffiliationAndVersion(
                             $affiliation,
                             $fullProjectProposal
@@ -668,7 +690,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                     }
 
                     $draftEffort = $this->projectService->findTotalEffortByAffiliation($affiliation);
-                    $draftCost = $this->projectService->findTotalCostByAffiliation($affiliation);
+                    $draftCost   = $this->projectService->findTotalCostByAffiliation($affiliation);
 
 
                     $projectColumn[$column++] = $project->getNumber();
@@ -680,6 +702,25 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                     $projectColumn[$column++] = $affiliation->getOrganisation()->getCountry()->getIso3();
                     $projectColumn[$column++] = $affiliation->getOrganisation()->getType()->getDescription();
                     $projectColumn[$column++] = $affiliation->isActive() ? 'Y' : 'N';
+
+                    if (null !== $fullProjectProposal && $fullProjectProposal->isReviewed() && $fullProjectProposal->isApproved()) {
+                        $this->dateColumns[]      = $column;
+                        $projectColumn[$column++] = $fullProjectProposal->getDateReviewed();
+                    } else {
+                        $projectColumn[$column++] = '';
+                    }
+                    if (null !== $project->getDateStartActual()) {
+                        $this->dateColumns[]      = $column;
+                        $projectColumn[$column++] = $project->getDateStartActual();
+                    } else {
+                        $projectColumn[$column++] = '';
+                    }
+                    if (null !== $project->getDateEndActual()) {
+                        $this->dateColumns[]      = $column;
+                        $projectColumn[$column++] = $project->getDateEndActual();
+                    } else {
+                        $projectColumn[$column++] = '';
+                    }
 
                     if ($this->includePOFPPCostAndEffort) {
                         $projectColumn[$column++] = $poEffortVersion;
@@ -697,8 +738,10 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                         $latestVersion
                     )
                         : '';
+
+                    $this->dateColumns[]      = $column;
                     $projectColumn[$column++] = null !== $latestVersion && null !== $latestVersion->getDateReviewed()
-                        ? $latestVersion->getDateReviewed()->format('d-m-Y') : '';
+                        ? $latestVersion->getDateReviewed() : '';
 
                     if ($this->includePOFPPCostAndEffort) {
                         $projectColumn[$column++] = $draftEffort;
@@ -716,11 +759,11 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
                     if ($this->includeTotals) {
                         $totalEffort = 0;
-                        $totalCost = 0;
+                        $totalCost   = 0;
 
                         if (null !== $latestVersion) {
                             $totalEffort = $this->versionService->findTotalEffortVersion($latestVersion);
-                            $totalCost = $this->versionService->findTotalCostVersionByProjectVersion($latestVersion);
+                            $totalCost   = $this->versionService->findTotalCostVersionByProjectVersion($latestVersion);
                         }
 
                         $projectColumn[$column++] = $totalEffort;
@@ -758,14 +801,14 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                             $mailAddress = $this->contactService->getMailAddress($affiliation->getContact());
                         }
                         $address = null;
-                        $zip = null;
-                        $city = null;
+                        $zip     = null;
+                        $city    = null;
                         $country = null;
 
                         if (null !== $mailAddress) {
                             $address = $mailAddress->getAddress();
-                            $zip = $mailAddress->getZipCode();
-                            $city = $mailAddress->getCity();
+                            $zip     = $mailAddress->getZipCode();
+                            $city    = $mailAddress->getCity();
                             $country = $mailAddress->getCountry()->getCountry();
                         }
 
@@ -773,7 +816,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                         $projectColumn[$column++] = $zip;
                         $projectColumn[$column++] = $city;
                         $projectColumn[$column++] = $country;
-                        $projectColumn[$column] = $this->contactService->getDirectPhone($affiliation->getContact());
+                        $projectColumn[$column]   = $this->contactService->getDirectPhone($affiliation->getContact());
                     }
 
                     $this->rows[] = $projectColumn;
@@ -792,6 +835,10 @@ final class CallSizeSpreadsheet extends AbstractPlugin
         $header[$column++] = $this->translator->translate('txt-program-call');
         $header[$column++] = $this->translator->translate('txt-project-status');
         $header[$column++] = $this->translator->translate('txt-project-countries');
+
+        $header[$column++] = $this->translator->translate('txt-label-date');
+        $header[$column++] = $this->translator->translate('txt-official-start-date');
+        $header[$column++] = $this->translator->translate('txt-official-end-date');
 
         if ($this->includePOFPPCostAndEffort) {
             $header[$column++] = $this->translator->translate('txt-effort-po');
@@ -817,7 +864,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
             $header[$column++] = $this->translator->translate('txt-zip');
             $header[$column++] = $this->translator->translate('txt-city');
             $header[$column++] = $this->translator->translate('txt-country');
-            $header[$column] = $this->translator->translate('txt-phone');
+            $header[$column]   = $this->translator->translate('txt-phone');
         }
 
         return $header;
@@ -834,25 +881,25 @@ final class CallSizeSpreadsheet extends AbstractPlugin
             }
 
             //Find the PO
-            $po = $this->versionService->findVersionTypeById(Type::TYPE_PO);
+            $po  = $this->versionService->findVersionTypeById(Type::TYPE_PO);
             $fpp = $this->versionService->findVersionTypeById(Type::TYPE_FPP);
 
-            $projectOutline = null;
+            $projectOutline      = null;
             $fullProjectProposal = null;
-            $latestVersion = null;
+            $latestVersion       = null;
 
             if ($this->includeDecisionPending) {
-                $projectOutline = $this->projectService->getAnyLatestProjectVersion($project, $po);
+                $projectOutline      = $this->projectService->getAnyLatestProjectVersion($project, $po);
                 $fullProjectProposal = $this->projectService->getAnyLatestProjectVersion($project, $fpp);
-                $latestVersion = $this->projectService->getAnyLatestProjectVersion($project);
+                $latestVersion       = $this->projectService->getAnyLatestProjectVersion($project);
 
                 if (! $this->includeRejectedCR && null !== $latestVersion && $latestVersion->isRejected()) {
                     $latestVersion = $this->projectService->getLatestApprovedProjectVersion($project);
                 }
             } else {
-                $projectOutline = $this->projectService->getLatestReviewedProjectVersion($project, $po);
+                $projectOutline      = $this->projectService->getLatestReviewedProjectVersion($project, $po);
                 $fullProjectProposal = $this->projectService->getLatestReviewedProjectVersion($project, $fpp);
-                $latestVersion = $this->projectService->getLatestReviewedProjectVersion($project);
+                $latestVersion       = $this->projectService->getLatestReviewedProjectVersion($project);
 
                 if (! $this->includeRejectedCR && null !== $latestVersion && $latestVersion->isRejected()) {
                     $latestVersion = $this->projectService->getLatestApprovedProjectVersion($project);
@@ -884,34 +931,34 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                 continue;
             }
 
-            $poEffortVersion = null;
-            $poCostVersion = null;
-            $fppEffortVersion = null;
-            $fppCostVersion = null;
+            $poEffortVersion     = null;
+            $poCostVersion       = null;
+            $fppEffortVersion    = null;
+            $fppCostVersion      = null;
             $latestEffortVersion = null;
-            $latestCostVersion = null;
-            $contractCost = null;
+            $latestCostVersion   = null;
+            $contractCost        = null;
 
             if (null !== $projectOutline) {
                 $poEffortVersion = $this->versionService->findTotalEffortVersion($projectOutline);
-                $poCostVersion = $this->versionService->findTotalCostVersionByProjectVersion($projectOutline);
+                $poCostVersion   = $this->versionService->findTotalCostVersionByProjectVersion($projectOutline);
             }
 
             if (null !== $fullProjectProposal) {
                 $fppEffortVersion = $this->versionService->findTotalEffortVersion($fullProjectProposal);
-                $fppCostVersion = $this->versionService->findTotalCostVersionByProjectVersion($fullProjectProposal);
+                $fppCostVersion   = $this->versionService->findTotalCostVersionByProjectVersion($fullProjectProposal);
             }
 
             if (null !== $latestVersion) {
                 $latestEffortVersion = $this->versionService->findTotalEffortVersion($latestVersion);
-                $latestCostVersion = $this->versionService->findTotalCostVersionByProjectVersion($latestVersion);
+                $latestCostVersion   = $this->versionService->findTotalCostVersionByProjectVersion($latestVersion);
             }
 
             $draftEffort = $this->projectService->findTotalEffortByProject($project);
-            $draftCost = $this->projectService->findTotalCostByProject($project);
+            $draftCost   = $this->projectService->findTotalCostByProject($project);
 
-            $projectColumn = [];
-            $column = 'A';
+            $projectColumn            = [];
+            $column                   = 'A';
             $projectColumn[$column++] = $project->getNumber();
             $projectColumn[$column++] = $project->getProject();
             $projectColumn[$column++] = (string)$project->getCall()->getProgram();
@@ -927,6 +974,25 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                     }
                 )->toArray()
             );
+
+            if (null !== $fullProjectProposal && $fullProjectProposal->isReviewed() && $fullProjectProposal->isApproved()) {
+                $this->dateColumns[]      = $column;
+                $projectColumn[$column++] = $fullProjectProposal->getDateReviewed();
+            } else {
+                $projectColumn[$column++] = '';
+            }
+            if (null !== $project->getDateStartActual()) {
+                $this->dateColumns[]      = $column;
+                $projectColumn[$column++] = $project->getDateStartActual();
+            } else {
+                $projectColumn[$column++] = '';
+            }
+            if (null !== $project->getDateEndActual()) {
+                $this->dateColumns[]      = $column;
+                $projectColumn[$column++] = $project->getDateEndActual();
+            } else {
+                $projectColumn[$column++] = '';
+            }
 
             if ($this->includePOFPPCostAndEffort) {
                 $projectColumn[$column++] = $poEffortVersion;
@@ -945,7 +1011,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
             )
                 : '';
             $projectColumn[$column++] = null !== $latestVersion && null !== $latestVersion->getDateReviewed()
-                ? $latestVersion->getDateReviewed()->format('d-m-Y') : '';
+                ? $latestVersion->getDateReviewed() : '';
 
 
             $projectColumn[$column++] = $draftEffort;
@@ -960,14 +1026,14 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                     $mailAddress = $this->contactService->getMailAddress($project->getContact());
                 }
                 $address = null;
-                $zip = null;
-                $city = null;
+                $zip     = null;
+                $city    = null;
                 $country = null;
 
                 if (null !== $mailAddress) {
                     $address = $mailAddress->getAddress();
-                    $zip = $mailAddress->getZipCode();
-                    $city = $mailAddress->getCity();
+                    $zip     = $mailAddress->getZipCode();
+                    $city    = $mailAddress->getCity();
                     $country = $mailAddress->getCountry()->getCountry();
                 }
 
@@ -975,7 +1041,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                 $projectColumn[$column++] = $zip;
                 $projectColumn[$column++] = $city;
                 $projectColumn[$column++] = $country;
-                $projectColumn[$column] = $this->contactService->getDirectPhone($project->getContact());
+                $projectColumn[$column]   = $this->contactService->getDirectPhone($project->getContact());
             }
 
 
@@ -1002,9 +1068,23 @@ final class CallSizeSpreadsheet extends AbstractPlugin
         $sheet->freezePane('A2');
         $sheet->fromArray($columns);
 
+
         //Add all the rows
         foreach ($this->rows as $row) {
+            //Convert the datetimes to Excel dates
+            $row = array_map(static function ($element) {
+                if ($element instanceof DateTime) {
+                    return Date::dateTimeToExcel($element);
+                }
+
+                return $element;
+            }, $row);
+
             $sheet->fromArray($row, null, 'A' . $this->start++);
+        }
+
+        foreach ($this->dateColumns as $dateColumn) {
+            $sheet->getStyle($dateColumn . '2:' . $dateColumn . '6000')->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_DDMMYYYY);
         }
 
         $response = new Response();
