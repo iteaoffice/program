@@ -13,7 +13,7 @@ $options = [
     'nda_template'   => __DIR__ . '/../../../../styles/' . $location . '/template/pdf/nda-template.pdf',
     'doa_template'   => __DIR__ . '/../../../../styles/' . $location . '/template/pdf/nda-template.pdf',
     'blank_template' => __DIR__ . '/../../../../styles/' . $location . '/template/pdf/blank-template-firstpage.pdf',
-    'has_nda'        => true,
+    'has_nda'        => $location === 'itea',
     'header_logo'    => __DIR__ . '/../../../../styles/' . $location . '/template/word/logo.png',
     'footer_image'   => __DIR__ . '/../../../../styles/' . $location . '/template/word/footer.png'
 ];
