@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Program\Navigation\Factory;
 
-use Admin\Options\ModuleOptions;
+use General\Options\ModuleOptions;
 use Interop\Container\ContainerInterface;
 use Program\Navigation\Service\CallNavigationService;
 use Program\Service\CallService;

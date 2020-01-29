@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Program\Navigation\Invokable;
 
-use Admin\Navigation\Invokable\AbstractNavigationInvokable;
+use General\Navigation\Invokable\AbstractNavigationInvokable;
 use Program\Entity\Call\Call;
 use Laminas\Navigation\Page\Mvc;
 
