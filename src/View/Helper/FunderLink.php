@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
@@ -32,7 +31,7 @@ final class FunderLink extends AbstractLink
 
         $routeParams = [];
         $showOptions = [];
-        if (! $funder->isEmpty()) {
+        if (!$funder->isEmpty()) {
             $routeParams['id'] = $funder->getId();
             $showOptions['name'] = $funder->getContact()->parseFullName();
         }
@@ -40,7 +39,7 @@ final class FunderLink extends AbstractLink
         switch ($action) {
             case 'new':
                 $linkParams = [
-                    'icon' => 'fa-plus',
+                    'icon' => 'fas fa-plus',
                     'route' => 'zfcadmin/funder/new',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-new-funder')
@@ -48,7 +47,7 @@ final class FunderLink extends AbstractLink
                 break;
             case 'edit':
                 $linkParams = [
-                    'icon' => 'fa-pencil-square-o',
+                    'icon' => 'far fa-edit',
                     'route' => 'zfcadmin/funder/edit',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-edit-funder')
@@ -56,7 +55,7 @@ final class FunderLink extends AbstractLink
                 break;
             case 'view':
                 $linkParams = [
-                    'icon' => 'fa-user',
+                    'icon' => 'fasfa-user',
                     'route' => 'zfcadmin/funder/view',
                     'text' => $showOptions[$show] ?? $funder->getContact()->parseFullName()
                 ];

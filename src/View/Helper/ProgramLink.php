@@ -1,5 +1,4 @@
 <?php
-
 /**
  * ITEA Office all rights reserved
  *
@@ -30,12 +29,13 @@ final class ProgramLink extends AbstractLink
         Program $program = null,
         string $action = 'view',
         string $show = 'name'
-    ): string {
+    ): string
+    {
         $program ??= new Program();
 
         $routeParams = [];
         $showOptions = [];
-        if (! $program->isEmpty()) {
+        if (!$program->isEmpty()) {
             $routeParams['id'] = $program->getId();
             $showOptions['name'] = $program->getProgram();
         }
@@ -43,7 +43,7 @@ final class ProgramLink extends AbstractLink
         switch ($action) {
             case 'new':
                 $linkParams = [
-                    'icon' => 'fa-plus',
+                    'icon' => 'fas fa-plus',
                     'route' => 'zfcadmin/program/new',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-new-program')
@@ -59,7 +59,7 @@ final class ProgramLink extends AbstractLink
                 break;
             case 'export-size':
                 $linkParams = [
-                    'icon' => 'fa-file-excel-o',
+                    'icon' => 'far fa-file-excel',
                     'route' => 'zfcadmin/program/export-size',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-export-program-size')
@@ -67,14 +67,14 @@ final class ProgramLink extends AbstractLink
                 break;
             case 'view':
                 $linkParams = [
-                    'icon' => 'fa-link',
+                    'icon' => 'fas fa-link',
                     'route' => 'zfcadmin/program/view',
                     'text' => $showOptions[$show] ?? $program->getProgram()
                 ];
                 break;
             case 'edit':
                 $linkParams = [
-                    'icon' => 'fa-pencil-square-o',
+                    'icon' => 'far fa-edit',
                     'route' => 'zfcadmin/program/edit',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-edit-program')

@@ -28,9 +28,9 @@
         {% for nda in nda %}
             <tr id="nda-{{ nda.id }}">
                 <td>{{ contactLink(nda.contact,'view-admin','name') }}
-                    <div class="pull-right">
+                    <span class="float-right">
                         {{ ndaLink(nda,'view-admin','icon') }} {{ ndaLink(nda,'edit-admin','icon') }} {{ ndaLink(nda,'download','icon') }}
-                    </div>
+                    </span>
                 </td>
                 <td>{{ nda.contact.contactOrganisation.organisation }}</td>
                 <td>{{ nda.parseCall }}</td>
@@ -62,7 +62,7 @@
 
         var btn = $(this);
         btn.data('original-text', btn.html());
-        btn.html('<i class="fa fa-circle-o-notch fa-spin"></i> loading...');
+        btn.html('<i class="far fa-circle-notch fa-spin"></i> loading...');
 
         //NdaId
         var ndaId = btn.data('nda-id');
@@ -80,7 +80,7 @@
             success: function (response) {
                 if (response.result === 'success') {
                     btn.attr('class', 'btn btn-success');
-                    btn.html('<i class="fa fa-check"></i> Approved');
+                    btn.html('<i class="fas fa-check"></i> Approved');
                     $("#nda-" + ndaId).addClass('table-success');
                 }
 

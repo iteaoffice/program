@@ -1,5 +1,4 @@
 <?php
-
 /**
  * ITEA Office all rights reserved
  *
@@ -35,7 +34,7 @@ final class CallLink extends AbstractLink
 
         $routeParams = [];
         $showOptions = [];
-        if (! $call->isEmpty()) {
+        if (!$call->isEmpty()) {
             $routeParams['id'] = $call->getId();
             $showOptions['name'] = (string)$call;
             $showOptions['name-without-program'] = $call->getCall();
@@ -44,7 +43,7 @@ final class CallLink extends AbstractLink
         switch ($action) {
             case 'new':
                 $linkParams = [
-                    'icon' => 'fa-plus',
+                    'icon' => 'fas fa-plus',
                     'route' => 'zfcadmin/call/new',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-new-program-call')
@@ -52,7 +51,7 @@ final class CallLink extends AbstractLink
                 break;
             case 'edit':
                 $linkParams = [
-                    'icon' => 'fa-pencil-square-o',
+                    'icon' => 'far fa-edit',
                     'route' => 'zfcadmin/call/edit',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-edit-program-call')
@@ -68,7 +67,7 @@ final class CallLink extends AbstractLink
                 break;
             case 'export-size':
                 $linkParams = [
-                    'icon' => 'fa-file-excel-o',
+                    'icon' => 'far fa-file-excel',
                     'route' => 'zfcadmin/call/export-size',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-export-call-size')
@@ -76,7 +75,7 @@ final class CallLink extends AbstractLink
                 break;
             case 'funding':
                 $linkParams = [
-                    'icon' => 'fa-eur',
+                    'icon' => 'fas fa-euro-sign',
                     'route' => 'zfcadmin/call/funding',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-call-funding')
@@ -84,7 +83,7 @@ final class CallLink extends AbstractLink
                 break;
             case 'download-funding':
                 $linkParams = [
-                    'icon' => 'fa-file-excel-o',
+                    'icon' => 'far fa-file-excel',
                     'route' => 'zfcadmin/call/download-funding',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-download-call-funding')
@@ -92,7 +91,7 @@ final class CallLink extends AbstractLink
                 break;
             case 'view-admin':
                 $linkParams = [
-                    'icon' => 'fa-link',
+                    'icon' => 'fas fa-link',
                     'route' => 'zfcadmin/call/view',
                     'text' => $showOptions[$show] ?? (string)$call
                 ];

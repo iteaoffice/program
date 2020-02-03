@@ -39,13 +39,13 @@ final class CallCountryLink extends AbstractLink
     ): string {
         $callCountry ??= new CallCountry();
 
-        if (! $this->hasAccess($callCountry, \Program\Acl\Assertion\Call\Country::class, $action)) {
+        if (!$this->hasAccess($callCountry, \Program\Acl\Assertion\Call\Country::class, $action)) {
             return '';
         }
 
         $routeParams = [];
         $showOptions = [];
-        if (! $callCountry->isEmpty()) {
+        if (!$callCountry->isEmpty()) {
             $routeParams['id'] = $callCountry->getId();
             $showOptions['name'] = $callCountry->getCountry()->getCountry();
         }
@@ -61,7 +61,7 @@ final class CallCountryLink extends AbstractLink
         switch ($action) {
             case 'new':
                 $linkParams = [
-                    'icon' => 'fa-plus',
+                    'icon' => 'fas fa-plus',
                     'route' => 'zfcadmin/call/country/new',
                     'text' => $showOptions[$show]
                         ?? sprintf(
@@ -73,7 +73,7 @@ final class CallCountryLink extends AbstractLink
                 break;
             case 'edit':
                 $linkParams = [
-                    'icon' => 'fa-pencil-square-o',
+                    'icon' => 'far fa-edit',
                     'route' => 'zfcadmin/call/country/edit',
                     'text' => $showOptions[$show]
                         ?? sprintf(
@@ -85,7 +85,7 @@ final class CallCountryLink extends AbstractLink
                 break;
             case 'view':
                 $linkParams = [
-                    'icon' => 'fa-link',
+                    'icon' => 'fas fa-link',
                     'route' => 'zfcadmin/call/country/view',
                     'text' => $showOptions[$show]
                         ?? sprintf(

@@ -38,7 +38,7 @@ final class CallSessionLink extends AbstractLink
 
         $routeParams = [];
         $showOptions = [];
-        if (! $session->isEmpty()) {
+        if (!$session->isEmpty()) {
             $routeParams['id'] = $session->getId();
             $routeParams['session'] = $session->getId();
             $showOptions['name'] = $session->getSession();
@@ -47,42 +47,42 @@ final class CallSessionLink extends AbstractLink
         switch ($action) {
             case 'download-pdf':
                 $linkParams = [
-                    'icon' => 'fa-file-pdf-o',
+                    'icon' => 'far fa-file-pdf',
                     'route' => 'community/program/session/download-pdf',
                     'text' => $showOptions[$show] ?? $this->translator->translate('txt-download-pdf-session-overview')
                 ];
                 break;
             case 'download-spreadsheet':
                 $linkParams = [
-                    'icon' => 'fa-file-excel-o',
+                    'icon' => 'far fa-file-excel',
                     'route' => 'community/program/session/download-spreadsheet',
                     'text' => $showOptions[$show] ?? $this->translator->translate('txt-download-excel-session-overview')
                 ];
                 break;
             case 'download-document':
                 $linkParams = [
-                    'icon' => 'fa-file-word-o',
+                    'icon' => 'far fa-file-word',
                     'route' => 'community/program/session/download-document',
                     'text' => $showOptions[$show] ?? $this->translator->translate('txt-download-word-session-overview')
                 ];
                 break;
             case 'download':
                 $linkParams = [
-                    'icon' => 'fa-download',
+                    'icon' => 'fas fa-download',
                     'route' => 'community/program/session/download',
                     'text' => $showOptions[$show] ?? $this->translator->translate('txt-download-session-documents')
                 ];
                 break;
             case 'view-admin':
                 $linkParams = [
-                    'icon' => 'fa-link',
+                    'icon' => 'fas fa-link',
                     'route' => 'zfcadmin/session/view',
                     'text' => $showOptions[$show] ?? $session->getSession()
                 ];
                 break;
             case 'edit':
                 $linkParams = [
-                    'icon' => 'fa-pencil-square-o',
+                    'icon' => 'far fa-edit',
                     'route' => 'zfcadmin/session/edit',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-edit-session')
@@ -90,7 +90,7 @@ final class CallSessionLink extends AbstractLink
                 break;
             case 'new':
                 $linkParams = [
-                    'icon' => 'fa-plus',
+                    'icon' => 'fas fa-plus',
                     'route' => 'zfcadmin/session/new',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-new-session')

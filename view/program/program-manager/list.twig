@@ -43,7 +43,7 @@
                 <td>{{ program.call.count }}</td>
                 <td>
                     <a href="{{ url('zfcadmin/project/export/program',{'id': program.id}) }}"><i
-                                class="fa fa-exchange"></i></a>
+                                class="fas fa-exchange-alt"></i></a>
                     {{ programLink(program,'export-size','icon') }}
                 </td>
                 <td>{% for method in program.invoiceMethod %}{{ method }}{% endfor %}</td>

@@ -31,7 +31,7 @@
                                                         {{ ideaDocumentLink(file.object, 'download', 'icon') }}
                                                         <a href="{{ ideaDocumentLink(file.object, 'delete', constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) }}"
                                                            onclick="return confirm('{{ translate("txt-this-will-permanently-remove-the-document-are-you-sure") }}')"
-                                                        ><i class="fa fa-trash-o"></i></a>
+                                                        ><i class="far fa-trash-alt"></i></a>
                                                     </td>
                                                 {% elseif file.type == 'image' %}
                                                     <td>{{ file.object.getImage() }}</td>
@@ -39,7 +39,7 @@
                                                     <td>
                                                         <a href="{{ ideaImageLink(file.object, 'delete', constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) }}"
                                                            onclick="return confirm('{{ translate("txt-this-will-permanently-remove-the-image-are-you-sure") }}')"
-                                                        ><i class="fa fa-trash-o"></i></a>
+                                                        ><i class="far fa-trash-alt"></i></a>
                                                     </td>
                                                 {% endif %}
                                             </tr>
@@ -106,8 +106,8 @@
                 <td><small>{{name}}</small></td>
                 <td><small>{{{size}}}</small></td>
                 <td>
-                {{#download-url}}<a href="{{download-url}}"><i class="fa fa-download"></i></a>{{/download-url}}
-                <a class="btn-del" data-delete-url="{{delete-url}}" href="/"><i class="fa fa-trash-o"></i></a>
+                {{#download-url}}<a href="{{download-url}}"><i class="fas fa-download"></i></a>{{/download-url}}
+                <a class="btn-del" data-delete-url="{{delete-url}}" href="/"><i class="far fa-trash-alt"></i></a>
                 </td>
             </tr>
          <!--{{/files}}-->

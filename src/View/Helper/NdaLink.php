@@ -39,13 +39,13 @@ final class NdaLink extends AbstractLink
     ): string {
         $nda ??= new Nda();
 
-        if (! $this->hasAccess($nda, NdaAssertion::class, $action)) {
+        if (!$this->hasAccess($nda, NdaAssertion::class, $action)) {
             return '';
         }
 
         $routeParams = [];
         $showOptions = [];
-        if (! $nda->isEmpty()) {
+        if (!$nda->isEmpty()) {
             $routeParams['id'] = $nda->getId();
             $showOptions['name'] = $nda->parseFileName();
 
@@ -69,7 +69,7 @@ final class NdaLink extends AbstractLink
                     $text = sprintf($this->translator->translate('txt-submit-nda-for-call-%s-title'), $call->getCall());
                 }
                 $linkParams = [
-                    'icon' => 'fa-file-o',
+                    'icon' => 'far fa-file',
                     'route' => 'community/program/nda/submit',
                     'text' => $showOptions[$show] ?? $text
                 ];
@@ -87,7 +87,7 @@ final class NdaLink extends AbstractLink
                     $text = sprintf($this->translator->translate('txt-render-nda-for-call-%s-title'), $call->getCall());
                 }
                 $linkParams = [
-                    'icon' => 'fa-file-pdf-o',
+                    'icon' => 'far fa-file-pdf',
                     'route' => 'community/program/nda/render',
                     'text' => $showOptions[$show] ?? $text
                 ];
@@ -98,28 +98,28 @@ final class NdaLink extends AbstractLink
                     $text = sprintf($this->translator->translate('txt-render-nda-for-call-%s-title'), $call->getCall());
                 }
                 $linkParams = [
-                    'icon' => 'fa-file-pdf-o',
+                    'icon' => 'far fa-file-pdf',
                     'route' => 'zfcadmin/nda/render',
                     'text' => $showOptions[$show] ?? $text
                 ];
                 break;
             case 'download':
                 $linkParams = [
-                    'icon' => 'fa-file-pdf-o',
+                    'icon' => 'far fa-file-pdf',
                     'route' => 'community/program/nda/download',
                     'text' => $showOptions[$show] ?? $this->translator->translate('txt-download-nda-title')
                 ];
                 break;
             case 'view-admin':
                 $linkParams = [
-                    'icon' => 'fa-link',
+                    'icon' => 'fas fa-link',
                     'route' => 'zfcadmin/nda/view',
                     'text' => $showOptions[$show] ?? $this->translator->translate('txt-view-nda')
                 ];
                 break;
             case 'edit-admin':
                 $linkParams = [
-                    'icon' => 'fa-pencil-square-o',
+                    'icon' => 'far fa-edit',
                     'route' => 'zfcadmin/nda/edit',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-edit-nda')
@@ -127,7 +127,7 @@ final class NdaLink extends AbstractLink
                 break;
             case 'upload':
                 $linkParams = [
-                    'icon' => 'fa-upload',
+                    'icon' => 'fas fa-upload',
                     'route' => 'zfcadmin/nda/upload',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-upload-nda')

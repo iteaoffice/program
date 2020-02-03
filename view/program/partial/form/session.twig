@@ -21,7 +21,7 @@
                 </select></p>
             <p>
                 <button id="btn-add" title="{{ translate("txt-add") }}" type="button" class="btn btn-primary">
-                    <i class="fa fa-plus"></i> {{ translate("txt-add-idea") }}
+                    <i class="fas fa-plus"></i> {{ translate("txt-add-idea") }}
                 </button>
             </p>
         </div>
@@ -47,7 +47,7 @@
                         </td>
                         <td>
                             <button title="{{ translate("txt-remove") }}" type="button"
-                                    class="btn btn-danger btn-sm pull-right"><i class="fa fa-trash"></i></button>
+                                    class="btn btn-danger btn-sm text-right"><i class="far fa-trash-alt"></i></button>
                         </td>
                     </tr>
                 {% endfor %}
@@ -72,7 +72,6 @@
             });
             $('#btn-add').click(function () {
                 var opt = $sel.find('option:selected');
-                console.log(opt);
                 if ($('#idea-' + opt.val()).length === 0) {
                     var html = $template.find('tbody').html()
                         .replace(/__id__/g, opt.val())
@@ -107,7 +106,7 @@
                 </td>
                 <td>
                     <button title="{{ translate("txt-remove") }}" type="button"
-                            class="btn btn-danger btn-sm pull-right"><i class="fa fa-trash"></i></button>
+                            class="btn btn-danger btn-sm text-right"><i class="far fa-trash-alt"></i></button>
                 </td>
             </tr>
             </tbody>

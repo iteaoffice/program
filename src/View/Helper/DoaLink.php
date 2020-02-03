@@ -40,13 +40,13 @@ final class DoaLink extends AbstractLink
         $doa ??= new Doa();
 
 
-        if (! $this->hasAccess($doa, DoaAssertion::class, $action)) {
+        if (!$this->hasAccess($doa, DoaAssertion::class, $action)) {
             return '';
         }
 
         $routeParams = [];
         $showOptions = [];
-        if (! $doa->isEmpty()) {
+        if (!$doa->isEmpty()) {
             $routeParams['id'] = $doa->getId();
             $showOptions['name'] = $doa->parseFileName();
             $routeParams['organisationId'] = $doa->getOrganisation()->getId();
@@ -63,7 +63,7 @@ final class DoaLink extends AbstractLink
         switch ($action) {
             case 'upload':
                 $linkParams = [
-                    'icon' => 'fa-upload',
+                    'icon' => 'fas fa-upload',
                     'route' => 'program/doa/upload',
                     'text' => $showOptions[$show]
                         ?? sprintf(
@@ -87,7 +87,7 @@ final class DoaLink extends AbstractLink
                 break;
             case 'view':
                 $linkParams = [
-                    'icon' => 'fa-file-o',
+                    'icon' => 'far fa-file',
                     'route' => 'community/program/doa/view',
                     'text' => $showOptions[$show]
                         ?? sprintf(
@@ -99,7 +99,7 @@ final class DoaLink extends AbstractLink
                 break;
             case 'download':
                 $linkParams = [
-                    'icon' => 'fa-download',
+                    'icon' => 'fas fa-download',
                     'route' => 'community/program/doa/download',
                     'text' => $showOptions[$show]
                         ?? sprintf(
