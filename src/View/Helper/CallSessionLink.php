@@ -38,7 +38,7 @@ final class CallSessionLink extends AbstractLink
 
         $routeParams = [];
         $showOptions = [];
-        if (!$session->isEmpty()) {
+        if (! $session->isEmpty()) {
             $routeParams['id'] = $session->getId();
             $routeParams['session'] = $session->getId();
             $showOptions['name'] = $session->getSession();

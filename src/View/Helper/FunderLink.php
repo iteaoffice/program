@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
@@ -31,7 +32,7 @@ final class FunderLink extends AbstractLink
 
         $routeParams = [];
         $showOptions = [];
-        if (!$funder->isEmpty()) {
+        if (! $funder->isEmpty()) {
             $routeParams['id'] = $funder->getId();
             $showOptions['name'] = $funder->getContact()->parseFullName();
         }

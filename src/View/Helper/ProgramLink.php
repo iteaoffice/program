@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -29,13 +30,12 @@ final class ProgramLink extends AbstractLink
         Program $program = null,
         string $action = 'view',
         string $show = 'name'
-    ): string
-    {
+    ): string {
         $program ??= new Program();
 
         $routeParams = [];
         $showOptions = [];
-        if (!$program->isEmpty()) {
+        if (! $program->isEmpty()) {
             $routeParams['id'] = $program->getId();
             $showOptions['name'] = $program->getProgram();
         }

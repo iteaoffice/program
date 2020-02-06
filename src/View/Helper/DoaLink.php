@@ -40,13 +40,13 @@ final class DoaLink extends AbstractLink
         $doa ??= new Doa();
 
 
-        if (!$this->hasAccess($doa, DoaAssertion::class, $action)) {
+        if (! $this->hasAccess($doa, DoaAssertion::class, $action)) {
             return '';
         }
 
         $routeParams = [];
         $showOptions = [];
-        if (!$doa->isEmpty()) {
+        if (! $doa->isEmpty()) {
             $routeParams['id'] = $doa->getId();
             $showOptions['name'] = $doa->parseFileName();
             $routeParams['organisationId'] = $doa->getOrganisation()->getId();
