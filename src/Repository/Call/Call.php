@@ -266,18 +266,6 @@ final class Call extends EntityRepository
         return (int)$firstPoOpen[0]['poOpenDate']->diff(new \DateTime())->y;
     }
 
-    public function findWithAchievement(): array
-    {
-        $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('program_entity_call_call');
-        $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
-        $queryBuilder->join('program_entity_call_call.project', 'project_entity_project');
-        $queryBuilder->join('project_entity_project.achievement', 'project_entityachievement');
-
-        return $queryBuilder->getQuery()->useQueryCache(true)->getResult();
-    }
-
-
     public function findMinAndMaxYearInCall(Entity\Call\Call $call)
     {
         $emConfig = $this->getEntityManager()->getConfiguration();
