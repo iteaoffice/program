@@ -21,7 +21,7 @@ use Laminas\Permissions\Acl\Resource\ResourceInterface;
 /**
  * @ORM\Table(name="programcall_country")
  * @ORM\Entity
- * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectPropertyHydrator")
  * @Annotation\Name("programcall_session")
  *
  * @category    Program

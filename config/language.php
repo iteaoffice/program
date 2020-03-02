@@ -1,4 +1,5 @@
 <?php
+
 _('txt-program-name-label');
 _('txt-program-name-help-block');
 _('txt-program-number-label');

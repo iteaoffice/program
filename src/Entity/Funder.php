@@ -22,7 +22,7 @@ use Laminas\Form\Annotation;
 /**
  * @ORM\Table(name="funder")
  * @ORM\Entity(repositoryClass="Program\Repository\Funder")
- * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectPropertyHydrator")
  * @Annotation\Name("funder")
  */
 class Funder extends AbstractEntity

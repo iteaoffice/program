@@ -1,9 +1,16 @@
 <?php
 
-use General\Navigation\Factory\NavigationInvokableFactory;
+/**
+ * @category    Program
+ * @package     Config
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
+ */
+
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Gedmo\Sluggable\SluggableListener;
 use Gedmo\Timestampable\TimestampableListener;
+use General\Navigation\Factory\NavigationInvokableFactory;
 use General\View\Factory\LinkHelperFactory;
 use Laminas\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 use Laminas\Stdlib;
@@ -17,13 +24,6 @@ use Program\Navigation;
 use Program\Options;
 use Program\Service;
 use Program\View;
-
-/**
- * @category    Program
- * @package     Config
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
- */
 
 $config = [
     'controllers'        => [

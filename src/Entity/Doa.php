@@ -24,7 +24,7 @@ use Laminas\Form\Annotation;
 /**
  * @ORM\Table(name="program_doa")
  * @ORM\Entity
- * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectPropertyHydrator")
  * @Annotation\Name("program_doa")
  *
  * @category    Program

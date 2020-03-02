@@ -31,7 +31,7 @@ use function str_replace;
 /**
  * @ORM\Table(name="nda")
  * @ORM\Entity(repositoryClass="Program\Repository\Nda")
- * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectPropertyHydrator")
  * @Annotation\Instance("Program\Entity\Nda")
  * @Annotation\Name("nda")
  */

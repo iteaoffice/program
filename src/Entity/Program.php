@@ -31,7 +31,7 @@ use function substr;
 /**
  * @ORM\Table(name="program")
  * @ORM\Entity(repositoryClass="Program\Repository\Program")
- * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectPropertyHydrator")
  * @Annotation\Name("contact_contact")
  */
 class Program extends AbstractEntity

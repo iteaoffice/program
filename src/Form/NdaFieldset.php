@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Program\Form;
 
 use Doctrine\ORM\EntityManager;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
+use Doctrine\Laminas\Hydrator\DoctrineObject as DoctrineHydrator;
 use DoctrineORMModule\Form\Element\EntitySelect;
 use Program\Entity;
 use Program\Entity\Call\Call;
