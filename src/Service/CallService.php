@@ -20,16 +20,15 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use General\Service\GeneralService;
+use Laminas\Validator\File\MimeType;
 use Program\Entity\Call\Call;
 use Program\Entity\Nda;
 use Program\Entity\NdaObject;
 use Program\Entity\Program;
 use Program\ValueObject\Calls;
 use Program\ValueObject\CallStatus;
-use Program\ValueObject\LastCall;
 use Project\Entity\Version\Type;
 use stdClass;
-use Laminas\Validator\File\MimeType;
 
 /**
  * Class CallService
@@ -38,13 +37,13 @@ use Laminas\Validator\File\MimeType;
  */
 class CallService extends AbstractService
 {
-    public const PO_CLOSED = 'PO_CLOSED';
-    public const PO_NOT_OPEN = 'PO_NOT_OPEN';
-    public const PO_OPEN = 'PO_OPEN';
-    public const FPP_CLOSED = 'FPP_CLOSED';
+    public const PO_CLOSED    = 'PO_CLOSED';
+    public const PO_NOT_OPEN  = 'PO_NOT_OPEN';
+    public const PO_OPEN      = 'PO_OPEN';
+    public const FPP_CLOSED   = 'FPP_CLOSED';
     public const FPP_NOT_OPEN = 'FPP_NOT_OPEN';
-    public const FPP_OPEN = 'FPP_OPEN';
-    public const UNDEFINED = 'UNDEFINED';
+    public const FPP_OPEN     = 'FPP_OPEN';
+    public const UNDEFINED    = 'UNDEFINED';
 
     private GeneralService $generalService;
     private AdminService $adminService;
@@ -57,7 +56,7 @@ class CallService extends AbstractService
         parent::__construct($entityManager);
 
         $this->generalService = $generalService;
-        $this->adminService = $adminService;
+        $this->adminService   = $adminService;
     }
 
     public function findCallById(int $id): ?Call
@@ -100,8 +99,8 @@ class CallService extends AbstractService
         /** @var \Program\Repository\Call\Call $repository */
         $repository = $this->entityManager->getRepository(Call::class);
 
-        $yearSpanResult = $repository->findMinAndMaxYearInCall($call);
-        $yearSpan = new stdClass();
+        $yearSpanResult    = $repository->findMinAndMaxYearInCall($call);
+        $yearSpan          = new stdClass();
         $yearSpan->minYear = (int)$yearSpanResult['minYear'];
         $yearSpan->maxYear = (int)$yearSpanResult['maxYear'];
 
@@ -151,67 +150,52 @@ class CallService extends AbstractService
 
     public function getCallStatus(Call $call): CallStatus
     {
-        $type = null;
-        $today = new DateTime();
-        $dateTime = new DateTime();
+        $type                 = null;
+        $today                = new DateTime();
+        $dateTime             = new DateTime();
         $notificationDeadline = $dateTime->sub(new DateInterval('P1W'));
 
         if ($call->getPoOpenDate() > $today) {
             $referenceDate = $call->getPoOpenDate();
-            $result = self::PO_NOT_OPEN;
-            $type = Type::TYPE_PO;
+            $result        = self::PO_NOT_OPEN;
+            $type          = Type::TYPE_PO;
         } elseif ($call->getPoCloseDate() > $today) {
             $referenceDate = $call->getPoCloseDate();
-            $result = self::PO_OPEN;
-            $type = Type::TYPE_PO;
+            $result        = self::PO_OPEN;
+            $type          = Type::TYPE_PO;
         } elseif ($call->getPoCloseDate() > $notificationDeadline && $call->getFppOpenDate() > $today) {
             $referenceDate = $call->getPoCloseDate();
-            $result = self::PO_CLOSED;
-            $type = Type::TYPE_PO;
+            $result        = self::PO_CLOSED;
+            $type          = Type::TYPE_PO;
         } elseif ($call->getFppOpenDate() > $today) {
             $referenceDate = $call->getFppOpenDate();
-            $result = self::FPP_NOT_OPEN;
-            $type = Type::TYPE_FPP;
+            $result        = self::FPP_NOT_OPEN;
+            $type          = Type::TYPE_FPP;
         } elseif ($call->getFppCloseDate() > $today) {
             $referenceDate = $call->getFppCloseDate();
-            $result = self::FPP_OPEN;
-            $type = Type::TYPE_FPP;
+            $result        = self::FPP_OPEN;
+            $type          = Type::TYPE_FPP;
         } elseif ($call->getFppCloseDate() > $notificationDeadline) {
             $referenceDate = $call->getFppCloseDate();
-            $result = self::FPP_CLOSED;
-            $type = Type::TYPE_FPP;
+            $result        = self::FPP_CLOSED;
+            $type          = Type::TYPE_FPP;
         } else {
             $referenceDate = null;
-            $result = self::UNDEFINED;
-            $type = Type::TYPE_CR;
+            $result        = self::UNDEFINED;
+            $type          = Type::TYPE_CR;
         }
 
         $type = $this->entityManager->find(Type::class, $type);
         return new CallStatus($referenceDate, $result, $type);
     }
 
-    public function requireDoaPerProject(Call $call): bool
-    {
-        return $call->getDoaRequirement() === Call::DOA_REQUIREMENT_PER_PROJECT;
-    }
-
-    public function requireDoaPerProgram(Call $call): bool
-    {
-        return $call->getDoaRequirement() === Call::DOA_REQUIREMENT_PER_PROGRAM;
-    }
-
-    public function requireLoi(Call $call): bool
-    {
-        return $call->getLoiRequirement() === Call::LOI_REQUIRED;
-    }
-
     public function findFirstAndLastCall(): stdClass
     {
-        $firstCall = $this->entityManager->getRepository(Call::class)->findOneBy([], ['id' => 'ASC']);
-        $lastCall = $this->entityManager->getRepository(Call::class)->findOneBy([], ['id' => 'DESC']);
-        $callSpan = new stdClass();
+        $firstCall           = $this->entityManager->getRepository(Call::class)->findOneBy([], ['id' => 'ASC']);
+        $lastCall            = $this->entityManager->getRepository(Call::class)->findOneBy([], ['id' => 'DESC']);
+        $callSpan            = new stdClass();
         $callSpan->firstCall = $firstCall;
-        $callSpan->lastCall = $lastCall;
+        $callSpan->lastCall  = $lastCall;
 
         return $callSpan;
     }
@@ -259,7 +243,7 @@ class CallService extends AbstractService
             return false;
         }
 
-        $today = new DateTime();
+        $today       = new DateTime();
         $twoYearsAgo = $today->sub(new DateInterval('P2Y'));
 
         return $nda->getDateSigned() > $twoYearsAgo;

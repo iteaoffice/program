@@ -47,19 +47,14 @@ use function strtoupper;
  */
 class Call extends AbstractEntity
 {
-    // Produce a list of different statuses in a call, which are required for representation and access control.
-    public const FPP_CLOSED   = 'FPP_CLOSED';
-    public const FPP_NOT_OPEN = 'FPP_NOT_OPEN';
-    public const FPP_OPEN     = 'FPP_OPEN';
-    public const PO_CLOSED    = 'PO_CLOSED';
-    public const PO_NOT_OPEN  = 'PO_NOT_OPEN';
-    public const PO_OPEN      = 'PO_OPEN';
+    public const INACTIVE = 0;
+    public const ACTIVE   = 1;
 
-    public const INACTIVE                       = 0;
-    public const ACTIVE                         = 1;
-    public const DOA_REQUIREMENT_NOT_APPLICABLE = 1;
-    public const DOA_REQUIREMENT_PER_PROGRAM    = 2;
-    public const DOA_REQUIREMENT_PER_PROJECT    = 3;
+    public const DOA_REQUIREMENT_NOT_APPLICABLE        = 1;
+    public const DOA_REQUIREMENT_PER_PROGRAM           = 2;
+    public const DOA_REQUIREMENT_PER_PROJECT           = 3;
+    public const DOA_REQUIREMENT_PER_PROJECT_OR_MEMBER = 4;
+
     public const NDA_REQUIREMENT_NOT_APPLICABLE = 1;
     public const NDA_REQUIREMENT_PER_CALL       = 2;
     public const NDA_REQUIREMENT_PER_PROJECT    = 3;
@@ -75,9 +70,10 @@ class Call extends AbstractEntity
     ];
 
     protected static array $doaRequirementTemplates = [
-        self::DOA_REQUIREMENT_NOT_APPLICABLE => 'txt-no-doa-required',
-        self::DOA_REQUIREMENT_PER_PROGRAM    => 'txt-doa-per-program-required',
-        self::DOA_REQUIREMENT_PER_PROJECT    => 'txt-doa-per-project-required',
+        self::DOA_REQUIREMENT_NOT_APPLICABLE        => 'txt-no-doa-required',
+        self::DOA_REQUIREMENT_PER_PROGRAM           => 'txt-doa-per-program-required',
+        self::DOA_REQUIREMENT_PER_PROJECT           => 'txt-doa-per-project-required',
+        self::DOA_REQUIREMENT_PER_PROJECT_OR_MEMBER => 'txt-doa-per-project-or-membership-required',
     ];
 
     protected static array $ndaRequirementTemplates = [
@@ -377,6 +373,26 @@ class Call extends AbstractEntity
     public static function getProjectReportTemplates(): array
     {
         return self::$projectReportTemplates;
+    }
+
+    public function requireDoaPerProject(): bool
+    {
+        return $this->doaRequirement === self::DOA_REQUIREMENT_PER_PROJECT;
+    }
+
+    public function requireDoaPerProgram(): bool
+    {
+        return $this->doaRequirement === self::DOA_REQUIREMENT_PER_PROGRAM;
+    }
+
+    public function requireDoaPerProjectOrMember(): bool
+    {
+        return $this->doaRequirement === self::DOA_REQUIREMENT_PER_PROJECT_OR_MEMBER;
+    }
+
+    public function requireLoi(): bool
+    {
+        return $this->loiRequirement === self::LOI_REQUIRED;
     }
 
     public function __toString(): string

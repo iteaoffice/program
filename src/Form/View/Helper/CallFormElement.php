@@ -23,8 +23,11 @@ use Zf3Bootstrap4\Form\View\Helper\FormElement;
  */
 final class CallFormElement extends FormElement
 {
-    public function __invoke(ElementInterface $element = null, bool $inline = false)
+    public function __invoke(ElementInterface $element = null, bool $inline = false, bool $formElementOnly = false)
     {
+        $this->inline          = $inline;
+        $this->formElementOnly = $formElementOnly;
+
         $this->view->headLink()->appendStylesheet('/assets/css/bootstrap-select.min.css');
         $this->view->headLink()->appendStylesheet('/assets/css/ajax-bootstrap-select.min.css');
         $this->view->headScript()->appendFile(

@@ -1,7 +1,7 @@
 <?php
 
 /**
-*
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
@@ -13,11 +13,14 @@ declare(strict_types=1);
 
 namespace Program\Navigation\Service;
 
-use Program\Service\CallService;
 use Laminas\Navigation\Navigation;
+use Laminas\Navigation\Page\AbstractPage;
 use Laminas\Navigation\Page\Mvc;
 use Laminas\Navigation\Page\Uri;
 use Laminas\Router\RouteMatch;
+use Program\Service\CallService;
+
+use function in_array;
 
 /**
  * Class CallNavigationService
@@ -26,23 +29,14 @@ use Laminas\Router\RouteMatch;
  */
 final class CallNavigationService
 {
-    /**
-     * @var Navigation
-     */
-    private $navigation;
-    /**
-     * @var RouteMatch
-     */
-    private $routeMatch;
-    /**
-     * @var CallService
-     */
-    private $callService;
+    private AbstractPage $navigation;
+    private ?RouteMatch $routeMatch;
+    private CallService $callService;
 
     public function __construct(Navigation $navigation, ?RouteMatch $routeMatch, CallService $callService)
     {
-        $this->navigation = $navigation->current();
-        $this->routeMatch = $routeMatch;
+        $this->navigation  = $navigation->current();
+        $this->routeMatch  = $routeMatch;
         $this->callService = $callService;
     }
 
@@ -61,7 +55,7 @@ final class CallNavigationService
 
         $pages = $callIndex->getPages();
 
-        $calls = $this->callService->findOpenCall();
+        $calls     = $this->callService->findOpenCall();
         $showCalls = [];
 
         if ($calls->hasUpcoming()) {
@@ -83,7 +77,7 @@ final class CallNavigationService
             foreach ($pages as $page) {
                 if (
                     ! $activeCall->hasIdeaTool()
-                    && \in_array(
+                    && in_array(
                         $page->getRoute(),
                         ['community/idea/list', 'community/idea/invite/retrieve'],
                         true
@@ -93,7 +87,6 @@ final class CallNavigationService
                 }
 
                 $page->setActive(false);
-
                 $page->setParams(
                     [
                         'toolId' => $activeCall->hasIdeaTool() ? $activeCall->getIdeaTool()->first()->getId() : '',

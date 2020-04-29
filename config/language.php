@@ -41,6 +41,7 @@ _('txt-active-for-projects');
 _('txt-no-doa-required');
 _('txt-doa-per-program-required');
 _('txt-doa-per-project-required');
+_('txt-doa-per-project-or-membership-required');
 _('txt-no-nda-required');
 _('txt-nda-per-call-required');
 _('txt-nda-per-project-required');
