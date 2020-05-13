@@ -1,7 +1,7 @@
 <?php
 
 /**
-*
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
@@ -15,10 +15,11 @@ namespace Program\Navigation\Factory;
 
 use General\Options\ModuleOptions;
 use Interop\Container\ContainerInterface;
-use Program\Navigation\Service\CallNavigationService;
-use Program\Service\CallService;
 use Laminas\Mvc\Application;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use Program\Navigation\Service\CallNavigationService;
+use Program\Service\CallService;
+use Project\Service\IdeaService;
 
 /**
  * Class CallNavigationServiceFactory
@@ -40,8 +41,10 @@ final class CallNavigationServiceFactory implements FactoryInterface
 
         return new CallNavigationService(
             $container->get($adminModuleOptions->getCommunityNavigationContainer()),
+            $application->getMvcEvent()->getRouter(),
             $application->getMvcEvent()->getRouteMatch(),
-            $container->get(CallService::class)
+            $container->get(CallService::class),
+            $container->get(IdeaService::class)
         );
     }
 }

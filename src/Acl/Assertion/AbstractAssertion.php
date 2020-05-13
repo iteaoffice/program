@@ -150,13 +150,6 @@ abstract class AbstractAssertion implements AssertionInterface
         return null;
     }
 
-    /**
-     * Returns true when a role or roles have access.
-     *
-     * @param string|PersistentCollection $accessRoleOrCollection
-     *
-     * @return boolean
-     */
     public function rolesHaveAccess($accessRoleOrCollection): bool
     {
         $accessRoles = $this->prepareAccessRoles($accessRoleOrCollection);
@@ -191,7 +184,10 @@ abstract class AbstractAssertion implements AssertionInterface
              */
             if (is_array($accessRoleOrCollection)) {
                 foreach ($accessRoleOrCollection as $key => $accessItem) {
-                    $access = $this->adminService->findAccessByName($accessItem);
+                    $access = $accessItem;
+                    if (! $accessItem instanceof Access) {
+                        $access = $this->adminService->findAccessByName($accessItem);
+                    }
 
                     if (null !== $access) {
                         $accessRoleOrCollection[$key] = strtolower($access->getAccess());
@@ -205,7 +201,7 @@ abstract class AbstractAssertion implements AssertionInterface
                 ];
             }
         } else {
-            $accessRoleOrCollection = $accessRoleOrCollection->toArray();
+            $accessRoleOrCollection = array_map('strtolower', $accessRoleOrCollection->toArray());
         }
 
         return $accessRoleOrCollection;
