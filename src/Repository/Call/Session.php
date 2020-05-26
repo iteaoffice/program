@@ -19,24 +19,20 @@ use Doctrine\ORM\QueryBuilder;
 use Program\Entity;
 
 /**
- * @category    Program
+ * Class Session
+ * @package Program\Repository\Call
  */
-class Session extends EntityRepository
+final class Session extends EntityRepository
 {
-    /**
-     * @param array $filter
-     *
-     * @return QueryBuilder
-     */
     public function findFiltered(array $filter): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('program_entity_call_session');
         $queryBuilder->from(Entity\Call\Session::class, 'program_entity_call_session');
-        $queryBuilder->innerJoin('program_entity_call_session.call', 'program_entity_call_call');
-        $queryBuilder->innerJoin('program_entity_call_call.program', 'program_entity_program');
+        $queryBuilder->innerJoin('program_entity_call_session.tool', 'program_entity_idea_tool');
 
-        // Search
+        $queryBuilder->leftJoin('program_entity_idea_tool.call', 'program_entity_call_call');
+
         if (array_key_exists('search', $filter)) {
             $queryBuilder->andWhere(
                 $queryBuilder->expr()->like('program_entity_call_session.session', ':like')
@@ -47,7 +43,7 @@ class Session extends EntityRepository
         // Filter by call
         if (array_key_exists('call', $filter)) {
             $queryBuilder->andWhere(
-                $queryBuilder->expr()->in('program_entity_call_session.call', implode($filter['call'], ', '))
+                $queryBuilder->expr()->in('program_entity_call_call.call', implode(', ', $filter['call']))
             );
         }
 
@@ -70,8 +66,11 @@ class Session extends EntityRepository
                 $queryBuilder->addOrderBy('program_entity_program.id', $direction);
                 $queryBuilder->addOrderBy('program_entity_call_call.call', $direction);
                 break;
-            case 'date':
-                $queryBuilder->addOrderBy('program_entity_call_session.date', $direction);
+            case 'date-from':
+                $queryBuilder->addOrderBy('program_entity_call_session.dateFrom', $direction);
+                break;
+            case 'date-end':
+                $queryBuilder->addOrderBy('program_entity_call_session.dateEnd', $direction);
                 break;
             default:
                 $queryBuilder->addOrderBy('program_entity_call_session.id', $direction);

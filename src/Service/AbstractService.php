@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Program\Service;
 
 use Admin\Entity\Permit;
+use Calendar\Entity\Calendar;
+use Calendar\Entity\Contact as CalendarContact;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;

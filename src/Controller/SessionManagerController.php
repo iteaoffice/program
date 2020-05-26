@@ -1,7 +1,7 @@
 <?php
 
 /**
-*
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
@@ -14,17 +14,11 @@ declare(strict_types=1);
 namespace Program\Controller;
 
 use Application\Twig\ParseSizeExtension;
+use Calendar\Form\CalendarContacts;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use Exception;
-use Program\Entity\Call\Session;
-use Program\Form\SessionFilter;
-use Program\Service\FormService;
-use Program\Service\ProgramService;
-use Project\Entity\Idea\Session as IdeaSession;
-use Project\Service\IdeaService;
-use Laminas\Http\Headers;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\I18n\Translator\TranslatorInterface;
@@ -33,6 +27,12 @@ use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\Paginator\Paginator;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use Program\Entity\Call\Session;
+use Program\Form\SessionFilter;
+use Program\Service\FormService;
+use Program\Service\ProgramService;
+use Project\Entity\Idea\Session as IdeaSession;
+use Project\Service\IdeaService;
 
 use function array_values;
 use function ceil;
@@ -109,7 +109,7 @@ final class SessionManagerController extends AbstractActionController
                 ];
             }
             foreach ($ideaSession->getImages() as $image) {
-                $date = $image->getDateUpdated() ?? $image->getDateCreated();
+                $date                                              = $image->getDateUpdated() ?? $image->getDateCreated();
                 $files[$date->format('U') . '|' . $image->getId()] = [
                     'object' => $image,
                     'type'   => 'image'
@@ -149,6 +149,11 @@ final class SessionManagerController extends AbstractActionController
             if ($form->isValid()) {
                 /** @var Session $session */
                 $session = $form->getData();
+
+                if ('' === $data['program_entity_call_session']['quota']) {
+                    $session->setQuota(null);
+                }
+
                 $this->programService->save($session);
 
                 return $this->redirect()->toRoute('zfcadmin/session/edit', ['id' => $session->getId()]);
@@ -163,7 +168,7 @@ final class SessionManagerController extends AbstractActionController
     public function editAction()
     {
         /** @var Session $session */
-        $session = $this->programService->find(Session::class, (int) $this->params('id'));
+        $session = $this->programService->find(Session::class, (int)$this->params('id'));
 
         if ($session === null) {
             return $this->notFoundAction();
@@ -196,6 +201,10 @@ final class SessionManagerController extends AbstractActionController
                 /** @var Session $session */
                 $session = $form->getData();
 
+                if ('' === $data['program_entity_call_session']['quota']) {
+                    $session->setQuota(null);
+                }
+
                 foreach ($session->getIdeaSession() as $ideaSession) {
                     $ideaSession->setSession($session);
                 }
@@ -210,12 +219,47 @@ final class SessionManagerController extends AbstractActionController
         ]);
     }
 
+    public function editParticipantsAction()
+    {
+        /** @var Session $session */
+        $session = $this->programService->find(Session::class, (int)$this->params('id'));
+
+        if ($session === null) {
+            return $this->notFoundAction();
+        }
+
+        $data = $this->getRequest()->getPost()->toArray();
+        $form = new CalendarContacts($this->entityManager);
+        $form->setData($data);
+
+        if ($this->getRequest()->isPost()) {
+            if (isset($data['cancel'])) {
+                return $this->redirect()->toRoute('zfcadmin/session/view', ['id' => $session->getId()]);
+            }
+
+            $this->flashMessenger()->addSuccessMessage(
+                sprintf(
+                    $this->translator->translate('txt-contacts-of-call-session-have-been-updated-successfully'),
+                    $session->getSession()
+                )
+            );
+            $this->programService->updateSessionParticipants($session, $data);
+
+            return $this->redirect()->toRoute('zfcadmin/session/view', ['id' => $session->getId()]);
+        }
+
+        return new ViewModel([
+            'session' => $session,
+            'form'    => $form,
+        ]);
+    }
+
     public function uploadAction(): Response
     {
         /** @var Request $request */
         $request = $this->getRequest();
         /** @var IdeaSession $ideaSession */
-        $ideaSession = $this->ideaService->find(IdeaSession::class, (int) $this->params('id'));
+        $ideaSession = $this->ideaService->find(IdeaSession::class, (int)$this->params('id'));
         $data        = $request->getFiles()->toArray();
         $errors      = [];
 
@@ -238,7 +282,7 @@ final class SessionManagerController extends AbstractActionController
     public function ideaFilesAction(): JsonModel
     {
         /** @var IdeaSession $ideaSession */
-        $ideaSession = $this->ideaService->find(IdeaSession::class, (int) $this->params('id'));
+        $ideaSession = $this->ideaService->find(IdeaSession::class, (int)$this->params('id'));
         $data        = [];
         $sizeParser  = new ParseSizeExtension();
 
@@ -253,11 +297,11 @@ final class SessionManagerController extends AbstractActionController
             ];
         }
         foreach ($ideaSession->getImages() as $image) {
-            $date = $image->getDateUpdated() ?? $image->getDateCreated();
+            $date                                             = $image->getDateUpdated() ?? $image->getDateCreated();
             $data[$date->format('U') . '|' . $image->getId()] = [
-                'name'         => $image->getImage(),
-                'size'         => $sizeParser->processFilter($image->getSize()),
-                'delete-url'   => $this->url()
+                'name'       => $image->getImage(),
+                'size'       => $sizeParser->processFilter($image->getSize()),
+                'delete-url' => $this->url()
                     ->fromRoute('community/idea/image/delete', ['id' => $image->getId()])
             ];
         }

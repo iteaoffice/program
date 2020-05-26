@@ -1,4 +1,10 @@
-{% do headLink().appendStylesheet('//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css') %}
+{% do headScript().appendFile('assets/js/jquery.timepicker.js', 'text/javascript') %}
+{% do headScript().appendFile('assets/js/jquery.slideraccess.js', 'text/javascript') %}
+
+{% do headLink().appendStylesheet('assets/css/jquery.timepicker.css') %}
+{% do headLink().appendStylesheet(
+    '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css'
+    ) %}
 
 {% do form.prepare() %}
 {{ form().openTag(form)|raw }}
@@ -6,8 +12,10 @@
 {% set sessionFieldset = form.get('program_entity_call_session') %}
 
 {{ ztbformelement(sessionFieldset.get('session')) }}
-{{ ztbformelement(sessionFieldset.get('date')) }}
-{{ ztbformelement(sessionFieldset.get('call')) }}
+{{ ztbformelement(sessionFieldset.get('openForRegistration')) }}
+{{ ztbformelement(sessionFieldset.get('quota')) }}
+{{ ztbformelement(sessionFieldset.get('dateFrom')) }}
+{{ ztbformelement(sessionFieldset.get('dateEnd')) }}
 {{ ztbformelement(sessionFieldset.get('tool')) }}
 
 {% if edit %}
@@ -15,9 +23,10 @@
     <div class="row">
         <div class="col-md-6">
             <p><select id="sel-idea" class="form-control">
-                {% for idea in ideas %}
-                    <option data-link="{{ ideaLink(idea, 'view-admin')|escape }}" value="{{ idea.id }}">{{ idea }}</option>
-                {% endfor %}
+                    {% for idea in ideas %}
+                        <option data-link="{{ ideaLink(idea, 'view-admin')|escape }}"
+                                value="{{ idea.id }}">{{ idea }}</option>
+                    {% endfor %}
                 </select></p>
             <p>
                 <button id="btn-add" title="{{ translate("txt-add") }}" type="button" class="btn btn-primary">
@@ -29,8 +38,8 @@
             <table class="table table-hover table-striped table-sm">
                 <thead>
                 <tr>
-                    <th class="col-md-2 col-sm-3">{{ translate("txt-schedule") }}</th>
-                    <th class="col-md-10 col-sm-9">{{ translate("txt-idea") }}</th>
+                    <th>{{ translate("txt-schedule") }}</th>
+                    <th>{{ translate("txt-idea") }}</th>
                     <th></th>
                 </thead>
                 <tfoot>
@@ -84,22 +93,15 @@
                 }
             });
         });
-
-
-        $('input[type=datetime]').datetimepicker({
-            addSliderAccess: true,
-            sliderAccessArgs: {touchonly: false},
-            timeFormat: 'HH:mm:ss',
-            dateFormat: 'yy-mm-dd'
-        });
     </script>
 
     <div id="template" class="d-none">
         <table>
             <tbody>
             <tr id="idea-__id__">
-                <td><input type="text" name="program_entity_call_session[ideaSession][__index__][schedule]"
-                           class="form-control" value=""></td>
+                <td style="width: 30%"><input type="text"
+                                              name="program_entity_call_session[ideaSession][__index__][schedule]"
+                                              class="form-control" value=""></td>
                 <td><input type="hidden" name="program_entity_call_session[ideaSession][__index__][idea]"
                            value="__id__">
                     __idea__
@@ -121,3 +123,13 @@
     </div>
     {{ form().closeTag()|raw }}
 {% endif %}
+
+<script>
+    $('input[type=datetime]').datetimepicker({
+        addSliderAccess: true,
+        sliderAccessArgs: {touchonly: false},
+        timeFormat: 'HH:mm',
+        dateFormat: 'yy-mm-dd'
+    });
+</script>
+

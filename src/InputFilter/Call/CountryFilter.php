@@ -16,9 +16,8 @@ namespace Program\InputFilter\Call;
 use Laminas\InputFilter\InputFilter;
 
 /**
- * Class ArticleFilter
- *
- * @package Content\InputFilter
+ * Class CountryFilter
+ * @package Program\InputFilter\Call
  */
 class CountryFilter extends InputFilter
 {

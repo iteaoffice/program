@@ -16,15 +16,11 @@ namespace Program\InputFilter\Call;
 use Laminas\InputFilter\InputFilter;
 
 /**
- * Class ArticleFilter
- *
- * @package Content\InputFilter
+ * Class CallFilter
+ * @package Program\InputFilter\Call
  */
 class CallFilter extends InputFilter
 {
-    /**
-     * CallFilter constructor.
-     */
     public function __construct()
     {
         $inputFilter = new InputFilter();

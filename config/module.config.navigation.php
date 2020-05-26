@@ -187,9 +187,19 @@ return [
                                     ],
                                 ],
                                 'pages'   => [
-                                    'edit' => [
+                                    'edit'              => [
                                         'label'   => _('txt-nav-edit'),
                                         'route'   => 'zfcadmin/session/edit',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities' => [
+                                                'id' => Program\Entity\Call\Session::class,
+                                            ],
+                                        ],
+                                    ],
+                                    'edit-participants' => [
+                                        'label'   => _('txt-nav-edit-participants'),
+                                        'route'   => 'zfcadmin/session/edit-participants',
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [

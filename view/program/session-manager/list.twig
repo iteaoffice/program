@@ -30,13 +30,15 @@
                 <tr>
                     <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/session/list', 'criteria': 'id', 'text': translate("txt-id")} %}</th>
                     <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/session/list', 'criteria': 'session', 'text': translate("txt-session")} %}</th>
-                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/session/list', 'criteria': 'call', 'text': translate("txt-call")} %}</th>
-                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/session/list', 'criteria': 'date', 'text': translate("txt-date")} %}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/session/list', 'criteria': 'tool', 'text': translate("txt-tool")} %}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/session/list', 'criteria': 'date-from', 'text': translate("txt-date-from")} %}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/session/list', 'criteria': 'date-end', 'text': translate("txt-date-to")} %}</th>
+                    <td>{{ translate("txt-open-for-registration") }}</td>
                 </tr>
                 </thead>
                 <tfoot>
                 <tr>
-                    <td colspan="4"></td>
+                    <td colspan=7"></td>
                 </tr>
                 </tfoot>
                 <tbody>
@@ -44,8 +46,10 @@
                     <tr>
                         <td><small class="text-muted">{{ session.id }}</small></td>
                         <td>{{ callSessionLink(session,'view-admin') }} {{ callSessionLink(session,'edit', 'icon') }}</td>
-                        <td>{{ callLink(session.call,'view-admin','name') }}</td>
-                        <td>{{ session.date|string_date }}</td>
+                        <td>{{ ideaToolLink(session.tool,'view-admin','name') }}</td>
+                        <td>{{ session.dateFrom|date('d-m-Y H:i') }}</td>
+                        <td>{{ session.dateEnd|date('d-m-Y H:i') }}</td>
+                        <td>{% if session.isOpenForRegistration %}<i class="fas fa-check text-success"></i> {{ session.quota}} {% endif %}</td>
                     </tr>
                 {% endfor %}
                 </tbody>

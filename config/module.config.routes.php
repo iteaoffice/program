@@ -611,7 +611,7 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes'  => [
-                            'list'            => [
+                            'list'              => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/list[/f-:encodedFilter][/page-:page].html',
@@ -620,7 +620,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'new'             => [
+                            'new'               => [
                                 'type'    => 'Literal',
                                 'options' => [
                                     'route'    => '/new.html',
@@ -629,7 +629,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'view'            => [
+                            'view'              => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/view/[:id].html',
@@ -638,16 +638,31 @@ return [
                                     ],
                                 ],
                             ],
-                            'edit'            => [
+                            'edit'              => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/edit/[:id].html',
-                                    'defaults' => [
+                                    'route'       => '/edit/[:id].html',
+                                    'constraints' => [
+                                        'id' => '\d+',
+                                    ],
+                                    'defaults'    => [
                                         'action' => 'edit',
                                     ],
                                 ],
                             ],
-                            'upload-document' => [
+                            'edit-participants' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'       => '/edit/participants/[:id].html',
+                                    'constraints' => [
+                                        'id' => '\d+',
+                                    ],
+                                    'defaults'    => [
+                                        'action' => 'edit-participants',
+                                    ],
+                                ],
+                            ],
+                            'upload-document'   => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'       => '/upload/[:id].html',
@@ -659,7 +674,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'idea-files'      => [
+                            'idea-files'        => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'       => '/idea-files/[:id].html',

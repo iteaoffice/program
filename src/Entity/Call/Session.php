@@ -20,18 +20,25 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Program\Entity\AbstractEntity;
-use Project\Entity\Idea\Tool;
 use Laminas\Form\Annotation;
+use Program\Entity\AbstractEntity;
+use Program\Entity\Call\Session\Participant;
+use Project\Entity\Idea\Tool;
 
 /**
  * @ORM\Table(name="programcall_session")
  * @ORM\Entity(repositoryClass="Program\Repository\Call\Session")
- *
- * @category    Program
  */
 class Session extends AbstractEntity
 {
+    public const NOT_OPEN_FOR_REGISTRATION = 0;
+    public const OPEN_FOR_REGISTRATION     = 1;
+
+    protected static array $openForRegistrationTemplates = [
+        self::NOT_OPEN_FOR_REGISTRATION => 'txt-not-open-for-registration',
+        self::OPEN_FOR_REGISTRATION     => 'txt-open-for-registration',
+    ];
+
     /**
      * @ORM\Column(name="session_id", type="integer", options={"unsigned":true})
      * @ORM\Id
@@ -44,36 +51,35 @@ class Session extends AbstractEntity
     /**
      * @ORM\Column(name="session", type="string", length=50, nullable=false)
      * @Annotation\Type("\Laminas\Form\Element\Text")
-     * @Annotation\Options({"label":"txt-session"})
+     * @Annotation\Attributes({"label":"txt-call-session-session-label","placeholder":"txt-call-session-session-placeholder"})
+     * @Annotation\Options({"help-block":"txt-call-session-quota-help-block"})
      *
      * @var string
      */
     private $session;
     /**
-     * @ORM\ManyToOne(targetEntity="Program\Entity\Call\Call", cascade={"persist"}, inversedBy="session")
-     * @ORM\JoinColumn(name="programcall_id", referencedColumnName="programcall_id", nullable=false)
-     * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
-     * @Annotation\Options({
-     *     "label":"txt-program-call",
-     *     "target_class": "Program\Entity\Call\Call",
-     *     "find_method": {
-     *         "name": "findBy",
-     *         "params": {
-     *             "criteria": {},
-     *             "orderBy": {"id": "DESC"}
-     *         }
-     *     }
-     * })
+     * @ORM\Column(name="quota", type="smallint", nullable=true)
+     * @Annotation\Type("\Laminas\Form\Element\Text")
+     * @Annotation\Attributes({"label":"txt-call-session-quota-label"})
+     * @Annotation\Options({"help-block":"txt-call-session-quota-help-block"})
      *
-     * @var Call
+     * @var int
      */
-    private $call;
+    private $quota;
+    /**
+     * @ORM\Column(name="open_for_registration", type="smallint", nullable=false)
+     * @Annotation\Type("Laminas\Form\Element\Radio")
+     * @Annotation\Attributes({"array":"openForRegistrationTemplates"})
+     * @Annotation\Options({"label":"txt-call-session-open-for-registration-label","help-block":"txt-call-session-open-for-registration-help-block"})
+     *
+     * @var int
+     */
+    private $openForRegistration;
     /**
      * @ORM\ManyToOne(targetEntity="Project\Entity\Idea\Tool", cascade={"persist"}, inversedBy="session")
-     * @ORM\JoinColumn(name="tool_id", referencedColumnName="tool_id", nullable=true)
+     * @ORM\JoinColumn(name="tool_id", referencedColumnName="tool_id", nullable=false)
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
      * @Annotation\Options({
-     *     "label":"txt-idea-tool",
      *     "help-block":"txt-idea-tool-help-block",
      *     "target_class":"Project\Entity\Idea\Tool",
      *     "find_method": {
@@ -84,19 +90,33 @@ class Session extends AbstractEntity
      *         }
      *     }
      * })
-     *
-     * @var Tool|null
+     * @Annotation\Attributes({"label":"txt-call-session-idea-tool-label"})
+     * @var Tool
      */
     private $tool;
     /**
-     * @ORM\Column(name="date", type="datetime", nullable=false)
-     * @Annotation\Type("\Laminas\Form\Element\DateTime")
-     * @Annotation\Attributes({"step":"any"})
-     * @Annotation\Options({"label":"txt-session-date", "format":"Y-m-d H:i:s"})
-     *
+     * @ORM\Column(name="date", type="datetime", nullable=true)
+     * @Annotation\Exclude()
+     * @deprecated
      * @var DateTime
      */
     private $date;
+    /**
+     * @ORM\Column(name="date_from", type="datetime", nullable=false)
+     * @Annotation\Type("\Laminas\Form\Element\DateTime")
+     * @Annotation\Options({"label":"txt-call-session-date-from-label","help-block": "txt-call-session-date-from-help-block", "format": "Y-m-d H:i"})
+     * @Annotation\Attributes({"step":"any"})
+     * @var DateTime
+     */
+    private $dateFrom;
+    /**
+     * @ORM\Column(name="date_end", type="datetime", nullable=false)
+     * @Annotation\Type("\Laminas\Form\Element\DateTime")
+     * @Annotation\Options({"label":"txt-call-session-date-end-label","help-block": "txt-call-session-date-end-help-block", "format": "Y-m-d H:i"})
+     * @Annotation\Attributes({"step":"any"})
+     * @var DateTime
+     */
+    private $dateEnd;
     /**
      * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Session", cascade={"persist", "remove"}, mappedBy="session", orphanRemoval=true)
      * @ORM\OrderBy({"schedule" = "ASC"})
@@ -114,10 +134,61 @@ class Session extends AbstractEntity
      * @var \Project\Entity\Idea\Session[]|Collection
      */
     private $ideaSession;
+    /**
+     * @ORM\OneToMany(targetEntity="Program\Entity\Call\Session\Participant", cascade={"persist","remove"}, mappedBy="session")
+     * @Annotation\Exclude()
+     *
+     * @var Participant[]|ArrayCollection
+     */
+    private $participant;
 
     public function __construct()
     {
         $this->ideaSession = new ArrayCollection();
+        $this->participant = new ArrayCollection();
+    }
+
+    public static function getOpenForRegistrationTemplates(): array
+    {
+        return self::$openForRegistrationTemplates;
+    }
+
+    public function hasIdeaSession(): bool
+    {
+        return ! $this->ideaSession->isEmpty();
+    }
+
+    public function hasParticipants(): bool
+    {
+        return ! $this->participant->isEmpty();
+    }
+
+    public function isOpenForRegistration(): bool
+    {
+        return $this->openForRegistration === self::OPEN_FOR_REGISTRATION;
+    }
+
+    public function isOverbooked(): bool
+    {
+        if (! $this->hasQuota()) {
+            return false;
+        }
+
+        return $this->participant->count() >= $this->quota;
+    }
+
+    public function hasQuota(): bool
+    {
+        return null !== $this->quota;
+    }
+
+    public function parseAmountLeft(): ?int
+    {
+        if (! $this->hasQuota()) {
+            return null;
+        }
+
+        return max($this->quota - $this->participant->count(), 0);
     }
 
     public function getId()
@@ -140,18 +211,6 @@ class Session extends AbstractEntity
     public function setSession(string $session): Session
     {
         $this->session = $session;
-
-        return $this;
-    }
-
-    public function getCall(): ?Call
-    {
-        return $this->call;
-    }
-
-    public function setCall(Call $call): Session
-    {
-        $this->call = $call;
 
         return $this;
     }
@@ -204,5 +263,65 @@ class Session extends AbstractEntity
         foreach ($ideaSessions as $ideaSession) {
             $this->ideaSession->removeElement($ideaSession);
         }
+    }
+
+    public function getDateFrom(): ?DateTime
+    {
+        return $this->dateFrom;
+    }
+
+    public function setDateFrom(?DateTime $dateFrom): Session
+    {
+        $this->dateFrom = $dateFrom;
+        return $this;
+    }
+
+    public function getDateEnd(): ?DateTime
+    {
+        return $this->dateEnd;
+    }
+
+    public function setDateEnd(?DateTime $dateEnd): Session
+    {
+        $this->dateEnd = $dateEnd;
+        return $this;
+    }
+
+    public function getOpenForRegistration(): ?int
+    {
+        return $this->openForRegistration;
+    }
+
+    public function setOpenForRegistration(?int $openForRegistration): Session
+    {
+        $this->openForRegistration = $openForRegistration;
+        return $this;
+    }
+
+    public function getOpenForRegistrationText(): string
+    {
+        return self::$openForRegistrationTemplates[$this->openForRegistration] ?? '';
+    }
+
+    public function getQuota(): ?int
+    {
+        return $this->quota;
+    }
+
+    public function setQuota(?int $quota): Session
+    {
+        $this->quota = $quota;
+        return $this;
+    }
+
+    public function getParticipant()
+    {
+        return $this->participant;
+    }
+
+    public function setParticipant($participant): Session
+    {
+        $this->participant = $participant;
+        return $this;
     }
 }

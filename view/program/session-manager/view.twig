@@ -8,10 +8,32 @@
 <dl class="dl-horizontal">
     <dt>{{ translate("txt-session") }}</dt>
     <dd>{{ session.session }}</dd>
-    <dt>{{ translate("txt-call") }}</dt>
-    <dd>{{ callLink(session.call, 'view-admin') }}</dd>
-    <dt>{{ translate("txt-date") }}</dt>
-    <dd>{{ session.date|date('d M Y H:i') }}</dd>
+    <dt>{{ translate("txt-project-idea-tool") }}</dt>
+    <dd>{{ ideaToolLink(session.tool,'view-admin','name') }}</dd>
+    {% if session.tool.call %}
+        <dt>{{ translate("txt-call") }}</dt>
+        <dd>{{ callLink(session.tool.call, 'view-admin') }}</dd>
+    {% endif %}
+    {% if session.tool.meeting %}
+        <dt>{{ translate("txt-meeting") }}</dt>
+        <dd>{{ meetingLink(session.tool.meeting, 'view-admin') }}</dd>
+    {% endif %}
+    <dt>{{ translate("txt-is-open-for-registration") }}</dt>
+    <dd>{{ translate(session.getOpenForRegistrationText()) }}</dd>
+    {% if session.quota %}
+        <dt>{{ translate("txt-quota") }}</dt>
+        <dd {% if session.isOverbooked %}class="text-danger"
+            {% else %}class="text-success"{% endif %}>{{ session.quota }}</dd>
+    {% endif %}
+
+    <dt>{{ translate("txt-participants") }}</dt>
+    <dd>{{ session.participant.count() }}</dd>
+
+
+    <dt>{{ translate("txt-date-start") }}</dt>
+    <dd>{{ session.dateFrom|date('d M Y H:i') }}</dd>
+    <dt>{{ translate("txt-date-end") }}</dt>
+    <dd>{{ session.dateEnd|date('d M Y H:i') }}</dd>
     <dt>{{ translate("txt-ideas") }}</dt>
     <dd>{{ session.ideaSession|length }}</dd>
 </dl>
@@ -21,12 +43,17 @@
     <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item active">
             <a class="nav-link active" href="#presentations" aria-controls="presentations" role="tab" data-toggle="tab">
-            {{ translate("txt-presentations") }}
+                {{ translate("txt-presentations") }}
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="#files" aria-controls="files" role="tab" data-toggle="tab">
-            {{ translate("txt-files") }}
+                {{ translate("txt-files") }}
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#participants" aria-controls="participants" role="tab" data-toggle="tab">
+                {{ translate("txt-participants") }}
             </a>
         </li>
     </ul>
@@ -37,6 +64,9 @@
         </div>
         <div role="tabpanel" class="tab-pane" id="files">
             {% include 'program/session-manager/tab/files' %}
+        </div>
+        <div role="tabpanel" class="tab-pane" id="participants">
+            {% include 'program/session-manager/tab/participants' %}
         </div>
     </div>
 </div>

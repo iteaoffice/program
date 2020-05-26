@@ -299,13 +299,6 @@ class Call extends AbstractEntity
      */
     private $ideaTool;
     /**
-     * @ORM\OneToMany(targetEntity="Program\Entity\Call\Session", cascade={"persist"}, mappedBy="call")
-     * @Annotation\Exclude()
-     *
-     * @var Session[]|Collections\ArrayCollection
-     */
-    private $session;
-    /**
      * @ORM\OneToMany(targetEntity="Program\Entity\Call\Country", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
@@ -337,7 +330,6 @@ class Call extends AbstractEntity
         $this->doa            = new Collections\ArrayCollection();
         $this->idea           = new Collections\ArrayCollection();
         $this->ideaTool       = new Collections\ArrayCollection();
-        $this->session        = new Collections\ArrayCollection();
         $this->callCountry    = new Collections\ArrayCollection();
         $this->challenge      = new Collections\ArrayCollection();
         $this->proxyProject   = new Collections\ArrayCollection();
@@ -649,18 +641,6 @@ class Call extends AbstractEntity
     public function setIdea($idea): Call
     {
         $this->idea = $idea;
-
-        return $this;
-    }
-
-    public function getSession()
-    {
-        return $this->session;
-    }
-
-    public function setSession($session): Call
-    {
-        $this->session = $session;
 
         return $this;
     }

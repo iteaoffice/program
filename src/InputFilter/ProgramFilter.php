@@ -20,16 +20,10 @@ use Laminas\InputFilter\InputFilter;
 
 /**
  * Class ProgramFilter
- *
  * @package Program\InputFilter
  */
-class ProgramFilter extends InputFilter
+final class ProgramFilter extends InputFilter
 {
-    /**
-     * ProgramFilter constructor.
-     *
-     * @param EntityManager $entityManager
-     */
     public function __construct(EntityManager $entityManager)
     {
         $inputFilter = new InputFilter();

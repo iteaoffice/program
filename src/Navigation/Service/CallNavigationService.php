@@ -66,6 +66,11 @@ final class CallNavigationService
             return;
         }
 
+        //Skip this function it if is not in the project
+        if (strpos($this->routeMatch->getMatchedRouteName(), 'community/event') !== false) {
+            return;
+        }
+
         $pages = $callIndex->getPages();
 
         $calls     = $this->callService->findOpenCall();

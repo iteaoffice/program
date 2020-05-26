@@ -31,6 +31,9 @@ use General\Search\Service\CountrySearchService;
 use General\Service\CountryService;
 use General\Service\EmailService;
 use General\Service\GeneralService;
+use Laminas\Authentication\AuthenticationService;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 use Organisation\Search\Service\OrganisationSearchService;
 use Organisation\Service\OrganisationService;
 use Program\Form\View\Helper\CallFormElement;
@@ -44,9 +47,6 @@ use Project\Service\HelpService;
 use Project\Service\IdeaService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
-use Laminas\Authentication\AuthenticationService;
-use Laminas\I18n\Translator\TranslatorInterface;
-use Laminas\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 use ZfcTwig\View\TwigRenderer;
 
 return [
@@ -178,14 +178,12 @@ return [
             ProgramService::class,
             AssertionService::class
         ],
-        InputFilter\ProgramFilter::class                   => [
-            EntityManager::class
-        ],
         Service\ProgramService::class                      => [
             EntityManager::class,
             OrganisationSearchService::class,
             ProjectSearchService::class,
-            CountrySearchService::class
+            CountrySearchService::class,
+            ContactService::class
         ],
         Service\CallService::class                         => [
             EntityManager::class,

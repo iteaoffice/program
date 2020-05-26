@@ -47,6 +47,7 @@ return [
                 ['route' => 'zfcadmin/session/new', 'roles' => ['office']],
                 ['route' => 'zfcadmin/session/list', 'roles' => ['office']],
                 ['route' => 'zfcadmin/session/edit', 'roles' => ['office']],
+                ['route' => 'zfcadmin/session/edit-participants', 'roles' => ['office']],
                 ['route' => 'zfcadmin/session/upload-document', 'roles' => ['office']],
                 ['route' => 'zfcadmin/session/idea-files', 'roles' => ['office']],
                 ['route' => 'community/program/session/download-pdf', 'roles' => ['user']],
