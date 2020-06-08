@@ -79,7 +79,7 @@ final class CallController extends AbstractActionController
             $projects = $this->projectService->findInvolvedProjectsByCallAndContact($call, $contact);
 
             if ($call->hasIdeaTool()) {
-                $tool = $call->getIdeaTool()->first();
+                $tool = $call->getIdeaTool();
                 $ideas = $this->ideaService->getInvolvedIdeaAndInviteListByToolAndContact($tool, $contact);
             }
         }

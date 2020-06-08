@@ -171,51 +171,6 @@ return [
                             ],
                         ],
                     ],
-                    'session-list' => [
-                        'label' => _('txt-nav-program-call-sessions'),
-                        'route' => 'zfcadmin/session/list',
-                        'pages' => [
-                            'view' => [
-                                'route'   => 'zfcadmin/session/view',
-                                'visible' => false,
-                                'params'  => [
-                                    'entities'   => [
-                                        'id' => Program\Entity\Call\Session::class,
-                                    ],
-                                    'invokables' => [
-                                        Program\Navigation\Invokable\SessionLabel::class,
-                                    ],
-                                ],
-                                'pages'   => [
-                                    'edit'              => [
-                                        'label'   => _('txt-nav-edit'),
-                                        'route'   => 'zfcadmin/session/edit',
-                                        'visible' => false,
-                                        'params'  => [
-                                            'entities' => [
-                                                'id' => Program\Entity\Call\Session::class,
-                                            ],
-                                        ],
-                                    ],
-                                    'edit-participants' => [
-                                        'label'   => _('txt-nav-edit-participants'),
-                                        'route'   => 'zfcadmin/session/edit-participants',
-                                        'visible' => false,
-                                        'params'  => [
-                                            'entities' => [
-                                                'id' => Program\Entity\Call\Session::class,
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'new'  => [
-                                'route'   => 'zfcadmin/session/new',
-                                'label'   => _('txt-add-session'),
-                                'visible' => false,
-                            ],
-                        ],
-                    ],
                 ],
             ],
             'tools'   => [

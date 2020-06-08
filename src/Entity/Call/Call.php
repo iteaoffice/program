@@ -22,14 +22,12 @@ use DateTime;
 use Doctrine\Common\Collections;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Event\Entity\Meeting\Meeting;
 use Gedmo\Mapping\Annotation as Gedmo;
 use General\Entity\Challenge;
 use Laminas\Form\Annotation;
 use Program\Entity\AbstractEntity;
 use Program\Entity\Nda;
 use Program\Entity\Program;
-use Project\Entity\Idea\Idea;
 use Project\Entity\Idea\Tool;
 use Project\Entity\Project;
 use Publication\Entity\Publication;
@@ -47,22 +45,19 @@ use function strtoupper;
  */
 class Call extends AbstractEntity
 {
-    public const INACTIVE = 0;
-    public const ACTIVE   = 1;
-
+    public const INACTIVE                              = 0;
+    public const ACTIVE                                = 1;
     public const DOA_REQUIREMENT_NOT_APPLICABLE        = 1;
     public const DOA_REQUIREMENT_PER_PROGRAM           = 2;
     public const DOA_REQUIREMENT_PER_PROJECT           = 3;
     public const DOA_REQUIREMENT_PER_PROJECT_OR_MEMBER = 4;
-
-    public const NDA_REQUIREMENT_NOT_APPLICABLE = 1;
-    public const NDA_REQUIREMENT_PER_CALL       = 2;
-    public const NDA_REQUIREMENT_PER_PROJECT    = 3;
-    public const LOI_NOI_REQUIRED               = 0;
-    public const LOI_REQUIRED                   = 1;
-
-    public const PROJECT_REPORT_SINGLE = 1;
-    public const PROJECT_REPORT_DOUBLE = 2;
+    public const NDA_REQUIREMENT_NOT_APPLICABLE        = 1;
+    public const NDA_REQUIREMENT_PER_CALL              = 2;
+    public const NDA_REQUIREMENT_PER_PROJECT           = 3;
+    public const LOI_NOI_REQUIRED                      = 0;
+    public const LOI_REQUIRED                          = 1;
+    public const PROJECT_REPORT_SINGLE                 = 1;
+    public const PROJECT_REPORT_DOUBLE                 = 2;
 
     protected static array $activeTemplates = [
         self::INACTIVE => 'txt-inactive-for-projects',
@@ -263,13 +258,6 @@ class Call extends AbstractEntity
      */
     private $publication;
     /**
-     * @ORM\ManyToMany(targetEntity="Event\Entity\Meeting\Meeting", cascade={"persist"}, mappedBy="call")
-     * @Annotation\Exclude()
-     *
-     * @var Meeting[]|Collections\ArrayCollection
-     */
-    private $meeting;
-    /**
      * @ORM\ManyToMany(targetEntity="Calendar\Entity\Calendar", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
@@ -284,18 +272,10 @@ class Call extends AbstractEntity
      */
     private $doa;
     /**
-     * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Idea", cascade={"persist"}, mappedBy="call")
-     * @ORM\OrderBy({"number" = "ASC"})
+     * @ORM\OneToOne (targetEntity="Project\Entity\Idea\Tool", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
-     * @var Idea[]|Collections\ArrayCollection
-     */
-    private $idea;
-    /**
-     * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Tool", cascade={"persist"}, mappedBy="call")
-     * @Annotation\Exclude()
-     *
-     * @var Tool[]|Collections\ArrayCollection
+     * @var Tool|null
      */
     private $ideaTool;
     /**
@@ -323,13 +303,10 @@ class Call extends AbstractEntity
     public function __construct()
     {
         $this->publication    = new Collections\ArrayCollection();
-        $this->meeting        = new Collections\ArrayCollection();
         $this->project        = new Collections\ArrayCollection();
         $this->nda            = new Collections\ArrayCollection();
         $this->calendar       = new Collections\ArrayCollection();
         $this->doa            = new Collections\ArrayCollection();
-        $this->idea           = new Collections\ArrayCollection();
-        $this->ideaTool       = new Collections\ArrayCollection();
         $this->callCountry    = new Collections\ArrayCollection();
         $this->challenge      = new Collections\ArrayCollection();
         $this->proxyProject   = new Collections\ArrayCollection();
@@ -423,7 +400,7 @@ class Call extends AbstractEntity
 
     public function hasIdeaTool(): bool
     {
-        return ! $this->ideaTool->isEmpty();
+        return null !== $this->ideaTool;
     }
 
     public function isActive(): bool
@@ -597,18 +574,6 @@ class Call extends AbstractEntity
         return $this;
     }
 
-    public function getMeeting()
-    {
-        return $this->meeting;
-    }
-
-    public function setMeeting($meeting): Call
-    {
-        $this->meeting = $meeting;
-
-        return $this;
-    }
-
     public function getCalendar()
     {
         return $this->calendar;
@@ -629,18 +594,6 @@ class Call extends AbstractEntity
     public function setDoa($doa): Call
     {
         $this->doa = $doa;
-
-        return $this;
-    }
-
-    public function getIdea()
-    {
-        return $this->idea;
-    }
-
-    public function setIdea($idea): Call
-    {
-        $this->idea = $idea;
 
         return $this;
     }

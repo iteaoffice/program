@@ -76,16 +76,6 @@ return [
             ModuleOptions::class,
             ContactService::class
         ],
-        Controller\Plugin\SessionPdf::class                => [
-            ModuleOptions::class,
-            TranslatorInterface::class
-        ],
-        Controller\Plugin\SessionSpreadsheet::class        => [
-            AssertionService::class,
-            Authorize::class,
-            TranslatorInterface::class,
-            'ViewHelperManager'
-        ],
         Controller\Plugin\CallSizeSpreadsheet::class       => [
             ProjectService::class,
             VersionService::class,
@@ -95,14 +85,6 @@ return [
             CountryService::class,
             EntityManager::class,
             TranslatorInterface::class
-        ],
-        Controller\Plugin\SessionDocument::class           => [
-            EntityManager::class,
-            ModuleOptions::class,
-            AssertionService::class,
-            Authorize::class,
-            TranslatorInterface::class,
-            'ViewHelperManager'
         ],
         Controller\CallController::class                   => [
             CallService::class,
@@ -167,17 +149,6 @@ return [
             EntityManager::class,
             TranslatorInterface::class
         ],
-        Controller\SessionManagerController::class         => [
-            ProgramService::class,
-            IdeaService::class,
-            FormService::class,
-            TranslatorInterface::class,
-            EntityManager::class
-        ],
-        Controller\SessionController::class                => [
-            ProgramService::class,
-            AssertionService::class
-        ],
         Service\ProgramService::class                      => [
             EntityManager::class,
             OrganisationSearchService::class,
@@ -189,15 +160,6 @@ return [
             EntityManager::class,
             GeneralService::class,
             AdminService::class
-        ],
-        View\Handler\SessionHandler::class                 => [
-            'Application',
-            'ViewHelperManager',
-            TwigRenderer::class,
-            AuthenticationService::class,
-            TranslatorInterface::class,
-            ProgramService::class,
-            IdeaService::class
         ],
         View\Handler\ProgramHandler::class                 => [
             'Application',

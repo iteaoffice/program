@@ -28,6 +28,10 @@
     {% endif %}
     <dt>{{ translate("txt-active") }}</dt>
     <dd>{{ translate(call.getActive(true)) }}</dd>
+    {% if call.hasIdeaTool() %}
+        <dt>{{ translate("txt-idea-tool") }}</dt>
+        <dd>{{ ideaToolLink(call.ideaTool,'view-admin','name') }}</dd>
+    {% endif %}
     <dt>{{ translate("txt-doa-requirement") }}</dt>
     <dd>{{ translate(call.getDoaRequirement(true)) }}</dd>
     <dt>{{ translate("txt-nda-requirement") }}</dt>

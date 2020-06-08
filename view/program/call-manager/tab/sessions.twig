@@ -13,7 +13,7 @@
         {% for session in call.session %}
             <tr>
                 <td><small class="text-muted">{{ session.id }}</small></td>
-                <td>{{ callSessionLink(session, 'view-admin') }}</td>
+                <td>{{ toolSessionLink(session, 'view-admin') }}</td>
                 <td>{{ session.date|string_date }}</td>
                 <td>{{ session.ideaSession|length }}</td>
             </tr>

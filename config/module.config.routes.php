@@ -28,70 +28,7 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes'  => [
-                            'session' => [
-                                'type'         => 'Literal',
-                                'options'      => [
-                                    'route'    => '/session',
-                                    'defaults' => [
-                                        'controller' => Controller\SessionController::class,
-                                        'action'     => 'image',
-                                    ],
-                                ],
-                                'child_routes' => [
-                                    'download-pdf'         => [
-                                        'type'    => 'Segment',
-                                        'options' => [
-                                            'route'       => '/download/[:id].pdf',
-                                            'constraints' => [
-                                                'id' => '\d+',
-                                            ],
-                                            'defaults'    => [
-                                                'action'    => 'download-pdf',
-                                                'privilege' => 'download-session',
-                                            ],
-                                        ],
-                                    ],
-                                    'download-spreadsheet' => [
-                                        'type'    => 'Segment',
-                                        'options' => [
-                                            'route'       => '/download/[:id].xlsx',
-                                            'constraints' => [
-                                                'id' => '\d+',
-                                            ],
-                                            'defaults'    => [
-                                                'action'    => 'download-spreadsheet',
-                                                'privilege' => 'download-session',
-                                            ],
-                                        ],
-                                    ],
-                                    'download-document'    => [
-                                        'type'    => 'Segment',
-                                        'options' => [
-                                            'route'       => '/download/[:id].docx',
-                                            'constraints' => [
-                                                'id' => '\d+',
-                                            ],
-                                            'defaults'    => [
-                                                'action'    => 'download-document',
-                                                'privilege' => 'download-session',
-                                            ],
-                                        ],
-                                    ],
-                                    'download'             => [
-                                        'type'    => 'Segment',
-                                        'options' => [
-                                            'route'       => '/download/[:id].zip',
-                                            'constraints' => [
-                                                'id' => '\d+',
-                                            ],
-                                            'defaults'    => [
-                                                'action' => 'download'
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'nda'     => [
+                            'nda' => [
                                 'type'         => 'Literal',
                                 'priority'     => 1000,
                                 'options'      => [
@@ -179,7 +116,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'doa'     => [
+                            'doa' => [
                                 'type'         => 'Segment',
                                 'options'      => [
                                     'route'    => '/doa',
@@ -594,95 +531,6 @@ return [
                                     'route'    => '/edit/[:id].html',
                                     'defaults' => [
                                         'action' => 'edit',
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                    'session' => [
-                        'type'          => 'Segment',
-                        'options'       => [
-                            'route'    => '/session',
-                            'defaults' => [
-                                'controller' => Controller\SessionManagerController::class,
-                                'action'     => 'list',
-                                'page'       => 1,
-                            ],
-                        ],
-                        'may_terminate' => true,
-                        'child_routes'  => [
-                            'list'              => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'    => '/list[/f-:encodedFilter][/page-:page].html',
-                                    'defaults' => [
-                                        'action' => 'list',
-                                    ],
-                                ],
-                            ],
-                            'new'               => [
-                                'type'    => 'Literal',
-                                'options' => [
-                                    'route'    => '/new.html',
-                                    'defaults' => [
-                                        'action' => 'new',
-                                    ],
-                                ],
-                            ],
-                            'view'              => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'    => '/view/[:id].html',
-                                    'defaults' => [
-                                        'action' => 'view',
-                                    ],
-                                ],
-                            ],
-                            'edit'              => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'       => '/edit/[:id].html',
-                                    'constraints' => [
-                                        'id' => '\d+',
-                                    ],
-                                    'defaults'    => [
-                                        'action' => 'edit',
-                                    ],
-                                ],
-                            ],
-                            'edit-participants' => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'       => '/edit/participants/[:id].html',
-                                    'constraints' => [
-                                        'id' => '\d+',
-                                    ],
-                                    'defaults'    => [
-                                        'action' => 'edit-participants',
-                                    ],
-                                ],
-                            ],
-                            'upload-document'   => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'       => '/upload/[:id].html',
-                                    'constraints' => [
-                                        'id' => '\d+',
-                                    ],
-                                    'defaults'    => [
-                                        'action' => 'upload'
-                                    ],
-                                ],
-                            ],
-                            'idea-files'        => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'       => '/idea-files/[:id].html',
-                                    'constraints' => [
-                                        'id' => '\d+',
-                                    ],
-                                    'defaults'    => [
-                                        'action' => 'idea-files'
                                     ],
                                 ],
                             ],

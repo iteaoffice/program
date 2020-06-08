@@ -22,7 +22,7 @@ use General\Search\Service\CountrySearchService;
 use Organisation\Entity\Organisation;
 use Organisation\Search\Service\OrganisationSearchService;
 use Program\Entity\Call\Call;
-use Program\Entity\Call\Session;
+use Project\Entity\Idea\Tool\Session;
 use Program\Entity\Doa;
 use Program\Entity\Funder;
 use Program\Entity\Program;
@@ -110,88 +110,5 @@ class ProgramService extends AbstractService
                 'organisation' => $organisation,
             ]
         );
-    }
-
-    public function findCallSessionsByMeeting(Meeting $meeting): array
-    {
-        $callSessions = [];
-        //Create a local array of available sessions
-        if ($meeting->hasIdeaTool()) {
-            foreach ($meeting->getIdeaTool() as $tool) {
-                foreach ($tool->getSession() as $callSession) {
-                    if ($callSession->isOpenForRegistration()) {
-                        $callSessions[] = $callSession;
-                    }
-                }
-            }
-        }
-
-        return $callSessions;
-    }
-
-    public function updateSessionsFromForm(array $selectedSessionIds, Contact $contact): void
-    {
-        //Handle the form data
-        foreach ($selectedSessionIds as $sessionId => $status) {
-            /** @var Session $session */
-            $session = $this->find(Session::class, (int)$sessionId);
-
-            //User wants to be in
-            if ($status === '1' && ! $session->isOverbooked() && ! $this->sessionHasContact($session, $contact)) {
-                $participant = new Session\Participant();
-                $participant->setContact($contact);
-                $participant->setSession($session);
-
-                $this->save($participant);
-            }
-
-            //User does not want to be in
-            if ($status === '0' && $this->sessionHasContact($session, $contact)) {
-                /** @var Session\Participant $participant */
-                $participant = $this->entityManager->getRepository(Session\Participant::class)->findOneBy(
-                    [
-                        'session' => $session,
-                        'contact' => $contact,
-                    ]
-                );
-                $this->delete($participant);
-            }
-        }
-    }
-
-    public function sessionHasContact(Session $session, Contact $contact): bool
-    {
-        $participant = $this->entityManager->getRepository(Session\Participant::class)->findOneBy(
-            [
-                'session' => $session,
-                'contact' => $contact,
-            ]
-        );
-
-        return null !== $participant;
-    }
-
-    public function updateSessionParticipants(Session $session, array $data): void
-    {
-        $contacts = $data['contacts'] ?? [];
-
-        //Update the contacts
-        foreach ($contacts as $contactId) {
-            $contact = $this->contactService->findContactById((int)$contactId);
-
-            if (null !== $contact && ! $this->sessionHasContact($session, $contact)) {
-                $participant = new Session\Participant();
-                $participant->setContact($contact);
-                $participant->setSession($session);
-
-                $this->save($participant);
-            }
-        }
-
-        foreach ($session->getParticipant() as $participant) {
-            if (! in_array($participant->getContact()->getId(), $contacts, false)) {
-                $this->delete($participant);
-            }
-        }
     }
 }

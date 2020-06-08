@@ -122,6 +122,11 @@ class Nda extends AbstractEntity
         $this->object = new ArrayCollection();
     }
 
+    public function isApproved(): bool
+    {
+        return null !== $this->dateApproved;
+    }
+
     public function __toString(): string
     {
         if (null === $this->id) {

@@ -66,11 +66,6 @@ final class CallNavigationService
             return;
         }
 
-        //Skip this function it if is not in the project
-        if (strpos($this->routeMatch->getMatchedRouteName(), 'community/event') !== false) {
-            return;
-        }
-
         $pages = $callIndex->getPages();
 
         $calls     = $this->callService->findOpenCall();
@@ -84,11 +79,9 @@ final class CallNavigationService
             $showCalls = $calls->toArray();
         }
 
-
         //This function needs to check if all toolId's are covered. These toolId might come from the tool index, or from an idea
         //First take the toolId from the routeMatch, this is valid when we view the toolId
         $toBeCoveredToolId = (int)$this->routeMatch->getParam('toolId');
-
 
         //When there is an idea, so we have a docRef, this has privilege
         $idea = null;
@@ -99,19 +92,21 @@ final class CallNavigationService
             }
         }
 
-        if (null !== $this->routeMatch->getParam('id')) {
-            $idea = $this->ideaService->findIdeaById((int)$this->routeMatch->getParam('id'));
-            if (null !== $idea) {
-                $toBeCoveredToolId = $idea->getTool()->getId();
+        //Grab the idea, but apply some filtering
+        if (strpos($this->routeMatch->getMatchedRouteName(), 'community/idea') !== false) {
+            if (null !== $this->routeMatch->getParam('id')) {
+                $idea = $this->ideaService->findIdeaById((int)$this->routeMatch->getParam('id'));
+                if (null !== $idea) {
+                    $toBeCoveredToolId = $idea->getTool()->getId();
+                }
             }
         }
-
 
         //We now collect the toolId's which are covered by the call
         $toolIds = [];
         $key     = 0;
         foreach ($showCalls as $key => $activeCall) {
-            $toolId    = $activeCall->hasIdeaTool() ? $activeCall->getIdeaTool()->first()->getId() : '';
+            $toolId    = $activeCall->hasIdeaTool() ? $activeCall->getIdeaTool()->getId() : '';
             $toolIds[] = $toolId;
 
             $callPage = new Mvc();

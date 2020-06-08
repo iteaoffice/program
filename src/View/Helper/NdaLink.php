@@ -66,7 +66,7 @@ final class NdaLink extends AbstractLink
             case 'submit':
                 $text = $this->translator->translate('txt-submit-nda-title');
                 if (null !== $call) {
-                    $text = sprintf($this->translator->translate('txt-submit-nda-for-call-%s-title'), $call->getCall());
+                    $text = sprintf($this->translator->translate('txt-submit-nda-for-call-%s-title'), $call->searchName());
                 }
                 $linkParams = [
                     'icon' => 'far fa-file',
@@ -84,7 +84,7 @@ final class NdaLink extends AbstractLink
             case 'render':
                 $text = $this->translator->translate('txt-render-general-nda-title');
                 if (null !== $call) {
-                    $text = sprintf($this->translator->translate('txt-render-nda-for-call-%s-title'), $call->getCall());
+                    $text = sprintf($this->translator->translate('txt-render-nda-for-call-%s-title'), $call->searchName());
                 }
                 $linkParams = [
                     'icon' => 'far fa-file-pdf',
@@ -95,7 +95,7 @@ final class NdaLink extends AbstractLink
             case 'render-admin':
                 $text = $this->translator->translate('txt-render-general-nda-title');
                 if (null !== $call) {
-                    $text = sprintf($this->translator->translate('txt-render-nda-for-call-%s-title'), $call->getCall());
+                    $text = sprintf($this->translator->translate('txt-render-nda-for-call-%s-title'), $call->searchName());
                 }
                 $linkParams = [
                     'icon' => 'far fa-file-pdf',

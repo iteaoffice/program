@@ -134,6 +134,10 @@ final class NdaController extends AbstractActionController
                     )
                 );
 
+                //Switch the trigger for the update
+                $contact->setTriggerUpdate(true);
+                $this->contactService->save($contact);
+
                 return $this->redirect()->toRoute('community/program/nda/submit');
             }
         }
