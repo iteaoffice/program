@@ -40,6 +40,12 @@
     <dd>{{ translate(call.getLoiRequirement(true)) }}</dd>
     <dt>{{ translate("txt-project-report") }}</dt>
     <dd>{{ translate(call.getProjectReport(true)) }}</dd>
+
+    <dt>{{ translate("txt-call-stages") }}</dt>
+    <dd>{{ translate(call.getCallStagesText()) }}</dd>
+    <dt>{{ translate("txt-po-has-work-packages") }}</dt>
+    <dd>{{ translate(call.getPoHasWorkPackagesText()) }}</dd>
+
     <dt>{{ translate("txt-challenges") }}</dt>
     {% for challenge in generalService.findChallengesByCall(call) %}
         <dd>{{ challengeLink(challenge,'view-admin','name') }}</dd>

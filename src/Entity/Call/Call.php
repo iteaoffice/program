@@ -40,8 +40,6 @@ use function strtoupper;
  * @ORM\Table(name="programcall")
  * @ORM\Entity(repositoryClass="Program\Repository\Call\Call")
  * @Annotation\Name("program_call")
- *
- * @category    Program
  */
 class Call extends AbstractEntity
 {
@@ -58,6 +56,10 @@ class Call extends AbstractEntity
     public const LOI_REQUIRED                          = 1;
     public const PROJECT_REPORT_SINGLE                 = 1;
     public const PROJECT_REPORT_DOUBLE                 = 2;
+    public const ONE_STAGE_CALL                        = 1;
+    public const TWO_STAGE_CALL                        = 2;
+    public const PO_HAS_WORK_PACKAGES                  = 1;
+    public const PO_HAS_NO_WORK_PACKAGES               = 2;
 
     protected static array $activeTemplates = [
         self::INACTIVE => 'txt-inactive-for-projects',
@@ -85,6 +87,16 @@ class Call extends AbstractEntity
     protected static array $projectReportTemplates = [
         self::PROJECT_REPORT_SINGLE => 'txt-project-report-single',
         self::PROJECT_REPORT_DOUBLE => 'txt-project-report-double',
+    ];
+
+    protected static array $callStagesTemplates = [
+        self::ONE_STAGE_CALL => 'txt-one-stage-call',
+        self::TWO_STAGE_CALL => 'txt-two-stage-call',
+    ];
+
+    protected static array $poHasWorkPackagesTemplates = [
+        self::PO_HAS_WORK_PACKAGES    => 'txt-po-has-work-packages',
+        self::PO_HAS_NO_WORK_PACKAGES => 'txt-po-has-no-work-packages',
     ];
 
     /**
@@ -221,6 +233,24 @@ class Call extends AbstractEntity
      */
     private $active;
     /**
+     * @ORM\Column(name="call_stages", type="smallint", nullable=false)
+     * @Annotation\Type("Laminas\Form\Element\Radio")
+     * @Annotation\Attributes({"array":"callStagesTemplates"})
+     * @Annotation\Options({"label":"txt-program-call-call-stages-label","help-block":"txt-program-call-call-stages-help-block"})
+     *
+     * @var int
+     */
+    private $callStages;
+    /**
+     * @ORM\Column(name="po_has_work_packages", type="smallint", nullable=false)
+     * @Annotation\Type("Laminas\Form\Element\Radio")
+     * @Annotation\Attributes({"array":"poHasWorkPackagesTemplates"})
+     * @Annotation\Options({"label":"txt-program-call-po-has-work-packages-label","help-block":"txt-program-call-po-has-work-packages-help-block"})
+     *
+     * @var int
+     */
+    private $poHasWorkPackages;
+    /**
      * @ORM\ManyToOne(targetEntity="Program\Entity\Program", cascade={"persist"}, inversedBy="call")
      * @ORM\JoinColumn(name="program_id", referencedColumnName="program_id", nullable=false)
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
@@ -312,11 +342,13 @@ class Call extends AbstractEntity
         $this->proxyProject   = new Collections\ArrayCollection();
         $this->questionnaires = new Collections\ArrayCollection();
 
-        $this->doaRequirement = self::DOA_REQUIREMENT_PER_PROJECT;
-        $this->ndaRequirement = self::NDA_REQUIREMENT_PER_CALL;
-        $this->loiRequirement = self::LOI_REQUIRED;
-        $this->projectReport  = self::PROJECT_REPORT_SINGLE;
-        $this->active         = self::ACTIVE;
+        $this->doaRequirement    = self::DOA_REQUIREMENT_PER_PROJECT;
+        $this->ndaRequirement    = self::NDA_REQUIREMENT_PER_CALL;
+        $this->loiRequirement    = self::LOI_REQUIRED;
+        $this->projectReport     = self::PROJECT_REPORT_SINGLE;
+        $this->callStages        = self::TWO_STAGE_CALL;
+        $this->poHasWorkPackages = self::PO_HAS_WORK_PACKAGES;
+        $this->active            = self::ACTIVE;
     }
 
     public static function getDoaRequirementTemplates(): array
@@ -344,6 +376,16 @@ class Call extends AbstractEntity
         return self::$projectReportTemplates;
     }
 
+    public static function getCallStagesTemplates(): array
+    {
+        return self::$callStagesTemplates;
+    }
+
+    public static function getPoHasWorkPackagesTemplates(): array
+    {
+        return self::$poHasWorkPackagesTemplates;
+    }
+
     public function requireDoaPerProject(): bool
     {
         return $this->doaRequirement === self::DOA_REQUIREMENT_PER_PROJECT;
@@ -362,6 +404,16 @@ class Call extends AbstractEntity
     public function requireLoi(): bool
     {
         return $this->loiRequirement === self::LOI_REQUIRED;
+    }
+
+    public function poHasWorkPackages(): bool
+    {
+        return $this->poHasWorkPackages === self::PO_HAS_WORK_PACKAGES;
+    }
+
+    public function hasTwoStageProcess(): bool
+    {
+        return $this->callStages === self::TWO_STAGE_CALL;
     }
 
     public function __toString(): string
@@ -723,5 +775,37 @@ class Call extends AbstractEntity
     {
         $this->questionnaires = $questionnaires;
         return $this;
+    }
+
+    public function getCallStages(): int
+    {
+        return $this->callStages;
+    }
+
+    public function setCallStages($callStages): Call
+    {
+        $this->callStages = $callStages;
+        return $this;
+    }
+
+    public function getCallStagesText(): string
+    {
+        return self::$callStagesTemplates[$this->callStages] ?? '';
+    }
+
+    public function getPoHasWorkPackages(): int
+    {
+        return $this->poHasWorkPackages;
+    }
+
+    public function setPoHasWorkPackages($poHasWorkPackages): Call
+    {
+        $this->poHasWorkPackages = $poHasWorkPackages;
+        return $this;
+    }
+
+    public function getPoHasWorkPackagesText(): string
+    {
+        return self::$poHasWorkPackagesTemplates[$this->poHasWorkPackages] ?? '';
     }
 }
