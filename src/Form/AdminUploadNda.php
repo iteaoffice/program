@@ -15,11 +15,11 @@ namespace Program\Form;
 
 use Doctrine\ORM\EntityManager;
 use DoctrineORMModule\Form\Element\EntitySelect;
-use Program\Entity\Call\Call;
 use Laminas\Form;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\File\Extension;
 use Laminas\Validator\File\Size;
+use Program\Entity\Call\Call;
 
 /**
  * Class AdminUploadNda
@@ -127,7 +127,7 @@ final class AdminUploadNda extends Form\Form implements InputFilterProviderInter
                 'required' => false,
             ],
             'file'       => [
-                'required'   => true,
+                'required'   => false,
                 'validators' => [
                     new Size(
                         [

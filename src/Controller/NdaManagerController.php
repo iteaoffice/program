@@ -26,15 +26,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use General\Service\EmailService;
 use General\Service\GeneralService;
-use Program\Controller\Plugin\GetFilter;
-use Program\Controller\Plugin\RenderNda;
-use Program\Entity\Call\Call;
-use Program\Entity\Nda;
-use Program\Entity\NdaObject;
-use Program\Form\AdminUploadNda;
-use Program\Form\NdaApproval;
-use Program\Service\CallService;
-use Program\Service\FormService;
 use Laminas\Http\Response;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -44,6 +35,15 @@ use Laminas\Validator\File\FilesSize;
 use Laminas\Validator\File\MimeType;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use Program\Controller\Plugin\GetFilter;
+use Program\Controller\Plugin\RenderNda;
+use Program\Entity\Call\Call;
+use Program\Entity\Nda;
+use Program\Entity\NdaObject;
+use Program\Form\AdminUploadNda;
+use Program\Form\NdaApproval;
+use Program\Service\CallService;
+use Program\Service\FormService;
 
 use function array_merge_recursive;
 use function sprintf;
@@ -76,19 +76,19 @@ final class NdaManagerController extends AbstractActionController
         TranslatorInterface $translator,
         EntityManager $entityManager
     ) {
-        $this->callService = $callService;
-        $this->formService = $formService;
+        $this->callService    = $callService;
+        $this->formService    = $formService;
         $this->contactService = $contactService;
         $this->generalService = $generalService;
-        $this->adminService = $adminService;
-        $this->emailService = $emailService;
-        $this->translator = $translator;
-        $this->entityManager = $entityManager;
+        $this->adminService   = $adminService;
+        $this->emailService   = $emailService;
+        $this->translator     = $translator;
+        $this->entityManager  = $entityManager;
     }
 
     public function approvalAction(): ViewModel
     {
-        $nda = $this->callService->findNotApprovedNda();
+        $nda  = $this->callService->findNotApprovedNda();
         $form = new NdaApproval($nda);
 
         return new ViewModel(
@@ -112,7 +112,7 @@ final class NdaManagerController extends AbstractActionController
     public function renderAction(): Response
     {
         //Create an empty NDA object
-        $nda = new Nda();
+        $nda     = new Nda();
         $contact = $this->contactService->findContactById((int)$this->params('contactId'));
 
         /** @var Response $response */
@@ -253,7 +253,7 @@ final class NdaManagerController extends AbstractActionController
     public function uploadAction()
     {
         $contact = $this->contactService->findContactById((int)$this->params('contactId'));
-        $calls = $this->callService->findAll(Call::class);
+        $calls   = $this->callService->findAll(Call::class);
 
         if (null === $contact) {
             return $this->notFoundAction();
@@ -275,7 +275,7 @@ final class NdaManagerController extends AbstractActionController
                 $fileData = $form->getData('file');
 
                 $call = $this->callService->findCallById((int)$data['call']);
-                $nda = $this->callService->uploadNda($fileData['file'], $contact, $call);
+                $nda  = $this->callService->uploadNda($fileData['file'], $contact, $call);
 
                 //if the date-signed is set, arrange that
                 $dateSigned = DateTime::createFromFormat('Y-m-d', $data['dateSigned']);
@@ -286,8 +286,9 @@ final class NdaManagerController extends AbstractActionController
 
                 if ($data['approve'] === '1') {
                     $nda->setDateApproved(new DateTime());
-                    $nda->setApprover($this->identity());
+                    $nda->setApprover($this->contactService->findContactById(1));
 
+                    $this->callService->save($nda);
                     $this->adminService->flushPermitsByContact($contact);
                 }
 
@@ -295,7 +296,7 @@ final class NdaManagerController extends AbstractActionController
                     sprintf($this->translator->translate('txt-nda-has-been-uploaded-successfully'))
                 );
 
-                return $this->redirect()->toRoute('zfcadmin/contact/view/general', ['id' => $contact->getId()]);
+                return $this->redirect()->toRoute('zfcadmin/contact/view/legal', ['id' => $contact->getId()]);
             }
         }
 
@@ -311,7 +312,7 @@ final class NdaManagerController extends AbstractActionController
     public function approveAction(): JsonModel
     {
         $dateSigned = $this->params()->fromPost('dateSigned');
-        $sendEmail = $this->params()->fromPost('sendEmail', 0);
+        $sendEmail  = $this->params()->fromPost('sendEmail', 0);
 
         if (empty($dateSigned)) {
             return new JsonModel(
@@ -345,18 +346,28 @@ final class NdaManagerController extends AbstractActionController
          * Send the email tot he user
          */
         if ($sendEmail === 'true') {
-            $this->emailService->setWebInfo('/program/nda/approved');
-            $this->emailService->addTo($nda->getContact());
-            $this->emailService->setTemplateVariable('filename', $nda->parseFileName());
-            $this->emailService->setTemplateVariable('date_signed', $nda->getDateSigned()->format('d-m-Y'));
-            if (! $nda->getCall()->isEmpty()) {
-                $this->emailService->setTemplateVariable('call', (string)$nda->getCall()->first());
+            $email = $this->emailService->createNewWebInfoEmailBuilder('/program/nda/approved');
+
+            $email->addContactTo($nda->getContact());
+            $email->setTemplateVariable('has_idea_tool', false);
+            $email->setTemplateVariable('has_call', false);
+
+            if ($nda->hasCall()) {
+                /** @var Call $call */
+                $call = $nda->getCall()->first();
+                $email->setTemplateVariable('has_call', true);
+                $email->setTemplateVariable('call', $call);
+
+                if ($call->hasIdeaTool()) {
+                    $email->setTemplateVariable('has_idea_tool', true);
+                    $email->addDeeplink('community/idea/tool/redirect', 'project_idea_tool_link', $nda->getContact(), null, $call->getIdeaTool()->getId());
+                }
             }
 
-            $this->emailService->send();
+            $email->addDeeplink('community/roadmap/index', 'living_roadmap_link', $nda->getContact());
+            $this->emailService->sendBuilder($email);
         }
 
-        //Update the
         return new JsonModel(
             [
                 'result' => 'success',

@@ -251,23 +251,29 @@ class CallService extends AbstractService
 
     public function uploadNda(array $file, Contact $contact, Call $call = null): Nda
     {
-        $ndaObject = new NdaObject();
-        $ndaObject->setObject(file_get_contents($file['tmp_name']));
         $nda = new Nda();
         $nda->setContact($contact);
         if (null !== $call) {
             $nda->setCall([$call]);
         }
-        $nda->setSize($file['size']);
 
-        $fileTypeValidator = new MimeType();
-        $fileTypeValidator->isValid($file);
-        $nda->setContentType($this->generalService->findContentTypeByContentTypeName($fileTypeValidator->type));
+        if ($file['error'] === 0) {
+            $ndaObject = new NdaObject();
+            $ndaObject->setObject(file_get_contents($file['tmp_name']));
 
-        $ndaObject->setNda($nda);
-        $this->save($ndaObject);
+            $nda->setSize($file['size']);
 
-        return $ndaObject->getNda();
+            $fileTypeValidator = new MimeType();
+            $fileTypeValidator->isValid($file);
+            $nda->setContentType($this->generalService->findContentTypeByContentTypeName($fileTypeValidator->type));
+
+            $ndaObject->setNda($nda);
+            $this->save($ndaObject);
+        } else {
+            $this->save($nda);
+        }
+
+        return $nda;
     }
 
     public function submitNda(Contact $contact, Call $call = null): Nda

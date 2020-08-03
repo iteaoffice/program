@@ -43,6 +43,7 @@ final class RenderNda extends AbstractPlugin
     public function renderForCall(Nda $nda): ProgramPdf
     {
         $pdf = new ProgramPdf();
+        $pdf->SetFont('freesans');
         $pdf->setTemplate($this->moduleOptions->getNdaTemplate());
         $pdf->AddPage();
 
@@ -107,6 +108,7 @@ final class RenderNda extends AbstractPlugin
     public function render(Nda $nda): ProgramPdf
     {
         $pdf = new ProgramPdf();
+        $pdf->SetFont('freesans');
         $pdf->setTemplate($this->moduleOptions->getNdaTemplate());
         $pdf->AddPage();
 

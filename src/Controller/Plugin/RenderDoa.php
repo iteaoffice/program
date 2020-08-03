@@ -43,6 +43,7 @@ final class RenderDoa extends AbstractPlugin
     public function __invoke(Doa $doa): ProgramPdf
     {
         $pdf = new ProgramPdf();
+        $pdf->SetFont('freesans');
         $pdf->setTemplate($this->moduleOptions->getDoaTemplate());
         $pdf->AddPage();
         $pdf->SetFontSize(9);
