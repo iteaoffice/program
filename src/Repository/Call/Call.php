@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Program\Repository\Call;
 
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineExtensions\Query\Mysql\Year;
@@ -85,12 +86,12 @@ final class Call extends EntityRepository
             case Type::TYPE_PO:
                 $queryBuilder->andWhere('program_entity_call_call.poOpenDate < :today')
                     ->andWhere('program_entity_call_call.poCloseDate > :today')
-                    ->setParameter('today', $today);
+                    ->setParameter('today', $today, Types::DATETIME_MUTABLE);
                 break;
             case Type::TYPE_FPP:
                 $queryBuilder->andWhere('program_entity_call_call.fppOpenDate < :today')
                     ->andWhere('program_entity_call_call.fppCloseDate > :today')
-                    ->setParameter('today', $today);
+                    ->setParameter('today', $today, Types::DATETIME_MUTABLE);
                 break;
         }
 
@@ -113,7 +114,7 @@ final class Call extends EntityRepository
 
         $queryBuilder->andWhere('program_entity_call_call.poOpenDate < :today')
             ->andWhere('program_entity_call_call.fppCloseDate > :today')
-            ->setParameter('today', $today);
+            ->setParameter('today', $today, Types::DATETIME_MUTABLE);
 
         $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::ASC);
 
@@ -135,7 +136,7 @@ final class Call extends EntityRepository
         $today = new \DateTime();
 
         $queryBuilder->andWhere('program_entity_call_call.poOpenDate > :today')
-            ->setParameter('today', $today);
+            ->setParameter('today', $today, Types::DATETIME_MUTABLE);
 
         $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::ASC);
 
@@ -167,7 +168,7 @@ final class Call extends EntityRepository
         $queryBuilder->select('program_entity_call_call');
         $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
         $queryBuilder->andWhere('program_entity_call_call.poOpenDate < :poOpenDate');
-        $queryBuilder->setParameter('poOpenDate', $call->getPoOpenDate());
+        $queryBuilder->setParameter('poOpenDate', $call->getPoOpenDate(), Types::DATETIME_MUTABLE);
         $queryBuilder->setMaxResults(1);
         $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::DESC);
 
@@ -180,7 +181,7 @@ final class Call extends EntityRepository
         $queryBuilder->select('program_entity_call_call');
         $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
         $queryBuilder->andWhere('program_entity_call_call.poOpenDate > :poOpenDate');
-        $queryBuilder->setParameter('poOpenDate', $call->getPoOpenDate());
+        $queryBuilder->setParameter('poOpenDate', $call->getPoOpenDate(), Types::DATETIME_MUTABLE);
         $queryBuilder->setMaxResults(1);
         $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::ASC);
 
@@ -202,7 +203,7 @@ final class Call extends EntityRepository
 
         //Filter here on the active calls
         $queryBuilder->andWhere('program_entity_call_call.active = :active');
-        $queryBuilder->setParameter('active', \Program\Entity\Call\Call::ACTIVE);
+        $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
 
         if ($program !== null) {
             $queryBuilder->andWhere('program_entity_call_call.program = :program')->setParameter('program', $program);
