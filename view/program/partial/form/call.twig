@@ -3,7 +3,7 @@
 {% do headLink().appendStylesheet('assets/css/jquery.timepicker.css') %}
 {% do headLink().appendStylesheet(
     '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css'
-    ) %}
+) %}
 
 
 {% do form.prepare() %}
@@ -28,6 +28,7 @@
 {{ ztbformelement(call.get('projectReport')) }}
 {{ ztbformelement(call.get('callStages')) }}
 {{ ztbformelement(call.get('poHasWorkPackages')) }}
+{{ ztbformelement(call.get('hasOnlineWorkPackages')) }}
 
 {{ formelement(form.get('csrf')) }}
 

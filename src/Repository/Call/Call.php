@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Program\Repository\Call;
 
+use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityRepository;
@@ -21,6 +22,9 @@ use DoctrineExtensions\Query\Mysql\Year;
 use Program\Entity;
 use Project\Entity\Project;
 use Project\Entity\Version\Type;
+
+use function count;
+use function in_array;
 
 /**
  * @category    Program
@@ -37,7 +41,7 @@ final class Call extends EntityRepository
         $direction = 'DESC';
         if (
             isset($filter['direction'])
-            && \in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)
+            && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)
         ) {
             $direction = strtoupper($filter['direction']);
         }
@@ -81,7 +85,7 @@ final class Call extends EntityRepository
         $queryBuilder->andWhere('program_entity_call_call.active = :active');
         $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
 
-        $today = new \DateTime();
+        $today = new DateTime();
         switch ($type) {
             case Type::TYPE_PO:
                 $queryBuilder->andWhere('program_entity_call_call.poOpenDate < :today')
@@ -110,7 +114,7 @@ final class Call extends EntityRepository
         $queryBuilder->andWhere('program_entity_call_call.active = :active');
         $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
 
-        $today = new \DateTime();
+        $today = new DateTime();
 
         $queryBuilder->andWhere('program_entity_call_call.poOpenDate < :today')
             ->andWhere('program_entity_call_call.fppCloseDate > :today')
@@ -133,7 +137,7 @@ final class Call extends EntityRepository
         $queryBuilder->andWhere('program_entity_call_call.active = :active');
         $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
 
-        $today = new \DateTime();
+        $today = new DateTime();
 
         $queryBuilder->andWhere('program_entity_call_call.poOpenDate > :today')
             ->setParameter('today', $today, Types::DATETIME_MUTABLE);
@@ -257,14 +261,14 @@ final class Call extends EntityRepository
         $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::ASC);
         $queryBuilder->setMaxResults(1);
 
-        /** @var \DateTime $firstPoOpen */
+        /** @var DateTime $firstPoOpen */
         $firstPoOpen = $queryBuilder->getQuery()->useQueryCache(true)->useResultCache(true)->getResult();
 
-        if (\count($firstPoOpen) === 0) {
+        if (count($firstPoOpen) === 0) {
             return 0;
         }
 
-        return (int)$firstPoOpen[0]['poOpenDate']->diff(new \DateTime())->y;
+        return (int)$firstPoOpen[0]['poOpenDate']->diff(new DateTime())->y;
     }
 
     public function findMinAndMaxYearInCall(Entity\Call\Call $call)

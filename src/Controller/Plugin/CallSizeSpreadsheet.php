@@ -99,7 +99,6 @@ final class CallSizeSpreadsheet extends AbstractPlugin
     private bool $splitPerYear = false;
     private bool $includeProjectLeaderData = false;
     private bool $includeTotals = false;
-    private int $output = Statistics::OUTPUT_PARTNERS;
 
     private array $header = [];
     private array $rows = [];
@@ -176,8 +175,6 @@ final class CallSizeSpreadsheet extends AbstractPlugin
         if (in_array(Statistics::INCLUDE_PROJECT_LEADER_DATA, $include, false)) {
             $this->includeProjectLeaderData = true;
         }
-
-        $this->output = $output;
 
         $this->programs = $programs;
         $this->calls    = $calls;
@@ -257,6 +254,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
         $header[$column++] = $this->translator->translate('txt-partner-country');
         $header[$column++] = $this->translator->translate('txt-partner-type');
         $header[$column++] = $this->translator->translate('txt-partner-active');
+        $header[$column++] = $this->translator->translate('txt-partner-self-funded');
 
         $header[$column++] = $this->translator->translate('txt-label-date');
         $header[$column++] = $this->translator->translate('txt-official-start-date');
@@ -507,6 +505,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                         $projectColumn[$column++] = $affiliation->getOrganisation()->getCountry()->getIso3();
                         $projectColumn[$column++] = $affiliation->getOrganisation()->getType()->getDescription();
                         $projectColumn[$column++] = $affiliation->isActive() ? 'Y' : 'N';
+                        $projectColumn[$column++] = $affiliation->isSelfFunded() ? 'Y' : 'N';
 
                         if (null !== $fullProjectProposal && $fullProjectProposal->isReviewed() && $fullProjectProposal->isApproved()) {
                             $this->dateColumns[]      = $column;
@@ -702,6 +701,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                     $projectColumn[$column++] = $affiliation->getOrganisation()->getCountry()->getIso3();
                     $projectColumn[$column++] = $affiliation->getOrganisation()->getType()->getDescription();
                     $projectColumn[$column++] = $affiliation->isActive() ? 'Y' : 'N';
+                    $projectColumn[$column++] = $affiliation->isSelfFunded() ? 'Y' : 'N';
 
                     if (null !== $fullProjectProposal && $fullProjectProposal->isReviewed() && $fullProjectProposal->isApproved()) {
                         $this->dateColumns[]      = $column;

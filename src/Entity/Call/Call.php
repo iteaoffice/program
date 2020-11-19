@@ -60,6 +60,8 @@ class Call extends AbstractEntity
     public const TWO_STAGE_CALL                        = 2;
     public const PO_HAS_WORK_PACKAGES                  = 1;
     public const PO_HAS_NO_WORK_PACKAGES               = 2;
+    public const HAS_ONLINE_WORK_PACKAGES              = 1;
+    public const HAS_NO_ONLINE_WORK_PACKAGES           = 2;
 
     protected static array $activeTemplates = [
         self::INACTIVE => 'txt-inactive-for-projects',
@@ -97,6 +99,11 @@ class Call extends AbstractEntity
     protected static array $poHasWorkPackagesTemplates = [
         self::PO_HAS_WORK_PACKAGES    => 'txt-po-has-work-packages',
         self::PO_HAS_NO_WORK_PACKAGES => 'txt-po-has-no-work-packages',
+    ];
+
+    protected static array $hasOnlineWorkPackageTemplates = [
+        self::HAS_ONLINE_WORK_PACKAGES    => 'txt-has-online-work-package-deliverables-and-tasks',
+        self::HAS_NO_ONLINE_WORK_PACKAGES => 'txt-has-no-online-work-package-deliverables-and-tasks',
     ];
 
     /**
@@ -251,6 +258,15 @@ class Call extends AbstractEntity
      */
     private $poHasWorkPackages;
     /**
+     * @ORM\Column(name="has_online_work_packages", type="smallint", nullable=false)
+     * @Annotation\Type("Laminas\Form\Element\Radio")
+     * @Annotation\Attributes({"array":"hasOnlineWorkPackageTemplates"})
+     * @Annotation\Options({"label":"txt-program-call-has-online-work-packages-label","help-block":"txt-program-call-has-online-work-packages-help-block"})
+     *
+     * @var int
+     */
+    private $hasOnlineWorkPackages;
+    /**
      * @ORM\ManyToOne(targetEntity="Program\Entity\Program", cascade={"persist"}, inversedBy="call")
      * @ORM\JoinColumn(name="program_id", referencedColumnName="program_id", nullable=false)
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
@@ -332,23 +348,23 @@ class Call extends AbstractEntity
 
     public function __construct()
     {
-        $this->publication    = new Collections\ArrayCollection();
-        $this->project        = new Collections\ArrayCollection();
-        $this->nda            = new Collections\ArrayCollection();
-        $this->calendar       = new Collections\ArrayCollection();
-        $this->doa            = new Collections\ArrayCollection();
-        $this->callCountry    = new Collections\ArrayCollection();
-        $this->challenge      = new Collections\ArrayCollection();
-        $this->proxyProject   = new Collections\ArrayCollection();
-        $this->questionnaires = new Collections\ArrayCollection();
-
-        $this->doaRequirement    = self::DOA_REQUIREMENT_PER_PROJECT;
-        $this->ndaRequirement    = self::NDA_REQUIREMENT_PER_CALL;
-        $this->loiRequirement    = self::LOI_REQUIRED;
-        $this->projectReport     = self::PROJECT_REPORT_SINGLE;
-        $this->callStages        = self::TWO_STAGE_CALL;
-        $this->poHasWorkPackages = self::PO_HAS_WORK_PACKAGES;
-        $this->active            = self::ACTIVE;
+        $this->publication           = new Collections\ArrayCollection();
+        $this->project               = new Collections\ArrayCollection();
+        $this->nda                   = new Collections\ArrayCollection();
+        $this->calendar              = new Collections\ArrayCollection();
+        $this->doa                   = new Collections\ArrayCollection();
+        $this->callCountry           = new Collections\ArrayCollection();
+        $this->challenge             = new Collections\ArrayCollection();
+        $this->proxyProject          = new Collections\ArrayCollection();
+        $this->questionnaires        = new Collections\ArrayCollection();
+        $this->doaRequirement        = self::DOA_REQUIREMENT_PER_PROJECT;
+        $this->ndaRequirement        = self::NDA_REQUIREMENT_PER_CALL;
+        $this->loiRequirement        = self::LOI_REQUIRED;
+        $this->projectReport         = self::PROJECT_REPORT_SINGLE;
+        $this->callStages            = self::TWO_STAGE_CALL;
+        $this->poHasWorkPackages     = self::PO_HAS_WORK_PACKAGES;
+        $this->hasOnlineWorkPackages = self::HAS_ONLINE_WORK_PACKAGES;
+        $this->active                = self::ACTIVE;
     }
 
     public static function getDoaRequirementTemplates(): array
@@ -386,6 +402,11 @@ class Call extends AbstractEntity
         return self::$poHasWorkPackagesTemplates;
     }
 
+    public static function getHasOnlineWorkPackageTemplates(): ?array
+    {
+        return self::$hasOnlineWorkPackageTemplates;
+    }
+
     public function requireDoaPerProject(): bool
     {
         return $this->doaRequirement === self::DOA_REQUIREMENT_PER_PROJECT;
@@ -414,6 +435,11 @@ class Call extends AbstractEntity
     public function hasTwoStageProcess(): bool
     {
         return $this->callStages === self::TWO_STAGE_CALL;
+    }
+
+    public function hasOnlineWorkPackages(): bool
+    {
+        return $this->hasOnlineWorkPackages === self::HAS_ONLINE_WORK_PACKAGES;
     }
 
     public function __toString(): string
@@ -807,5 +833,21 @@ class Call extends AbstractEntity
     public function getPoHasWorkPackagesText(): string
     {
         return self::$poHasWorkPackagesTemplates[$this->poHasWorkPackages] ?? '';
+    }
+
+    public function getHasOnlineWorkPackages(): ?int
+    {
+        return $this->hasOnlineWorkPackages;
+    }
+
+    public function setHasOnlineWorkPackages(?int $hasOnlineWorkPackages): Call
+    {
+        $this->hasOnlineWorkPackages = $hasOnlineWorkPackages;
+        return $this;
+    }
+
+    public function getHasOnlineWorkPackagesText(): string
+    {
+        return self::$hasOnlineWorkPackageTemplates[$this->hasOnlineWorkPackages] ?? '';
     }
 }

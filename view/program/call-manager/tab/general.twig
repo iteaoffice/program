@@ -45,6 +45,8 @@
     <dd>{{ translate(call.getCallStagesText()) }}</dd>
     <dt>{{ translate("txt-po-has-work-packages") }}</dt>
     <dd>{{ translate(call.getPoHasWorkPackagesText()) }}</dd>
+    <dt>{{ translate("txt-has-online-work-packages") }}</dt>
+    <dd>{{ translate(call.getHasOnlineWorkPackagesText()) }}</dd>
 
     <dt>{{ translate("txt-challenges") }}</dt>
     {% for challenge in generalService.findChallengesByCall(call) %}

@@ -20,7 +20,7 @@
 
                 <td>
                     {% for version in versionOverview[project.id][year] %}
-                        {{ version.cost|parse_cost }} ({{ versionLink(version.version,'view-admin','type') }}) {% if not loop.last %} &middot; {% endif %}
+                        {{ version.cost|parse_cost }} ({{ versionLink(version.version,'general-admin','type') }}) {% if not loop.last %} &middot; {% endif %}
                     {% endfor %}
                 </td>
             {% endfor %}

@@ -132,7 +132,7 @@ final class AdminUploadNda extends Form\Form implements InputFilterProviderInter
                     new Size(
                         [
                             'min' => '1kB',
-                            'max' => '8MB',
+                            'max' => '16MB',
                         ]
                     ),
                     new Extension(
