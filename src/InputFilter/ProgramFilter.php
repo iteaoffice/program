@@ -91,6 +91,12 @@ final class ProgramFilter extends InputFilter
                 'required' => false,
             ]
         );
+        $inputFilter->add(
+            [
+                'name'     => 'cluster',
+                'required' => true,
+            ]
+        );
         $this->add($inputFilter, 'program_entity_program');
     }
 }

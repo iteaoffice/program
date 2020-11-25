@@ -19,6 +19,13 @@ use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use General\Service\CountryService;
 use General\Service\GeneralService;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\Paginator\Paginator;
+use Laminas\View\Model\ViewModel;
 use Program\Controller\Plugin\CallSizeSpreadsheet;
 use Program\Controller\Plugin\CreateCallFundingOverview;
 use Program\Controller\Plugin\CreateFundingDownload;
@@ -32,13 +39,6 @@ use Project\Entity\Project;
 use Project\Entity\Version\Version;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
-use Laminas\Http\Request;
-use Laminas\Http\Response;
-use Laminas\I18n\Translator\TranslatorInterface;
-use Laminas\Mvc\Controller\AbstractActionController;
-use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Laminas\Paginator\Paginator;
-use Laminas\View\Model\ViewModel;
 
 /**
  * @method FlashMessenger flashMessenger()
@@ -69,21 +69,22 @@ final class CallManagerController extends AbstractActionController
         CountryService $countryService,
         EntityManager $entityManager,
         TranslatorInterface $translator
-    ) {
-        $this->callService = $callService;
-        $this->formService = $formService;
+    )
+    {
+        $this->callService        = $callService;
+        $this->formService        = $formService;
         $this->affiliationService = $affiliationService;
-        $this->projectService = $projectService;
-        $this->versionService = $versionService;
-        $this->generalService = $generalService;
-        $this->countryService = $countryService;
-        $this->entityManager = $entityManager;
-        $this->translator = $translator;
+        $this->projectService     = $projectService;
+        $this->versionService     = $versionService;
+        $this->generalService     = $generalService;
+        $this->countryService     = $countryService;
+        $this->entityManager      = $entityManager;
+        $this->translator         = $translator;
     }
 
     public function listAction(): ViewModel
     {
-        $page = $this->params()->fromRoute('page', 1);
+        $page         = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getProgramFilter();
 
         $callQuery = $this->callService->findFiltered(Call::class, $filterPlugin->getFilter());
@@ -132,7 +133,7 @@ final class CallManagerController extends AbstractActionController
     {
         /** @var Request $request */
         $request = $this->getRequest();
-        $data = $request->getPost()->toArray();
+        $data    = $request->getPost()->toArray();
 
         $form = $this->formService->prepare(Call::class, $data);
         $form->remove('delete');
@@ -147,12 +148,7 @@ final class CallManagerController extends AbstractActionController
                 $call = $form->getData();
                 $this->callService->save($call);
 
-                $this->flashMessenger()->addSuccessMessage(
-                    sprintf(
-                        $this->translator->translate('txt-call-%s-has-been-created-successfully'),
-                        $call
-                    )
-                );
+                $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-program-call-has-been-updated-successfully")));
 
                 return $this->redirect()->toRoute('zfcadmin/call/view', ['id' => $call->getId()]);
             }
@@ -165,28 +161,37 @@ final class CallManagerController extends AbstractActionController
     {
         /** @var Request $request */
         $request = $this->getRequest();
+
+        /** @var Call $call */
         $call = $this->callService->find(Call::class, (int)$this->params('id'));
         $data = $request->getPost()->toArray();
         $form = $this->formService->prepare($call, $data);
 
+        if (!$this->callService->canDeleteCall($call)) {
+            $form->remove('delete');
+        }
+
         if ($request->isPost()) {
             if (isset($data['cancel'])) {
-                return $this->redirect()->toRoute('zfcadmin/program/vat/call/list');
+                return $this->redirect()->toRoute('zfcadmin/call/list');
+            }
+
+            if (isset($data['delete']) && $this->callService->canDeleteCall($call)) {
+
+                $this->callService->delete($call);
+
+                $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-program-call-has-been-deleted-successfully")));
+
+                return $this->redirect()->toRoute('zfcadmin/program/list');
             }
 
             if ($form->isValid()) {
                 /** @var Call $call */
                 $call = $form->getData();
 
-                /** @var Call $call */
                 $this->callService->save($call);
 
-                $this->flashMessenger()->addSuccessMessage(
-                    sprintf(
-                        $this->translator->translate('txt-call-%s-has-been-updated-successfully'),
-                        $call
-                    )
-                );
+                $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-program-call-has-been-updated-successfully")));
 
                 return $this->redirect()->toRoute('zfcadmin/call/view', ['id' => $call->getId()]);
             }
@@ -205,11 +210,11 @@ final class CallManagerController extends AbstractActionController
 
         // Only add the active projects
         $activeProjects = $this->projectService->findProjectsByCall($call, ProjectService::WHICH_ALL);
-        $projects = $activeProjects->getQuery()->getResult();
+        $projects       = $activeProjects->getQuery()->getResult();
 
         // Find the span of the call, because otherwise the matrix will be filled with numbers of year before the call
-        $minMaxYearCall = $this->callService->findMinAndMaxYearInCall($call);
-        $yearSpan = range($minMaxYearCall->minYear, $minMaxYearCall->maxYear);
+        $minMaxYearCall  = $this->callService->findMinAndMaxYearInCall($call);
+        $yearSpan        = range($minMaxYearCall->minYear, $minMaxYearCall->maxYear);
         $versionOverview = [];
 
         /** @var Project $project */
@@ -252,15 +257,15 @@ final class CallManagerController extends AbstractActionController
     {
         /** @var Request $request */
         $request = $this->getRequest();
-        $callId = (int)$this->params('id', $this->callService->findFirstAndLastCall()->lastCall->getId());
-        $call = $this->callService->findCallById($callId);
+        $callId  = (int)$this->params('id', $this->callService->findFirstAndLastCall()->lastCall->getId());
+        $call    = $this->callService->findCallById($callId);
 
         if (null === $call) {
             return $this->notFoundAction();
         }
 
         $minMaxYear = $this->callService->findMinAndMaxYearInCall($call);
-        $year = $this->params('year', $minMaxYear->maxYear);
+        $year       = $this->params('year', $minMaxYear->maxYear);
 
         /*
          * The form can be used to overrule some parameters. We therefore need to check if the form is set

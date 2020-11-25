@@ -13,16 +13,13 @@ declare(strict_types=1);
 
 namespace Program\Service;
 
-use Contact\Entity\Contact;
-use Contact\Service\ContactService;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
-use Event\Entity\Meeting\Meeting;
 use General\Entity\Country;
 use General\Search\Service\CountrySearchService;
 use Organisation\Entity\Organisation;
 use Organisation\Search\Service\OrganisationSearchService;
 use Program\Entity\Call\Call;
-use Project\Entity\Idea\Tool\Session;
 use Program\Entity\Doa;
 use Program\Entity\Funder;
 use Program\Entity\Program;
@@ -39,26 +36,51 @@ class ProgramService extends AbstractService
     private OrganisationSearchService $organisationSearchService;
     private ProjectSearchService $projectSearchService;
     private CountrySearchService $countrySearchService;
-    private ContactService $contactService;
 
     public function __construct(
         EntityManager $entityManager,
         OrganisationSearchService $organisationSearchService,
         ProjectSearchService $projectSearchService,
-        CountrySearchService $countrySearchService,
-        ContactService $contactService
-    ) {
+        CountrySearchService $countrySearchService
+    )
+    {
         parent::__construct($entityManager);
 
         $this->organisationSearchService = $organisationSearchService;
         $this->projectSearchService      = $projectSearchService;
         $this->countrySearchService      = $countrySearchService;
-        $this->contactService            = $contactService;
     }
 
     public function findProgramById(int $id): ?Program
     {
         return $this->entityManager->getRepository(Program::class)->find($id);
+    }
+
+    public function canDeleteProgram(Program $program): bool
+    {
+        $cannotDeleteProgramReasons = [];
+
+        if (!$program->getCall()->isEmpty()) {
+            $cannotDeleteProgramReasons[] = 'This programme has calls';
+        }
+
+        if (!$program->getContactDnd()->isEmpty()) {
+            $cannotDeleteProgramReasons[] = 'This programme has DND';
+        }
+
+        if (!$program->getParentDoa()->isEmpty()) {
+            $cannotDeleteProgramReasons[] = 'This programme has Parent DOAs';
+        }
+
+        if (!$program->getParentInvoice()->isEmpty()) {
+            $cannotDeleteProgramReasons[] = 'This programme has Parent Invoices';
+        }
+
+        if (!$program->getParentInvoiceExtra()->isEmpty()) {
+            $cannotDeleteProgramReasons[] = 'This programme has Parent Extra Invoices';
+        }
+
+        return count($cannotDeleteProgramReasons) === 0;
     }
 
     public function findProgramByName(string $name): ?Program
@@ -68,7 +90,7 @@ class ProgramService extends AbstractService
 
     public function findLastProgram(): ?Program
     {
-        return $this->entityManager->getRepository(Program::class)->findOneBy([], ['id' => 'DESC']);
+        return $this->entityManager->getRepository(Program::class)->findOneBy([], ['id' => Criteria::DESC]);
     }
 
     public function findMinAndMaxYearInProgram(Program $program): stdClass
@@ -99,16 +121,6 @@ class ProgramService extends AbstractService
     public function findFunderByCountry(Country $country): array
     {
         return $this->entityManager->getRepository(Funder::class)
-            ->findBy(['country' => $country], ['position' => 'ASC']);
-    }
-
-    public function findProgramDoaByProgramAndOrganisation(Program $program, Organisation $organisation): ?Doa
-    {
-        return $this->entityManager->getRepository(Doa::class)->findOneBy(
-            [
-                'program'      => $program,
-                'organisation' => $organisation,
-            ]
-        );
+            ->findBy(['country' => $country], ['position' => Criteria::ASC]);
     }
 }

@@ -20,8 +20,8 @@ final class CallStatus
     public function __construct(?DateTime $referenceDate, string $result, ?Type $versionType)
     {
         $this->referenceDate = $referenceDate;
-        $this->result = $result;
-        $this->versionType = $versionType;
+        $this->result        = $result;
+        $this->versionType   = $versionType;
     }
 
     public function getReferenceDate(): ?DateTime

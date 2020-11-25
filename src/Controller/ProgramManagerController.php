@@ -1,7 +1,7 @@
 <?php
 
 /**
-*
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
@@ -13,27 +13,21 @@ declare(strict_types=1);
 
 namespace Program\Controller;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
-use Program\Controller\Plugin\CallSizeSpreadsheet;
-use Program\Controller\Plugin\GetFilter;
-use Program\Entity\Call\Call;
-use Program\Entity\Program;
-use Program\Form\ProgramFilter;
-use Program\Form\SizeSelect;
-use Program\Service\CallService;
-use Program\Service\FormService;
-use Program\Service\ProgramService;
-use Project\Entity\Project;
-use Project\Service\ProjectService;
-use Project\Service\VersionService;
 use Laminas\Http\Response;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\Paginator\Paginator;
 use Laminas\View\Model\ViewModel;
+use Program\Controller\Plugin\CallSizeSpreadsheet;
+use Program\Controller\Plugin\GetFilter;
+use Program\Entity\Call\Call;
+use Program\Entity\Program;
+use Program\Form\ProgramFilter;
+use Program\Service\FormService;
+use Program\Service\ProgramService;
 
 /**
  * @method FlashMessenger flashMessenger()
@@ -43,36 +37,22 @@ use Laminas\View\Model\ViewModel;
 final class ProgramManagerController extends AbstractActionController
 {
     private ProgramService $programService;
-    private CallService $callService;
-    private ProjectService $projectService;
-    private VersionService $versionService;
     private FormService $formService;
-    private EntityManager $entityManager;
     private TranslatorInterface $translator;
 
-    public function __construct(
-        ProgramService $programService,
-        CallService $callService,
-        ProjectService $projectService,
-        VersionService $versionService,
-        FormService $formService,
-        EntityManager $entityManager,
-        TranslatorInterface $translator
-    ) {
+    public function __construct(ProgramService $programService, FormService $formService, TranslatorInterface $translator)
+    {
         $this->programService = $programService;
-        $this->callService = $callService;
-        $this->projectService = $projectService;
-        $this->versionService = $versionService;
-        $this->formService = $formService;
-        $this->entityManager = $entityManager;
-        $this->translator = $translator;
+        $this->formService    = $formService;
+        $this->translator     = $translator;
     }
+
 
     public function listAction(): ViewModel
     {
-        $page = $this->params()->fromRoute('page', 1);
+        $page         = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getProgramFilter();
-        $query = $this->programService->findFiltered(Program::class, $filterPlugin->getFilter());
+        $query        = $this->programService->findFiltered(Program::class, $filterPlugin->getFilter());
 
         $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($query, false)));
         $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 20);
@@ -108,7 +88,7 @@ final class ProgramManagerController extends AbstractActionController
         $data = $this->getRequest()->getPost()->toArray();
 
         $program = new Program();
-        $form = $this->formService->prepare($program, $data);
+        $form    = $this->formService->prepare($program, $data);
         $form->remove('delete');
 
         if ($this->getRequest()->isPost()) {
@@ -143,11 +123,23 @@ final class ProgramManagerController extends AbstractActionController
         }
 
         $data = $this->getRequest()->getPost()->toArray();
-
         $form = $this->formService->prepare($program, $data);
+
+        if (!$this->programService->canDeleteProgram($program)) {
+            $form->remove('delete');
+        }
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
+                return $this->redirect()->toRoute('zfcadmin/program/view', ['id' => $program->getId()]);
+            }
+
+            if (isset($data['delete']) && $this->programService->canDeleteProgram($program)) {
+
+                $this->programService->delete($program);
+
+                $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-program-has-been-deleted-successfully")));
+
                 return $this->redirect()->toRoute('zfcadmin/program/list');
             }
 
@@ -155,8 +147,10 @@ final class ProgramManagerController extends AbstractActionController
                 /** @var Program $program */
                 $program = $form->getData();
 
-                /** @var Program $program */
                 $this->programService->save($program);
+
+                $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-program-has-been-updated-successfully")));
+
                 return $this->redirect()->toRoute(
                     'zfcadmin/program/view',
                     [

@@ -4,6 +4,14 @@
     <dd>{{ call.id }}</dd>
     <dt>{{ translate("txt-program") }}</dt>
     <dd>{{ programLink(call.program,'view','name') }}</dd>
+
+    <dt>{{ translate("txt-clusters") }}</dt>
+    {% for cluster in call.cluster %}
+        <dd>{{ clusterLink(cluster,'view','name') }}</dd>
+    {% else %}
+        <dd>{{ translate("txt-no-clusters-connected") }}</dd>
+    {% endfor %}
+
     <dt>{{ translate("txt-call") }}</dt>
     <dd>{{ call }}</dd>
     <dt>{{ translate("txt-po-open-date") }}</dt>

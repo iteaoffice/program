@@ -25,9 +25,11 @@ use Project\Entity\Version\Type;
 
 use function count;
 use function in_array;
+use Project\Entity\Cost\Cost;
 
 /**
- * @category    Program
+ * Class Call
+ * @package Program\Repository\Call
  */
 final class Call extends EntityRepository
 {
@@ -64,9 +66,6 @@ final class Call extends EntityRepository
                 break;
             case 'fpp-close-date':
                 $queryBuilder->addOrderBy('program_entity_call_call.fppCloseDate', $direction);
-                break;
-            case 'fpp-program-date':
-                $queryBuilder->addOrderBy('program_entity_program.program', $direction);
                 break;
             default:
                 $queryBuilder->addOrderBy('program_entity_call_call.id', $direction);
@@ -171,8 +170,8 @@ final class Call extends EntityRepository
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('program_entity_call_call');
         $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
-        $queryBuilder->andWhere('program_entity_call_call.poOpenDate < :poOpenDate');
-        $queryBuilder->setParameter('poOpenDate', $call->getPoOpenDate(), Types::DATETIME_MUTABLE);
+        $queryBuilder->andWhere('program_entity_call_call.fppOpenDate < :fppOpenDate');
+        $queryBuilder->setParameter('fppOpenDate', $call->getFppOpenDate(), Types::DATETIME_MUTABLE);
         $queryBuilder->setMaxResults(1);
         $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::DESC);
 
@@ -184,36 +183,12 @@ final class Call extends EntityRepository
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('program_entity_call_call');
         $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
-        $queryBuilder->andWhere('program_entity_call_call.poOpenDate > :poOpenDate');
-        $queryBuilder->setParameter('poOpenDate', $call->getPoOpenDate(), Types::DATETIME_MUTABLE);
+        $queryBuilder->andWhere('program_entity_call_call.fppOpenDate > :fppOpenDate');
+        $queryBuilder->setParameter('fppOpenDate', $call->getFppOpenDate(), Types::DATETIME_MUTABLE);
         $queryBuilder->setMaxResults(1);
-        $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::ASC);
+        $queryBuilder->addOrderBy('program_entity_call_call.fppOpenDate', Criteria::ASC);
 
         return $queryBuilder->getQuery()->getOneOrNullResult();
-    }
-
-    public function findNonEmptyAndActiveCalls(Entity\Program $program = null): array
-    {
-        $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('program_entity_call_call');
-        $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
-
-        //Show only calls which are already in projects
-        $subSelect = $this->_em->createQueryBuilder();
-        $subSelect->select('call.id');
-        $subSelect->from(Project::class, 'project_entity_project');
-        $subSelect->join('project_entity_project.call', 'call');
-        $queryBuilder->andWhere($queryBuilder->expr()->in('program_entity_call_call.id', $subSelect->getDQL()));
-
-        //Filter here on the active calls
-        $queryBuilder->andWhere('program_entity_call_call.active = :active');
-        $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
-
-        if ($program !== null) {
-            $queryBuilder->andWhere('program_entity_call_call.program = :program')->setParameter('program', $program);
-        }
-
-        return $queryBuilder->getQuery()->useQueryCache(true)->getResult();
     }
 
     public function findActiveCalls(Entity\Program $program = null): array
@@ -245,7 +220,7 @@ final class Call extends EntityRepository
         $queryBuilder->andWhere('program_entity_call_call.active = :active');
         $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
 
-        return (int)$queryBuilder->getQuery()->useQueryCache(true)->useResultCache(true)->getSingleScalarResult();
+        return (int)$queryBuilder->getQuery()->useQueryCache(true)->enableResultCache()->getSingleScalarResult();
     }
 
     public function findAmountOfYears(): int
@@ -262,7 +237,7 @@ final class Call extends EntityRepository
         $queryBuilder->setMaxResults(1);
 
         /** @var DateTime $firstPoOpen */
-        $firstPoOpen = $queryBuilder->getQuery()->useQueryCache(true)->useResultCache(true)->getResult();
+        $firstPoOpen = $queryBuilder->getQuery()->useQueryCache(true)->enableResultCache()->getResult();
 
         if (count($firstPoOpen) === 0) {
             return 0;
@@ -271,7 +246,7 @@ final class Call extends EntityRepository
         return (int)$firstPoOpen[0]['poOpenDate']->diff(new DateTime())->y;
     }
 
-    public function findMinAndMaxYearInCall(Entity\Call\Call $call)
+    public function findMinAndMaxYearInCall(Entity\Call\Call $call): string
     {
         $emConfig = $this->getEntityManager()->getConfiguration();
         $emConfig->addCustomDatetimeFunction('YEAR', Year::class);
@@ -296,7 +271,7 @@ final class Call extends EntityRepository
         $queryBuilder->addSelect('COUNT(DISTINCT a.project) projects');
         $queryBuilder->addSelect('SUM(program_entity_call_call.fundingEu) funding_eu');
         $queryBuilder->addSelect('SUM(program_entity_call_call.fundingNational) funding_national');
-        $queryBuilder->from('Project\Entity\Cost\Cost', 'program_entity_call_call');
+        $queryBuilder->from(Cost::class, 'program_entity_call_call');
         $queryBuilder->join('program_entity_call_call.affiliation', 'a');
         $queryBuilder->join('a.organisation', 'o');
         $queryBuilder->join('a.project', 'p');

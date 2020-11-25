@@ -135,7 +135,7 @@ class Call extends AbstractEntity
      * @ORM\Column(name="po_open_date", type="datetime", nullable=true)
      * @Annotation\Type("\Laminas\Form\Element\DateTime")
      * @Annotation\Attributes({"step":"any"})
-     * @Annotation\Options({"label":"txt-po-open-date", "format":"Y-m-d H:i:s"})
+     * @Annotation\Options({"label":"txt-call-po-open-date-label", "format":"Y-m-d H:i:s", "help-block":"txt-call-po-open-date-help-block"})
      *
      * @var DateTime
      */
@@ -144,7 +144,7 @@ class Call extends AbstractEntity
      * @ORM\Column(name="po_close_date", type="datetime", nullable=true)
      * @Annotation\Type("\Laminas\Form\Element\DateTime")
      * @Annotation\Attributes({"step":"any"})
-     * @Annotation\Options({"label":"txt-po-close-date", "format":"Y-m-d H:i:s"})
+     * @Annotation\Options({"label":"txt-call-po-close-date-label", "format":"Y-m-d H:i:s", "help-block":"txt-call-po-close-date-help-block"})
      *
      * @var DateTime
      */
@@ -159,7 +159,7 @@ class Call extends AbstractEntity
      */
     private $loiSubmissionDate;
     /**
-     * @ORM\Column(name="fpp_open_date", type="datetime", nullable=true)
+     * @ORM\Column(name="fpp_open_date", type="datetime", nullable=false)
      * @Annotation\Type("\Laminas\Form\Element\DateTime")
      * @Annotation\Attributes({"step":"any"})
      * @Annotation\Options({"label":"txt-fpp-open-date", "format":"Y-m-d H:i:s"})
@@ -168,10 +168,10 @@ class Call extends AbstractEntity
      */
     private $fppOpenDate;
     /**
-     * @ORM\Column(name="fpp_close_date", type="datetime", nullable=true)
+     * @ORM\Column(name="fpp_close_date", type="datetime", nullable=false)
      * @Annotation\Type("\Laminas\Form\Element\DateTime")
      * @Annotation\Attributes({"step":"any"})
-     * @Annotation\Options({"label":"txt-fpp-close-date", "format":"Y-m-d H:i:s"})
+     * @Annotation\Options({"label":"txt-call-fpp-close-date-label", "format":"Y-m-d H:i:s", "help-block":"txt-call-fpp-close-date-help-block"})
      *
      * @var DateTime
      */
@@ -345,6 +345,37 @@ class Call extends AbstractEntity
      * @var Questionnaire[]|Collection
      */
     private $questionnaires;
+    /**
+     * @ORM\OneToMany(targetEntity="\Quality\Entity\Kpi", cascade={"persist"}, mappedBy="call")
+     * @Annotation\Exclude()
+     *
+     * @var \Quality\Entity\Kpi[]|Collections\ArrayCollection
+     */
+    private $kpi;
+    /**
+     * @ORM\ManyToMany(targetEntity="Cluster\Entity\Cluster", cascade={"persist"}, inversedBy="call")
+     * @ORM\JoinTable(name="programcall_cluster",
+     *            joinColumns={@ORM\JoinColumn(name="programcall_id", referencedColumnName="programcall_id", unique=true)},
+     *            inverseJoinColumns={@ORM\JoinColumn(name="cluster_id", referencedColumnName="cluster_id")}
+     * )
+     * @Annotation\Type("DoctrineORMModule\Form\Element\EntityMultiCheckbox")
+     * @Annotation\Options({
+     *      "target_class":"Cluster\Entity\Cluster",
+     *      "find_method":{
+     *          "name":"findBy",
+     *          "params": {
+     *              "criteria":{},
+     *              "orderBy":{
+     *                  "name":"ASC"}
+     *              }
+     *          }
+     *      }
+     * )
+     * @Annotation\Attributes({"label":"txt-program-call-cluster-label","help-block":"txt-program-call-cluster-help-block"})
+     *
+     * @var \Cluster\Entity\Cluster[]|Collections\ArrayCollection
+     */
+    private $cluster;
 
     public function __construct()
     {
@@ -357,6 +388,8 @@ class Call extends AbstractEntity
         $this->challenge             = new Collections\ArrayCollection();
         $this->proxyProject          = new Collections\ArrayCollection();
         $this->questionnaires        = new Collections\ArrayCollection();
+        $this->kpi                   = new Collections\ArrayCollection();
+        $this->cluster               = new Collections\ArrayCollection();
         $this->doaRequirement        = self::DOA_REQUIREMENT_PER_PROJECT;
         $this->ndaRequirement        = self::NDA_REQUIREMENT_PER_CALL;
         $this->loiRequirement        = self::LOI_REQUIRED;
@@ -445,6 +478,20 @@ class Call extends AbstractEntity
     public function __toString(): string
     {
         return sprintf('%s Call %s', $this->program->getProgram(), $this->call);
+    }
+
+    public function addCluster(Collections\Collection $clusters): void
+    {
+        foreach ($clusters as $cluster) {
+            $this->cluster->add($cluster);
+        }
+    }
+
+    public function removeCluster(Collections\Collection $clusters): void
+    {
+        foreach ($clusters as $cluster) {
+            $this->cluster->removeElement($cluster);
+        }
     }
 
     public function shortName(): string
@@ -571,7 +618,7 @@ class Call extends AbstractEntity
         return $this;
     }
 
-    public function getFppOpenDate()
+    public function getFppOpenDate():?DateTime
     {
         return $this->fppOpenDate;
     }
@@ -720,7 +767,7 @@ class Call extends AbstractEntity
         return $this;
     }
 
-    public function getIdeaTool()
+    public function getIdeaTool(): ?Tool
     {
         return $this->ideaTool;
     }
@@ -849,5 +896,27 @@ class Call extends AbstractEntity
     public function getHasOnlineWorkPackagesText(): string
     {
         return self::$hasOnlineWorkPackageTemplates[$this->hasOnlineWorkPackages] ?? '';
+    }
+
+    public function getKpi()
+    {
+        return $this->kpi;
+    }
+
+    public function setKpi($kpi): Call
+    {
+        $this->kpi = $kpi;
+        return $this;
+    }
+
+    public function getCluster()
+    {
+        return $this->cluster;
+    }
+
+    public function setCluster($cluster): Call
+    {
+        $this->cluster = $cluster;
+        return $this;
     }
 }

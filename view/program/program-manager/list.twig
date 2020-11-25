@@ -31,6 +31,7 @@
             <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/program/list', 'criteria': 'number', 'text': translate("txt-number")} %}</th>
             <th>{{ translate("txt-amount-of-calls") }}</th>
             <th>{{ translate("txt-eurkeka-export") }}</th>
+            <th>{{ translate("txt-cluster") }}</th>
             <th>{{ translate("txt-invoice-method") }}</th>
         </tr>
         </thead>
@@ -46,6 +47,7 @@
                                 class="fas fa-exchange-alt"></i></a>
                     {{ programLink(program,'export-size','icon') }}
                 </td>
+                <td>{% for cluster in program.cluster %}{{ clusterLink(cluster,'view') }} {% if not loop.last %} &middot; {% endif %}{% endfor %}</td>
                 <td>{% for method in program.invoiceMethod %}{{ method }}{% endfor %}</td>
             </tr>
         {% endfor %}

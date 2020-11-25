@@ -20,8 +20,6 @@ namespace Program;
 
 use Admin\Service\AdminService;
 use Affiliation\Service\AffiliationService;
-use Application\Service\AssertionService;
-use BjyAuthorize\Service\Authorize;
 use Contact\Service\ContactService;
 use Doctrine\ORM\EntityManager;
 use Evaluation\Service\EvaluationService;
@@ -142,11 +140,7 @@ return [
         ],
         Controller\ProgramManagerController::class         => [
             ProgramService::class,
-            CallService::class,
-            ProjectService::class,
-            VersionService::class,
             FormService::class,
-            EntityManager::class,
             TranslatorInterface::class
         ],
         Service\ProgramService::class                      => [

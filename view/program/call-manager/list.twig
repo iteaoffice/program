@@ -32,12 +32,13 @@
             <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'po-close-date', 'text': translate("txt-call-po-close")} %}</th>
             <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'fpp-open-date', 'text': translate("txt-call-fpp-open")} %}</th>
             <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/call/list', 'criteria': 'fpp-close-date', 'text': translate("txt-call-fpp-close")} %}</th>
+            <th>{{ translate("txt-clusters") }}</th>
             <th>{{ translate("txt-#projects") }}</th>
         </tr>
         </thead>
         <tfoot>
         <tr>
-            <td colspan="8"></td>
+            <td colspan="9"></td>
         </tr>
         </tfoot>
         <tbody>
@@ -50,6 +51,7 @@
                 <td>{% if call.poCloseDate %}{{ call.poCloseDate|string_date }}{% endif %}</td>
                 <td>{% if call.fppOpenDate %}{{ call.fppOpenDate|string_date }}{% endif %}</td>
                 <td>{% if call.fppCloseDate %}{{ call.fppCloseDate|string_date }}{% endif %}</td>
+                <td>{% for cluster in call.cluster %}{{ clusterLink(cluster,'view') }} {% if not loop.last %} &middot; {% endif %}{% endfor %}</td>
                 <td>{{ call.project.count }}</td>
             </tr>
         {% endfor %}

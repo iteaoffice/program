@@ -24,7 +24,6 @@ use Laminas\Validator\File\MimeType;
 use Program\Entity\Call\Call;
 use Program\Entity\Nda;
 use Program\Entity\NdaObject;
-use Program\Entity\Program;
 use Program\ValueObject\Calls;
 use Program\ValueObject\CallStatus;
 use Project\Entity\Version\Type;
@@ -52,7 +51,8 @@ class CallService extends AbstractService
         EntityManager $entityManager,
         GeneralService $generalService,
         AdminService $adminService
-    ) {
+    )
+    {
         parent::__construct($entityManager);
 
         $this->generalService = $generalService;
@@ -69,6 +69,32 @@ class CallService extends AbstractService
         return $this->entityManager->getRepository(Call::class)->findOneBy(['call' => $name]);
     }
 
+    public function canDeleteCall(Call $call): bool
+    {
+        $cannotDeleteCallReasons = [];
+
+        if (!$call->getProject()->isEmpty()) {
+            $cannotDeleteCallReasons[] = 'This programme call has projects';
+        }
+
+        if (!$call->getNda()->isEmpty()) {
+            $cannotDeleteCallReasons[] = 'This programme call has NDA';
+        }
+
+        if (!$call->getCalendar()->isEmpty()) {
+            $cannotDeleteCallReasons[] = 'This programme call has calendar items';
+        }
+        if (!$call->getDoa()->isEmpty()) {
+            $cannotDeleteCallReasons[] = 'This programme call has DOAs';
+        }
+
+        if (null !== $call->getIdeaTool()) {
+            $cannotDeleteCallReasons[] = 'This programme call has a Project Idea Tool';
+        }
+
+        return count($cannotDeleteCallReasons) === 0;
+    }
+
     public function findNotApprovedNda(): ArrayCollection
     {
         /** @var \Program\Repository\Nda $repository */
@@ -76,6 +102,57 @@ class CallService extends AbstractService
 
         return new ArrayCollection($repository->findNotApprovedNda());
     }
+
+    /*
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
+
+    public function findActiveVersionTypeInCall(Call $call): Type
+    {
+        $today = new DateTime();
+
+        if ($call->getPoOpenDate() < $today && $call->getPoCloseDate() > $today) {
+            return $this->entityManager->find(Type::class, Type::TYPE_PO);
+        }
+
+        return $this->entityManager->find(Type::class, Type::TYPE_FPP);
+    }
+
+    public function findLastActiveCall(): ?Call
+    {
+        if (null !== $this->findOpenCall()->getFirst()) {
+            return $this->findOpenCall()->getFirst();
+        }
+
+        return $this->findOpenCall()->getUpcoming();
+    }
+
+    public function findOpenCall(): Calls
+    {
+        $repository = $this->entityManager->getRepository(Call::class);
+
+        $upcomingCall = $repository->findUpcomingCall();
+
+        return new Calls($repository->findOpenCall(), $upcomingCall ?? $repository->findLastCall());
+    }
+
+
+
+
+
+    /**
+     *
+     *
+     *
+     *
+     *
+     */
 
     public function findNextCall(Call $call): ?Call
     {
@@ -105,35 +182,6 @@ class CallService extends AbstractService
         $yearSpan->maxYear = (int)$yearSpanResult['maxYear'];
 
         return $yearSpan;
-    }
-
-    public function findActiveVersionTypeInCall(Call $call): Type
-    {
-        $today = new DateTime();
-
-        if ($call->getPoOpenDate() < $today && $call->getPoCloseDate() > $today) {
-            return $this->entityManager->find(Type::class, Type::TYPE_PO);
-        }
-
-        return $this->entityManager->find(Type::class, Type::TYPE_FPP);
-    }
-
-    public function findLastActiveCall(): ?Call
-    {
-        if (null !== $this->findOpenCall()->getFirst()) {
-            return $this->findOpenCall()->getFirst();
-        }
-
-        return $this->findOpenCall()->getUpcoming();
-    }
-
-    public function findOpenCall(): Calls
-    {
-        $repository = $this->entityManager->getRepository(Call::class);
-
-        $upcomingCall = $repository->findUpcomingCall();
-
-        return new Calls($repository->findOpenCall(), $upcomingCall ?? $repository->findLastCall());
     }
 
     public function isOpen(Call $call, Type $type): bool
@@ -198,19 +246,6 @@ class CallService extends AbstractService
         $callSpan->lastCall  = $lastCall;
 
         return $callSpan;
-    }
-
-    /**
-     * @param Program|null $program
-     *
-     * @return Call[]
-     */
-    public function findNonEmptyAndActiveCalls(Program $program = null): array
-    {
-        /** @var \Program\Repository\Call\Call $repository */
-        $repository = $this->entityManager->getRepository(Call::class);
-
-        return $repository->findNonEmptyAndActiveCalls($program);
     }
 
     public function findProjectAndPartners(Call $call): array

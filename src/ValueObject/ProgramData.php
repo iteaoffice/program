@@ -18,11 +18,11 @@ final class ProgramData
 
     public function __construct(int $calls, int $projects, int $partners, int $countries, int $years)
     {
-        $this->calls = $calls;
-        $this->projects = $projects;
-        $this->partners = $partners;
+        $this->calls     = $calls;
+        $this->projects  = $projects;
+        $this->partners  = $partners;
         $this->countries = $countries;
-        $this->years = $years;
+        $this->years     = $years;
     }
 
     public function getCalls(): int

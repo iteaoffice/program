@@ -114,6 +114,30 @@ class Program extends AbstractEntity
      */
     private $invoiceMethod;
     /**
+     * @ORM\ManyToMany(targetEntity="Cluster\Entity\Cluster", cascade={"persist"}, inversedBy="program")
+     * @ORM\JoinTable(name="program_cluster",
+     *            joinColumns={@ORM\JoinColumn(name="program_id", referencedColumnName="program_id", unique=true)},
+     *            inverseJoinColumns={@ORM\JoinColumn(name="cluster_id", referencedColumnName="cluster_id")}
+     * )
+     * @Annotation\Type("DoctrineORMModule\Form\Element\EntityMultiCheckbox")
+     * @Annotation\Options({
+     *      "target_class":"Cluster\Entity\Cluster",
+     *      "find_method":{
+     *          "name":"findBy",
+     *          "params": {
+     *              "criteria":{},
+     *              "orderBy":{
+     *                  "name":"ASC"}
+     *              }
+     *          }
+     *      }
+     * )
+     * @Annotation\Attributes({"label":"txt-program-cluster-label","help-block":"txt-program-cluster-help-block"})
+     *
+     * @var \Cluster\Entity\Cluster[]|Collections\ArrayCollection
+     */
+    private $cluster;
+    /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Parent\Invoice", cascade={"persist"}, mappedBy="program")
      * @Annotation\Exclude()
      *
@@ -131,6 +155,8 @@ class Program extends AbstractEntity
     public function __construct()
     {
         $this->call               = new Collections\ArrayCollection();
+        $this->cluster            = new Collections\ArrayCollection();
+        $this->contactDnd         = new Collections\ArrayCollection();
         $this->doa                = new Collections\ArrayCollection();
         $this->parentDoa          = new Collections\ArrayCollection();
         $this->invoiceMethod      = new Collections\ArrayCollection();
@@ -142,32 +168,41 @@ class Program extends AbstractEntity
     {
         $programName = $this->getProgram();
 
-        if (! is_numeric(substr($programName, -1))) {
+        if (!is_numeric(substr($programName, -1))) {
             $programName .= ' 1';
         }
 
         return $programName;
     }
 
-    /**
-     * @return string
-     */
-    public function getProgram()
+    public function getProgram(): ?string
     {
         return $this->program;
     }
 
-    /**
-     * @param string $program
-     */
-    public function setProgram($program)
+    public function setProgram(?string $program): Program
     {
         $this->program = $program;
+        return $this;
     }
 
     public function __toString(): string
     {
         return (string)$this->program;
+    }
+
+    public function addCluster(Collections\Collection $clusters): void
+    {
+        foreach ($clusters as $cluster) {
+            $this->cluster->add($cluster);
+        }
+    }
+
+    public function removeCluster(Collections\Collection $clusters): void
+    {
+        foreach ($clusters as $cluster) {
+            $this->cluster->removeElement($cluster);
+        }
     }
 
     public function addInvoiceMethod(Collections\Collection $invoiceMethodCollection): void
@@ -184,156 +219,113 @@ class Program extends AbstractEntity
         }
     }
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function setId(?int $id): Program
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function getNumber(): ?string
+    {
+        return $this->number;
+    }
+
+    public function setNumber(?string $number): Program
+    {
+        $this->number = $number;
+        return $this;
+    }
+
     public function getCall()
     {
         return $this->call;
     }
 
-    /**
-     * @param Call[] $call
-     */
-    public function setCall($call)
+    public function setCall($call): Program
     {
         $this->call = $call;
+        return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getNumber()
-    {
-        return $this->number;
-    }
-
-    /**
-     * @param string $number
-     */
-    public function setNumber($number)
-    {
-        $this->number = $number;
-    }
-
-    /**
-     * @return Dnd[]
-     */
-    public function getContactDnd()
-    {
-        return $this->contactDnd;
-    }
-
-    /**
-     * @param Dnd[] $contactDnd
-     */
-    public function setContactDnd($contactDnd)
-    {
-        $this->contactDnd = $contactDnd;
-    }
-
-    /**
-     * @return Doa[]
-     */
     public function getDoa()
     {
         return $this->doa;
     }
 
-    /**
-     * @param Doa[] $doa
-     */
-    public function setDoa($doa)
+    public function setDoa($doa): Program
     {
         $this->doa = $doa;
+        return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|Method[]
-     */
-    public function getInvoiceMethod()
-    {
-        return $this->invoiceMethod;
-    }
-
-    /**
-     * @param Collections\ArrayCollection|Method[] $invoiceMethod
-     */
-    public function setInvoiceMethod($invoiceMethod)
-    {
-        $this->invoiceMethod = $invoiceMethod;
-    }
-
-    /**
-     * @return Collections\ArrayCollection|\Organisation\Entity\Parent\Doa[]
-     */
     public function getParentDoa()
     {
         return $this->parentDoa;
     }
 
-    /**
-     * @param Collections\ArrayCollection|\Organisation\Entity\Parent\Doa[] $parentDoa
-     *
-     * @return Program
-     */
-    public function setParentDoa($parentDoa)
+    public function setParentDoa($parentDoa): Program
     {
         $this->parentDoa = $parentDoa;
-
         return $this;
     }
 
-    /**
-     * @return Invoice[]|Collections\ArrayCollection
-     */
+    public function getContactDnd()
+    {
+        return $this->contactDnd;
+    }
+
+    public function setContactDnd($contactDnd): Program
+    {
+        $this->contactDnd = $contactDnd;
+        return $this;
+    }
+
+    public function getInvoiceMethod()
+    {
+        return $this->invoiceMethod;
+    }
+
+    public function setInvoiceMethod($invoiceMethod): Program
+    {
+        $this->invoiceMethod = $invoiceMethod;
+        return $this;
+    }
+
     public function getParentInvoice()
     {
         return $this->parentInvoice;
     }
 
-    /**
-     * @param Invoice $parentInvoice
-     *
-     * @return Program
-     */
-    public function setParentInvoice(Invoice $parentInvoice): Program
+    public function setParentInvoice($parentInvoice): Program
     {
         $this->parentInvoice = $parentInvoice;
-
         return $this;
     }
 
-    /**
-     * @return InvoiceExtra[]|Collections\ArrayCollection
-     */
     public function getParentInvoiceExtra()
     {
         return $this->parentInvoiceExtra;
     }
 
-    /**
-     * @param InvoiceExtra $parentInvoiceExtra
-     *
-     * @return Program
-     */
-    public function setParentInvoiceExtra(InvoiceExtra $parentInvoiceExtra): Program
+    public function setParentInvoiceExtra($parentInvoiceExtra): Program
     {
         $this->parentInvoiceExtra = $parentInvoiceExtra;
+        return $this;
+    }
 
+    public function getCluster()
+    {
+        return $this->cluster;
+    }
+
+    public function setCluster($cluster): Program
+    {
+        $this->cluster = $cluster;
         return $this;
     }
 }

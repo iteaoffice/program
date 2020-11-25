@@ -21,11 +21,19 @@
         <dd>{{ translate("txt-no-invoice-method-found") }}</dd>
     {% endfor %}
 
+    <dt>{{ translate("txt-cluster") }}</dt>
+    {% for cluster in program.cluster %}
+        <dd>{{ clusterLink(cluster, 'view','name') }}</dd>
+    {% else %}
+        <dd>{{ translate("txt-no-cluster-could-be-found") }}</dd>
+    {% endfor %}
+
     <dt>{{ translate("txt-amount-of-calls") }}</dt>
     <dd>{{ program.call.count }}</dd>
 
     <dt>{{ translate("txt-program-eureka-export") }}</dt>
-    <dd><a href="{{ url('zfcadmin/project/export/program',{'id': program.id}) }}"><i class="fas fa-exchange-alt"></i></a>
+    <dd><a href="{{ url('zfcadmin/project/export/program',{'id': program.id}) }}"><i
+                    class="fas fa-exchange-alt"></i></a>
     </dd>
 </dl>
 
@@ -41,13 +49,14 @@
             <th>{{ translate("txt-call-po-close") }}</th>
             <th>{{ translate("txt-call-fpp-open") }}</th>
             <th>{{ translate("txt-call-fpp-close") }}</th>
+            <th>{{ translate("txt-clusters") }}</th>
             <th>{{ translate("txt-#projects") }}</th>
             <th>{{ translate("txt-export-size") }}</th>
         </tr>
         </thead>
         <tfoot>
         <tr>
-            <td colspan="8"></td>
+            <td colspan="9"></td>
         </tr>
         </tfoot>
         <tbody>
@@ -59,6 +68,7 @@
                 <td>{% if call.poCloseDate %}{{ call.poCloseDate|string_date }}{% endif %}</td>
                 <td>{% if call.fppOpenDate %}{{ call.fppOpenDate|string_date }}{% endif %}</td>
                 <td>{% if call.fppCloseDate %}{{ call.fppCloseDate|string_date }}{% endif %}</td>
+                <td>{% for cluster in call.cluster %}{{ clusterLink(cluster,'view') }} {% if not loop.last %} &middot; {% endif %}{% endfor %}</td>
                 <td>{{ call.project.count }}</td>
                 <td>{{ callLink(call,'export-size','icon') }}</td>
             </tr>
