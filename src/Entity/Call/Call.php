@@ -32,9 +32,7 @@ use Project\Entity\Idea\Tool;
 use Project\Entity\Project;
 use Publication\Entity\Publication;
 
-use function explode;
 use function sprintf;
-use function strtoupper;
 
 /**
  * @ORM\Table(name="programcall")
@@ -62,6 +60,8 @@ class Call extends AbstractEntity
     public const PO_HAS_NO_WORK_PACKAGES               = 2;
     public const HAS_ONLINE_WORK_PACKAGES              = 1;
     public const HAS_NO_ONLINE_WORK_PACKAGES           = 2;
+    public const ONE_CHALLENGE_PER_PROJECT             = 1;
+    public const MULTIPLE_CHALLENGE_PER_PROJECT        = 2;
 
     protected static array $activeTemplates = [
         self::INACTIVE => 'txt-inactive-for-projects',
@@ -96,6 +96,11 @@ class Call extends AbstractEntity
         self::TWO_STAGE_CALL => 'txt-two-stage-call',
     ];
 
+    protected static array $challengePerProjectTemplates = [
+        self::ONE_CHALLENGE_PER_PROJECT      => 'txt-one-challenge-per-project',
+        self::MULTIPLE_CHALLENGE_PER_PROJECT => 'txt-multiple-challenge-per-project',
+    ];
+
     protected static array $poHasWorkPackagesTemplates = [
         self::PO_HAS_WORK_PACKAGES    => 'txt-po-has-work-packages',
         self::PO_HAS_NO_WORK_PACKAGES => 'txt-po-has-no-work-packages',
@@ -123,6 +128,23 @@ class Call extends AbstractEntity
      * @var string
      */
     private $call;
+    /**
+     * @ORM\Column(name="project_number_mask", type="string", nullable=false)
+     * @Annotation\Type("\Laminas\Form\Element\Text")
+     * @Annotation\Options({"label":"txt-call-project-number-mask-label", "help-block":"txt-call-project-number-mask-help-block"})
+     *
+     * @var string
+     */
+    private $projectNumberMask;
+    /**
+     * @ORM\Column(name="instruction_text", type="text", nullable=true)
+     * @Annotation\Type("\Laminas\Form\Element\Textarea")
+     * @Annotation\Options({"label":"txt-txt-call-instruction-text-label","help-block": "txt-call-instruction-text-help-block"})
+     * @Annotation\Attributes({"placeholder":"txt-call-instruction-text-placeholder", "id":"html_instruction_text"})
+     *
+     * @var string
+     */
+    private $instructionText;
     /**
      * @ORM\Column(name="docref", type="string", nullable=true, unique=true)
      * @Gedmo\Slug(fields={"call"})
@@ -230,6 +252,15 @@ class Call extends AbstractEntity
      * @var int
      */
     private $ndaRequirement;
+    /**
+     * @ORM\Column(name="challenge_per_project", type="smallint", nullable=false)
+     * @Annotation\Type("Laminas\Form\Element\Radio")
+     * @Annotation\Attributes({"array":"challengePerProjectTemplates"})
+     * @Annotation\Options({"label":"txt-call-challenge-per-project-label","help-block":"txt-call-challenge-per-project-help-block"})
+     *
+     * @var int
+     */
+    private $challengePerProject;
     /**
      * @ORM\Column(name="active", type="smallint", nullable=false)
      * @Annotation\Type("Laminas\Form\Element\Radio")
@@ -355,7 +386,7 @@ class Call extends AbstractEntity
     /**
      * @ORM\ManyToMany(targetEntity="Cluster\Entity\Cluster", cascade={"persist"}, inversedBy="call")
      * @ORM\JoinTable(name="programcall_cluster",
-     *            joinColumns={@ORM\JoinColumn(name="programcall_id", referencedColumnName="programcall_id", unique=true)},
+     *            joinColumns={@ORM\JoinColumn(name="programcall_id", referencedColumnName="programcall_id")},
      *            inverseJoinColumns={@ORM\JoinColumn(name="cluster_id", referencedColumnName="cluster_id")}
      * )
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntityMultiCheckbox")
@@ -398,6 +429,7 @@ class Call extends AbstractEntity
         $this->poHasWorkPackages     = self::PO_HAS_WORK_PACKAGES;
         $this->hasOnlineWorkPackages = self::HAS_ONLINE_WORK_PACKAGES;
         $this->active                = self::ACTIVE;
+        $this->challengePerProject   = self::ONE_CHALLENGE_PER_PROJECT;
     }
 
     public static function getDoaRequirementTemplates(): array
@@ -435,9 +467,14 @@ class Call extends AbstractEntity
         return self::$poHasWorkPackagesTemplates;
     }
 
-    public static function getHasOnlineWorkPackageTemplates(): ?array
+    public static function getHasOnlineWorkPackageTemplates(): array
     {
         return self::$hasOnlineWorkPackageTemplates;
+    }
+
+    public static function getChallengePerProjectTemplates(): array
+    {
+        return self::$challengePerProjectTemplates;
     }
 
     public function requireDoaPerProject(): bool
@@ -475,9 +512,19 @@ class Call extends AbstractEntity
         return $this->hasOnlineWorkPackages === self::HAS_ONLINE_WORK_PACKAGES;
     }
 
-    public function __toString(): string
+    public function hasOneChallengePerProject(): bool
     {
-        return sprintf('%s Call %s', $this->program->getProgram(), $this->call);
+        return $this->challengePerProject === self::ONE_CHALLENGE_PER_PROJECT;
+    }
+
+    public function hasInstructionText(): bool
+    {
+        return null !== $this->instructionText;
+    }
+
+    public function isMultiCluster(): bool
+    {
+        return $this->cluster->count() > 1;
     }
 
     public function addCluster(Collections\Collection $clusters): void
@@ -496,15 +543,19 @@ class Call extends AbstractEntity
 
     public function shortName(): string
     {
-        $words   = explode(' ', $this->program->getProgram());
-        $acronym = '';
-
-        foreach ($words as $w) {
-            $acronym .= strtoupper($w[0]);
-        }
-
-        return sprintf('%sC%s', $acronym, $this->call);
+        return $this->__toString();
     }
+
+    public function __toString(): string
+    {
+        return sprintf('%s', $this->call);
+    }
+
+    public function searchName(): string
+    {
+        return $this->__toString();
+    }
+
 
     public function getProgram(): ?Program
     {
@@ -516,11 +567,6 @@ class Call extends AbstractEntity
         $this->program = $program;
 
         return $this;
-    }
-
-    public function searchName(): string
-    {
-        return sprintf('%s Call %s', $this->program->searchName(), $this->call);
     }
 
     public function hasIdeaTool(): bool
@@ -585,6 +631,17 @@ class Call extends AbstractEntity
         return $this;
     }
 
+    public function getProjectNumberMask(): ?string
+    {
+        return $this->projectNumberMask;
+    }
+
+    public function setProjectNumberMask(string $projectNumberMask): Call
+    {
+        $this->projectNumberMask = $projectNumberMask;
+        return $this;
+    }
+
     public function getPoOpenDate(): ?DateTime
     {
         return $this->poOpenDate;
@@ -612,13 +669,13 @@ class Call extends AbstractEntity
         return $this->loiSubmissionDate;
     }
 
-    public function setLoiSubmissionDate($loiSubmissionDate): Call
+    public function setLoiSubmissionDate(?DateTime $loiSubmissionDate): Call
     {
         $this->loiSubmissionDate = $loiSubmissionDate;
         return $this;
     }
 
-    public function getFppOpenDate():?DateTime
+    public function getFppOpenDate(): ?DateTime
     {
         return $this->fppOpenDate;
     }
@@ -629,12 +686,13 @@ class Call extends AbstractEntity
         return $this;
     }
 
-    public function getFppCloseDate()
+
+    public function getFppCloseDate(): ?DateTime
     {
         return $this->fppCloseDate;
     }
 
-    public function setFppCloseDate($fppCloseDate): Call
+    public function setFppCloseDate(?DateTime $fppCloseDate): Call
     {
         $this->fppCloseDate = $fppCloseDate;
         return $this;
@@ -645,7 +703,7 @@ class Call extends AbstractEntity
         return $this->doaSubmissionDate;
     }
 
-    public function setDoaSubmissionDate($doaSubmissionDate): Call
+    public function setDoaSubmissionDate(?DateTime $doaSubmissionDate): Call
     {
         $this->doaSubmissionDate = $doaSubmissionDate;
 
@@ -917,6 +975,33 @@ class Call extends AbstractEntity
     public function setCluster($cluster): Call
     {
         $this->cluster = $cluster;
+        return $this;
+    }
+
+    public function getChallengePerProject(): int
+    {
+        return $this->challengePerProject;
+    }
+
+    public function setChallengePerProject(int $challengePerProject): Call
+    {
+        $this->challengePerProject = $challengePerProject;
+        return $this;
+    }
+
+    public function getChallengePerProjectText(): string
+    {
+        return self::$challengePerProjectTemplates[$this->challengePerProject] ?? '';
+    }
+
+    public function getInstructionText(): ?string
+    {
+        return $this->instructionText;
+    }
+
+    public function setInstructionText(?string $instructionText): Call
+    {
+        $this->instructionText = $instructionText;
         return $this;
     }
 }

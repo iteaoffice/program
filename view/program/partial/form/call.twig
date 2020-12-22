@@ -1,5 +1,13 @@
 {% do headScript().appendFile('assets/js/jquery.timepicker.js', 'text/javascript') %}
 {% do headScript().appendFile('assets/js/jquery.slideraccess.js', 'text/javascript') %}
+{% do headScript().appendFile('assets/js/codemirror.js', 'text/javascript') %}
+{% do headScript().appendFile('assets/js/codemirror/css.js', 'text/javascript') %}
+{% do headScript().appendFile('assets/js/codemirror/htmlmixed.js', 'text/javascript') %}
+{% do headScript().appendFile('assets/js/codemirror/javascript.js', 'text/javascript') %}
+{% do headScript().appendFile('assets/js/codemirror/xml.js', 'text/javascript') %}
+{% do headScript().appendFile('assets/js/codemirror/selection-pointer.js', 'text/javascript') %}
+{% do headScript().appendFile('assets/js/codemirror/matchbrackets.js', 'text/javascript') %}
+{% do headLink().appendStylesheet('assets/css/codemirror.css') %}
 {% do headLink().appendStylesheet('assets/css/jquery.timepicker.css') %}
 {% do headLink().appendStylesheet(
     '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css'
@@ -15,6 +23,8 @@
 {{ ztbformelement(call.get('program')) }}
 {{ ztbformelement(call.get('call')) }}
 {{ ztbformelement(call.get('cluster')) }}
+{{ ztbformelement(call.get('projectNumberMask')) }}
+{{ ztbformelement(call.get('instructionText')) }}
 {{ ztbformelement(call.get('poOpenDate')) }}
 {{ ztbformelement(call.get('poCloseDate')) }}
 {{ ztbformelement(call.get('loiSubmissionDate')) }}
@@ -30,6 +40,7 @@
 {{ ztbformelement(call.get('callStages')) }}
 {{ ztbformelement(call.get('poHasWorkPackages')) }}
 {{ ztbformelement(call.get('hasOnlineWorkPackages')) }}
+{{ ztbformelement(call.get('challengePerProject')) }}
 
 {{ formelement(form.get('csrf')) }}
 
@@ -43,6 +54,8 @@
     </div>
 </div>
 
+{{ form().closeTag()|raw }}
+
 <script type="text/javascript">
     $('input[type=datetime]').datetimepicker({
         addSliderAccess: true,
@@ -50,6 +63,11 @@
         timeFormat: 'HH:mm:ss',
         dateFormat: 'yy-mm-dd'
     });
+    var htmlEditor = CodeMirror.fromTextArea(document.getElementById("html_instruction_text"), {
+        mode: "text/html",
+        lineNumbers: true,
+        selectionPointer: true,
+        lineWrapping: true,
+        matchBrackets: true
+    });
 </script>
-
-{{ form().closeTag()|raw }}

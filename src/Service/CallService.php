@@ -51,8 +51,7 @@ class CallService extends AbstractService
         EntityManager $entityManager,
         GeneralService $generalService,
         AdminService $adminService
-    )
-    {
+    ) {
         parent::__construct($entityManager);
 
         $this->generalService = $generalService;
@@ -73,18 +72,18 @@ class CallService extends AbstractService
     {
         $cannotDeleteCallReasons = [];
 
-        if (!$call->getProject()->isEmpty()) {
+        if (! $call->getProject()->isEmpty()) {
             $cannotDeleteCallReasons[] = 'This programme call has projects';
         }
 
-        if (!$call->getNda()->isEmpty()) {
+        if (! $call->getNda()->isEmpty()) {
             $cannotDeleteCallReasons[] = 'This programme call has NDA';
         }
 
-        if (!$call->getCalendar()->isEmpty()) {
+        if (! $call->getCalendar()->isEmpty()) {
             $cannotDeleteCallReasons[] = 'This programme call has calendar items';
         }
-        if (!$call->getDoa()->isEmpty()) {
+        if (! $call->getDoa()->isEmpty()) {
             $cannotDeleteCallReasons[] = 'This programme call has DOAs';
         }
 
@@ -126,6 +125,8 @@ class CallService extends AbstractService
 
     public function findLastActiveCall(): ?Call
     {
+        print __CLASS__;
+        die(__CLASS__);
         if (null !== $this->findOpenCall()->getFirst()) {
             return $this->findOpenCall()->getFirst();
         }
@@ -133,17 +134,20 @@ class CallService extends AbstractService
         return $this->findOpenCall()->getUpcoming();
     }
 
+    /**
+     * @return Calls
+     * @todo handle this
+     * @deprecated
+     */
     public function findOpenCall(): Calls
     {
-        $repository = $this->entityManager->getRepository(Call::class);
+        $repository    = $this->entityManager->getRepository(Call::class);
+        $openCalls     = $repository->findOpenCalls();
+        $upcomingCalls = $repository->findUpcomingCalls();
 
-        $upcomingCall = $repository->findUpcomingCall();
 
-        return new Calls($repository->findOpenCall(), $upcomingCall ?? $repository->findLastCall());
+        return new Calls($openCalls, $upcomingCalls);
     }
-
-
-
 
 
     /**
@@ -164,11 +168,16 @@ class CallService extends AbstractService
         return $this->entityManager->getRepository(Call::class)->findPreviousCall($call);
     }
 
-    public function hasOpenCall(int $type): bool
+    public function hasOpenCallsForNewProject(): bool
+    {
+        return count($this->findOpenCallsForNewProject()) > 0;
+    }
+
+    public function findOpenCallsForNewProject(): array
     {
         $repository = $this->entityManager->getRepository(Call::class);
 
-        return $repository->hasOpenCall($type);
+        return $repository->findOpenCallsForNewProject();
     }
 
     public function findMinAndMaxYearInCall(Call $call): stdClass
@@ -184,9 +193,18 @@ class CallService extends AbstractService
         return $yearSpan;
     }
 
-    public function isOpen(Call $call, Type $type): bool
+    public function isOpen(Call $call, int $type = null): bool
     {
-        switch ($type->getId()) {
+        //Of no type is given, we assume it is a new project and we derive the
+        //type from the call
+        if (null === $type) {
+            $type = Type::TYPE_FPP;
+            if ($call->hasTwoStageProcess()) {
+                $type = Type::TYPE_PO;
+            }
+        }
+
+        switch ($type) {
             case Type::TYPE_PO:
                 return $this->getCallStatus($call)->getResult() === self::PO_OPEN;
             case Type::TYPE_FPP:
@@ -206,35 +224,27 @@ class CallService extends AbstractService
         if ($call->getPoOpenDate() > $today) {
             $referenceDate = $call->getPoOpenDate();
             $result        = self::PO_NOT_OPEN;
-            $type          = Type::TYPE_PO;
         } elseif ($call->getPoCloseDate() > $today) {
             $referenceDate = $call->getPoCloseDate();
             $result        = self::PO_OPEN;
-            $type          = Type::TYPE_PO;
         } elseif ($call->getPoCloseDate() > $notificationDeadline && $call->getFppOpenDate() > $today) {
             $referenceDate = $call->getPoCloseDate();
             $result        = self::PO_CLOSED;
-            $type          = Type::TYPE_PO;
         } elseif ($call->getFppOpenDate() > $today) {
             $referenceDate = $call->getFppOpenDate();
             $result        = self::FPP_NOT_OPEN;
-            $type          = Type::TYPE_FPP;
         } elseif ($call->getFppCloseDate() > $today) {
             $referenceDate = $call->getFppCloseDate();
             $result        = self::FPP_OPEN;
-            $type          = Type::TYPE_FPP;
         } elseif ($call->getFppCloseDate() > $notificationDeadline) {
             $referenceDate = $call->getFppCloseDate();
             $result        = self::FPP_CLOSED;
-            $type          = Type::TYPE_FPP;
         } else {
             $referenceDate = null;
             $result        = self::UNDEFINED;
-            $type          = Type::TYPE_CR;
         }
 
-        $type = $this->entityManager->find(Type::class, $type);
-        return new CallStatus($referenceDate, $result, $type);
+        return new CallStatus($referenceDate, $result);
     }
 
     public function findFirstAndLastCall(): stdClass

@@ -8,35 +8,48 @@ declare(strict_types=1);
 
 namespace Program\ValueObject;
 
-use InvalidArgumentException;
+use Doctrine\Common\Collections\ArrayCollection;
 use Program\Entity\Call\Call;
 
 final class Calls
 {
-    private ?Call $call1 = null;
-    private ?Call $call2 = null;
-    private ?Call $upcoming = null;
+    private ArrayCollection $open;
+    private ArrayCollection $upcoming;
 
-    public function __construct(array $calls, ?Call $upcoming = null)
+    public function __construct(array $openCalls, array $upcomingCalls)
     {
-        if (isset($calls[0])) {
-            if (! $calls[0] instanceof Call) {
-                throw new InvalidArgumentException('The object should be an instance of the Program Call');
-            }
-
-            $this->call1 = $calls[0];
-        }
-        if (isset($calls[1])) {
-            if (! $calls[0] instanceof Call) {
-                throw new InvalidArgumentException('The object should be an instance of the Program Call');
-            }
-
-            $this->call2 = $calls[1];
-        }
-
-        $this->upcoming = $upcoming;
+        $this->open     = new ArrayCollection($openCalls);
+        $this->upcoming = new ArrayCollection($upcomingCalls);
     }
 
+    public function isEmpty(): bool
+    {
+        return ! $this->hasOpen() && ! $this->hasUpcoming();
+    }
+
+    public function hasOpen(): bool
+    {
+        return ! $this->open->isEmpty();
+    }
+
+    public function hasUpcoming(): bool
+    {
+        return ! $this->upcoming->isEmpty();
+    }
+
+    public function getCallIds(): array
+    {
+        return array_map(static function (Call $call) {
+            return (int)$call->getId();
+        }, $this->toArray());
+    }
+
+    public function toArray(): array
+    {
+        return array_merge($this->open->toArray(), $this->upcoming->toArray());
+    }
+
+    /*
     public function getFirst(): ?Call
     {
         return $this->call1;
@@ -62,9 +75,6 @@ final class Calls
         return null !== $this->upcoming;
     }
 
-    /**
-     * @return Call[]
-     */
     public function toArray(): array
     {
         if (null === $this->call1) {
@@ -95,4 +105,5 @@ final class Calls
 
         return [$this->call1->getId(), $this->call2->getId()];
     }
+    */
 }

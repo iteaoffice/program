@@ -19,16 +19,10 @@ use Program\Entity;
 
 /**
  * Class Funder
- *
  * @package Program\Repository
  */
 class Funder extends EntityRepository
 {
-    /**
-     * @param array $filter
-     *
-     * @return QueryBuilder
-     */
     public function findFiltered(array $filter): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
@@ -63,12 +57,6 @@ class Funder extends EntityRepository
         return $queryBuilder;
     }
 
-    /**
-     * @param QueryBuilder $queryBuilder
-     * @param array        $filter
-     *
-     * @return QueryBuilder
-     */
     public function applyFilter(QueryBuilder $queryBuilder, array $filter): QueryBuilder
     {
         if (! empty($filter['search'])) {

@@ -16,19 +16,14 @@ namespace Program\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Program\Entity;
+use DoctrineExtensions\Query\Mysql\Year;
 
 /**
  * Class Program
- *
  * @package Program\Repository
  */
 class Program extends EntityRepository
 {
-    /**
-     * @param array $filter
-     *
-     * @return QueryBuilder
-     */
     public function findFiltered(array $filter): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
@@ -57,15 +52,10 @@ class Program extends EntityRepository
         return $queryBuilder;
     }
 
-    /**
-     * @param Entity\Program $program
-     *
-     * @return mixed
-     */
     public function findMinAndMaxYearInProgram(Entity\Program $program)
     {
         $emConfig = $this->getEntityManager()->getConfiguration();
-        $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
+        $emConfig->addCustomDatetimeFunction('YEAR', Year::class);
 
         $dql
             = 'SELECT

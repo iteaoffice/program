@@ -17,37 +17,36 @@ declare(strict_types=1);
 namespace Program\View\Helper;
 
 use DateTime;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Router\RouteStackInterface;
+use Laminas\View\Helper\AbstractHelper;
+use Program\Entity\Call\Call;
 use Program\Service\CallService;
 use Program\ValueObject\Calls;
-use Laminas\View\Helper\AbstractHelper;
 
 use function sprintf;
 
 final class CallInformationBox extends AbstractHelper
 {
     private CallService $callService;
+    private TranslatorInterface $translator;
+    private RouteStackInterface $router;
 
-    public function __construct(CallService $callService)
+    public function __construct(CallService $callService, TranslatorInterface $translator, RouteStackInterface $router)
     {
         $this->callService = $callService;
+        $this->translator  = $translator;
+        $this->router      = $router;
     }
+
 
     public function __invoke(Calls $calls): string
     {
-        $showCalls = [];
-
-        if ($calls->hasUpcoming()) {
-            $showCalls[] = $calls->getUpcoming();
-        }
-
-        if (! $calls->isEmpty()) {
-            $showCalls = $calls->toArray();
-        }
-
         $return = '';
 
-        foreach ($showCalls as $call) {
-            $contents = [
+        /** @var Call $call */
+        foreach ($calls->toArray() as $call) {
+            $contents   = [
                 CallService::PO_NOT_OPEN  => '%call% for Project Outlines will <strong>open</strong> %diff% from now (<strong>%time%</strong>)',
                 CallService::PO_OPEN      => '%call% for Project Outlines will <strong>close</strong> %diff% from now (deadline: <strong>%time%</strong>)',
                 CallService::PO_CLOSED    => '%call% for Project Outlines closed %diff% ago (deadline: %time%)',
@@ -64,8 +63,8 @@ final class CallInformationBox extends AbstractHelper
             }
             $result = $callStatus->getResult();
             /** @var DateTime $referenceDate */
-            $referenceDate = $callStatus->getReferenceDate();
-            $today = new DateTime();
+            $referenceDate  = $callStatus->getReferenceDate();
+            $today          = new DateTime();
             $dateDifference = $referenceDate->diff($today);
             if ($dateDifference->days > 7) {
                 $format = '%a days';
@@ -85,15 +84,26 @@ final class CallInformationBox extends AbstractHelper
                 [
                     $call,
                     $dateDifference->format($format),
-                    $referenceDate->format('l, d F Y H:i:s T'),
+                    $referenceDate->format('l, d F Y H:i T'),
                 ],
                 $contents[$result]
             );
-            $alert = '<div class="alert alert-%s">%s</div>';
+            $alert   = '<div class="alert alert-%s">%s%s</div>';
 
             $type = 'info';
 
-            $return .= sprintf($alert, $type, $content);
+            $link = '';
+            if ($this->callService->isOpen($call)) {
+                $link = sprintf(
+                    '<br><a class="btn btn-primary my-2" href="%s">%s %s</a>',
+                    $this->router->assemble(['callId' => $call->getId()], ['name' => 'community/project/new']),
+                    '<i class="fa fa-plus"></i>',
+                    sprintf($this->translator->translate("txt-create-project-in-%s"), $call->getCall())
+                );
+            }
+
+
+            $return .= sprintf($alert, $type, $content, $link);
         }
 
         return $return;

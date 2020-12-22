@@ -213,8 +213,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
             /** @var Project $project */
             foreach (
                 $this->projectService->findProjectByProgram($program, ProjectService::WHICH_ALL)
-                ->getQuery()
-                ->getResult() as $project
+                    ->getQuery()
+                    ->getResult() as $project
             ) {
                 $this->projects[$project->getId()] = $project;
             }
@@ -228,7 +228,6 @@ final class CallSizeSpreadsheet extends AbstractPlugin
         if (count($calls) === 0 && count($this->programs) === 0) {
             $calls = $this->entityManager->getRepository(Call::class)->findAll();
         }
-
 
         foreach ($calls as $call) {
 
@@ -363,12 +362,12 @@ final class CallSizeSpreadsheet extends AbstractPlugin
             }
 
             //Include cancelled projects destroys a bit the first filter, so remove some leftovers
-            if (
-                $this->includeCancelledProjects
-                && $this->projectService->parseStatus($project) === ProjectService::STATUS_FPP_UNSUBMITTED
-            ) {
-                continue;
-            }
+//            if (
+//                $this->includeCancelledProjects
+//                && $this->projectService->parseStatus($project) === ProjectService::STATUS_FPP_UNSUBMITTED
+//            ) {
+//                continue;
+//            }
 
 
             $affiliations = $this->affiliationService->findAffiliationByProjectAndWhich(
@@ -924,12 +923,12 @@ final class CallSizeSpreadsheet extends AbstractPlugin
             }
 
             //Include cancelled projects destroys a bit the first filter, so remove some leftovers
-            if (
-                $this->includeCancelledProjects
-                && $this->projectService->parseStatus($project) === ProjectService::STATUS_FPP_UNSUBMITTED
-            ) {
-                continue;
-            }
+//            if (
+//                $this->includeCancelledProjects
+//                && $this->projectService->parseStatus($project) === ProjectService::STATUS_FPP_UNSUBMITTED
+//            ) {
+//                continue;
+//            }
 
             $poEffortVersion     = null;
             $poCostVersion       = null;

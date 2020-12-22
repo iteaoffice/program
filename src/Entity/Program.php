@@ -25,9 +25,6 @@ use Organisation\Entity\Parent\Invoice;
 use Organisation\Entity\Parent\InvoiceExtra;
 use Program\Entity\Call\Call;
 
-use function is_numeric;
-use function substr;
-
 /**
  * @ORM\Table(name="program")
  * @ORM\Entity(repositoryClass="Program\Repository\Program")
@@ -116,7 +113,7 @@ class Program extends AbstractEntity
     /**
      * @ORM\ManyToMany(targetEntity="Cluster\Entity\Cluster", cascade={"persist"}, inversedBy="program")
      * @ORM\JoinTable(name="program_cluster",
-     *            joinColumns={@ORM\JoinColumn(name="program_id", referencedColumnName="program_id", unique=true)},
+     *            joinColumns={@ORM\JoinColumn(name="program_id", referencedColumnName="program_id")},
      *            inverseJoinColumns={@ORM\JoinColumn(name="cluster_id", referencedColumnName="cluster_id")}
      * )
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntityMultiCheckbox")
@@ -164,16 +161,6 @@ class Program extends AbstractEntity
         $this->parentInvoiceExtra = new Collections\ArrayCollection();
     }
 
-    public function searchName(): string
-    {
-        $programName = $this->getProgram();
-
-        if (!is_numeric(substr($programName, -1))) {
-            $programName .= ' 1';
-        }
-
-        return $programName;
-    }
 
     public function getProgram(): ?string
     {
@@ -184,6 +171,11 @@ class Program extends AbstractEntity
     {
         $this->program = $program;
         return $this;
+    }
+
+    public function searchName(): string
+    {
+        return $this->__toString();
     }
 
     public function __toString(): string

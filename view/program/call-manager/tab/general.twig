@@ -1,7 +1,14 @@
+{% do headScript().appendFile("//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.2/highlight.min.js",'text/javascript') %}
+{% do headLink().appendStylesheet("//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.2/styles/github-gist.min.css") %}
+{% do inlineScript().appendScript("hljs.initHighlightingOnLoad();",'text/javascript') %}
+
+
 <h2>{{ translate("txt-call-information") }}</h2>
 <dl class="dl-horizontal">
     <dt>{{ translate("txt-call-id") }}</dt>
     <dd>{{ call.id }}</dd>
+    <dt>{{ translate("txt-call") }}</dt>
+    <dd>{{ call }}</dd>
     <dt>{{ translate("txt-program") }}</dt>
     <dd>{{ programLink(call.program,'view','name') }}</dd>
 
@@ -12,8 +19,10 @@
         <dd>{{ translate("txt-no-clusters-connected") }}</dd>
     {% endfor %}
 
-    <dt>{{ translate("txt-call") }}</dt>
-    <dd>{{ call }}</dd>
+    <dt>{{ translate("txt-project-number-mask") }}</dt>
+    <dd><span class="text-monospace">{{ call.projectNumberMask }}</span></dd>
+
+
     <dt>{{ translate("txt-po-open-date") }}</dt>
     <dd>{{ call.poOpenDate|string_date }} ({{ call.poOpenDate|date('d-m-Y H:i:s') }})</dd>
     <dt>{{ translate("txt-po-close-date") }}</dt>
@@ -48,6 +57,8 @@
     <dd>{{ translate(call.getLoiRequirement(true)) }}</dd>
     <dt>{{ translate("txt-project-report") }}</dt>
     <dd>{{ translate(call.getProjectReport(true)) }}</dd>
+    <dt>{{ translate("txt-call-challenge-per-project") }}</dt>
+    <dd>{{ translate(call.getChallengePerProjectText()) }}</dd>
 
     <dt>{{ translate("txt-call-stages") }}</dt>
     <dd>{{ translate(call.getCallStagesText()) }}</dd>
@@ -63,3 +74,8 @@
         <dd>{{ translate("txt-no-challenges-could-be-found") }}</dd>
     {% endfor %}
 </dl>
+
+{% if call.hasInstructionText %}
+    <h2>{{ translate("txt-instruction-text") }}</h2>
+    <pre><code class="html">{{ call.instructionText }}</code></pre>
+{% endif %}

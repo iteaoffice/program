@@ -11,8 +11,10 @@
     <dt>{{ translate("txt-program") }}</dt>
     <dd>{{ program.program }}</dd>
 
-    <dt>{{ translate("txt-program-number") }}</dt>
-    <dd>{{ program.number }}</dd>
+    {% if program.number %}
+        <dt>{{ translate("txt-program-number") }}</dt>
+        <dd>{{ program.number }}</dd>
+    {% endif %}
 
     <dt>{{ translate("txt-invoice-method") }}</dt>
     {% for method in program.invoiceMethod %}

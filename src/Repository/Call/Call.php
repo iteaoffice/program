@@ -20,12 +20,10 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineExtensions\Query\Mysql\Year;
 use Program\Entity;
-use Project\Entity\Project;
+use Project\Entity\Cost\Cost;
 use Project\Entity\Version\Type;
 
-use function count;
 use function in_array;
-use Project\Entity\Cost\Cost;
 
 /**
  * Class Call
@@ -74,7 +72,7 @@ final class Call extends EntityRepository
         return $queryBuilder;
     }
 
-    public function hasOpenCall(int $type): bool
+    public function findOpenCallsForNewProject(): array
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('program_entity_call_call');
@@ -82,28 +80,40 @@ final class Call extends EntityRepository
 
         //Filter here on the active calls
         $queryBuilder->andWhere('program_entity_call_call.active = :active');
-        $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
+
+        //For 1 stage program call we look only at the FPP
+        $oneStageSelect = $this->_em->createQueryBuilder();
+        $oneStageSelect->select('program_entity_call_one_stage');
+        $oneStageSelect->from(Entity\Call\Call::class, 'program_entity_call_one_stage');
+        $oneStageSelect->andWhere('program_entity_call_one_stage.callStages = :oneStageCall');
+        $oneStageSelect->andWhere('program_entity_call_one_stage.fppOpenDate <= :today');
+        $oneStageSelect->andWhere('program_entity_call_one_stage.fppCloseDate > :today');
+
+        //For 2-stage program call we look only at the PO
+        $twoStageSelect = $this->_em->createQueryBuilder();
+        $twoStageSelect->select('program_entity_call_two_stage');
+        $twoStageSelect->from(Entity\Call\Call::class, 'program_entity_call_two_stage');
+        $twoStageSelect->andWhere('program_entity_call_two_stage.callStages = :twoStageCall');
+        $twoStageSelect->andWhere('program_entity_call_two_stage.poOpenDate <= :today');
+        $twoStageSelect->andWhere('program_entity_call_two_stage.poCloseDate >= :today');
+
+        $queryBuilder->andWhere(
+            $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->in('program_entity_call_call', $oneStageSelect->getDQL()),
+                $queryBuilder->expr()->in('program_entity_call_call', $twoStageSelect->getDQL())
+            )
+        );
 
         $today = new DateTime();
-        switch ($type) {
-            case Type::TYPE_PO:
-                $queryBuilder->andWhere('program_entity_call_call.poOpenDate < :today')
-                    ->andWhere('program_entity_call_call.poCloseDate > :today')
-                    ->setParameter('today', $today, Types::DATETIME_MUTABLE);
-                break;
-            case Type::TYPE_FPP:
-                $queryBuilder->andWhere('program_entity_call_call.fppOpenDate < :today')
-                    ->andWhere('program_entity_call_call.fppCloseDate > :today')
-                    ->setParameter('today', $today, Types::DATETIME_MUTABLE);
-                break;
-        }
+        $queryBuilder->setParameter('today', $today, Types::DATETIME_MUTABLE);
+        $queryBuilder->setParameter('oneStageCall', Entity\Call\Call::ONE_STAGE_CALL);
+        $queryBuilder->setParameter('twoStageCall', Entity\Call\Call::TWO_STAGE_CALL);
+        $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
 
-        $queryBuilder->setMaxResults(1);
-
-        return null !== $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult();
+        return $queryBuilder->getQuery()->getResult();
     }
 
-    public function findOpenCall(): array
+    public function findOpenCalls(): array
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('program_entity_call_call');
@@ -111,22 +121,42 @@ final class Call extends EntityRepository
 
         //Filter here on the active calls
         $queryBuilder->andWhere('program_entity_call_call.active = :active');
-        $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
+
+        //For 1 stage program call we look only at the FPP
+        $oneStageSelect = $this->_em->createQueryBuilder();
+        $oneStageSelect->select('program_entity_call_one_stage');
+        $oneStageSelect->from(Entity\Call\Call::class, 'program_entity_call_one_stage');
+        $oneStageSelect->andWhere('program_entity_call_one_stage.callStages = :oneStageCall');
+        $oneStageSelect->andWhere('program_entity_call_one_stage.fppOpenDate <= :today');
+        $oneStageSelect->andWhere('program_entity_call_one_stage.fppCloseDate > :today');
+
+        //For 2-stage program call we look only at the PO
+        $twoStageSelect = $this->_em->createQueryBuilder();
+        $twoStageSelect->select('program_entity_call_two_stage');
+        $twoStageSelect->from(Entity\Call\Call::class, 'program_entity_call_two_stage');
+        $twoStageSelect->andWhere('program_entity_call_two_stage.callStages = :twoStageCall');
+        $twoStageSelect->andWhere('program_entity_call_two_stage.poOpenDate <= :today');
+        $twoStageSelect->andWhere('program_entity_call_two_stage.fppCloseDate >= :today');
+
+        $queryBuilder->andWhere(
+            $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->in('program_entity_call_call', $oneStageSelect->getDQL()),
+                $queryBuilder->expr()->in('program_entity_call_call', $twoStageSelect->getDQL())
+            )
+        );
 
         $today = new DateTime();
+        $queryBuilder->setParameter('today', $today, Types::DATETIME_MUTABLE);
+        $queryBuilder->setParameter('oneStageCall', Entity\Call\Call::ONE_STAGE_CALL);
+        $queryBuilder->setParameter('twoStageCall', Entity\Call\Call::TWO_STAGE_CALL);
+        $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
 
-        $queryBuilder->andWhere('program_entity_call_call.poOpenDate < :today')
-            ->andWhere('program_entity_call_call.fppCloseDate > :today')
-            ->setParameter('today', $today, Types::DATETIME_MUTABLE);
+        $queryBuilder->addOrderBy('program_entity_call_call.fppOpenDate', Criteria::ASC);
 
-        $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::ASC);
-
-        $queryBuilder->setMaxResults(2);
-
-        return $queryBuilder->getQuery()->useQueryCache(true)->getResult();
+        return $queryBuilder->getQuery()->getResult();
     }
 
-    public function findUpcomingCall(): ?Entity\Call\Call
+    public function findUpcomingCalls(): array
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('program_entity_call_call');
@@ -136,16 +166,36 @@ final class Call extends EntityRepository
         $queryBuilder->andWhere('program_entity_call_call.active = :active');
         $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
 
+        //For 1 stage program call we look only at the FPP
+        $oneStageSelect = $this->_em->createQueryBuilder();
+        $oneStageSelect->select('program_entity_call_one_stage');
+        $oneStageSelect->from(Entity\Call\Call::class, 'program_entity_call_one_stage');
+        $oneStageSelect->andWhere('program_entity_call_one_stage.callStages = :oneStageCall');
+        $oneStageSelect->andWhere('program_entity_call_one_stage.fppOpenDate > :today');
+
+        //For 2-stage program call we look only at the PO
+        $twoStageSelect = $this->_em->createQueryBuilder();
+        $twoStageSelect->select('program_entity_call_two_stage');
+        $twoStageSelect->from(Entity\Call\Call::class, 'program_entity_call_two_stage');
+        $twoStageSelect->andWhere('program_entity_call_two_stage.callStages = :twoStageCall');
+        $twoStageSelect->andWhere('program_entity_call_two_stage.poOpenDate > :today');
+
+        $queryBuilder->andWhere(
+            $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->in('program_entity_call_call', $oneStageSelect->getDQL()),
+                $queryBuilder->expr()->in('program_entity_call_call', $twoStageSelect->getDQL())
+            )
+        );
+
         $today = new DateTime();
+        $queryBuilder->setParameter('today', $today, Types::DATETIME_MUTABLE);
+        $queryBuilder->setParameter('oneStageCall', Entity\Call\Call::ONE_STAGE_CALL);
+        $queryBuilder->setParameter('twoStageCall', Entity\Call\Call::TWO_STAGE_CALL);
+        $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
 
-        $queryBuilder->andWhere('program_entity_call_call.poOpenDate > :today')
-            ->setParameter('today', $today, Types::DATETIME_MUTABLE);
+        $queryBuilder->addOrderBy('program_entity_call_call.fppOpenDate', Criteria::ASC);
 
-        $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::ASC);
-
-        $queryBuilder->setMaxResults(1);
-
-        return $queryBuilder->getQuery()->useQueryCache(true)->getOneOrNullResult();
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function findLastCall(): ?Entity\Call\Call
@@ -226,24 +276,30 @@ final class Call extends EntityRepository
     public function findAmountOfYears(): int
     {
         $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('program_entity_call_call.poOpenDate');
+        $queryBuilder->select('program_entity_call_call');
         $queryBuilder->from(Entity\Call\Call::class, 'program_entity_call_call');
 
         //Filter here on the active calls
         $queryBuilder->andWhere('program_entity_call_call.active = :active');
         $queryBuilder->setParameter('active', Entity\Call\Call::ACTIVE);
 
-        $queryBuilder->addOrderBy('program_entity_call_call.poOpenDate', Criteria::ASC);
+        $queryBuilder->addOrderBy('program_entity_call_call.fppOpenDate', Criteria::ASC);
         $queryBuilder->setMaxResults(1);
 
-        /** @var DateTime $firstPoOpen */
-        $firstPoOpen = $queryBuilder->getQuery()->useQueryCache(true)->enableResultCache()->getResult();
+        /** @var Entity\Call\Call $firstCall */
+        $firstCall = $queryBuilder->getQuery()->getOneOrNullResult();
 
-        if (count($firstPoOpen) === 0) {
+        if (null === $firstCall) {
             return 0;
         }
 
-        return (int)$firstPoOpen[0]['poOpenDate']->diff(new DateTime())->y;
+        //if the call has a PO, we use that date
+        if ($firstCall->hasTwoStageProcess()) {
+            return (int)$firstCall->getPoOpenDate()->diff(new DateTime())->y;
+        }
+
+
+        return (int)$firstCall->getFppOpenDate()->diff(new DateTime())->y;
     }
 
     public function findMinAndMaxYearInCall(Entity\Call\Call $call): string
@@ -252,7 +308,7 @@ final class Call extends EntityRepository
         $emConfig->addCustomDatetimeFunction('YEAR', Year::class);
 
         $dql
-            = 'SELECT
+                = 'SELECT
                         MIN(YEAR(project_entity_version_version.dateSubmitted)) AS minYear,
                         MAX(YEAR(project_entity_project.dateEnd)) AS maxYear
                    FROM Project\Entity\Project project_entity_project

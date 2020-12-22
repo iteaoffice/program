@@ -23,11 +23,6 @@ use Program\Entity;
  */
 class Nda extends EntityRepository
 {
-    /**
-     * @param Entity\Call\Call $call
-     * @param Contact $contact
-     * @return Entity\Nda|null
-     */
     public function findNdaByCallAndContact(Entity\Call\Call $call, Contact $contact): ?Entity\Nda
     {
         $qb = $this->_em->createQueryBuilder();
@@ -43,11 +38,6 @@ class Nda extends EntityRepository
         return $qb->getQuery()->getOneOrNullResult();
     }
 
-    /**
-     * @param Contact $contact
-     * @return null|Entity\Nda
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
     public function findNdaByContact(Contact $contact): ?Entity\Nda
     {
         $qb = $this->_em->createQueryBuilder();
@@ -61,9 +51,6 @@ class Nda extends EntityRepository
         return $qb->getQuery()->getOneOrNullResult();
     }
 
-    /**
-     * @return array|Entity\Nda[]
-     */
     public function findNotApprovedNda(): array
     {
         $qb = $this->_em->createQueryBuilder();
