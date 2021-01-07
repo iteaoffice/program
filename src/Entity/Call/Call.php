@@ -14,6 +14,7 @@ namespace Program\Entity\Call;
 
 use Affiliation\Entity\Questionnaire\Questionnaire;
 use Calendar\Entity\Calendar;
+use Cluster\Entity\Cluster;
 use DateTime;
 use Doctrine\Common\Collections;
 use Doctrine\Common\Collections\Collection;
@@ -27,6 +28,7 @@ use Program\Entity\Program;
 use Project\Entity\Idea\Tool;
 use Project\Entity\Project;
 use Publication\Entity\Publication;
+use Quality\Entity\Kpi;
 
 use function sprintf;
 
@@ -373,10 +375,10 @@ class Call extends AbstractEntity
      */
     private $questionnaires;
     /**
-     * @ORM\OneToMany(targetEntity="\Quality\Entity\Kpi", cascade={"persist"}, mappedBy="call")
+     * @ORM\OneToMany(targetEntity="Quality\Entity\Kpi", cascade={"persist"}, mappedBy="programCall")
      * @Annotation\Exclude()
      *
-     * @var \Quality\Entity\Kpi[]|Collections\ArrayCollection
+     * @var Kpi[]|Collections\ArrayCollection
      */
     private $kpi;
     /**
@@ -400,7 +402,7 @@ class Call extends AbstractEntity
      * )
      * @Annotation\Attributes({"label":"txt-program-call-cluster-label","help-block":"txt-program-call-cluster-help-block"})
      *
-     * @var \Cluster\Entity\Cluster[]|Collections\ArrayCollection
+     * @var Cluster[]|Collections\ArrayCollection
      */
     private $cluster;
 
@@ -952,23 +954,29 @@ class Call extends AbstractEntity
         return self::$hasOnlineWorkPackageTemplates[$this->hasOnlineWorkPackages] ?? '';
     }
 
-    public function getKpi()
+    /**
+     * @return Collection|Kpi[]
+     */
+    public function getKpi(): Collection
     {
         return $this->kpi;
     }
 
-    public function setKpi($kpi): Call
+    public function setKpi(Collection $kpi): Call
     {
         $this->kpi = $kpi;
         return $this;
     }
 
-    public function getCluster()
+    /**
+     * @return Collection|Cluster[]
+     */
+    public function getCluster(): Collection
     {
         return $this->cluster;
     }
 
-    public function setCluster($cluster): Call
+    public function setCluster(Collection $cluster): Call
     {
         $this->cluster = $cluster;
         return $this;
