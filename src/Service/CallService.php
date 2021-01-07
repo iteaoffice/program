@@ -3,10 +3,9 @@
 /**
  * ITEA Office all rights reserved
  *
- * @category    Program
- *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2021 ITEA Office (https://itea3.org)
+ * @license     https://itea3.org/license.txt proprietary
  */
 
 declare(strict_types=1);
@@ -51,7 +50,8 @@ class CallService extends AbstractService
         EntityManager $entityManager,
         GeneralService $generalService,
         AdminService $adminService
-    ) {
+    )
+    {
         parent::__construct($entityManager);
 
         $this->generalService = $generalService;
@@ -72,18 +72,18 @@ class CallService extends AbstractService
     {
         $cannotDeleteCallReasons = [];
 
-        if (! $call->getProject()->isEmpty()) {
+        if (!$call->getProject()->isEmpty()) {
             $cannotDeleteCallReasons[] = 'This programme call has projects';
         }
 
-        if (! $call->getNda()->isEmpty()) {
+        if (!$call->getNda()->isEmpty()) {
             $cannotDeleteCallReasons[] = 'This programme call has NDA';
         }
 
-        if (! $call->getCalendar()->isEmpty()) {
+        if (!$call->getCalendar()->isEmpty()) {
             $cannotDeleteCallReasons[] = 'This programme call has calendar items';
         }
-        if (! $call->getDoa()->isEmpty()) {
+        if (!$call->getDoa()->isEmpty()) {
             $cannotDeleteCallReasons[] = 'This programme call has DOAs';
         }
 

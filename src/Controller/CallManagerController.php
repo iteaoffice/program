@@ -1,12 +1,11 @@
 <?php
 
 /**
+ * ITEA Office all rights reserved
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2021 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
- *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
 declare(strict_types=1);
@@ -69,7 +68,8 @@ final class CallManagerController extends AbstractActionController
         CountryService $countryService,
         EntityManager $entityManager,
         TranslatorInterface $translator
-    ) {
+    )
+    {
         $this->callService        = $callService;
         $this->formService        = $formService;
         $this->affiliationService = $affiliationService;
@@ -166,7 +166,7 @@ final class CallManagerController extends AbstractActionController
         $data = $request->getPost()->toArray();
         $form = $this->formService->prepare($call, $data);
 
-        if (! $this->callService->canDeleteCall($call)) {
+        if (!$this->callService->canDeleteCall($call)) {
             $form->remove('delete');
         }
 
@@ -176,6 +176,7 @@ final class CallManagerController extends AbstractActionController
             }
 
             if (isset($data['delete']) && $this->callService->canDeleteCall($call)) {
+
                 $this->callService->delete($call);
 
                 $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-program-call-has-been-deleted-successfully")));

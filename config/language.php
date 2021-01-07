@@ -1,4 +1,11 @@
 <?php
+/**
+ * ITEA Office all rights reserved
+ *
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2021 ITEA Office (https://itea3.org)
+ * @license     https://itea3.org/license.txt proprietary
+ */
 
 _('txt-program-name-label');
 _('txt-program-name-help-block');
@@ -6,27 +13,17 @@ _('txt-program-number-label');
 _('txt-program-label-help-block');
 _('txt-program-invoice-method-label');
 _('txt-program-invoice-method-help-block');
-_('txt-program-cluster-label');
-_('txt-program-cluster-help-block');
 _('txt-date-national-application-label');
 _('txt-date-national-application-help-block');
 _('txt-date-expected-funding-decision-label');
 _('txt-date-expected-funding-decision-help-block');
 _('txt-program-call');
-_('txt-call-project-number-mask-label');
-_('txt-call-project-number-mask-help-block');
-_('txt-call-instruction-text-placeholder');
-_('txt-txt-call-instruction-text-label');
-_('txt-call-instruction-text-help-block');
-_('txt-call-po-open-date-label');
-_('txt-call-po-open-date-help-block');
-_('txt-call-po-close-date-label');
-_('txt-call-po-close-date-help-block');
+_('txt-po-open-date');
+_('txt-po-close-date');
 _('txt-loi-submission-date-label');
 _('txt-loi-submission-help-block');
 _('txt-fpp-open-date');
-_('txt-call-fpp-close-date-label');
-_('txt-call-fpp-close-date-help-block');
+_('txt-fpp-close-date');
 _('txt-doa-submission-date-label');
 _('txt-doa-submission-help-block');
 _('txt-label-announcement-date-label');
@@ -39,19 +36,13 @@ _('txt-call-project-report-label');
 _('txt-call-project-report-help-block');
 _('txt-nda-requirements');
 _('txt-nda-requirements-inline-help');
-_('txt-call-challenge-per-project-label');
-_('txt-call-challenge-per-project-help-block');
 _('txt-program-call-active-label');
 _('txt-program-call-active-inline-help');
 _('txt-program-call-call-stages-label');
 _('txt-program-call-call-stages-help-block');
 _('txt-program-call-po-has-work-packages-label');
 _('txt-program-call-po-has-work-packages-help-block');
-_('txt-program-call-has-online-work-packages-label');
-_('txt-program-call-has-online-work-packages-help-block');
 _('txt-program');
-_('txt-program-call-cluster-label');
-_('txt-program-call-cluster-help-block');
 _('txt-inactive-for-projects');
 _('txt-active-for-projects');
 _('txt-no-doa-required');
@@ -67,12 +58,8 @@ _('txt-project-report-single');
 _('txt-project-report-double');
 _('txt-one-stage-call');
 _('txt-two-stage-call');
-_('txt-one-challenge-per-project');
-_('txt-multiple-challenge-per-project');
 _('txt-po-has-work-packages');
 _('txt-po-has-no-work-packages');
-_('txt-has-online-work-package-deliverables-and-tasks');
-_('txt-has-no-online-work-package-deliverables-and-tasks');
 _('txt-nda-file');
 _('txt-contact');
 _('txt-country');

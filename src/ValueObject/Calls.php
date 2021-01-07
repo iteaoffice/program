@@ -1,4 +1,11 @@
 <?php
+/**
+ * ITEA Office all rights reserved
+ *
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2021 ITEA Office (https://itea3.org)
+ * @license     https://itea3.org/license.txt proprietary
+ */
 
 /**
  *
@@ -24,17 +31,17 @@ final class Calls
 
     public function isEmpty(): bool
     {
-        return ! $this->hasOpen() && ! $this->hasUpcoming();
+        return !$this->hasOpen() && !$this->hasUpcoming();
     }
 
     public function hasOpen(): bool
     {
-        return ! $this->open->isEmpty();
+        return !$this->open->isEmpty();
     }
 
     public function hasUpcoming(): bool
     {
-        return ! $this->upcoming->isEmpty();
+        return !$this->upcoming->isEmpty();
     }
 
     public function getCallIds(): array

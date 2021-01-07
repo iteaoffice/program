@@ -3,13 +3,9 @@
 /**
  * ITEA Office all rights reserved
  *
- * @category   Program
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  Copyright (c) 2019 ITEA Office (https://itea3.org)
- * @license    https://itea3.org/license.txt proprietary
- *
- * @link       https://itea3.org
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2021 ITEA Office (https://itea3.org)
+ * @license     https://itea3.org/license.txt proprietary
  */
 
 declare(strict_types=1);
@@ -94,8 +90,7 @@ final class CallInformationBox extends AbstractHelper
 
             $link = '';
             if ($this->callService->isOpen($call)) {
-                $link = sprintf(
-                    '<br><a class="btn btn-primary my-2" href="%s">%s %s</a>',
+                $link = sprintf('<br><a class="btn btn-primary my-2" href="%s">%s %s</a>',
                     $this->router->assemble(['callId' => $call->getId()], ['name' => 'community/project/new']),
                     '<i class="fa fa-plus"></i>',
                     sprintf($this->translator->translate("txt-create-project-in-%s"), $call->getCall())

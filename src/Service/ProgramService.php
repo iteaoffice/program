@@ -3,10 +3,9 @@
 /**
  * ITEA Office all rights reserved
  *
- * @category    Program
- *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2021 ITEA Office (https://itea3.org)
+ * @license     https://itea3.org/license.txt proprietary
  */
 
 declare(strict_types=1);
@@ -42,7 +41,8 @@ class ProgramService extends AbstractService
         OrganisationSearchService $organisationSearchService,
         ProjectSearchService $projectSearchService,
         CountrySearchService $countrySearchService
-    ) {
+    )
+    {
         parent::__construct($entityManager);
 
         $this->organisationSearchService = $organisationSearchService;
@@ -59,23 +59,23 @@ class ProgramService extends AbstractService
     {
         $cannotDeleteProgramReasons = [];
 
-        if (! $program->getCall()->isEmpty()) {
+        if (!$program->getCall()->isEmpty()) {
             $cannotDeleteProgramReasons[] = 'This programme has calls';
         }
 
-        if (! $program->getContactDnd()->isEmpty()) {
+        if (!$program->getContactDnd()->isEmpty()) {
             $cannotDeleteProgramReasons[] = 'This programme has DND';
         }
 
-        if (! $program->getParentDoa()->isEmpty()) {
+        if (!$program->getParentDoa()->isEmpty()) {
             $cannotDeleteProgramReasons[] = 'This programme has Parent DOAs';
         }
 
-        if (! $program->getParentInvoice()->isEmpty()) {
+        if (!$program->getParentInvoice()->isEmpty()) {
             $cannotDeleteProgramReasons[] = 'This programme has Parent Invoices';
         }
 
-        if (! $program->getParentInvoiceExtra()->isEmpty()) {
+        if (!$program->getParentInvoiceExtra()->isEmpty()) {
             $cannotDeleteProgramReasons[] = 'This programme has Parent Extra Invoices';
         }
 

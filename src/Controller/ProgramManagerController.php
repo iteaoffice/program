@@ -1,12 +1,11 @@
 <?php
 
 /**
+ * ITEA Office all rights reserved
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2021 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
- *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
 declare(strict_types=1);
@@ -125,7 +124,7 @@ final class ProgramManagerController extends AbstractActionController
         $data = $this->getRequest()->getPost()->toArray();
         $form = $this->formService->prepare($program, $data);
 
-        if (! $this->programService->canDeleteProgram($program)) {
+        if (!$this->programService->canDeleteProgram($program)) {
             $form->remove('delete');
         }
 
@@ -135,6 +134,7 @@ final class ProgramManagerController extends AbstractActionController
             }
 
             if (isset($data['delete']) && $this->programService->canDeleteProgram($program)) {
+
                 $this->programService->delete($program);
 
                 $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-program-has-been-deleted-successfully")));
