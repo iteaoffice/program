@@ -50,8 +50,7 @@ class CallService extends AbstractService
         EntityManager $entityManager,
         GeneralService $generalService,
         AdminService $adminService
-    )
-    {
+    ) {
         parent::__construct($entityManager);
 
         $this->generalService = $generalService;
@@ -72,18 +71,18 @@ class CallService extends AbstractService
     {
         $cannotDeleteCallReasons = [];
 
-        if (!$call->getProject()->isEmpty()) {
+        if (! $call->getProject()->isEmpty()) {
             $cannotDeleteCallReasons[] = 'This programme call has projects';
         }
 
-        if (!$call->getNda()->isEmpty()) {
+        if (! $call->getNda()->isEmpty()) {
             $cannotDeleteCallReasons[] = 'This programme call has NDA';
         }
 
-        if (!$call->getCalendar()->isEmpty()) {
+        if (! $call->getCalendar()->isEmpty()) {
             $cannotDeleteCallReasons[] = 'This programme call has calendar items';
         }
-        if (!$call->getDoa()->isEmpty()) {
+        if (! $call->getDoa()->isEmpty()) {
             $cannotDeleteCallReasons[] = 'This programme call has DOAs';
         }
 

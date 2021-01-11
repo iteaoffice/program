@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -31,17 +32,17 @@ final class Calls
 
     public function isEmpty(): bool
     {
-        return !$this->hasOpen() && !$this->hasUpcoming();
+        return ! $this->hasOpen() && ! $this->hasUpcoming();
     }
 
     public function hasOpen(): bool
     {
-        return !$this->open->isEmpty();
+        return ! $this->open->isEmpty();
     }
 
     public function hasUpcoming(): bool
     {
-        return !$this->upcoming->isEmpty();
+        return ! $this->upcoming->isEmpty();
     }
 
     public function getCallIds(): array

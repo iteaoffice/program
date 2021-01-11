@@ -41,8 +41,7 @@ class ProgramService extends AbstractService
         OrganisationSearchService $organisationSearchService,
         ProjectSearchService $projectSearchService,
         CountrySearchService $countrySearchService
-    )
-    {
+    ) {
         parent::__construct($entityManager);
 
         $this->organisationSearchService = $organisationSearchService;
@@ -59,23 +58,23 @@ class ProgramService extends AbstractService
     {
         $cannotDeleteProgramReasons = [];
 
-        if (!$program->getCall()->isEmpty()) {
+        if (! $program->getCall()->isEmpty()) {
             $cannotDeleteProgramReasons[] = 'This programme has calls';
         }
 
-        if (!$program->getContactDnd()->isEmpty()) {
+        if (! $program->getContactDnd()->isEmpty()) {
             $cannotDeleteProgramReasons[] = 'This programme has DND';
         }
 
-        if (!$program->getParentDoa()->isEmpty()) {
+        if (! $program->getParentDoa()->isEmpty()) {
             $cannotDeleteProgramReasons[] = 'This programme has Parent DOAs';
         }
 
-        if (!$program->getParentInvoice()->isEmpty()) {
+        if (! $program->getParentInvoice()->isEmpty()) {
             $cannotDeleteProgramReasons[] = 'This programme has Parent Invoices';
         }
 
-        if (!$program->getParentInvoiceExtra()->isEmpty()) {
+        if (! $program->getParentInvoiceExtra()->isEmpty()) {
             $cannotDeleteProgramReasons[] = 'This programme has Parent Extra Invoices';
         }
 

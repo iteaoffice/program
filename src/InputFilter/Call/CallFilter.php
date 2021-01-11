@@ -97,8 +97,7 @@ class CallFilter extends InputFilter
                                 Callback::INVALID_VALUE => 'If a value for PO Open date is given, a value for PO Close date is mandatory',
                             ],
                             'callback' => function ($value, $context = []) {
-
-                                return !(empty($context['poCloseDate']) && !empty($value));
+                                return ! (empty($context['poCloseDate']) && ! empty($value));
                             },
                         ],
                     ],
@@ -127,8 +126,7 @@ class CallFilter extends InputFilter
                                 Callback::INVALID_VALUE => 'If a value for PO Close date is given, a value for PO Open date is mandatory',
                             ],
                             'callback' => function ($value, $context = []) {
-
-                                return !(empty($context['poOpenDate']) && !empty($value));
+                                return ! (empty($context['poOpenDate']) && ! empty($value));
                             },
                         ],
                     ],
@@ -139,7 +137,6 @@ class CallFilter extends InputFilter
                                 Callback::INVALID_VALUE => 'The PO Close date end date should be later than the PO Open Date',
                             ],
                             'callback' => function ($value, $context = []) {
-
                                 $startDate = DateTime::createFromFormat('Y-m-d H:i:s', $context['poOpenDate']);
                                 $endDate   = DateTime::createFromFormat('Y-m-d H:i:s', $value);
 
@@ -190,8 +187,7 @@ class CallFilter extends InputFilter
                                 Callback::INVALID_VALUE => 'If a value for FPP Open date is given, a value for FPP Close date is mandatory',
                             ],
                             'callback' => function ($value, $context = []) {
-
-                                return !(empty($context['fppCloseDate']) && !empty($value));
+                                return ! (empty($context['fppCloseDate']) && ! empty($value));
                             },
                         ],
                     ],
@@ -258,8 +254,7 @@ class CallFilter extends InputFilter
                                 Callback::INVALID_VALUE => 'If a value for FPP Close date is given, a value for FPP Open date is mandatory',
                             ],
                             'callback' => function ($value, $context = []) {
-
-                                return !(empty($context['fppOpenDate']) && !empty($value));
+                                return ! (empty($context['fppOpenDate']) && ! empty($value));
                             },
                         ],
                     ],
@@ -270,7 +265,6 @@ class CallFilter extends InputFilter
                                 Callback::INVALID_VALUE => 'The FPP Close date end date should be later than the FPP Open Date',
                             ],
                             'callback' => function ($value, $context = []) {
-
                                 $startDate = DateTime::createFromFormat('Y-m-d H:i:s', $context['fppOpenDate']);
                                 $endDate   = DateTime::createFromFormat('Y-m-d H:i:s', $value);
 
@@ -324,12 +318,11 @@ class CallFilter extends InputFilter
                                 Callback::INVALID_VALUE => 'If a 2 stage call is chosen, the date for PO start and PO end has to be given',
                             ],
                             'callback' => function ($value, $context = []) {
-
                                 if ((int)$value === Call::ONE_STAGE_CALL) {
                                     return true;
                                 }
 
-                                return !empty($context['poOpenDate']) && !empty($context['poCloseDate']);
+                                return ! empty($context['poOpenDate']) && ! empty($context['poCloseDate']);
                             },
                         ],
                     ],

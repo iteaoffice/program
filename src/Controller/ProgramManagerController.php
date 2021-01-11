@@ -124,7 +124,7 @@ final class ProgramManagerController extends AbstractActionController
         $data = $this->getRequest()->getPost()->toArray();
         $form = $this->formService->prepare($program, $data);
 
-        if (!$this->programService->canDeleteProgram($program)) {
+        if (! $this->programService->canDeleteProgram($program)) {
             $form->remove('delete');
         }
 
@@ -134,7 +134,6 @@ final class ProgramManagerController extends AbstractActionController
             }
 
             if (isset($data['delete']) && $this->programService->canDeleteProgram($program)) {
-
                 $this->programService->delete($program);
 
                 $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-program-has-been-deleted-successfully")));

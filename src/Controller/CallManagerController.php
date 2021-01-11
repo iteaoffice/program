@@ -68,8 +68,7 @@ final class CallManagerController extends AbstractActionController
         CountryService $countryService,
         EntityManager $entityManager,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->callService        = $callService;
         $this->formService        = $formService;
         $this->affiliationService = $affiliationService;
@@ -166,7 +165,7 @@ final class CallManagerController extends AbstractActionController
         $data = $request->getPost()->toArray();
         $form = $this->formService->prepare($call, $data);
 
-        if (!$this->callService->canDeleteCall($call)) {
+        if (! $this->callService->canDeleteCall($call)) {
             $form->remove('delete');
         }
 
@@ -176,7 +175,6 @@ final class CallManagerController extends AbstractActionController
             }
 
             if (isset($data['delete']) && $this->callService->canDeleteCall($call)) {
-
                 $this->callService->delete($call);
 
                 $this->flashMessenger()->addSuccessMessage(sprintf($this->translator->translate("txt-program-call-has-been-deleted-successfully")));

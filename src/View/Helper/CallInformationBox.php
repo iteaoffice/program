@@ -90,7 +90,8 @@ final class CallInformationBox extends AbstractHelper
 
             $link = '';
             if ($this->callService->isOpen($call)) {
-                $link = sprintf('<br><a class="btn btn-primary my-2" href="%s">%s %s</a>',
+                $link = sprintf(
+                    '<br><a class="btn btn-primary my-2" href="%s">%s %s</a>',
                     $this->router->assemble(['callId' => $call->getId()], ['name' => 'community/project/new']),
                     '<i class="fa fa-plus"></i>',
                     sprintf($this->translator->translate("txt-create-project-in-%s"), $call->getCall())

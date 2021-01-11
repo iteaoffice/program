@@ -108,8 +108,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
         CountryService $countryService,
         EntityManager $entityManager,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->projectService     = $projectService;
         $this->versionService     = $versionService;
         $this->affiliationService = $affiliationService;
@@ -127,8 +126,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
         array $organisationTypeIds = [],
         array $include = [],
         int $output = Statistics::OUTPUT_PROJECTS
-    ): self
-    {
+    ): self {
         set_time_limit(0);
         ini_set('memory_limit', '2000M');
 
@@ -310,9 +308,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
     {
         /** @var Project $project */
         foreach ($projects as $project) {
-
-            if (!($this->includeRejectedPO || $this->includeRejectedFPP || $this->includeCancelledProjects)) {
-                if (!$this->projectService->isSuccessful($project)) {
+            if (! ($this->includeRejectedPO || $this->includeRejectedFPP || $this->includeCancelledProjects)) {
+                if (! $this->projectService->isSuccessful($project)) {
                     continue;
                 }
             }
@@ -330,7 +327,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                 $fullProjectProposal = $this->projectService->getAnyLatestProjectVersion($project, $fpp);
                 $latestVersion       = $this->projectService->getAnyLatestProjectVersion($project);
 
-                if (!$this->includeRejectedCR && null !== $latestVersion && $latestVersion->isRejected()) {
+                if (! $this->includeRejectedCR && null !== $latestVersion && $latestVersion->isRejected()) {
                     $latestVersion = $this->projectService->getLatestApprovedProjectVersion($project);
                 }
             } else {
@@ -338,25 +335,25 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                 $fullProjectProposal = $this->projectService->getLatestReviewedProjectVersion($project, $fpp);
                 $latestVersion       = $this->projectService->getLatestReviewedProjectVersion($project);
 
-                if (!$this->includeRejectedCR && null !== $latestVersion && $latestVersion->isRejected()) {
+                if (! $this->includeRejectedCR && null !== $latestVersion && $latestVersion->isRejected()) {
                     $latestVersion = $this->projectService->getLatestApprovedProjectVersion($project);
                 }
             }
 
             //Stop the process when we don't include rejected PO and when the PO has not been approved
-            if (!$this->includeRejectedPO && null !== $projectOutline && $projectOutline->isReviewed() && $projectOutline->isRejected()) {
+            if (! $this->includeRejectedPO && null !== $projectOutline && $projectOutline->isReviewed() && $projectOutline->isRejected()) {
                 continue;
             }
 
             //Stop the process when we don't include rejected PO and when the PO has not been approved
             if (
-                !$this->includeRejectedFPP && null !== $fullProjectProposal && $fullProjectProposal->isReviewed()
+                ! $this->includeRejectedFPP && null !== $fullProjectProposal && $fullProjectProposal->isReviewed()
                 && $fullProjectProposal->isRejected()
             ) {
                 continue;
             }
 
-            if (!$this->includeCancelledProjects && $this->projectService->isCancelled($project)) {
+            if (! $this->includeCancelledProjects && $this->projectService->isCancelled($project)) {
                 continue;
             }
 
@@ -376,13 +373,13 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
             /** @var Affiliation $affiliation */
             foreach ($affiliations as $affiliation) {
-                if (!$this->includeDeactivatedPartners && !$affiliation->isActive()) {
+                if (! $this->includeDeactivatedPartners && ! $affiliation->isActive()) {
                     continue;
                 }
 
                 if (
-                    !empty($this->countryIds)
-                    && !in_array(
+                    ! empty($this->countryIds)
+                    && ! in_array(
                         $affiliation->getOrganisation()->getCountry()->getId(),
                         $this->countryIds,
                         false
@@ -392,8 +389,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                 }
 
                 if (
-                    !empty($this->organisationTypeIds)
-                    && !in_array(
+                    ! empty($this->organisationTypeIds)
+                    && ! in_array(
                         $affiliation->getOrganisation()->getType()->getId(),
                         $this->organisationTypeIds,
                         false
@@ -425,27 +422,27 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                         if (null !== $projectOutline) {
                             $poEffortVersionPerYear
                                 = $this->versionService->findTotalEffortVersionByAffiliationAndVersionPerYear(
-                                $affiliation,
-                                $projectOutline
-                            );
+                                    $affiliation,
+                                    $projectOutline
+                                );
                             $poCostVersionPerYear
                                 = $this->versionService->findTotalCostVersionByAffiliationAndVersionPerYear(
-                                $affiliation,
-                                $projectOutline
-                            );
+                                    $affiliation,
+                                    $projectOutline
+                                );
                         }
 
                         if (null !== $fullProjectProposal) {
                             $fppEffortVersionPerYear
                                 = $this->versionService->findTotalEffortVersionByAffiliationAndVersionPerYear(
-                                $affiliation,
-                                $fullProjectProposal
-                            );
+                                    $affiliation,
+                                    $fullProjectProposal
+                                );
                             $fppCostVersionPerYear
                                 = $this->versionService->findTotalCostVersionByAffiliationAndVersionPerYear(
-                                $affiliation,
-                                $fullProjectProposal
-                            );
+                                    $affiliation,
+                                    $fullProjectProposal
+                                );
                         }
 
                         $draftEffort = $this->projectService->findTotalEffortByAffiliationPerYear($affiliation);
@@ -455,14 +452,14 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                     if (null !== $latestVersion) {
                         $latestEffortVersionPerYear
                             = $this->versionService->findTotalEffortVersionByAffiliationAndVersionPerYear(
-                            $affiliation,
-                            $latestVersion
-                        );
+                                $affiliation,
+                                $latestVersion
+                            );
                         $latestCostVersionPerYear
                             = $this->versionService->findTotalCostVersionByAffiliationAndVersionPerYear(
-                            $affiliation,
-                            $latestVersion
-                        );
+                                $affiliation,
+                                $latestVersion
+                            );
                     }
 
                     if (null !== $latestContractVersion) {
@@ -628,7 +625,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                     }
                 }
 
-                if (!$this->splitPerYear) {
+                if (! $this->splitPerYear) {
                     $projectColumn = [];
 
                     $poEffortVersion     = null;
@@ -642,9 +639,9 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                     if (null !== $projectOutline) {
                         $poEffortVersion
                                        = $this->versionService->findTotalEffortVersionByAffiliationAndVersion(
-                            $affiliation,
-                            $projectOutline
-                        );
+                                           $affiliation,
+                                           $projectOutline
+                                       );
                         $poCostVersion = $this->versionService->findTotalCostVersionByAffiliationAndVersion(
                             $affiliation,
                             $projectOutline
@@ -654,9 +651,9 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                     if (null !== $fullProjectProposal) {
                         $fppEffortVersion
                                         = $this->versionService->findTotalEffortVersionByAffiliationAndVersion(
-                            $affiliation,
-                            $fullProjectProposal
-                        );
+                                            $affiliation,
+                                            $fullProjectProposal
+                                        );
                         $fppCostVersion = $this->versionService->findTotalCostVersionByAffiliationAndVersion(
                             $affiliation,
                             $fullProjectProposal
@@ -666,14 +663,14 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                     if (null !== $latestVersion) {
                         $latestEffortVersion
                             = $this->versionService->findTotalEffortVersionByAffiliationAndVersion(
-                            $affiliation,
-                            $latestVersion
-                        );
+                                $affiliation,
+                                $latestVersion
+                            );
                         $latestCostVersion
                             = $this->versionService->findTotalCostVersionByAffiliationAndVersion(
-                            $affiliation,
-                            $latestVersion
-                        );
+                                $affiliation,
+                                $latestVersion
+                            );
                     }
 
                     if (null !== $latestContractVersion) {
@@ -872,8 +869,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
     {
         /** @var Project $project */
         foreach ($projects as $project) {
-            if (!($this->includeRejectedPO || $this->includeRejectedFPP || $this->includeCancelledProjects)) {
-                if (!$this->projectService->isSuccessful($project)) {
+            if (! ($this->includeRejectedPO || $this->includeRejectedFPP || $this->includeCancelledProjects)) {
+                if (! $this->projectService->isSuccessful($project)) {
                     continue;
                 }
             }
@@ -891,7 +888,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                 $fullProjectProposal = $this->projectService->getAnyLatestProjectVersion($project, $fpp);
                 $latestVersion       = $this->projectService->getAnyLatestProjectVersion($project);
 
-                if (!$this->includeRejectedCR && null !== $latestVersion && $latestVersion->isRejected()) {
+                if (! $this->includeRejectedCR && null !== $latestVersion && $latestVersion->isRejected()) {
                     $latestVersion = $this->projectService->getLatestApprovedProjectVersion($project);
                 }
             } else {
@@ -899,25 +896,25 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                 $fullProjectProposal = $this->projectService->getLatestReviewedProjectVersion($project, $fpp);
                 $latestVersion       = $this->projectService->getLatestReviewedProjectVersion($project);
 
-                if (!$this->includeRejectedCR && null !== $latestVersion && $latestVersion->isRejected()) {
+                if (! $this->includeRejectedCR && null !== $latestVersion && $latestVersion->isRejected()) {
                     $latestVersion = $this->projectService->getLatestApprovedProjectVersion($project);
                 }
             }
 
             //Stop the process when we don't include rejected PO and when the PO has not been approved
-            if (!$this->includeRejectedPO && null !== $projectOutline && $projectOutline->isReviewed() && $projectOutline->isRejected()) {
+            if (! $this->includeRejectedPO && null !== $projectOutline && $projectOutline->isReviewed() && $projectOutline->isRejected()) {
                 continue;
             }
 
             //Stop the process when we don't include rejected PO and when the PO has not been approved
             if (
-                !$this->includeRejectedFPP && null !== $fullProjectProposal && $fullProjectProposal->isReviewed()
+                ! $this->includeRejectedFPP && null !== $fullProjectProposal && $fullProjectProposal->isReviewed()
                 && $fullProjectProposal->isRejected()
             ) {
                 continue;
             }
 
-            if (!$this->includeCancelledProjects && $this->projectService->isCancelled($project)) {
+            if (! $this->includeCancelledProjects && $this->projectService->isCancelled($project)) {
                 continue;
             }
 
@@ -1087,7 +1084,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
         $response = new Response();
 
-        if (!($this->spreadsheet instanceof Spreadsheet)) {
+        if (! ($this->spreadsheet instanceof Spreadsheet)) {
             return $response->setStatusCode(Response::STATUS_CODE_404);
         }
 
