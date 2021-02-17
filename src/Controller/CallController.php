@@ -15,14 +15,14 @@ namespace Program\Controller;
 use Contact\Entity\Contact;
 use Event\Service\MeetingService;
 use Event\Service\RegistrationService;
-use Program\Service\CallService;
-use Project\Service\HelpService;
-use Project\Service\IdeaService;
-use Project\Service\ProjectService;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\Mvc\Plugin\Identity\Identity;
 use Laminas\View\Model\ViewModel;
+use Program\Service\CallService;
+use Project\Service\HelpService;
+use Project\Service\IdeaService;
+use Project\Service\ProjectService;
 
 /**
  * @method Identity|Contact identity()
@@ -46,11 +46,11 @@ final class CallController extends AbstractActionController
         MeetingService $meetingService,
         RegistrationService $registrationService
     ) {
-        $this->callService = $callService;
-        $this->projectService = $projectService;
-        $this->ideaService = $ideaService;
-        $this->helpService = $helpService;
-        $this->meetingService = $meetingService;
+        $this->callService         = $callService;
+        $this->projectService      = $projectService;
+        $this->ideaService         = $ideaService;
+        $this->helpService         = $helpService;
+        $this->meetingService      = $meetingService;
         $this->registrationService = $registrationService;
     }
 
@@ -58,11 +58,7 @@ final class CallController extends AbstractActionController
     public function indexAction()
     {
         $callId = $this->params('call');
-        $call = $this->callService->findLastActiveCall();
-
-        if (null !== $callId) {
-            $call = $this->callService->findCallById((int)$callId);
-        }
+        $call   = $this->callService->findCallById((int)$callId);
 
         if (null === $call) {
             return $this->redirect()->toRoute('community');
@@ -70,17 +66,13 @@ final class CallController extends AbstractActionController
 
         $contact = $this->identity();
 
-        $projects = [];
         $ideas = [];
-        $tool = null;
+        $tool  = null;
 
-        if (null !== $call) {
-            $projects = $this->projectService->findInvolvedProjectsByCallAndContact($call, $contact);
-
-            if ($call->hasIdeaTool()) {
-                $tool = $call->getIdeaTool();
-                $ideas = $this->ideaService->getInvolvedIdeaAndInviteListByToolAndContact($tool, $contact);
-            }
+        $projects = $this->projectService->findInvolvedProjectsByCallAndContact($call, $contact);
+        if ($call->hasIdeaTool()) {
+            $tool  = $call->getIdeaTool();
+            $ideas = $this->ideaService->getInvolvedIdeaAndInviteListByToolAndContact($tool, $contact);
         }
 
         return new ViewModel(

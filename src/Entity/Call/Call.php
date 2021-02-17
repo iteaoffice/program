@@ -14,7 +14,6 @@ namespace Program\Entity\Call;
 
 use Affiliation\Entity\Questionnaire\Questionnaire;
 use Calendar\Entity\Calendar;
-use Cluster\Entity\Cluster;
 use DateTime;
 use Doctrine\Common\Collections;
 use Doctrine\Common\Collections\Collection;
@@ -28,7 +27,6 @@ use Program\Entity\Program;
 use Project\Entity\Idea\Tool;
 use Project\Entity\Project;
 use Publication\Entity\Publication;
-use Quality\Entity\Kpi;
 
 use function sprintf;
 
@@ -340,13 +338,6 @@ class Call extends AbstractEntity
      */
     private $calendar;
     /**
-     * @ORM\OneToMany(targetEntity="Program\Entity\Call\Doa", cascade={"persist"}, mappedBy="call")
-     * @Annotation\Exclude()
-     *
-     * @var Doa[]|Collections\ArrayCollection
-     */
-    private $doa;
-    /**
      * @ORM\OneToOne (targetEntity="Project\Entity\Idea\Tool", cascade={"persist"}, mappedBy="call")
      * @Annotation\Exclude()
      *
@@ -375,10 +366,10 @@ class Call extends AbstractEntity
      */
     private $questionnaires;
     /**
-     * @ORM\OneToMany(targetEntity="Quality\Entity\Kpi", cascade={"persist"}, mappedBy="programCall")
+     * @ORM\OneToMany(targetEntity="\Quality\Entity\Kpi", cascade={"persist"}, mappedBy="programCall")
      * @Annotation\Exclude()
      *
-     * @var Kpi[]|Collections\ArrayCollection
+     * @var \Quality\Entity\Kpi[]|Collections\ArrayCollection
      */
     private $kpi;
     /**
@@ -402,7 +393,7 @@ class Call extends AbstractEntity
      * )
      * @Annotation\Attributes({"label":"txt-program-call-cluster-label","help-block":"txt-program-call-cluster-help-block"})
      *
-     * @var Cluster[]|Collections\ArrayCollection
+     * @var \Cluster\Entity\Cluster[]|Collections\ArrayCollection
      */
     private $cluster;
 
@@ -412,7 +403,6 @@ class Call extends AbstractEntity
         $this->project               = new Collections\ArrayCollection();
         $this->nda                   = new Collections\ArrayCollection();
         $this->calendar              = new Collections\ArrayCollection();
-        $this->doa                   = new Collections\ArrayCollection();
         $this->callCountry           = new Collections\ArrayCollection();
         $this->challenge             = new Collections\ArrayCollection();
         $this->proxyProject          = new Collections\ArrayCollection();
@@ -767,18 +757,6 @@ class Call extends AbstractEntity
         return $this;
     }
 
-    public function getDoa()
-    {
-        return $this->doa;
-    }
-
-    public function setDoa($doa): Call
-    {
-        $this->doa = $doa;
-
-        return $this;
-    }
-
     public function getCallCountry()
     {
         return $this->callCountry;
@@ -954,29 +932,23 @@ class Call extends AbstractEntity
         return self::$hasOnlineWorkPackageTemplates[$this->hasOnlineWorkPackages] ?? '';
     }
 
-    /**
-     * @return Collection|Kpi[]
-     */
-    public function getKpi(): Collection
+    public function getKpi()
     {
         return $this->kpi;
     }
 
-    public function setKpi(Collection $kpi): Call
+    public function setKpi($kpi): Call
     {
         $this->kpi = $kpi;
         return $this;
     }
 
-    /**
-     * @return Collection|Cluster[]
-     */
-    public function getCluster(): Collection
+    public function getCluster()
     {
         return $this->cluster;
     }
 
-    public function setCluster(Collection $cluster): Call
+    public function setCluster($cluster): Call
     {
         $this->cluster = $cluster;
         return $this;

@@ -34,11 +34,10 @@ class Funder extends AbstractEntity
             self::SHOW_ON_WEBSITE => 'txt-show-on-website',
         ];
     /**
-     * @var int
-     *
      * @ORM\Column(name="funder_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @var int
      */
     private $id;
     /**
@@ -119,7 +118,7 @@ class Funder extends AbstractEntity
 
     public function __construct()
     {
-        $this->position = 1;
+        $this->position      = 1;
         $this->showOnWebsite = self::SHOW_ON_WEBSITE;
     }
 

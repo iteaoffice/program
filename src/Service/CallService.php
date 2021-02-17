@@ -82,11 +82,8 @@ class CallService extends AbstractService
         if (! $call->getCalendar()->isEmpty()) {
             $cannotDeleteCallReasons[] = 'This programme call has calendar items';
         }
-        if (! $call->getDoa()->isEmpty()) {
-            $cannotDeleteCallReasons[] = 'This programme call has DOAs';
-        }
 
-        if (null !== $call->getIdeaTool()) {
+        if ($call->hasIdeaTool()) {
             $cannotDeleteCallReasons[] = 'This programme call has a Project Idea Tool';
         }
 
@@ -101,16 +98,6 @@ class CallService extends AbstractService
         return new ArrayCollection($repository->findNotApprovedNda());
     }
 
-    /*
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     */
-
     public function findActiveVersionTypeInCall(Call $call): Type
     {
         $today = new DateTime();
@@ -122,40 +109,14 @@ class CallService extends AbstractService
         return $this->entityManager->find(Type::class, Type::TYPE_FPP);
     }
 
-    public function findLastActiveCall(): ?Call
-    {
-        print __CLASS__;
-        die(__CLASS__);
-        if (null !== $this->findOpenCall()->getFirst()) {
-            return $this->findOpenCall()->getFirst();
-        }
-
-        return $this->findOpenCall()->getUpcoming();
-    }
-
-    /**
-     * @return Calls
-     * @todo handle this
-     * @deprecated
-     */
     public function findOpenCall(): Calls
     {
         $repository    = $this->entityManager->getRepository(Call::class);
         $openCalls     = $repository->findOpenCalls();
         $upcomingCalls = $repository->findUpcomingCalls();
 
-
         return new Calls($openCalls, $upcomingCalls);
     }
-
-
-    /**
-     *
-     *
-     *
-     *
-     *
-     */
 
     public function findNextCall(Call $call): ?Call
     {

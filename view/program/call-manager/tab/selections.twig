@@ -1,0 +1,458 @@
+<h2>{{ translate("txt-selections") }}</h2>
+
+<h3>{{ translate("txt-%s-po-submitted-pl-proxy-pl")|format(call) }}</h3>
+<pre><code class="sql d-block py-3">SELECT contact_id
+FROM project
+WHERE programcall_id = {{ call.id }}
+  AND project_id IN (
+    SELECT project_id FROM project_version WHERE type_id = 1
+    )
+
+UNION
+
+SELECT project_contact_proxy.contact_id
+FROM project_contact_proxy
+         INNER JOIN project ON project.project_id = project_contact_proxy.project_id
+WHERE programcall_id = {{ call.id }}
+  AND project.project_id IN (
+    SELECT project_id FROM project_version WHERE type_id = 1
+    )</code></pre>
+
+<h3>{{ translate("txt-%s-po-submitted-tc-proxy-tc-cc")|format(call) }}</h3>
+<pre><code class="sql d-block py-3">SELECT affiliation.contact_id
+FROM affiliation
+WHERE affiliation.project_id IN (
+    SELECT project.project_id
+    FROM project
+    WHERE programcall_id = {{ call.id }}
+      AND project.project_id IN (
+        SELECT project_version.project_id FROM project_version WHERE type_id = 1)
+)
+  AND affiliation.date_end IS NULL
+
+UNION
+
+SELECT affiliation_contact_proxy.contact_id
+FROM affiliation_contact_proxy
+WHERE affiliation_id IN (
+    SELECT affiliation.affiliation_id
+    FROM affiliation
+    WHERE affiliation.project_id IN (
+        SELECT project.project_id
+        FROM project
+        WHERE programcall_id = {{ call.id }}
+          AND project.project_id IN (
+            SELECT project_version.project_id FROM project_version WHERE type_id = 1
+            )
+    )
+      AND affiliation.date_end IS NULL
+)
+
+UNION
+
+SELECT project_rationale.contact_id
+FROM project_rationale
+WHERE project_rationale.project_id IN (
+    SELECT project.project_id
+    FROM project
+    WHERE programcall_id = {{ call.id }}
+      AND project.project_id IN (
+        SELECT project_version.project_id FROM project_version WHERE type_id = 1
+        )
+)</code></pre>
+
+<h3>{{ translate("txt-%s-po-submitted-tc-proxy-tc-cc-wpl")|format(call) }}</h3>
+<pre><code class="sql d-block py-3">SELECT affiliation.contact_id
+FROM affiliation
+WHERE affiliation.project_id IN (
+    SELECT project.project_id
+    FROM project
+    WHERE programcall_id = {{ call.id }}
+      AND project.project_id IN (
+        SELECT project_version.project_id FROM project_version WHERE type_id = 1)
+)
+  AND affiliation.date_end IS NULL
+
+UNION
+
+SELECT affiliation_contact_proxy.contact_id
+FROM affiliation_contact_proxy
+WHERE affiliation_id IN (
+    SELECT affiliation.affiliation_id
+    FROM affiliation
+    WHERE affiliation.project_id IN (
+        SELECT project.project_id
+        FROM project
+        WHERE programcall_id = {{ call.id }}
+          AND project.project_id IN (
+            SELECT project_version.project_id FROM project_version WHERE type_id = 1
+            )
+    )
+      AND affiliation.date_end IS NULL
+)
+
+UNION
+
+SELECT project_rationale.contact_id
+FROM project_rationale
+WHERE project_rationale.project_id IN (
+    SELECT project.project_id
+    FROM project
+    WHERE programcall_id = {{ call.id }}
+      AND project.project_id IN (
+        SELECT project_version.project_id FROM project_version WHERE type_id = 1
+        )
+)
+
+UNION
+
+SELECT workpackage.contact_id
+FROM workpackage
+WHERE workpackage.project_id IN (
+    SELECT project.project_id
+    FROM project
+    WHERE programcall_id = {{ call.id }}
+      AND project.project_id IN (
+        SELECT project_version.project_id FROM project_version WHERE type_id = 1
+        )
+)
+  AND workpackage.date_end IS NULL
+</code></pre>
+
+<h3>{{ translate("txt-%s-po-not-submitted-po-pl-proxy-pl")|format(call) }}</h3>
+<pre><code class="sql d-block py-3">SELECT contact_id
+FROM project
+WHERE programcall_id = {{ call.id }}
+  AND project_id NOT IN (
+    SELECT project_id FROM project_version WHERE type_id = 1
+    )
+
+UNION
+
+SELECT project_contact_proxy.contact_id
+FROM project_contact_proxy
+         INNER JOIN project ON project.project_id = project_contact_proxy.project_id
+WHERE programcall_id = {{ call.id }}
+  AND project.project_id NOT IN (
+    SELECT project_id FROM project_version WHERE type_id = 1
+    )</code></pre>
+
+<h3>{{ translate("txt-%s-fpp-submitted-pl-proxy-pl")|format(call) }}</h3>
+<pre><code class="sql d-block py-3">SELECT contact_id
+FROM project
+WHERE programcall_id = {{ call.id }}
+  AND project_id IN (
+    SELECT project_id FROM project_version WHERE type_id = 2
+    )
+
+UNION
+
+SELECT project_contact_proxy.contact_id
+FROM project_contact_proxy
+         INNER JOIN project ON project.project_id = project_contact_proxy.project_id
+WHERE programcall_id = {{ call.id }}
+  AND project.project_id IN (
+    SELECT project_id FROM project_version WHERE type_id = 2
+    )</code></pre>
+
+<h3>{{ translate("txt-%s-fpp-submitted-tc-proxy-tc-cc")|format(call) }}</h3>
+<pre><code class="sql d-block py-3">SELECT affiliation.contact_id
+FROM affiliation
+WHERE affiliation.project_id IN (
+    SELECT project.project_id
+    FROM project
+    WHERE programcall_id = {{ call.id }}
+      AND project.project_id IN (
+        SELECT project_version.project_id FROM project_version WHERE type_id = 2)
+)
+  AND affiliation.date_end IS NULL
+
+UNION
+
+SELECT affiliation_contact_proxy.contact_id
+FROM affiliation_contact_proxy
+WHERE affiliation_id IN (
+    SELECT affiliation.affiliation_id
+    FROM affiliation
+    WHERE affiliation.project_id IN (
+        SELECT project.project_id
+        FROM project
+        WHERE programcall_id = {{ call.id }}
+          AND project.project_id IN (
+            SELECT project_version.project_id FROM project_version WHERE type_id = 2
+            )
+    )
+      AND affiliation.date_end IS NULL
+)
+
+UNION
+
+SELECT project_rationale.contact_id
+FROM project_rationale
+WHERE project_rationale.project_id IN (
+    SELECT project.project_id
+    FROM project
+    WHERE programcall_id = {{ call.id }}
+      AND project.project_id IN (
+        SELECT project_version.project_id FROM project_version WHERE type_id = 2
+        )
+)</code></pre>
+
+<h3>{{ translate("txt-%s-fpp-submitted-tc-proxy-tc-cc-wpl")|format(call) }}</h3>
+<pre><code class="sql d-block py-3">SELECT affiliation.contact_id
+FROM affiliation
+WHERE affiliation.project_id IN (
+    SELECT project.project_id
+    FROM project
+    WHERE programcall_id = {{ call.id }}
+      AND project.project_id IN (
+        SELECT project_version.project_id FROM project_version WHERE type_id = 2)
+)
+  AND affiliation.date_end IS NULL
+
+UNION
+
+SELECT affiliation_contact_proxy.contact_id
+FROM affiliation_contact_proxy
+WHERE affiliation_id IN (
+    SELECT affiliation.affiliation_id
+    FROM affiliation
+    WHERE affiliation.project_id IN (
+        SELECT project.project_id
+        FROM project
+        WHERE programcall_id = {{ call.id }}
+          AND project.project_id IN (
+            SELECT project_version.project_id FROM project_version WHERE type_id = 2
+            )
+    )
+      AND affiliation.date_end IS NULL
+)
+
+UNION
+
+SELECT project_rationale.contact_id
+FROM project_rationale
+WHERE project_rationale.project_id IN (
+    SELECT project.project_id
+    FROM project
+    WHERE programcall_id = {{ call.id }}
+      AND project.project_id IN (
+        SELECT project_version.project_id FROM project_version WHERE type_id = 2
+        )
+)
+
+UNION
+
+SELECT workpackage.contact_id
+FROM workpackage
+WHERE workpackage.project_id IN (
+    SELECT project.project_id
+    FROM project
+    WHERE programcall_id = {{ call.id }}
+      AND project.project_id IN (
+        SELECT project_version.project_id FROM project_version WHERE type_id = 2
+        )
+)
+  AND workpackage.date_end IS NULL</code></pre>
+
+<h3>{{ translate("txt-%s-fpp-submitted-tc-proxy-tc-cc-wpl-minus-pl-proxy-pl")|format(call) }}</h3>
+<pre><code class="sql d-block py-3">SELECT contact_id
+FROM contact
+WHERE contact_id IN (
+    SELECT affiliation.contact_id
+    FROM affiliation
+    WHERE affiliation.project_id IN (
+        SELECT project.project_id
+        FROM project
+        WHERE programcall_id = {{ call.id }}
+          AND project.project_id IN (
+            SELECT project_version.project_id FROM project_version WHERE type_id = 2)
+    )
+      AND affiliation.date_end IS NULL
+
+    UNION
+
+    SELECT affiliation_contact_proxy.contact_id
+    FROM affiliation_contact_proxy
+    WHERE affiliation_id IN (
+        SELECT affiliation.affiliation_id
+        FROM affiliation
+        WHERE affiliation.project_id IN (
+            SELECT project.project_id
+            FROM project
+            WHERE programcall_id = {{ call.id }}
+              AND project.project_id IN (
+                SELECT project_version.project_id FROM project_version WHERE type_id = 2
+                )
+        )
+          AND affiliation.date_end IS NULL
+    )
+
+    UNION
+
+    SELECT project_rationale.contact_id
+    FROM project_rationale
+    WHERE project_rationale.project_id IN (
+        SELECT project.project_id
+        FROM project
+        WHERE programcall_id = {{ call.id }}
+          AND project.project_id IN (
+            SELECT project_version.project_id FROM project_version WHERE type_id = 2
+            )
+    )
+
+    UNION
+
+    SELECT workpackage.contact_id
+    FROM workpackage
+    WHERE workpackage.project_id IN (
+        SELECT project.project_id
+        FROM project
+        WHERE programcall_id = {{ call.id }}
+          AND project.project_id IN (
+            SELECT project_version.project_id FROM project_version WHERE type_id = 2
+            )
+    )
+      AND workpackage.date_end IS NULL
+)
+  AND contact_id NOT IN (
+    SELECT contact_id
+    FROM project
+    WHERE programcall_id = {{ call.id }}
+      AND project_id IN (
+        SELECT project_id FROM project_version WHERE type_id = 2
+        )
+
+    UNION
+
+    SELECT project_contact_proxy.contact_id
+    FROM project_contact_proxy
+        INNER JOIN project
+    ON project.project_id = project_contact_proxy.project_id
+    WHERE programcall_id = {{ call.id }}
+      AND project.project_id IN (
+        SELECT project_id FROM project_version WHERE type_id = 2
+        )
+)</code></pre>
+
+<h3>{{ translate("txt-%s-labelled-not-cancelled-or-stopped-pl-proxy-pl")|format(call) }}</h3>
+<pre><code class="sql d-block py-3">SELECT contact_id
+FROM project
+WHERE project.programcall_id = {{ call.id }}
+  AND project_id IN (
+    SELECT project_id
+    FROM project_version
+    WHERE type_id = 2
+  AND approved = 1
+  AND date_cancelled IS NULL
+    )
+  AND project_id NOT IN (
+    SELECT project_id
+    FROM project_version
+    WHERE type_id = 4
+  AND approved = 1
+    )
+
+UNION
+
+SELECT contact_id
+FROM project_contact_proxy
+WHERE project_id IN (
+    SELECT project_id
+    FROM project
+    WHERE project.programcall_id = {{ call.id }}
+      AND project_id IN (
+        SELECT project_id
+        FROM project_version
+        WHERE type_id = 2
+      AND approved = 1
+      AND date_cancelled IS NULL
+      AND project_id NOT IN (
+        SELECT project_id
+        FROM project_version
+        WHERE type_id = 4
+      AND approved = 1
+        )
+   )
+)</code></pre>
+
+<h3>{{ translate("txt-%s-labelled-not-cancelled-or-stopped-tc-proxy-tc-cc-wpl")|format(call) }}</h3>
+<pre><code class="sql d-block py-3">SELECT affiliation.contact_id
+FROM affiliation
+WHERE affiliation.project_id IN (
+SELECT project.project_id
+FROM project
+WHERE programcall_id = {{ call.id }}
+AND project.project_id IN (
+SELECT project_version.project_id FROM project_version WHERE type_id = 2
+AND date_cancelled IS NULL
+)
+AND project.project_id NOT IN (
+SELECT project_id FROM project_version WHERE type_id = 4
+AND approved = 1
+)
+)
+AND affiliation.date_end IS NULL
+
+UNION
+
+SELECT affiliation_contact_proxy.contact_id
+FROM affiliation_contact_proxy
+WHERE affiliation_id IN (
+SELECT affiliation.affiliation_id
+FROM affiliation
+WHERE affiliation.project_id IN (
+SELECT project.project_id
+FROM project
+WHERE programcall_id = {{ call.id }}
+AND project.project_id IN (
+SELECT project_version.project_id FROM project_version WHERE type_id = 2
+)
+AND project.project_id NOT IN (
+SELECT project_id FROM project_version WHERE type_id = 4
+AND approved = 1
+)
+)
+AND affiliation.date_end IS NULL
+)
+
+UNION
+
+SELECT project_rationale.contact_id
+FROM project_rationale
+WHERE project_rationale.project_id IN (
+SELECT project.project_id
+FROM project
+WHERE programcall_id = {{ call.id }}
+AND project.project_id IN (
+SELECT project_version.project_id FROM project_version WHERE type_id = 2
+AND date_cancelled IS NULL
+)
+AND project.project_id NOT IN (
+SELECT project_id FROM project_version WHERE type_id = 4
+AND approved = 1
+)
+)
+
+UNION
+
+SELECT workpackage.contact_id
+FROM workpackage
+WHERE workpackage.project_id IN (
+SELECT project.project_id
+FROM project
+WHERE programcall_id = {{ call.id }}
+AND project.project_id IN (
+SELECT project_version.project_id FROM project_version WHERE type_id = 2
+AND date_cancelled IS NULL
+)
+AND project.project_id NOT IN (
+SELECT project_id FROM project_version WHERE type_id = 4
+AND approved = 1
+)
+)
+AND workpackage.date_end IS NULL</code></pre>
+
+{% do headScript().appendFile("//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.2/highlight.min.js",'text/javascript') %}
+        {% do headLink().appendStylesheet("//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.2/styles/github-gist.min.css") %}
+{% do inlineScript().appendScript("hljs.initHighlightingOnLoad();",'text/javascript') %}

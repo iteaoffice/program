@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Program\Navigation\Invokable;
 
 use General\Navigation\Invokable\AbstractNavigationInvokable;
-use Program\Entity\Call\Call;
 use Laminas\Navigation\Page\Mvc;
+use Program\Entity\Call\Call;
 
 /**
  * Class CallLabel
@@ -34,12 +34,14 @@ final class CallLabel extends AbstractNavigationInvokable
                 array_merge(
                     $page->getParams(),
                     [
-                        'id' => $call->getId(),
+                        'id'   => $call->getId(),
+                        'call' => $call->getId()
                     ]
                 )
             );
             $label = (string)$call;
         }
+
         $page->set('label', $label);
     }
 }

@@ -18,7 +18,6 @@ use Laminas\Navigation\Page\Mvc;
 use Laminas\Router\RouteMatch;
 use Laminas\Router\RouteStackInterface;
 use Program\Service\CallService;
-use Project\Entity\Idea\Tool;
 use Project\Service\IdeaService;
 
 /**
@@ -54,13 +53,6 @@ final class CallNavigationService
         /** @var Mvc $ideaIndex */
         $callIndex = $this->navigation->findOneBy('id', 'callindex');
 
-        /** @var Mvc $ideaViewPages */
-        $ideaViewPages = $this->navigation->findOneBy('route', 'community/idea/view');
-
-        /** @var Mvc $ideaNewPages */
-        $ideaNewPages = $this->navigation->findOneBy('route', 'community/idea/new');
-
-
         if (null === $callIndex) {
             return;
         }
@@ -70,12 +62,8 @@ final class CallNavigationService
         $calls     = $this->callService->findOpenCall();
         $showCalls = [];
 
-        if ($calls->hasUpcoming()) {
-            //   $showCalls[] = $calls->getUpcoming();
-        }
-
-        if (! $calls->isEmpty()) {
-            $showCalls = $calls->toArray();
+        if ($calls->isEmpty()) {
+            return;
         }
 
         //This function needs to check if all toolId's are covered. These toolId might come from the tool index, or from an idea
@@ -91,27 +79,20 @@ final class CallNavigationService
             }
         }
 
-        //Grab the idea, but apply some filtering
-        if (strpos($this->routeMatch->getMatchedRouteName(), 'community/idea') !== false) {
-            if (null !== $this->routeMatch->getParam('id')) {
-                $idea = $this->ideaService->findIdeaById((int)$this->routeMatch->getParam('id'));
-                if (null !== $idea) {
-                    $toBeCoveredToolId = $idea->getTool()->getId();
-                }
-            }
-        }
 
         //We now collect the toolId's which are covered by the call
         $toolIds = [];
         $key     = 0;
-        foreach ($showCalls as $key => $activeCall) {
-            $toolId    = $activeCall->hasIdeaTool() ? $activeCall->getIdeaTool()->getId() : '';
+
+        foreach ($calls->toArray() as $key => $activeCall) {
+            $toolId    = $activeCall->hasIdeaTool() ? $activeCall->getIdeaTool()->getId() : null;
             $toolIds[] = $toolId;
 
             $callPage = new Mvc();
             $callPage->setOrder($key);
             $callPage->setId($key);
-            $callPage->setActive($toBeCoveredToolId === $toolId);
+            $callPage->setActive(false);
+            $callPage->set('notAutoActive', true);
             $callPage->setRouter($this->router);
             $callPage->setRoute('community/call/index');
             $callPage->setParams([
@@ -121,6 +102,9 @@ final class CallNavigationService
 
             /** @var Mvc $page */
             foreach ($pages as $page) {
+                $page = clone $page;
+                $page->set('notAutoActive', true);
+
                 //Only active the page when we have the same toolId, the notAutoActive will cancel out the auto navigation updater
                 $page->setParams(
                     [
@@ -129,14 +113,29 @@ final class CallNavigationService
                     ]
                 );
 
+                //Make the page active when the callId is set
+                if ((int)$this->routeMatch->getParam('call') === $activeCall->getId()) {
+                    $page->setActive(true);
+                }
+
+
+                //Make the page active when the toolId is set
                 if ($page->getRoute() === 'community/idea/list') {
                     $page->setActive($toBeCoveredToolId === $toolId);
-                    $page->set('notAutoActive', true);
+                }
+
+                //Make the page active when the toolId is set
+                if ($page->getRoute() === 'community/idea/view') {
+                    $page->setActive($toBeCoveredToolId === $toolId);
                 }
 
                 if ($page->getRoute() === 'community/idea/new') {
                     $page->setActive($toBeCoveredToolId === $toolId);
-                    $page->set('notAutoActive', true);
+                }
+
+                //Skip the page if it is the idea overview and we don't have tool
+                if ($page->getRoute() === 'community/idea/list' && null === $toolId) {
+                    continue;
                 }
 
                 $callPage->addPage($page);
@@ -146,31 +145,31 @@ final class CallNavigationService
 
         $this->navigation->removePage($callIndex);
 
-        //Now add a new page, ad hoc for the remaining toolId's
-        if (! in_array($toBeCoveredToolId, $toolIds, true)) {
-            $tool = $this->ideaService->find(Tool::class, $toBeCoveredToolId);
-
-            if (null !== $tool) {
-                $toolPage = new Mvc();
-                $toolPage->setOrder($key + 1);
-                $toolPage->setId($key);
-                $toolPage->setActive(true);
-                $toolPage->setRouter($this->router);
-                $toolPage->setRoute('community/idea/list');
-                $toolPage->setParams(
-                    [
-                        'toolId' => $tool->getId()
-                    ]
-                );
-                $toolPage->setLabel((string)$tool);
-                $toolPage->set('notAutoActive', true);
-
-                $ideaViewPages->setParent($toolPage);
-                $ideaNewPages->setActive(true);
-                $toolPage->addPage($ideaNewPages);
-
-                $this->navigation->addPage($toolPage);
-            }
-        }
+//        //Now add a new page, ad hoc for the remaining toolId's
+//        if (!in_array($toBeCoveredToolId, $toolIds, true)) {
+//            $tool = $this->ideaService->find(Tool::class, $toBeCoveredToolId);
+//
+//            if (null !== $tool) {
+//                $toolPage = new Mvc();
+//                $toolPage->setOrder($key + 1);
+//                $toolPage->setId($key);
+//                $toolPage->setActive(true);
+//                $toolPage->setRouter($this->router);
+//                $toolPage->setRoute('community/idea/list');
+//                $toolPage->setParams(
+//                    [
+//                        'toolId' => $tool->getId()
+//                    ]
+//                );
+//                $toolPage->setLabel((string)$tool);
+//                $toolPage->set('notAutoActive', true);
+//
+//                $ideaViewPages->setParent($toolPage);
+//                $ideaNewPages->setActive(true);
+//                $toolPage->addPage($ideaNewPages);
+//
+//                $this->navigation->addPage($toolPage);
+//            }
+//        }
     }
 }

@@ -18,8 +18,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use General\Entity\ContentType;
-use Program\Entity\Call\Call;
 use Laminas\Form\Annotation;
+use Program\Entity\Call\Call;
 
 use function sprintf;
 use function str_replace;
@@ -114,7 +114,7 @@ class Nda extends AbstractEntity
 
     public function __construct()
     {
-        $this->call = new ArrayCollection();
+        $this->call   = new ArrayCollection();
         $this->object = new ArrayCollection();
     }
 

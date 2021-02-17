@@ -302,7 +302,7 @@ class CallFilter extends InputFilter
         $inputFilter->add(
             [
                 'name'     => 'cluster',
-                'required' => true,
+                'required' => false,
             ]
         );
         $inputFilter->add(

@@ -64,7 +64,7 @@ final class DoaController extends AbstractActionController
         /** @var Entity\Doa $doa */
         $doa = $this->programService->find(Entity\Doa::class, (int)$this->params('id'));
 
-        if (null === $doa || count($doa->getObject()) === 0) {
+        if (null === $doa || ! $doa->hasObject()) {
             return $this->notFoundAction();
         }
 
@@ -138,7 +138,7 @@ final class DoaController extends AbstractActionController
         /** @var Entity\Doa $doa */
         $doa = $this->programService->find(Entity\Doa::class, (int)$this->params('id'));
 
-        if (null === $doa || count($doa->getObject()) === 0) {
+        if (null === $doa || ! $doa->hasObject()) {
             return $this->notFoundAction();
         }
         $data = array_merge_recursive(
@@ -154,15 +154,14 @@ final class DoaController extends AbstractActionController
 
             if ($form->isValid()) {
                 $fileData = $this->params()->fromFiles();
-                /*
-                 * Remove the current entity
-                 */
-                foreach ($doa->getObject() as $object) {
-                    $this->programService->delete($object);
+
+                $doaObject = $doa->getObject();
+                if (null === $doaObject) {
+                    $doaObject = new Entity\DoaObject();
+                    $doaObject->setDoa($doa);
                 }
-                //Create a article object element
-                $programDoaObject = new Entity\DoaObject();
-                $programDoaObject->setObject(file_get_contents($fileData['file']['tmp_name']));
+
+                $doaObject->setObject(file_get_contents($fileData['file']['tmp_name']));
                 $fileSizeValidator = new FilesSize(PHP_INT_MAX);
                 $fileSizeValidator->isValid($fileData['file']);
                 $doa->setSize($fileSizeValidator->size);
@@ -174,11 +173,10 @@ final class DoaController extends AbstractActionController
                     $this->generalService->findContentTypeByContentTypeName($fileTypeValidator->type)
                 );
 
-                $programDoaObject->setDoa($doa);
-                $this->programService->save($programDoaObject);
+                $this->programService->save($doaObject);
                 $this->flashMessenger()->addSuccessMessage(
                     sprintf(
-                        $this->translator->translate("txt-doa-for-organisation-%s-in-program-%s-has-been-uploaded"),
+                        $this->translator->translate("txt-doa-for-organisation-%s-in-program-%s-has-been-replaced-successfully"),
                         $doa->getOrganisation(),
                         $doa->getProgram()
                     )
@@ -232,13 +230,13 @@ final class DoaController extends AbstractActionController
         /** @var Response $response */
         $response = $this->getResponse();
 
-        if (null === $doa || count($doa->getObject()) === 0) {
+        if (null === $doa || ! $doa->hasObject()) {
             return $response->setStatusCode(Response::STATUS_CODE_404);
         }
         /*
          * Due to the BLOB issue, we treat this as an array and we need to capture the first element
          */
-        $object = $doa->getObject()->first()->getObject();
+        $object = $doa->getObject()->getObject();
 
         $response->setContent(stream_get_contents($object));
         $response->getHeaders()

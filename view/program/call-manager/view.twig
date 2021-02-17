@@ -26,6 +26,11 @@
                 {{ translate("txt-idea-sessions") }}
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#selections" aria-controls="selections" role="tab" data-toggle="tab">
+                {{ translate("txt-call-selections") }}
+            </a>
+        </li>
     </ul>
 
     <!-- Tab panes -->
@@ -41,6 +46,9 @@
         </div>
         <div role="tabpanel" class="tab-pane" id="sessions">
             {% include 'program/call-manager/tab/sessions' %}
+        </div>
+        <div role="tabpanel" class="tab-pane" id="selections">
+            {% include 'program/call-manager/tab/selections' %}
         </div>
     </div>
 </div>

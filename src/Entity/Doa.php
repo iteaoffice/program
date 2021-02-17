@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Program\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Laminas\Form\Annotation;
@@ -22,8 +21,6 @@ use Laminas\Form\Annotation;
  * @ORM\Entity
  * @Annotation\Hydrator("Laminas\Hydrator\ObjectPropertyHydrator")
  * @Annotation\Name("program_doa")
- *
- * @category    Program
  */
 class Doa extends AbstractEntity
 {
@@ -83,10 +80,10 @@ class Doa extends AbstractEntity
      */
     private $dateCreated;
     /**
-     * @ORM\OneToMany(targetEntity="Program\Entity\DoaObject", cascade={"persist","remove"}, mappedBy="doa")
+     * @ORM\OneToOne(targetEntity="Program\Entity\DoaObject", cascade={"persist","remove"}, mappedBy="doa")
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\DoaObject[]|ArrayCollection
+     * @var \Program\Entity\DoaObject
      */
     private $object;
     /**
@@ -111,19 +108,29 @@ class Doa extends AbstractEntity
      */
     private $program;
 
-    public function __construct()
-    {
-        $this->object = new ArrayCollection();
-    }
-
     public function __toString(): string
     {
-        return sprintf('Doa: %s', $this->id);
+        return $this->parseFileName();
     }
 
     public function parseFileName(): string
     {
-        return str_replace(' ', '_', sprintf('DOA_%s_%s', $this->getOrganisation(), $this->getProgram()));
+        return sprintf('PROGRAM_DOA_%s_%s', $this->organisation, $this->program);
+    }
+
+    public function isApproved(): bool
+    {
+        return null !== $this->dateApproved;
+    }
+
+    public function isSigned(): bool
+    {
+        return null === $this->dateSigned;
+    }
+
+    public function hasObject(): bool
+    {
+        return null !== $this->object;
     }
 
     public function getId(): ?int
