@@ -4,9 +4,10 @@
     <table class="table table-hover table-striped table-sm">
         <thead>
         <tr>
-            <th>{{ translate("txt-no") }}</th>
+            <th>{{ translate("txt-id") }}</th>
             <th>{{ translate("txt-project") }}</th>
             <th>{{ translate("txt-project-leader") }}</th>
+            <th>{{ translate("txt-clusters") }}</th>
             <th>{{ translate("txt-total-project-partners") }}</th>
             <th>{{ translate("txt-active-project-partners") }}</th>
             <th>{{ translate("txt-inactive-project-partners") }}</th>
@@ -20,9 +21,10 @@
         <tbody>
         {% for project in call.project %}
             <tr>
-                <td><small class="text-muted">{{ loop.index }}</small></td>
-                <td>{{ projectLink(project,'view-admin','name') }}</td>
+                <td><small class="text-muted">{{ project.id }}</small></td>
+                <td>{{ projectLink(project,'view-admin','name') }} {{ projectLink(project,'edit-admin','icon') }}</td>
                 <td>{{ contactLink(project.contact, 'view-admin','name') }}</td>
+                <td>{% for projectCluster in project.projectCluster %}{{ clusterLink(projectCluster.cluster,'view') }} ({{ translate(projectCluster.getTypeText()) }}){% if not loop.last %} &middot; {% endif %}{% endfor %}</td>
                 <td>{{ affiliationService.findAffiliationByProjectAndWhich(project, constant("Affiliation\\Service\\AffiliationService::WHICH_ALL")).count() }}</td>
                 <td>{{ affiliationService.findAffiliationByProjectAndWhich(project, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")).count() }}</td>
                 <td>{{ affiliationService.findAffiliationByProjectAndWhich(project, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_INACTIVE")).count() }}</td>

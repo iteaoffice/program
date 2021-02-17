@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Program\Navigation\Service;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Laminas\Navigation\Navigation;
 use Laminas\Navigation\Page\AbstractPage;
 use Laminas\Navigation\Page\Mvc;
@@ -59,11 +60,16 @@ final class CallNavigationService
 
         $pages = $callIndex->getPages();
 
-        $calls     = $this->callService->findOpenCall();
-        $showCalls = [];
+        $calls = $this->callService->findOpenCall();
 
         if ($calls->isEmpty()) {
-            return;
+            //If we have no call, just do a fallback to the latest calls
+            $latestCall = $this->callService->findLastActiveCall();
+            if (null === $latestCall) {
+                return;
+            }
+
+            $calls = new ArrayCollection([$latestCall]);
         }
 
         //This function needs to check if all toolId's are covered. These toolId might come from the tool index, or from an idea

@@ -22,11 +22,14 @@
     <dt>{{ translate("txt-project-number-mask") }}</dt>
     <dd><span class="text-monospace">{{ call.projectNumberMask }}</span></dd>
 
-
-    <dt>{{ translate("txt-po-open-date") }}</dt>
-    <dd>{{ call.poOpenDate|string_date }} ({{ call.poOpenDate|date('d-m-Y H:i:s') }})</dd>
-    <dt>{{ translate("txt-po-close-date") }}</dt>
-    <dd>{{ call.poCloseDate|string_date }} ({{ call.poCloseDate|date('d-m-Y H:i:s') }})</dd>
+    {% if call.poOpenDate %}
+        <dt>{{ translate("txt-po-open-date") }}</dt>
+        <dd>{{ call.poOpenDate|string_date }} ({{ call.poOpenDate|date('d-m-Y H:i:s') }})</dd>
+    {% endif %}
+    {% if call.poCloseDate %}
+        <dt>{{ translate("txt-po-close-date") }}</dt>
+        <dd>{{ call.poCloseDate|string_date }} ({{ call.poCloseDate|date('d-m-Y H:i:s') }})</dd>
+    {% endif %}
     {% if call.loiSubmissionDate %}
         <dt>{{ translate("txt-loi-submission-deadline") }}</dt>
         <dd>{{ call.loiSubmissionDate|string_date }} ({{ call.loiSubmissionDate|date('d-m-Y H:i:s') }})</dd>

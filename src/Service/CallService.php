@@ -118,6 +118,12 @@ class CallService extends AbstractService
         return new Calls($openCalls, $upcomingCalls);
     }
 
+    public function findLastActiveCall(): ?Call
+    {
+        $repository    = $this->entityManager->getRepository(Call::class);
+        return $repository->findLastActiveCall();
+    }
+
     public function findNextCall(Call $call): ?Call
     {
         return $this->entityManager->getRepository(Call::class)->findNextCall($call);

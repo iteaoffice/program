@@ -197,7 +197,7 @@ final class Call extends EntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
-    public function findLastCall(): ?Entity\Call\Call
+    public function findLastActiveCall(): ?Entity\Call\Call
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('program_entity_call_call');
