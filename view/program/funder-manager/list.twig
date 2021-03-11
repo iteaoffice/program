@@ -5,8 +5,6 @@
 {{ form().openTag(form)|raw }}
 {% set filter = form.get('filter') %}
 
-
-
 <div class="row">
     <div class="col-md-10">
         <h1>{{ translate("txt-funder-list") }} {{ funderLink(null, 'new','button') }}</h1>
@@ -29,19 +27,31 @@
             <table class="table table-hover table-striped table-sm">
                 <thead>
                 <tr>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/funder/list', 'criteria': 'id', 'text': translate("txt-id")} %}</th>
                     <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/funder/list', 'criteria': 'contact', 'text': translate("txt-contact")} %}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/funder/list', 'criteria': 'organisation', 'text': translate("txt-organisation")} %}</th>
                     <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/funder/list', 'criteria': 'country', 'text': translate("txt-country")} %}</th>
                     <th>{{ translate("txt-position") }}</th>
                     <th>{{ translate("txt-show-on-website") }}</th>
                 </tr>
                 </thead>
+                <tfoot>
+                <tr>
+                    <td colspan="7"></td>
+                </tr>
+                </tfoot>
                 <tbody>
                 {% for funder in paginator.getCurrentItems() %}
                     <tr>
-                        <td>{{ funderLink(funder,'view', 'name') }} {{ funderLink(funder,'edit', 'icon') }}</td>
+                        <td><small class="text-muted">{{ funder.id }}</small></td>
+                        <td>
+                            {{ funderLink(funder,'view', 'name') }} {{ funderLink(funder,'edit', 'icon') }}
+                            <a href="mailto:{{ funder.contact.email }}"><i class="fas fa-envelope-o"></i></a>
+                        </td>
+                        <td>{% if funder.contact.hasOrganisation() %}{{ organisationLink(funder.contact.contactOrganisation.organisation,'view-admin','name') }}{% endif %}</td>
                         <td>{{ countryLink(funder.country,'view-admin','name') }}</td>
                         <td>{{ funder.position }}</td>
-                        <td>{% if funder.getShowOnWebsite() %}{{ translate(funder.getShowOnWebsite(true)) }}{% endif %}</td>
+                        <td>{% if funder.getShowOnWebsite() %}<i class="fa text-success fa-check"></i>{% endif %}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -52,14 +62,9 @@
         {% endif %}
     </div>
     <div class="col-md-2">
-        <div class="well well-sm">
-            <fieldset>
-                {{ ztbformelement(filter.get('showOnWebsite'), true) }}
-
-                                   {{ ztbformelement(form.get('submit')) }}
-                    {{ ztbformelement(form.get('clear')) }}
-            </fieldset>
-        </div>
+        {{ ztbformelement(filter.get('showOnWebsite'), true) }}
+        {{ ztbformelement(form.get('submit')) }}
+        {{ ztbformelement(form.get('clear')) }}
     </div>
 </div>
 
