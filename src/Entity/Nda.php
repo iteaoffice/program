@@ -96,7 +96,7 @@ class Nda extends AbstractEntity
      */
     private $contact;
     /**
-     * @ORM\ManyToMany(targetEntity="Program\Entity\Call\Call", cascade="persist", inversedBy="nda")
+     * @ORM\ManyToMany(targetEntity="Program\Entity\Call\Call", cascade={"persist"}, inversedBy="nda")
      * @ORM\JoinTable(name="programcall_nda",
      *      joinColumns={@ORM\JoinColumn(name="nda_id", referencedColumnName="nda_id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="programcall_id", referencedColumnName="programcall_id")}

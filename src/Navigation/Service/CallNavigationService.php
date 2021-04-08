@@ -29,7 +29,6 @@ use Project\Service\IdeaService;
 final class CallNavigationService
 {
     private AbstractPage $navigation;
-    private ?AbstractPage $communityNavigation;
     private RouteStackInterface $router;
     private ?RouteMatch $routeMatch;
     private CallService $callService;
@@ -37,12 +36,11 @@ final class CallNavigationService
 
     public function __construct(Navigation $navigation, RouteStackInterface $router, ?RouteMatch $routeMatch, CallService $callService, IdeaService $ideaService)
     {
-        $this->navigation          = $navigation->current();
-        $this->communityNavigation = $navigation->findOneBy('route', 'community');
-        $this->router              = $router;
-        $this->routeMatch          = $routeMatch;
-        $this->callService         = $callService;
-        $this->ideaService         = $ideaService;
+        $this->navigation  = $navigation->current();
+        $this->router      = $router;
+        $this->routeMatch  = $routeMatch;
+        $this->callService = $callService;
+        $this->ideaService = $ideaService;
     }
 
     public function __invoke(): void
