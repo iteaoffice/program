@@ -24,7 +24,7 @@
     {% do form.prepare() %}
     {{ form().openTag(form)|raw }}
 
-    <div class="form-group row">
+    <div class="row mb-3">
         <label class="col-sm-3 col-form-label">{{ translate("txt-contact") }}</label>
 
         <div class="col-sm-9">
@@ -33,7 +33,7 @@
     </div>
 
     {% if call %}
-        <div class="form-group row">
+        <div class="row mb-3">
             <label class="col-sm-3 col-form-label">{{ translate("txt-program-call") }}</label>
 
             <div class="col-sm-9">
@@ -44,7 +44,7 @@
 
     {{ ztbformelement(form.get('file')) }}
 
-    <div class="form-group row">
+    <div class="row mb-3">
         <div class="offset-sm-3 col-sm-9">
             {{ ndaLink(nda, 'render', 'button', call ) }} {{ formelement(form.get('submit')) }}
         </div>

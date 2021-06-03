@@ -29,7 +29,6 @@ use Laminas\Router\RouteStackInterface;
 use Laminas\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 use Organisation\Search\Service\OrganisationSearchService;
 use Organisation\Service\OrganisationService;
-use Program\Form\View\Helper\CallFormElement;
 use Program\Options\ModuleOptions;
 use Program\Service\CallService;
 use Program\Service\FormService;
@@ -162,10 +161,6 @@ return [
             CallService::class,
             TranslatorInterface::class,
             RouteStackInterface::class,
-        ],
-        CallFormElement::class                             => [
-            'ViewHelperManager',
-            TranslatorInterface::class
-        ],
+        ]
     ]
 ];

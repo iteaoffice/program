@@ -30,7 +30,7 @@
 
         {{ ztbformelement(form.get('file')) }}
 
-        <div class="form-group row">
+        <div class="row mb-3">
             <div class="offset-sm-3 col-sm-9">
                 {{ ndaLink(nda, 'render', 'button', call ) }} {{ formelement(form.get('submit')) }}
             </div>
@@ -40,7 +40,7 @@
     <fieldset>
         <legend>{{ translate("txt-sign-online-version") }}</legend>
 
-        <div class="form-group row">
+        <div class="row mb-3">
             <div class="offset-sm-3 col-sm-9">
                 <p>{{ translate("txt-please-read-the-text-below-before-signing-the-nda") }}</p>
                 <div style="max-height: 400px; overflow-y: scroll; background-color: #f8f8f8; padding: 10px;">
@@ -62,7 +62,7 @@
         </div>
 
 
-        <div class="form-group row">
+        <div class="row mb-3">
             <div class="offset-sm-3 col-sm-9">
                 {{ formelement(form.get('approve')) }}
             </div>

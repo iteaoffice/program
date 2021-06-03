@@ -70,8 +70,7 @@ $config = [
             'callLink'           => View\Helper\CallLink::class,
             'ndaLink'            => View\Helper\NdaLink::class,
             'funderLink'         => View\Helper\FunderLink::class,
-            'callCountryLink'    => View\Helper\CallCountryLink::class,
-            'callformelement' => Form\View\Helper\CallFormElement::class,
+            'callCountryLink'    => View\Helper\CallCountryLink::class
         ],
         'factories' => [
             View\Handler\ProgramHandler::class      => ConfigAbstractFactory::class,
@@ -81,8 +80,7 @@ $config = [
             View\Helper\NdaLink::class              => LinkHelperFactory::class,
             View\Helper\FunderLink::class           => LinkHelperFactory::class,
             View\Helper\CallCountryLink::class      => LinkHelperFactory::class,
-            View\Helper\CallInformationBox::class   => ConfigAbstractFactory::class,
-            Form\View\Helper\CallFormElement::class => ConfigAbstractFactory::class
+            View\Helper\CallInformationBox::class   => ConfigAbstractFactory::class
         ],
     ],
     'service_manager'    => [

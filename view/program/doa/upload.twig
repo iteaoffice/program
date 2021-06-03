@@ -9,7 +9,7 @@
 
 {{ form().openTag(form)|raw }}
 
-<div class="form-group row">
+<div class="row mb-3">
     <label class="col-sm-3 col-form-label">{{ translate("txt-program") }}</label>
 
     <div class="col-sm-9">
@@ -17,7 +17,7 @@
     </div>
 </div>
 
-<div class="form-group row">
+<div class="row mb-3">
     <label class="col-sm-3 col-form-label">{{ translate("txt-organisation") }}</label>
 
     <div class="col-sm-9">
@@ -25,7 +25,7 @@
     </div>
 </div>
 
-<div class="form-group row">
+<div class="row mb-3">
     <label class="col-sm-3 col-form-label">{{ translate("txt-download-doa") }}</label>
 
     <div class="col-sm-9">
@@ -36,7 +36,7 @@
 {{ ztbformelement(form.get('file')) }}
 {{ formelement(form.get('csrf')) }}
 
-<div class="form-group row">
+<div class="row mb-3">
     <div class="offset-sm-3 col-sm-9">
         {{ ztbformelement(form.get('submit')) }}
         {{ ztbformelement(form.get('cancel')) }}
