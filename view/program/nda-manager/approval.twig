@@ -28,7 +28,7 @@
         {% for nda in nda %}
             <tr id="nda-{{ nda.id }}">
                 <td>{{ contactLink(nda.contact,'view-admin','name') }}
-                    <span class="float-right">
+                    <span class="float-end">
                         {{ ndaLink(nda,'view-admin','icon') }} {{ ndaLink(nda,'edit-admin','icon') }} {{ ndaLink(nda,'download','icon') }}
                     </span>
                 </td>
