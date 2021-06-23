@@ -43,6 +43,12 @@ final class RenderNda extends AbstractPlugin
         $pdf->setTemplate($this->moduleOptions->getNdaTemplate());
         $pdf->AddPage();
 
+        $pdf->SetFontSize(16);
+        $pdf->SetTextColor(0, 150, 64);
+        $pdf->SetXY(14, 40);
+        $pdf->Write(0, 'Declaration of Non-Disclosure:');
+
+        $pdf->SetTextColor(0, 0, 0);
         $pdf->SetFontSize(9);
         $pdf->SetXY(14, 50);
         $pdf->Write(0, 'Name:');
@@ -56,8 +62,7 @@ final class RenderNda extends AbstractPlugin
          */
         $pdf->SetXY(14, 55);
         $pdf->Write(0, $nda->getContact()->parseFullName());
-        $pdf->SetXY(14, 60);
-        $pdf->Write(0, $this->contactService->parseOrganisation($nda->getContact()));
+
         /*
          * Write the current date
          */
@@ -121,8 +126,7 @@ final class RenderNda extends AbstractPlugin
          */
         $pdf->SetXY(14, 55);
         $pdf->Write(0, $nda->getContact()->parseFullName());
-        $pdf->SetXY(14, 60);
-        $pdf->Write(0, $this->contactService->parseOrganisation($nda->getContact()));
+
         /*
          * Write the current date
          */
