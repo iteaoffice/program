@@ -1,25 +1,34 @@
 <h2>{{ translate("txt-sessions") }}</h2>
-{% if call.session.count() > 0 %}
+{% if call.ideaTool.session.count() > 0 %}
     <table class="table table-hover table-striped table-sm">
         <thead>
         <tr>
             <th>{{ translate("txt-id") }}</th>
             <th>{{ translate("txt-session") }}</th>
-            <th>{{ translate("txt-date") }}</th>
-            <th>{{ translate("txt-ideas") }}</th>
+            <th>{{ translate("txt-tool") }}</th>
+            <th>{{ translate("txt-date-from") }}</th>
+            <th>{{ translate("txt-date-to") }}</th>
+            <th>{{ translate("txt-pitches") }}</th>
+            <th>{{ translate("txt-registration") }}</th>
+            <th>{{ translate("txt-participants") }}</th>
         </tr>
         </thead>
         <tbody>
-        {% for session in call.session %}
+        {% for session in call.ideaTool.session %}
             <tr>
                 <td><small class="text-muted">{{ session.id }}</small></td>
-                <td>{{ toolSessionLink(session, 'view-admin') }}</td>
-                <td>{{ session.date|string_date }}</td>
-                <td>{{ session.ideaSession|length }}</td>
+                <td>{{ toolSessionLink(session,'view-admin') }} {{ toolSessionLink(session,'edit', 'icon') }}</td>
+                <td>{{ ideaToolLink(session.tool,'view-admin','name') }}</td>
+                <td>{{ session.dateFrom|date('d-m-Y H:i') }}</td>
+                <td>{{ session.dateEnd|date('d-m-Y H:i') }}</td>
+                <td>{{ session.ideaSession.count() }}</td>
+                <td>{% if session.isOpenForRegistration %}<i
+                            class="fas fa-check text-success"></i> {{ session.quota }} {% endif %}</td>
+                <td>{% if session.isOpenForRegistration %}{{ session.participant.count() }}{% endif %}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 {% else %}
-    {{ ztbalert().info(translate("txt-no-sessions-found"))|raw }}
+    {{ lbs5alert().info(translate("txt-no-sessions-found"))|raw }}
 {% endif %}

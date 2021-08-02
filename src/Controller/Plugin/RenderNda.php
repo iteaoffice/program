@@ -62,6 +62,8 @@ final class RenderNda extends AbstractPlugin
          */
         $pdf->SetXY(14, 55);
         $pdf->Write(0, $nda->getContact()->parseFullName());
+        $pdf->SetXY(14, 60);
+        $pdf->Write(0, $this->contactService->parseOrganisation($nda->getContact()));
 
         /*
          * Write the current date

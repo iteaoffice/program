@@ -8,9 +8,9 @@ format(doa.organisation, doa.program)) %}
     format(doa.organisation, doa.program)|raw }}</p>
 
 {% if doa.dateApproved %}
-    {{ ztbalert().success(translate("txt-doa-received-and-approved-on-%s")|format(doa.dateApproved|date("d-m-Y")))|raw }}
+    {{ lbs5alert().success(translate("txt-doa-received-and-approved-on-%s")|format(doa.dateApproved|date("d-m-Y")))|raw }}
 {% else %}
-    {{ ztbalert().info(translate("txt-doa-received-on-%s-but-waiting-for-approval")|format(doa.dateCreated|date("d-m-Y")))|raw }}
+    {{ lbs5alert().info(translate("txt-doa-received-on-%s-but-waiting-for-approval")|format(doa.dateCreated|date("d-m-Y")))|raw }}
 {% endif %}
 
 <dl class="dl-horizontal">
