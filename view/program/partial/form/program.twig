@@ -3,11 +3,11 @@
 
 {% set program = form.get('program_entity_program') %}
 
-{{ ztbformelement(program.get('id')) }}
-{{ ztbformelement(program.get('program')) }}
-{{ ztbformelement(program.get('number')) }}
-{{ ztbformelement(program.get('cluster')) }}
-{{ ztbformelement(program.get('invoiceMethod')) }}
+{{ lbs5formelement(program.get('id')) }}
+{{ lbs5formelement(program.get('program')) }}
+{{ lbs5formelement(program.get('number')) }}
+{{ lbs5formelement(program.get('cluster')) }}
+{{ lbs5formelement(program.get('invoiceMethod')) }}
 {{ formelement(form.get('csrf')) }}
 <div class="row mb-3">
     <div class="offset-sm-3 col-sm-9">

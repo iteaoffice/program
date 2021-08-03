@@ -4,12 +4,12 @@
 {% set funder = form.get('program_entity_funder') %}
 
  {{ contactformelement(funder.get('contact')) }}
-{{ ztbformelement(funder.get('country')) }}
-{{ ztbformelement(funder.get('showOnWebsite')) }}
-{{ ztbformelement(funder.get('website')) }}
-{{ ztbformelement(funder.get('position')) }}
-{{ ztbformelement(funder.get('infoOffice')) }}
-{{ ztbformelement(funder.get('infoPublic')) }}
+{{ lbs5formelement(funder.get('country')) }}
+{{ lbs5formelement(funder.get('showOnWebsite')) }}
+{{ lbs5formelement(funder.get('website')) }}
+{{ lbs5formelement(funder.get('position')) }}
+{{ lbs5formelement(funder.get('infoOffice')) }}
+{{ lbs5formelement(funder.get('infoPublic')) }}
 {{ formelement(form.get('csrf')) }}
 
 <div class="row mb-3">

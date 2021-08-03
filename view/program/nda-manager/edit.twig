@@ -9,9 +9,9 @@
     {% set ndaForm = form.get('program_entity_nda') %}
 
     {{ contactformelement(ndaForm.get('contact')) }}
-    {{ ztbformelement(ndaForm.get('dateSigned')) }}
-    {{ ztbformelement(ndaForm.get('dateApproved')) }}
-    {{ ztbformelement(ndaForm.get('programCall')) }}
+    {{ lbs5formelement(ndaForm.get('dateSigned')) }}
+    {{ lbs5formelement(ndaForm.get('dateApproved')) }}
+    {{ lbs5formelement(ndaForm.get('programCall')) }}
 
 {% if not nda.object.isEmpty() %}
     <div class="row mb-3">
@@ -23,16 +23,16 @@
     </div>
 {% endif %}
 
-{{ ztbformelement(ndaForm.get('file')) }}
+{{ lbs5formelement(ndaForm.get('file')) }}
 {{ formelement(form.get('csrf')) }}
 <hr>
 
 
 <div class="row mb-3">
     <div class="offset-sm-3 col-sm-9">
-        {{ ztbformelement(form.get('submit')) }}
-        {{ ztbformelement(form.get('cancel')) }}
-        {{ ztbformelement(form.get('delete')) }}
+        {{ lbs5formelement(form.get('submit')) }}
+        {{ lbs5formelement(form.get('cancel')) }}
+        {{ lbs5formelement(form.get('delete')) }}
     </div>
 </div>
 
