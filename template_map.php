@@ -8,7 +8,6 @@ return [
     'program/program-manager/new' => __DIR__ . '/./view/program/program-manager/new.twig',
     'program/program-manager/list' => __DIR__ . '/./view/program/program-manager/list.twig',
     'program/program-manager/edit' => __DIR__ . '/./view/program/program-manager/edit.twig',
-    'program/pdf/doa-program' => __DIR__ . '/./view/program/pdf/doa-program.twig',
     'program/call-manager/view' => __DIR__ . '/./view/program/call-manager/view.twig',
     'program/call-manager/new' => __DIR__ . '/./view/program/call-manager/new.twig',
     'program/call-manager/list' => __DIR__ . '/./view/program/call-manager/list.twig',

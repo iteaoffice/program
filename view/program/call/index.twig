@@ -98,7 +98,7 @@
                     </div>
                 {% endfor %}
 
-                {% set newProjectLink = projectLink(null, 'new-community',constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) %}
+                {% set newProjectLink = projectLink(null, 'new-community',constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW"), call) %}
 
                 {% if newProjectLink %}
                     <div class="col-xs-6 col-md-3">
@@ -128,7 +128,8 @@
                 {% for ideaItem in ideas %}
                     <div class="col-md-3 pb-3">
                         {% if ideaItem.type is constant('\\Project\\ValueObject\\IdeaItem::TYPE_IDEA') %}
-                            <a class="card" href="{{ ideaLink(ideaItem.idea,'view',constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) }}">
+                            <a class="card"
+                               href="{{ ideaLink(ideaItem.idea,'view',constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) }}">
                                 <div class="idea-card"></div>
 
                                 <div class="card-label">{{ ideaItem.label }}</div>
@@ -183,15 +184,15 @@
             {{ ideaToolLink(tool,'list-idea', 'button') }}
 
 
-            {# some extra stuff#}
+            {# some extra stuff #}
             <br><br>
             <h2>{{ translate("txt-po-preparation") }}</h2>
 
-            <div class="row">
+            <div class="row row-cols-4">
 
 
                 {% if tool.meeting %}
-                    <div class="col-md-3">
+                    <div class="col mb-3">
                         {# Try to see if we can find a registration of the event #}
                         {% set registration = registrationService.findRegistrationByMeetingAndContact(tool.meeting, identity() ) %}
 
@@ -209,29 +210,41 @@
                             <div class="card-name"><p>{{ tool.meeting }}</p></div>
                         </a>
                     </div>
+
+                    {% set chatLink = meetingLink(tool.meeting,'chat', 'raw') %}
+                    {% if chatLink %}
+                        <div class="col mb-3">
+                            <a class="card" href="{{ chatLink }}">
+
+                                <img src="https://image.itea3.org/1Jie_7ezLFpmk6r5xIuLt5n5__s=/fit-in/290x290/https://itea4.org/img/i/9857-1630505542.png">
+
+                                <div class="card-name"><p>{{ translate("txt-meeting-chat") }}</p></div></a>
+                        </div>
+                    {% endif %}
                 {% endif %}
 
-                <div class="col-md-3">
-                    <a class="card" href="{{ ideaToolLink(tool,'list-idea', constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) }}">
-                        <img src="https://image.itea3.org/7fB2tsMdjHdoDdBbYKSLlTtdcFA=/fit-in/150x150/https://itea3.org/img/i/1744-1430817993.jpg">
+                <div class="col mb-3">
+                    <a class="card"
+                       href="{{ ideaToolLink(tool,'list-idea', constant("\\General\\ValueObject\\Link\\LinkDecoration::SHOW_RAW")) }}">
+                        <img src="https://image.itea3.org/A-FcF0erP7sTDXf6dpcusfVEnMg=/fit-in/290x290/https://itea3.org/img/i/9462-1623231918.png">
 
                         <div class="card-name"><p>{{ translate("txt-project-ideas") }}<br>{{ tool }}</p></div>
                     </a>
 
                 </div>
 
-                <div class="col-md-3">
+                <div class="col mb-3">
                     <a class="card" href="{{ url('community/contact/search') }}">
-                        <img src="https://image.itea3.org/Zqv9wG7Yi4FVGJo_-NHxTgZtyAU=/fit-in/150x150/https://itea3.org/img/i/1746-1430818037.jpg">
+                        <img src="https://image.itea3.org/ekZgQd5vpcdSNXZaO4gXRAQdDBY=/fit-in/290x290/https://itea3.org/img/i/9464-1623231944.png">
 
                         <div class="card-name"><p>{{ translate("txt-partner-search") }}</p></div>
                     </a>
 
                 </div>
 
-                <div class="col-md-3">
+                <div class="col mb-3">
                     <a class="card" href="/call-documents.html">
-                        <img src="https://image.itea3.org/-Ul4jSuKtwTeDWrm9UyNBNGYyAM=/fit-in/150x150/https://itea3.org/img/i/1745-1430818012.jpg">
+                        <img src="https://image.itea3.org/n36QAkFKPJY2u91ITId-U2bZVXI=/fit-in/290x290/https://itea4.org/img/i/9858-1630506249.png">
 
                         <div class="card-name"><p>{{ translate("txt-call-documents") }}</p></div>
                     </a>

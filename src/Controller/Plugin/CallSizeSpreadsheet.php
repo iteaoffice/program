@@ -14,6 +14,7 @@ namespace Program\Controller\Plugin;
 
 use Affiliation\Entity\Affiliation;
 use Affiliation\Service\AffiliationService;
+use Contact\Entity\Contact;
 use Contact\Service\ContactService;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -23,6 +24,7 @@ use Laminas\Http\Headers;
 use Laminas\Http\Response;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -34,6 +36,7 @@ use Program\Entity\Program;
 use Project\Entity\Funding\Funding;
 use Project\Entity\Funding\Source;
 use Project\Entity\Project;
+use Project\Entity\Rationale;
 use Project\Entity\Version\Type;
 use Project\Form\Statistics;
 use Project\Service\ContractService;
@@ -94,6 +97,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
     private bool $includeCancelledProjects = false;
     private bool $splitPerYear = false;
     private bool $includeProjectLeaderData = false;
+    private bool $includeCountryCoordinatorData = false;
     private bool $includeTotals = false;
 
     private array $header = [];
@@ -128,7 +132,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
         int $output = Statistics::OUTPUT_PROJECTS
     ): self {
         set_time_limit(0);
-        ini_set('memory_limit', '2000M');
+        ini_set('memory_limit', '8000M');
 
         $this->spreadsheet = new Spreadsheet();
 
@@ -170,6 +174,10 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
         if (in_array(Statistics::INCLUDE_PROJECT_LEADER_DATA, $include, false)) {
             $this->includeProjectLeaderData = true;
+        }
+
+        if (in_array(Statistics::INCLUDE_COUNTRY_COORDINATOR_DATA, $include, false)) {
+            $this->includeCountryCoordinatorData = true;
         }
 
         $this->programs = $programs;
@@ -242,6 +250,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
         $header[$column++] = $this->translator->translate('txt-project-number');
         $header[$column++] = $this->translator->translate('txt-project-name');
+        $header[$column++] = $this->translator->translate('txt-project-title');
+        $header[$column++] = $this->translator->translate('txt-project-description');
         $header[$column++] = $this->translator->translate('txt-program');
         $header[$column++] = $this->translator->translate('txt-program-call');
         $header[$column++] = $this->translator->translate('txt-project-status');
@@ -292,13 +302,29 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
         if ($this->includeProjectLeaderData) {
             $header[$column++] = $this->translator->translate('txt-technical-contact');
+            $header[$column++] = $this->translator->translate('txt-technical-contact-organisation');
+            $header[$column++] = $this->translator->translate('txt-technical-contact-organisation-country');
             $header[$column++] = $this->translator->translate('txt-technical-contact-email');
-            $header[$column++] = $this->translator->translate('txt-vat-number');
-            $header[$column++] = $this->translator->translate('txt-address');
-            $header[$column++] = $this->translator->translate('txt-zip');
-            $header[$column++] = $this->translator->translate('txt-city');
-            $header[$column++] = $this->translator->translate('txt-country');
-            $header[$column]   = $this->translator->translate('txt-phone');
+            $header[$column++] = $this->translator->translate('txt-technical-contact-is-project-leader');
+            $header[$column++] = $this->translator->translate('txt-technical-contact-vat-number');
+            $header[$column++] = $this->translator->translate('txt-technical-contact-address');
+            $header[$column++] = $this->translator->translate('txt-technical-contact-zip');
+            $header[$column++] = $this->translator->translate('txt-technical-contact-city');
+            $header[$column++] = $this->translator->translate('txt-technical-contact-country');
+            $header[$column++] = $this->translator->translate('txt-technical-contact-phone');
+        }
+
+        if ($this->includeCountryCoordinatorData) {
+            $header[$column++] = $this->translator->translate('txt-country-coordinator-contact');
+            $header[$column++] = $this->translator->translate('txt-country-coordinator-contact-organisation');
+            $header[$column++] = $this->translator->translate('txt-country-coordinator-contact-organisation-country');
+            $header[$column++] = $this->translator->translate('txt-country-coordinator-contact-email');
+            $header[$column++] = $this->translator->translate('txt-country-coordinator-is-project-leader');
+            $header[$column++] = $this->translator->translate('txt-country-coordinator-address');
+            $header[$column++] = $this->translator->translate('txt-country-coordinator-zip');
+            $header[$column++] = $this->translator->translate('txt-country-coordinator-city');
+            $header[$column++] = $this->translator->translate('txt-country-coordinator-country');
+            $header[$column]   = $this->translator->translate('txt-country-coordinator-phone');
         }
 
         return $header;
@@ -493,6 +519,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
                         $projectColumn[$column++] = $project->getNumber();
                         $projectColumn[$column++] = $project->getProject();
+                        $projectColumn[$column++] = $project->getTitle();
+                        $projectColumn[$column++] = htmlentities(strip_tags((string)$project->getDescription()));
                         $projectColumn[$column++] = (string)$project->getCall()->getProgram();
                         $projectColumn[$column++] = (string)$project->getCall();
                         $projectColumn[$column++] = $this->projectService->parseStatus($project);
@@ -585,7 +613,12 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
                         if ($this->includeProjectLeaderData) {
                             $projectColumn[$column++] = $affiliation->getContact()->parseFullName();
+                            $projectColumn[$column++] = (string)$affiliation->getContact()->getContactOrganisation()->getOrganisation();
+                            $projectColumn[$column++] = (string)$affiliation->getContact()->getContactOrganisation()->getOrganisation()->getCountry();
                             $projectColumn[$column++] = $affiliation->getContact()->getEmail();
+
+                            //Check if project leader
+                            $projectColumn[$column++] = $affiliation->getContact() === $affiliation->getProject()->getContact() ? 'Y' : 'N';
 
                             //Find the financial
                             $vat = '';
@@ -618,7 +651,50 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                             $projectColumn[$column++] = $zip;
                             $projectColumn[$column++] = $city;
                             $projectColumn[$column++] = $country;
-                            $projectColumn[$column]   = $this->contactService->getDirectPhone($affiliation->getContact());
+                            $projectColumn[$column++] = $this->contactService->getDirectPhone($affiliation->getContact());
+                        }
+
+                        if ($this->includeCountryCoordinatorData) {
+                            //Find the country coordinator for the country of the partner
+                            $countryCoordinator = $project->getRationale()->filter(static function (Rationale $rationale) use ($affiliation) {
+                                return $rationale->getCountry() === $affiliation->getOrganisation()->getCountry();
+                            })->first();
+
+                            if ($countryCoordinator) {
+                                /** @var Contact $countryCoordinatorContact */
+                                $countryCoordinatorContact = $countryCoordinator->getContact();
+
+                                $projectColumn[$column++] = $countryCoordinatorContact->parseFullName();
+                                $projectColumn[$column++] = (string)$countryCoordinatorContact->getContactOrganisation()->getOrganisation();
+                                $projectColumn[$column++] = (string)$countryCoordinatorContact->getContactOrganisation()->getOrganisation()->getCountry();
+
+                                $projectColumn[$column++] = $countryCoordinatorContact->getEmail();
+
+                                //Check if project leader
+                                $projectColumn[$column++] = $countryCoordinatorContact === $project->getContact() ? 'Y' : 'N';
+
+                                $mailAddress = null;
+                                if (null !== $countryCoordinatorContact->getId()) {
+                                    $mailAddress = $this->contactService->getMailAddress($countryCoordinatorContact);
+                                }
+                                $address = null;
+                                $zip     = null;
+                                $city    = null;
+                                $country = null;
+
+                                if (null !== $mailAddress) {
+                                    $address = $mailAddress->getAddress();
+                                    $zip     = $mailAddress->getZipCode();
+                                    $city    = $mailAddress->getCity();
+                                    $country = $mailAddress->getCountry()->getCountry();
+                                }
+
+                                $projectColumn[$column++] = $address;
+                                $projectColumn[$column++] = $zip;
+                                $projectColumn[$column++] = $city;
+                                $projectColumn[$column++] = $country;
+                                $projectColumn[$column]   = $this->contactService->getDirectPhone($countryCoordinatorContact);
+                            }
                         }
 
                         $this->rows[] = $projectColumn;
@@ -689,6 +765,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
                     $projectColumn[$column++] = $project->getNumber();
                     $projectColumn[$column++] = $project->getProject();
+                    $projectColumn[$column++] = $project->getTitle();
+                    $projectColumn[$column++] = htmlentities(strip_tags((string)$project->getDescription()));
                     $projectColumn[$column++] = (string)$project->getCall()->getProgram();
                     $projectColumn[$column++] = (string)$project->getCall();
                     $projectColumn[$column++] = $this->projectService->parseStatus($project);
@@ -778,7 +856,12 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
                     if ($this->includeProjectLeaderData) {
                         $projectColumn[$column++] = $affiliation->getContact()->parseFullName();
+                        $projectColumn[$column++] = (string)$affiliation->getContact()->getContactOrganisation()->getOrganisation();
+                        $projectColumn[$column++] = (string)$affiliation->getContact()->getContactOrganisation()->getOrganisation()->getCountry();
                         $projectColumn[$column++] = $affiliation->getContact()->getEmail();
+
+                        //Check if project leader
+                        $projectColumn[$column++] = $affiliation->getContact() === $affiliation->getProject()->getContact() ? 'Y' : 'N';
 
                         //Find the financial
                         $vat = '';
@@ -811,7 +894,48 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                         $projectColumn[$column++] = $zip;
                         $projectColumn[$column++] = $city;
                         $projectColumn[$column++] = $country;
-                        $projectColumn[$column]   = $this->contactService->getDirectPhone($affiliation->getContact());
+                        $projectColumn[$column++] = $this->contactService->getDirectPhone($affiliation->getContact());
+                    }
+
+                    if ($this->includeCountryCoordinatorData) {
+                        //Find the country coordinator for the country of the partner
+                        $countryCoordinator = $project->getRationale()->filter(static function (Rationale $rationale) use ($affiliation) {
+                            return $rationale->getCountry() === $affiliation->getOrganisation()->getCountry();
+                        })->first();
+
+                        if ($countryCoordinator) {
+                            /** @var Contact $countryCoordinatorContact */
+                            $countryCoordinatorContact = $countryCoordinator->getContact();
+                            $projectColumn[$column++]  = $countryCoordinatorContact->parseFullName();
+                            $projectColumn[$column++]  = (string)$countryCoordinatorContact->getContactOrganisation()->getOrganisation();
+                            $projectColumn[$column++]  = (string)$countryCoordinatorContact->getContactOrganisation()->getOrganisation()->getCountry();
+                            $projectColumn[$column++]  = $countryCoordinatorContact->getEmail();
+
+                            //Check if project leader
+                            $projectColumn[$column++] = $countryCoordinatorContact === $project->getContact() ? 'Y' : 'N';
+
+                            $mailAddress = null;
+                            if (null !== $countryCoordinatorContact->getId()) {
+                                $mailAddress = $this->contactService->getMailAddress($countryCoordinatorContact);
+                            }
+                            $address = null;
+                            $zip     = null;
+                            $city    = null;
+                            $country = null;
+
+                            if (null !== $mailAddress) {
+                                $address = $mailAddress->getAddress();
+                                $zip     = $mailAddress->getZipCode();
+                                $city    = $mailAddress->getCity();
+                                $country = $mailAddress->getCountry()->getCountry();
+                            }
+
+                            $projectColumn[$column++] = $address;
+                            $projectColumn[$column++] = $zip;
+                            $projectColumn[$column++] = $city;
+                            $projectColumn[$column++] = $country;
+                            $projectColumn[$column]   = $this->contactService->getDirectPhone($countryCoordinatorContact);
+                        }
                     }
 
                     $this->rows[] = $projectColumn;
@@ -826,6 +950,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
         $header[$column++] = $this->translator->translate('txt-project-number');
         $header[$column++] = $this->translator->translate('txt-project-name');
+        $header[$column++] = $this->translator->translate('txt-project-description');
         $header[$column++] = $this->translator->translate('txt-program');
         $header[$column++] = $this->translator->translate('txt-program-call');
         $header[$column++] = $this->translator->translate('txt-project-status');
@@ -854,12 +979,27 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
         if ($this->includeProjectLeaderData) {
             $header[$column++] = $this->translator->translate('txt-project-leader');
+            $header[$column++] = $this->translator->translate('txt-project-leader-organisation');
+            $header[$column++] = $this->translator->translate('txt-project-leader-organisation-country');
             $header[$column++] = $this->translator->translate('txt-project-leader-email');
             $header[$column++] = $this->translator->translate('txt-address');
             $header[$column++] = $this->translator->translate('txt-zip');
             $header[$column++] = $this->translator->translate('txt-city');
             $header[$column++] = $this->translator->translate('txt-country');
-            $header[$column]   = $this->translator->translate('txt-phone');
+            $header[$column++] = $this->translator->translate('txt-phone');
+        }
+
+        if ($this->includeCountryCoordinatorData) {
+            $header[$column++] = $this->translator->translate('txt-country-coordinator-contact');
+            $header[$column++] = $this->translator->translate('txt-country-coordinator-contact-organisation');
+            $header[$column++] = $this->translator->translate('txt-country-coordinator-contact-organisation-country');
+            $header[$column++] = $this->translator->translate('txt-country-coordinator-contact-email');
+            $header[$column++] = $this->translator->translate('txt-country-coordinator-is-project-leader');
+            $header[$column++] = $this->translator->translate('txt-country-coordinator-address');
+            $header[$column++] = $this->translator->translate('txt-country-coordinator-zip');
+            $header[$column++] = $this->translator->translate('txt-country-coordinator-city');
+            $header[$column++] = $this->translator->translate('txt-country-coordinator-country');
+            $header[$column]   = $this->translator->translate('txt-country-coordinator-phone');
         }
 
         return $header;
@@ -956,6 +1096,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
             $column                   = 'A';
             $projectColumn[$column++] = $project->getNumber();
             $projectColumn[$column++] = $project->getProject();
+            $projectColumn[$column++] = htmlentities(strip_tags((string)$project->getDescription()));
             $projectColumn[$column++] = (string)$project->getCall()->getProgram();
             $projectColumn[$column++] = (string)$project->getCall();
             $projectColumn[$column++] = $this->projectService->parseStatus($project);
@@ -1014,6 +1155,8 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
             if ($this->includeProjectLeaderData) {
                 $projectColumn[$column++] = $project->getContact()->parseFullName();
+                $projectColumn[$column++] = (string)$project->getContact()->getContactOrganisation()->getOrganisation();
+                $projectColumn[$column++] = (string)$project->getContact()->getContactOrganisation()->getOrganisation()->getCountry();
                 $projectColumn[$column++] = $project->getContact()->getEmail();
 
                 $mailAddress = null;
@@ -1080,6 +1223,12 @@ final class CallSizeSpreadsheet extends AbstractPlugin
 
         foreach ($this->dateColumns as $dateColumn) {
             $sheet->getStyle($dateColumn . '2:' . $dateColumn . '6000')->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_DDMMYYYY);
+        }
+
+        //The value of $row['D'] can contain all elements, including forbidden characters.
+        //We therefore need to set these values explicit, but only from row 2 on otherwise the title gets overwritten
+        foreach ($this->rows as $key => $row) {
+            $sheet->setCellValueExplicit('D' . ($key + 2), $row['D'], DataType::TYPE_STRING);
         }
 
         $response = new Response();
