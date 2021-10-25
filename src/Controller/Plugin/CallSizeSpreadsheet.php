@@ -432,7 +432,6 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                     );
                 }
                 $exchangeRate = 1;
-                $column       = 'A';
 
 
                 if ($this->splitPerYear) {
@@ -516,7 +515,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                             $fundingStatus = 'SF';
                         }
 
-
+                        $column       = 'A';
                         $projectColumn[$column++] = $project->getNumber();
                         $projectColumn[$column++] = $project->getProject();
                         $projectColumn[$column++] = $project->getTitle();
@@ -762,7 +761,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
                     $draftEffort = $this->projectService->findTotalEffortByAffiliation($affiliation);
                     $draftCost   = $this->projectService->findTotalCostByAffiliation($affiliation);
 
-
+                    $column       = 'A';
                     $projectColumn[$column++] = $project->getNumber();
                     $projectColumn[$column++] = $project->getProject();
                     $projectColumn[$column++] = $project->getTitle();
@@ -1096,6 +1095,7 @@ final class CallSizeSpreadsheet extends AbstractPlugin
             $column                   = 'A';
             $projectColumn[$column++] = $project->getNumber();
             $projectColumn[$column++] = $project->getProject();
+            $projectColumn[$column++] = $project->getTitle();
             $projectColumn[$column++] = htmlentities(strip_tags((string)$project->getDescription()));
             $projectColumn[$column++] = (string)$project->getCall()->getProgram();
             $projectColumn[$column++] = (string)$project->getCall();
