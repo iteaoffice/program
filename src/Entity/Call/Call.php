@@ -14,6 +14,7 @@ namespace Program\Entity\Call;
 
 use Affiliation\Entity\Questionnaire\Questionnaire;
 use Calendar\Entity\Calendar;
+use Cluster\Entity\Cluster;
 use DateTime;
 use Doctrine\Common\Collections;
 use Doctrine\Common\Collections\Collection;
@@ -26,8 +27,10 @@ use Program\Entity\Nda;
 use Program\Entity\Program;
 use Project\Entity\Idea\Tool;
 use Project\Entity\Project;
+use Project\Entity\Report\Window\Window;
 use Publication\Entity\Publication;
 
+use Quality\Entity\Kpi;
 use function sprintf;
 
 /**
@@ -369,7 +372,7 @@ class Call extends AbstractEntity
      * @ORM\OneToMany(targetEntity="\Quality\Entity\Kpi", cascade={"persist"}, mappedBy="programCall")
      * @Annotation\Exclude()
      *
-     * @var \Quality\Entity\Kpi[]|Collections\ArrayCollection
+     * @var Kpi[]|Collections\ArrayCollection
      */
     private $kpi;
     /**
@@ -393,9 +396,17 @@ class Call extends AbstractEntity
      * )
      * @Annotation\Attributes({"label":"txt-program-call-cluster-label","help-block":"txt-program-call-cluster-help-block"})
      *
-     * @var \Cluster\Entity\Cluster[]|Collections\ArrayCollection
+     * @var Cluster[]|Collections\ArrayCollection
      */
     private $cluster;
+
+    /**
+     * @ORM\OneToMany(targetEntity="\Project\Entity\Report\Window\Window", cascade={"persist"}, mappedBy="programCall")
+     * @Annotation\Exclude()
+     *
+     * @var Window[]|Collections\ArrayCollection
+     */
+    private $projectReportWindows;
 
     public function __construct()
     {
@@ -409,6 +420,7 @@ class Call extends AbstractEntity
         $this->questionnaires        = new Collections\ArrayCollection();
         $this->kpi                   = new Collections\ArrayCollection();
         $this->cluster               = new Collections\ArrayCollection();
+        $this->projectReportWindows  = new Collections\ArrayCollection();
         $this->doaRequirement        = self::DOA_REQUIREMENT_PER_PROJECT;
         $this->ndaRequirement        = self::NDA_REQUIREMENT_PER_CALL;
         $this->loiRequirement        = self::LOI_REQUIRED;
@@ -978,6 +990,23 @@ class Call extends AbstractEntity
     public function setInstructionText(?string $instructionText): Call
     {
         $this->instructionText = $instructionText;
+        return $this;
+    }
+
+    /**
+     * @return Collections\Collection|Window[]
+     */
+    public function getProjectReportWindows(): Collections\Collection
+    {
+        return $this->projectReportWindows;
+    }
+
+    /**
+     * @param Collections\Collection|Window[] $projectReportWindows
+     */
+    public function setProjectReportWindows(Collections\Collection $projectReportWindows): Call
+    {
+        $this->projectReportWindows = $projectReportWindows;
         return $this;
     }
 }
